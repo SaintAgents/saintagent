@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Info, PartyPopper, Bell, Save, Eye, EyeOff, Zap, RefreshCw, X } from 'lucide-react';
+import { AlertTriangle, Info, PartyPopper, Bell, Save, Eye, EyeOff, Zap, RefreshCw, X, Image as ImageIcon, Link2, Clock, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 
 const ALERT_TYPES = [
@@ -36,8 +36,14 @@ export default function GlobalAlertManager() {
     global_alert_type: 'info',
     global_alert_flash: false,
     global_alert_repeat: false,
-    global_alert_dismissable: true
+    global_alert_dismissable: true,
+    global_alert_image_url: '',
+    global_alert_action_url: '',
+    global_alert_action_label: '',
+    global_alert_start_time: '',
+    global_alert_end_time: ''
   });
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (setting) {
@@ -48,17 +54,32 @@ export default function GlobalAlertManager() {
         global_alert_type: setting.global_alert_type || 'info',
         global_alert_flash: setting.global_alert_flash || false,
         global_alert_repeat: setting.global_alert_repeat || false,
-        global_alert_dismissable: setting.global_alert_dismissable !== false
+        global_alert_dismissable: setting.global_alert_dismissable !== false,
+        global_alert_image_url: setting.global_alert_image_url || '',
+        global_alert_action_url: setting.global_alert_action_url || '',
+        global_alert_action_label: setting.global_alert_action_label || '',
+        global_alert_start_time: setting.global_alert_start_time ? setting.global_alert_start_time.slice(0, 16) : '',
+        global_alert_end_time: setting.global_alert_end_time ? setting.global_alert_end_time.slice(0, 16) : ''
       });
     }
   }, [setting]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
+      const payload = { ...data };
+      // Convert empty strings to null for date fields
+      if (!payload.global_alert_start_time) payload.global_alert_start_time = null;
+      else payload.global_alert_start_time = new Date(payload.global_alert_start_time).toISOString();
+      if (!payload.global_alert_end_time) payload.global_alert_end_time = null;
+      else payload.global_alert_end_time = new Date(payload.global_alert_end_time).toISOString();
+      if (!payload.global_alert_image_url) payload.global_alert_image_url = null;
+      if (!payload.global_alert_action_url) payload.global_alert_action_url = null;
+      if (!payload.global_alert_action_label) payload.global_alert_action_label = null;
+
       if (setting?.id) {
-        return base44.entities.PlatformSetting.update(setting.id, data);
+        return base44.entities.PlatformSetting.update(setting.id, payload);
       } else {
-        return base44.entities.PlatformSetting.create({ key: 'main', ...data });
+        return base44.entities.PlatformSetting.create({ key: 'main', ...payload });
       }
     },
     onSuccess: () => {
@@ -70,14 +91,22 @@ export default function GlobalAlertManager() {
     }
   });
 
-  const handleSave = () => {
-    saveMutation.mutate(form);
-  };
+  const handleSave = () => saveMutation.mutate(form);
 
   const handleQuickDisable = () => {
     const updated = { ...form, global_alert_enabled: false };
     setForm(updated);
     saveMutation.mutate(updated);
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setForm(prev => ({ ...prev, global_alert_image_url: file_url }));
+    setUploading(false);
+    toast.success('Image uploaded');
   };
 
   const selectedType = ALERT_TYPES.find(t => t.value === form.global_alert_type);
@@ -165,6 +194,97 @@ export default function GlobalAlertManager() {
           <p className="text-xs text-slate-500">{form.global_alert_message.length} characters</p>
         </div>
 
+        {/* Image/Banner */}
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <ImageIcon className="w-4 h-4" /> Banner Image (optional)
+          </Label>
+          <div className="flex items-center gap-3">
+            <Input
+              value={form.global_alert_image_url}
+              onChange={(e) => setForm({ ...form, global_alert_image_url: e.target.value })}
+              placeholder="https://... or upload below"
+              className="flex-1"
+            />
+            <label className="shrink-0">
+              <Button variant="outline" size="sm" className="gap-2 cursor-pointer" asChild disabled={uploading}>
+                <span>
+                  <Upload className="w-4 h-4" />
+                  {uploading ? 'Uploading...' : 'Upload'}
+                </span>
+              </Button>
+              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+            </label>
+          </div>
+          {form.global_alert_image_url && (
+            <div className="relative mt-2 rounded-lg overflow-hidden border max-h-40">
+              <img src={form.global_alert_image_url} alt="Preview" className="w-full h-full object-cover" />
+              <button
+                onClick={() => setForm({ ...form, global_alert_image_url: '' })}
+                className="absolute top-1 right-1 p-1 rounded-full bg-black/50 text-white hover:bg-black/70"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Action Button */}
+        <div className="space-y-3 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+          <Label className="flex items-center gap-2 text-base font-semibold">
+            <Link2 className="w-4 h-4" /> Action Button (optional)
+          </Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <Label className="text-xs text-slate-500">Button Label</Label>
+              <Input
+                value={form.global_alert_action_label}
+                onChange={(e) => setForm({ ...form, global_alert_action_label: e.target.value })}
+                placeholder="Learn More"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-slate-500">Button URL</Label>
+              <Input
+                value={form.global_alert_action_url}
+                onChange={(e) => setForm({ ...form, global_alert_action_url: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Schedule */}
+        <div className="space-y-3 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+          <Label className="flex items-center gap-2 text-base font-semibold">
+            <Clock className="w-4 h-4" /> Schedule (optional)
+          </Label>
+          <p className="text-xs text-slate-500">Leave blank to show immediately when enabled. Times are in your local timezone.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <Label className="text-xs text-slate-500">Start Time</Label>
+              <Input
+                type="datetime-local"
+                value={form.global_alert_start_time}
+                onChange={(e) => setForm({ ...form, global_alert_start_time: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-slate-500">End Time</Label>
+              <Input
+                type="datetime-local"
+                value={form.global_alert_end_time}
+                onChange={(e) => setForm({ ...form, global_alert_end_time: e.target.value })}
+              />
+            </div>
+          </div>
+          {form.global_alert_start_time && form.global_alert_end_time && (
+            <p className="text-xs text-emerald-600">
+              Active window: {new Date(form.global_alert_start_time).toLocaleString()} → {new Date(form.global_alert_end_time).toLocaleString()}
+            </p>
+          )}
+        </div>
+
         {/* Options */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
@@ -205,12 +325,24 @@ export default function GlobalAlertManager() {
         {form.global_alert_message && (
           <div className="space-y-2">
             <Label>Preview</Label>
-            <div className={`p-4 rounded-lg text-white ${selectedType?.color || 'bg-blue-500'}`}>
-              <div className="flex items-center gap-2 mb-2">
-                <TypeIcon className="w-5 h-5" />
-                <span className="font-bold">{form.global_alert_title || 'Alert Title'}</span>
+            <div className={`rounded-lg text-white overflow-hidden ${selectedType?.color || 'bg-blue-500'}`}>
+              {form.global_alert_image_url && (
+                <img src={form.global_alert_image_url} alt="" className="w-full h-32 object-cover" />
+              )}
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <TypeIcon className="w-5 h-5" />
+                  <span className="font-bold">{form.global_alert_title || 'Alert Title'}</span>
+                </div>
+                <p className="text-sm opacity-90 whitespace-pre-wrap line-clamp-3">{form.global_alert_message}</p>
+                {form.global_alert_action_url && (
+                  <div className="mt-3">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-white/20 rounded-lg text-sm font-medium">
+                      {form.global_alert_action_label || 'Learn More'} →
+                    </span>
+                  </div>
+                )}
               </div>
-              <p className="text-sm opacity-90 whitespace-pre-wrap line-clamp-3">{form.global_alert_message}</p>
             </div>
           </div>
         )}

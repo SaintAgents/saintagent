@@ -1,0 +1,168 @@
+{
+  "name": "PlatformSetting",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Settings key identifier (for programmatic settings like counters)."
+    },
+    "value": {
+      "type": "string",
+      "description": "Stringified setting value."
+    },
+    "site_name": {
+      "type": "string",
+      "description": "Public name of the platform"
+    },
+    "support_email": {
+      "type": "string",
+      "description": "Support contact email"
+    },
+    "terms_url": {
+      "type": "string",
+      "description": "URL to Terms & Conditions"
+    },
+    "faq_url": {
+      "type": "string",
+      "description": "URL to Help / FAQ"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Logo image URL"
+    },
+    "branding_primary_color": {
+      "type": "string",
+      "description": "Primary brand color (hex or tailwind token)"
+    },
+    "announcement_banner": {
+      "type": "string",
+      "description": "Optional announcement text to show globally"
+    },
+    "maintenance_mode": {
+      "type": "boolean",
+      "default": false,
+      "description": "Put site into maintenance/read-only mode"
+    },
+    "referrals_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "marketplace_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "messages_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "synchronicity_engine_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "broadcasts_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Kill switch for the live broadcast banner. When false, no live broadcasts are shown."
+    },
+    "mission_reward_cap_usd": {
+      "type": "number",
+      "default": 55,
+      "description": "Maximum USD reward allowed per mission (default $55)"
+    },
+    "mission_cap_override_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "List of user emails allowed to bypass mission reward cap"
+    },
+    "global_alert_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the global alert popup is active"
+    },
+    "global_alert_title": {
+      "type": "string",
+      "description": "Title for the global alert popup"
+    },
+    "global_alert_message": {
+      "type": "string",
+      "description": "Main message content for the global alert"
+    },
+    "global_alert_type": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical",
+        "celebration"
+      ],
+      "default": "info",
+      "description": "Type of alert affecting styling"
+    },
+    "global_alert_flash": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the alert should flash/animate"
+    },
+    "global_alert_repeat": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether alert shows again on each page load"
+    },
+    "global_alert_dismissable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether users can dismiss the alert"
+    },
+    "global_alert_image_url": {
+      "type": "string",
+      "description": "Optional image/banner URL for the global alert"
+    },
+    "global_alert_action_url": {
+      "type": "string",
+      "description": "Optional action button URL"
+    },
+    "global_alert_action_label": {
+      "type": "string",
+      "description": "Label for the action button"
+    },
+    "global_alert_start_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scheduled start time for the alert"
+    },
+    "global_alert_end_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scheduled end time for the alert"
+    },
+    "beta_bonus_active": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether bonus test period is active (2x feedback rewards)"
+    },
+    "beta_bonus_multiplier": {
+      "type": "number",
+      "default": 2,
+      "description": "Multiplier for feedback rewards during bonus period"
+    },
+    "beta_bonus_end_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the current bonus period ends"
+    },
+    "beta_last_period_earnings": {
+      "type": "number",
+      "default": 0,
+      "description": "Total GGG earned by all testers in last bonus period"
+    },
+    "beta_last_period_feedback_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Total feedback submitted in last bonus period"
+    }
+  },
+  "required": []
+}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { X, AlertTriangle, Info, PartyPopper, Bell } from 'lucide-react';
+import { X, AlertTriangle, Info, PartyPopper, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const ALERT_STYLES = {
@@ -32,6 +32,13 @@ const ALERT_STYLES = {
   }
 };
 
+function isWithinSchedule(startTime, endTime) {
+  const now = new Date();
+  if (startTime && new Date(startTime) > now) return false;
+  if (endTime && new Date(endTime) < now) return false;
+  return true;
+}
+
 export default function GlobalAlertPopup() {
   const [dismissed, setDismissed] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -51,9 +58,19 @@ export default function GlobalAlertPopup() {
   const alertFlash = setting?.global_alert_flash;
   const alertRepeat = setting?.global_alert_repeat;
   const alertDismissable = setting?.global_alert_dismissable !== false;
+  const alertImageUrl = setting?.global_alert_image_url;
+  const alertActionUrl = setting?.global_alert_action_url;
+  const alertActionLabel = setting?.global_alert_action_label || 'Learn More';
+  const alertStartTime = setting?.global_alert_start_time;
+  const alertEndTime = setting?.global_alert_end_time;
 
   useEffect(() => {
     if (!alertEnabled || !alertMessage) {
+      setVisible(false);
+      return;
+    }
+
+    if (!isWithinSchedule(alertStartTime, alertEndTime)) {
       setVisible(false);
       return;
     }
@@ -67,7 +84,19 @@ export default function GlobalAlertPopup() {
       setVisible(true);
       setDismissed(false);
     }
-  }, [alertEnabled, alertMessage, alertRepeat, setting?.id, setting?.updated_date]);
+  }, [alertEnabled, alertMessage, alertRepeat, alertStartTime, alertEndTime, setting?.id, setting?.updated_date]);
+
+  // Re-check schedule every 30s so alerts appear/disappear on time
+  useEffect(() => {
+    if (!alertEnabled || !alertMessage) return;
+    if (!alertStartTime && !alertEndTime) return;
+    const interval = setInterval(() => {
+      if (!isWithinSchedule(alertStartTime, alertEndTime)) {
+        setVisible(false);
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [alertEnabled, alertMessage, alertStartTime, alertEndTime]);
 
   const handleDismiss = () => {
     if (alertDismissable) {
@@ -87,7 +116,7 @@ export default function GlobalAlertPopup() {
     <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <div 
         className={cn(
-          "relative w-full max-w-2xl max-h-[75vh] overflow-hidden rounded-2xl border-2",
+          "relative w-full max-w-2xl max-h-[85vh] overflow-hidden rounded-2xl border-2",
           style.bg,
           style.border,
           style.glow,
@@ -109,6 +138,17 @@ export default function GlobalAlertPopup() {
           </button>
         )}
 
+        {/* Banner Image */}
+        {alertImageUrl && (
+          <div className="w-full max-h-56 overflow-hidden">
+            <img 
+              src={alertImageUrl} 
+              alt="" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
         {/* Content */}
         <div className="p-8 md:p-12 text-center text-white">
           {/* Icon */}
@@ -126,15 +166,25 @@ export default function GlobalAlertPopup() {
           </h2>
 
           {/* Message */}
-          <div className="text-lg md:text-xl leading-relaxed opacity-95 whitespace-pre-wrap max-h-[40vh] overflow-y-auto px-4">
+          <div className="text-lg md:text-xl leading-relaxed opacity-95 whitespace-pre-wrap max-h-[30vh] overflow-y-auto px-4">
             {alertMessage}
           </div>
+
+          {/* Action Button */}
+          {alertActionUrl && (
+            <a href={alertActionUrl} target="_blank" rel="noopener noreferrer">
+              <Button className="mt-6 bg-white text-slate-900 hover:bg-white/90 font-semibold px-8 py-3 text-lg gap-2">
+                {alertActionLabel}
+                <ExternalLink className="w-4 h-4" />
+              </Button>
+            </a>
+          )}
 
           {/* Dismiss button */}
           {alertDismissable && (
             <Button
               onClick={handleDismiss}
-              className="mt-8 bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 text-lg"
+              className="mt-4 bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-3 text-lg"
             >
               Got it
             </Button>

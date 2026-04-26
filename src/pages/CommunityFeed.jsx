@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight, Link2, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight, Link2, MoreHorizontal, Trash2, FileText, Download } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,6 +43,8 @@ export default function CommunityFeed() {
   const [lightboxImages, setLightboxImages] = useState([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [linkUrl, setLinkUrl] = useState('');
+  const [docFiles, setDocFiles] = useState([]);
+  const [docNames, setDocNames] = useState([]);
 
   const openLightbox = (images, index) => {
     setLightboxImages(images);
@@ -118,7 +120,9 @@ export default function CommunityFeed() {
         video_duration_seconds: payload.video_duration_seconds,
         audio_url: payload.audio_url,
         image_urls: payload.image_urls || [],
-        link_url: payload.link_url || null
+        link_url: payload.link_url || null,
+        file_urls: payload.file_urls || [],
+        file_names: payload.file_names || []
       });
     },
     onSuccess: () => {
@@ -136,6 +140,8 @@ export default function CommunityFeed() {
       setImageFiles([]);
       setImagePreviews([]);
       setLinkUrl('');
+      setDocFiles([]);
+      setDocNames([]);
     }
   });
 
@@ -193,7 +199,7 @@ export default function CommunityFeed() {
   });
 
   const handleCreatePost = async () => {
-    if (!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0 && !linkUrl.trim()) return;
+    if (!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0 && !linkUrl.trim() && docFiles.length === 0) return;
     let video_url, audio_url;
     const image_urls = [];
     
@@ -209,6 +215,11 @@ export default function CommunityFeed() {
       const up = await base44.integrations.Core.UploadFile({ file: img });
       image_urls.push(up.file_url);
     }
+    const file_urls = [];
+    for (const doc of docFiles) {
+      const up = await base44.integrations.Core.UploadFile({ file: doc });
+      file_urls.push(up.file_url);
+    }
     
     createPostMutation.mutate({
       content: newPostText.trim(),
@@ -216,7 +227,9 @@ export default function CommunityFeed() {
       video_duration_seconds: videoFile ? Math.round(videoDuration || 0) : undefined,
       audio_url,
       image_urls,
-      link_url: linkUrl.trim() || null
+      link_url: linkUrl.trim() || null,
+      file_urls: file_urls.length > 0 ? file_urls : undefined,
+      file_names: docNames.length > 0 ? docNames : undefined
     });
   };
 
@@ -354,6 +367,16 @@ export default function CommunityFeed() {
                 Audio
                 <input type="file" accept="audio/mp3,audio/mpeg,audio/*" onChange={onAudioChange} className="hidden" />
               </label>
+              <label className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 cursor-pointer transition-colors text-sm">
+                <FileText className="w-4 h-4" />
+                PDF / Doc
+                <input type="file" accept=".pdf,.docx,.doc" multiple onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  if (files.length === 0) return;
+                  setDocFiles(prev => [...prev, ...files].slice(0, 5));
+                  setDocNames(prev => [...prev, ...files.map(f => f.name)].slice(0, 5));
+                }} className="hidden" />
+              </label>
               {videoError && <span className="text-sm text-rose-600">{videoError}</span>}
             </div>
             
@@ -386,6 +409,20 @@ export default function CommunityFeed() {
             )}
             {videoPreview && !videoError && <video src={videoPreview} controls className="w-full rounded-lg" />}
             {audioPreview && <audio src={audioPreview} controls className="w-full" />}
+            {docNames.length > 0 && (
+              <div className="space-y-1">
+                {docNames.map((name, i) => (
+                  <div key={i} className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg text-sm">
+                    <FileText className="w-4 h-4 text-red-500 shrink-0" />
+                    <span className="flex-1 truncate">{name}</span>
+                    <button onClick={() => {
+                      setDocFiles(prev => prev.filter((_, idx) => idx !== i));
+                      setDocNames(prev => prev.filter((_, idx) => idx !== i));
+                    }} className="text-slate-400 hover:text-red-500"><X className="w-4 h-4" /></button>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -398,7 +435,7 @@ export default function CommunityFeed() {
               </div>
               <Button
                 onClick={handleCreatePost}
-                disabled={(!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0 && !linkUrl.trim()) || createPostMutation.isPending}
+                disabled={(!newPostText.trim() && !videoFile && !audioFile && imageFiles.length === 0 && !linkUrl.trim() && docFiles.length === 0) || createPostMutation.isPending}
                 className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2"
               >
                 <Send className="w-4 h-4" />
@@ -537,6 +574,24 @@ export default function CommunityFeed() {
                       );
                     })()}
                     {post.audio_url && <audio src={post.audio_url} controls className="w-full" />}
+
+                    {/* Attached Documents */}
+                    {post.file_urls && post.file_urls.length > 0 && (
+                      <div className="space-y-1.5">
+                        {post.file_urls.map((url, i) => {
+                          const name = post.file_names?.[i] || `Document ${i + 1}`;
+                          const isPdf = name.toLowerCase().endsWith('.pdf') || url.toLowerCase().includes('.pdf');
+                          return (
+                            <a key={i} href={url} target="_blank" rel="noopener noreferrer"
+                              className="flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-lg transition-colors group">
+                              <FileText className={`w-5 h-5 shrink-0 ${isPdf ? 'text-red-500' : 'text-blue-500'}`} />
+                              <span className="flex-1 text-sm font-medium text-slate-700 truncate">{name}</span>
+                              <Download className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
 
                     {/* Post Actions */}
                     <div className="flex items-center gap-6 pt-2 border-t border-slate-100">

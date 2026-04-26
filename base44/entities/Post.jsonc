@@ -1,0 +1,74 @@
+{
+  "name": "Post",
+  "type": "object",
+  "properties": {
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "image_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "video_url": {
+      "type": "string"
+    },
+    "video_duration_seconds": {
+      "type": "number"
+    },
+    "audio_url": {
+      "type": "string",
+      "description": "URL to uploaded audio file (mp3)"
+    },
+    "link_url": {
+      "type": "string",
+      "description": "External URL (YouTube, Vimeo, articles, etc.)"
+    },
+    "file_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Uploaded document files (PDF, DOCX, etc.)"
+    },
+    "file_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Original filenames for uploaded documents"
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comments_count": {
+      "type": "number",
+      "default": 0
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "followers",
+        "circle"
+      ],
+      "default": "public"
+    }
+  },
+  "required": [
+    "author_id"
+  ]
+}
