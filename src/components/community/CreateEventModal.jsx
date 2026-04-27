@@ -97,7 +97,7 @@ export default function CreateEventModal({ open, onOpenChange, user, circleId = 
       price_ggg: formData.is_free ? 0 : formData.price_ggg,
       tags: formData.tags,
       recurring: formData.recurring,
-      circle_id: selectedCircle || undefined,
+      circle_id: (selectedCircle && selectedCircle !== 'none') ? selectedCircle : undefined,
       attendee_ids: [user.email],
       attendee_count: 1,
       status: 'upcoming'
@@ -290,7 +290,7 @@ export default function CreateEventModal({ open, onOpenChange, user, circleId = 
                   <SelectValue placeholder="Select a circle..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={null}>None</SelectItem>
+                  <SelectItem value="none">None</SelectItem>
                   {circles.map(c => (
                     <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                   ))}

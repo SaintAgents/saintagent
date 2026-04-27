@@ -26,14 +26,19 @@ export default function Events() {
     queryFn: () => base44.auth.me()
   });
 
-  const { data: events = [], isLoading } = useQuery({
+  const { data: events = [], isLoading, error: eventsError } = useQuery({
     queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list('-start_time', 100)
+    queryFn: () => base44.entities.Event.list('-start_time', 100),
+    staleTime: 60000,
+    retry: 2,
+    retryDelay: 2000,
   });
 
   // Filter events
   const filteredEvents = events.filter(event => {
+    if (!event.start_time) return tab === 'my_events';
     const eventDate = parseISO(event.start_time);
+    if (isNaN(eventDate.getTime())) return tab === 'my_events';
     const eventPast = isPast(eventDate) && event.status !== 'live';
     
     // Tab filter
@@ -182,6 +187,17 @@ export default function Events() {
             <TabsTrigger value="past" className="rounded-lg">Past</TabsTrigger>
           </TabsList>
         </Tabs>
+
+        {/* Error state */}
+        {eventsError && (
+          <div className="text-center py-8 mb-6 bg-red-50 rounded-xl border border-red-200">
+            <p className="text-red-600 font-medium mb-2">Failed to load events</p>
+            <p className="text-red-500 text-sm mb-4">This is usually temporary — please try again.</p>
+            <Button variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ['events'] })} className="border-red-200 text-red-600 hover:bg-red-50">
+              Retry
+            </Button>
+          </div>
+        )}
 
         {/* Events Grid */}
         {isLoading ? (
