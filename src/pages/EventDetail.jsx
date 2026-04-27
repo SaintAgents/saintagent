@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Calendar, Clock, MapPin, Link as LinkIcon, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, MapPin, Link as LinkIcon, ArrowLeft, Pencil } from 'lucide-react';
+import EditEventModal from '@/components/community/EditEventModal';
 
 export default function EventDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const eventId = urlParams.get('id');
+  const [editOpen, setEditOpen] = useState(false);
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 300000
+  });
 
   const { data: event, isLoading } = useQuery({
     queryKey: ['event', eventId],
@@ -19,6 +27,8 @@ export default function EventDetail() {
     },
     enabled: !!eventId
   });
+
+  const isHost = currentUser?.email && event?.host_id === currentUser.email;
 
   if (isLoading) {
     return (
@@ -69,6 +79,11 @@ export default function EventDetail() {
                 <p className="text-slate-700 max-w-2xl">{event.description}</p>
               )}
             </div>
+            {isHost && (
+              <Button variant="outline" className="shrink-0 gap-2" onClick={() => setEditOpen(true)}>
+                <Pencil className="w-4 h-4" /> Edit Event
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -130,6 +145,7 @@ export default function EventDetail() {
           </Card>
         </div>
       </div>
+      {isHost && <EditEventModal open={editOpen} onOpenChange={setEditOpen} event={event} />}
     </div>
   );
 }
