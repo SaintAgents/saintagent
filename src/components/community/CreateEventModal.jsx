@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar, Clock, MapPin, Video, X } from "lucide-react";
+import { Calendar, Clock, MapPin, Video, X, Loader2 } from "lucide-react";
 
 const CATEGORIES = [
   { value: 'meditation', label: 'Meditation' },
@@ -46,6 +46,7 @@ export default function CreateEventModal({ open, onOpenChange, user, circleId = 
     recurring: 'none'
   });
   const [tagInput, setTagInput] = useState('');
+  const [creatingZoom, setCreatingZoom] = useState(false);
 
   // Fetch user's circles for optional circle association
   const { data: circles = [] } = useQuery({
@@ -211,12 +212,45 @@ export default function CreateEventModal({ open, onOpenChange, user, circleId = 
           {formData.event_type !== 'in_person' && (
             <div>
               <Label className="flex items-center gap-1"><Video className="w-3 h-3" /> Online Link</Label>
-              <Input
-                value={formData.online_link}
-                onChange={(e) => setFormData({ ...formData, online_link: e.target.value })}
-                placeholder="Zoom, Google Meet, etc."
-                className="mt-2"
-              />
+              <div className="flex gap-2 mt-2">
+                <Input
+                  value={formData.online_link}
+                  onChange={(e) => setFormData({ ...formData, online_link: e.target.value })}
+                  placeholder="Zoom, Google Meet, etc."
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={creatingZoom}
+                  className="shrink-0 gap-1.5 text-blue-600 border-blue-200 hover:bg-blue-50"
+                  onClick={async () => {
+                    setCreatingZoom(true);
+                    const startISO = formData.start_date && formData.start_time
+                      ? new Date(`${formData.start_date}T${formData.start_time}`).toISOString()
+                      : undefined;
+                    const durationMin = formData.start_time && formData.end_time
+                      ? Math.round((new Date(`${formData.start_date}T${formData.end_time}`) - new Date(`${formData.start_date}T${formData.start_time}`)) / 60000)
+                      : 60;
+                    const res = await base44.functions.invoke('zoomMeeting', {
+                      action: 'create',
+                      meetingDetails: {
+                        topic: formData.title || 'Event Meeting',
+                        start_time: startISO,
+                        duration: durationMin > 0 ? durationMin : 60
+                      }
+                    });
+                    if (res.data?.meeting?.join_url) {
+                      setFormData(prev => ({ ...prev, online_link: res.data.meeting.join_url }));
+                    }
+                    setCreatingZoom(false);
+                  }}
+                >
+                  {creatingZoom ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
+                  {creatingZoom ? 'Creating...' : 'Zoom'}
+                </Button>
+              </div>
             </div>
           )}
 

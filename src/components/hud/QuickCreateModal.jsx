@@ -27,7 +27,8 @@ import {
   X,
   Sparkles,
   ArrowRight,
-  Folder } from
+  Folder,
+  Loader2 } from
 "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { base44 } from '@/api/base44Client';
@@ -47,6 +48,7 @@ const CREATE_OPTIONS = [
 export default function QuickCreateModal({ open, onClose, onCreate, initialType }) {
   const [selectedType, setSelectedType] = useState(null);
   const [formData, setFormData] = useState({});
+  const [creatingZoom, setCreatingZoom] = useState(false);
 
   // When opened with an initialType, jump straight into that form
   useEffect(() => {
@@ -231,7 +233,6 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 className="mt-2"
                 value={formData.title || ''}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
-
             </div>
             <div>
               <Label>With (email or username)</Label>
@@ -240,14 +241,12 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 className="mt-2"
                 value={formData.recipient || ''}
                 onChange={(e) => setFormData({ ...formData, recipient: e.target.value })} />
-
             </div>
             <div>
               <Label>Type</Label>
               <Select
                 value={formData.type || 'casual'}
                 onValueChange={(v) => setFormData({ ...formData, type: v })}>
-
                 <SelectTrigger className="mt-2">
                   <SelectValue />
                 </SelectTrigger>
@@ -258,6 +257,40 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                   <SelectItem value="consultation">Consultation</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div>
+              <Label>Online Link (optional)</Label>
+              <div className="flex gap-2 mt-2">
+                <Input
+                  placeholder="https://..."
+                  className="flex-1"
+                  value={formData.online_link || ''}
+                  onChange={(e) => setFormData({ ...formData, online_link: e.target.value })} />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={creatingZoom}
+                  className="shrink-0 gap-1.5 text-blue-600 border-blue-200 hover:bg-blue-50"
+                  onClick={async () => {
+                    setCreatingZoom(true);
+                    const res = await base44.functions.invoke('zoomMeeting', {
+                      action: 'create',
+                      meetingDetails: {
+                        topic: formData.title || 'Meeting',
+                        duration: 30
+                      }
+                    });
+                    if (res.data?.meeting?.join_url) {
+                      setFormData(prev => ({ ...prev, online_link: res.data.meeting.join_url }));
+                    }
+                    setCreatingZoom(false);
+                  }}
+                >
+                  {creatingZoom ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
+                  {creatingZoom ? 'Creating...' : 'Zoom'}
+                </Button>
+              </div>
             </div>
           </div>);
 
@@ -356,12 +389,39 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
             </div>
             <div>
               <Label>Online Link (optional)</Label>
-              <Input
-                placeholder="https://..."
-                className="mt-2"
-                value={formData.online_link || ''}
-                onChange={(e) => setFormData({ ...formData, online_link: e.target.value })} />
-
+              <div className="flex gap-2 mt-2">
+                <Input
+                  placeholder="https://..."
+                  className="flex-1"
+                  value={formData.online_link || ''}
+                  onChange={(e) => setFormData({ ...formData, online_link: e.target.value })} />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={creatingZoom}
+                  className="shrink-0 gap-1.5 text-blue-600 border-blue-200 hover:bg-blue-50"
+                  onClick={async () => {
+                    setCreatingZoom(true);
+                    const startISO = formData.start_time ? new Date(formData.start_time).toISOString() : undefined;
+                    const res = await base44.functions.invoke('zoomMeeting', {
+                      action: 'create',
+                      meetingDetails: {
+                        topic: formData.title || 'Event Meeting',
+                        start_time: startISO,
+                        duration: 60
+                      }
+                    });
+                    if (res.data?.meeting?.join_url) {
+                      setFormData(prev => ({ ...prev, online_link: res.data.meeting.join_url }));
+                    }
+                    setCreatingZoom(false);
+                  }}
+                >
+                  {creatingZoom ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
+                  {creatingZoom ? 'Creating...' : 'Zoom'}
+                </Button>
+              </div>
             </div>
             <div>
               <Label>Description</Label>
