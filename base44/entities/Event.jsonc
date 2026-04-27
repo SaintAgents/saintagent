@@ -1,0 +1,134 @@
+{
+  "name": "Event",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "host_id": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "host_avatar": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "location": {
+      "type": "string"
+    },
+    "online_link": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "upcoming",
+        "live",
+        "completed",
+        "cancelled"
+      ],
+      "default": "upcoming"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "online",
+        "in_person",
+        "hybrid"
+      ],
+      "default": "online"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "meditation",
+        "workshop",
+        "meetup",
+        "ceremony",
+        "discussion",
+        "training",
+        "celebration",
+        "other"
+      ],
+      "default": "meetup"
+    },
+    "circle_id": {
+      "type": "string",
+      "description": "Optional circle this event belongs to"
+    },
+    "max_attendees": {
+      "type": "number"
+    },
+    "attendee_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "attendee_count": {
+      "type": "number",
+      "default": 0
+    },
+    "interested_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "interested_count": {
+      "type": "number",
+      "default": 0
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_free": {
+      "type": "boolean",
+      "default": true
+    },
+    "price_ggg": {
+      "type": "number",
+      "default": 0
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recurring": {
+      "type": "string",
+      "enum": [
+        "none",
+        "daily",
+        "weekly",
+        "biweekly",
+        "monthly"
+      ],
+      "default": "none"
+    }
+  },
+  "required": [
+    "title",
+    "host_id",
+    "start_time"
+  ]
+}

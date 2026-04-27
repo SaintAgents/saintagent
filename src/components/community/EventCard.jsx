@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, Clock, MapPin, Video, Users, ExternalLink } from "lucide-react";
+import { Calendar, Clock, MapPin, Video, Users, ExternalLink, Pencil, Heart, CheckCircle2 } from "lucide-react";
 import { format, parseISO, isPast, isToday, isTomorrow } from "date-fns";
 import { cn } from "@/lib/utils";
 import DemoStamp from '@/components/ui/DemoStamp';
+import EditEventModal from './EditEventModal';
 
 export default function EventCard({ event, user, onViewDetails }) {
+  const [editOpen, setEditOpen] = React.useState(false);
   const queryClient = useQueryClient();
 
   const isAttending = event.attendee_ids?.includes(user?.email);
@@ -36,6 +38,22 @@ export default function EventCard({ event, user, onViewDetails }) {
       return base44.entities.Event.update(event.id, {
         attendee_ids: newAttendees,
         attendee_count: newAttendees.length
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['events'] })
+  });
+
+  const isInterested = event.interested_ids?.includes(user?.email);
+
+  const interestedMutation = useMutation({
+    mutationFn: async () => {
+      const current = event.interested_ids || [];
+      const newList = isInterested
+        ? current.filter(id => id !== user.email)
+        : [...current, user.email];
+      return base44.entities.Event.update(event.id, {
+        interested_ids: newList,
+        interested_count: newList.length
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['events'] })
@@ -132,7 +150,26 @@ export default function EventCard({ event, user, onViewDetails }) {
           )}
         </div>
 
-        {/* Host & Attendees */}
+        {/* Going & Interested counts */}
+        <div className="flex items-center gap-4 mb-3 text-xs">
+          <div className="flex items-center gap-1 text-emerald-600">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span className="font-medium">{event.attendee_count || 0} Going</span>
+          </div>
+          <button
+            onClick={() => interestedMutation.mutate()}
+            disabled={interestedMutation.isPending}
+            className={cn(
+              "flex items-center gap-1 transition-colors",
+              isInterested ? "text-pink-600" : "text-slate-400 hover:text-pink-500"
+            )}
+          >
+            <Heart className={cn("w-3.5 h-3.5", isInterested && "fill-current")} />
+            <span className="font-medium">{event.interested_count || 0} Interested</span>
+          </button>
+        </div>
+
+        {/* Host & Edit */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 cursor-pointer" data-user-id={event.host_id}>
             <Avatar className="w-6 h-6">
@@ -141,10 +178,21 @@ export default function EventCard({ event, user, onViewDetails }) {
             </Avatar>
             <span className="text-xs text-slate-500">by {event.host_name}</span>
           </div>
-          <div className="flex items-center gap-1 text-xs text-slate-500">
-            <Users className="w-3.5 h-3.5" />
-            {event.attendee_count || 0}
-            {event.max_attendees && ` / ${event.max_attendees}`}
+          <div className="flex items-center gap-2">
+            {isHost && (
+              <button
+                onClick={() => setEditOpen(true)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition-colors"
+                title="Edit event"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <div className="flex items-center gap-1 text-xs text-slate-500">
+              <Users className="w-3.5 h-3.5" />
+              {event.attendee_count || 0}
+              {event.max_attendees && ` / ${event.max_attendees}`}
+            </div>
           </div>
         </div>
 
@@ -205,6 +253,11 @@ export default function EventCard({ event, user, onViewDetails }) {
           )}
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {isHost && (
+        <EditEventModal open={editOpen} onOpenChange={setEditOpen} event={event} />
+      )}
     </div>
   );
 }
