@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,6 +20,7 @@ export default function Events() {
   const [tab, setTab] = useState('upcoming');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -74,9 +75,10 @@ export default function Events() {
     return new Date(a.start_time) - new Date(b.start_time);
   });
 
-  // Stats
-  const todayCount = events.filter(e => isToday(parseISO(e.start_time))).length;
-  const thisWeekCount = events.filter(e => isThisWeek(parseISO(e.start_time))).length;
+  // Stats (guard against missing start_time)
+  const safeParseDate = (t) => { if (!t) return null; const d = parseISO(t); return isNaN(d.getTime()) ? null : d; };
+  const todayCount = events.filter(e => { const d = safeParseDate(e.start_time); return d && isToday(d); }).length;
+  const thisWeekCount = events.filter(e => { const d = safeParseDate(e.start_time); return d && isThisWeek(d); }).length;
   const myEventsCount = events.filter(e => e.host_id === user?.email || e.attendee_ids?.includes(user?.email)).length;
   const liveCount = events.filter(e => e.status === 'live').length;
 
