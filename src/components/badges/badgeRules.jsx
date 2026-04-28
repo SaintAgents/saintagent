@@ -1,3 +1,4 @@
-/* eslint-disable */
-// Stub - badge data lives in badgesData.jsx
-export default {};
+// Badge rules are consolidated in badgesData.jsx
+// This file exports an empty object for backward compatibility
+const badgeRules = {};
+export default badgeRules;
