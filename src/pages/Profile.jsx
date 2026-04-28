@@ -129,9 +129,14 @@ export default function Profile() {
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  // Check for ?id= URL parameter to view another user's profile
-  const urlParams = new URLSearchParams(window.location.search);
-  const viewingUserId = urlParams.get('id');
+  // Reactively track ?id= so profile updates on soft navigation
+  const [viewingUserId, setViewingUserId] = useState(() => new URLSearchParams(window.location.search).get('id'));
+  useEffect(() => {
+    const check = () => { const id = new URLSearchParams(window.location.search).get('id'); setViewingUserId(p => p !== id ? id : p); };
+    window.addEventListener('popstate', check);
+    const t = setInterval(check, 250);
+    return () => { window.removeEventListener('popstate', check); clearInterval(t); };
+  }, []);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -167,7 +172,6 @@ export default function Profile() {
     queryKey: ['userProfile', targetUserId],
     queryFn: async () => {
       if (viewingUserId) {
-        // Try SA# first, then email
         const bySA = await base44.entities.UserProfile.filter({ sa_number: viewingUserId }, '-updated_date', 1);
         if (bySA.length > 0) return bySA;
         return base44.entities.UserProfile.filter({ user_id: viewingUserId }, '-updated_date', 1);
@@ -176,7 +180,7 @@ export default function Profile() {
       return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
     },
     enabled: !!targetUserId,
-    staleTime: 600000,
+    staleTime: viewingUserId ? 30000 : 600000,
     refetchOnWindowFocus: false,
   });
 
