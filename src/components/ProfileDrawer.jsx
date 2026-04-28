@@ -22,7 +22,9 @@ import {
   Target,
   Sparkles,
   MapPin,
-  Award } from
+  Award,
+  Video,
+  Loader2 } from
 "lucide-react";
 import { createPageUrl } from '@/utils';
 import FollowButton from '@/components/FollowButton';
@@ -193,10 +195,37 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
 
   const handleBook = () => {
     if (isOwnProfile) {
-      // Guide user to settings to set up availability
       window.location.href = '/Settings';
     } else {
       window.location.href = '/BookCall?host=' + encodeURIComponent(userId);
+    }
+  };
+
+  const [zoomLoading, setZoomLoading] = React.useState(false);
+
+  const handleInviteToZoom = async () => {
+    if (zoomLoading) return;
+    setZoomLoading(true);
+    try {
+      const res = await base44.functions.invoke('zoomMeeting', {
+        action: 'create',
+        meetingDetails: {
+          topic: `Meeting: ${currentUser?.full_name || 'You'} & ${profile?.display_name || 'Guest'}`,
+          duration: 30
+        },
+        sendEmails: true,
+        hostEmail: currentUser?.email,
+        hostName: currentUser?.full_name,
+        guestEmail: userId,
+        guestName: profile?.display_name
+      });
+      if (res.data?.meeting?.join_url) {
+        window.open(res.data.meeting.join_url, '_blank');
+      }
+    } catch (err) {
+      console.error('Zoom invite failed:', err);
+    } finally {
+      setZoomLoading(false);
     }
   };
 
@@ -312,7 +341,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             {/* Actions */}
             {!isOwnProfile &&
             <div className="space-y-3 mb-6">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2 text-sm px-3">
                     <MessageCircle className="w-4 h-4" />
                     Message
@@ -320,6 +349,10 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                   <Button onClick={handleBook} variant="outline" className="rounded-xl gap-2 text-sm px-3 border-violet-300 text-violet-700 hover:bg-violet-50">
                     <Calendar className="w-4 h-4" />
                     Book
+                  </Button>
+                  <Button onClick={handleInviteToZoom} disabled={zoomLoading} className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl gap-2 text-sm px-3">
+                    {zoomLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
+                    Zoom
                   </Button>
                 </div>
                 <FriendRequestButton
