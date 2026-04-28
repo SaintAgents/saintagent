@@ -248,7 +248,7 @@ export default function TopBar({
   // Search data - LAZY: only fetch when user focuses search or types
   const { data: searchProfiles = [] } = useQuery({
     queryKey: ['topbarSearchProfiles'],
-    queryFn: () => base44.entities.UserProfile.list('-created_date', 100),
+    queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
     enabled: searchFocused || searchQuery.length > 0,
     staleTime: 300000,
     gcTime: 600000,
@@ -286,15 +286,13 @@ export default function TopBar({
     refetchOnMount: false,
   });
 
-  // Filter results based on query - match at word boundaries only
+  // Filter results based on query - use simple includes for broad matching
   const filterResults = (items, fields) => {
     if (!searchQuery.trim()) return [];
     const term = searchQuery.toLowerCase().trim().replace(/^@/, '');
-    // Create regex that matches term at start of string or after a word boundary
-    const regex = new RegExp(`(^|\\s|[^a-z])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i');
     return items.filter(item => 
-      fields.some(f => item[f] && regex.test(String(item[f])))
-    ).slice(0, 5);
+      fields.some(f => item[f] && String(item[f]).toLowerCase().includes(term))
+    ).slice(0, 8);
   };
 
   // Filter pages based on query - require at least 2 chars for pages
@@ -306,7 +304,7 @@ export default function TopBar({
       }).slice(0, 5)
     : [];
 
-  const filteredProfiles = filterResults(searchProfiles, ['handle', 'display_name']);
+  const filteredProfiles = filterResults(searchProfiles, ['handle', 'display_name', 'user_id', 'sa_number', 'alias']);
   const filteredListings = filterResults(searchListings, ['title']);
   const filteredMissions = filterResults(searchMissions, ['title']);
   const filteredCircles = filterResults(searchCircles, ['name']);

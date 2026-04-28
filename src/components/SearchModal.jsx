@@ -161,8 +161,8 @@ export default function SearchModal({ open, onClose, onSelect }) {
     });
   };
 
-  // Search profiles by handle, display_name, bio
-  const filteredProfiles = filterResults(profiles, ['handle', 'display_name', 'bio', 'user_id']);
+  // Search profiles by handle, display_name, bio, email, sa_number, alias
+  const filteredProfiles = filterResults(profiles, ['handle', 'display_name', 'bio', 'user_id', 'sa_number', 'alias']);
   const filteredListings = filterResults(listings, ['title', 'description', 'owner_name']);
   const filteredMissions = filterResults(missions, ['title', 'description', 'objective']);
   const filteredCircles = filterResults(circles, ['name', 'description', 'purpose']);

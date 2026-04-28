@@ -184,11 +184,15 @@ export default function Profiles() {
 
     // Search filter
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
+      const query = searchQuery.toLowerCase().replace(/^@/, '');
       result = result.filter((p) =>
         p.display_name?.toLowerCase().includes(query) ||
         p.handle?.toLowerCase().includes(query) ||
         p.bio?.toLowerCase().includes(query) ||
+        p.user_id?.toLowerCase().includes(query) ||
+        p.sa_number?.toLowerCase().includes(query) ||
+        p.alias?.toLowerCase().includes(query) ||
+        p.location?.toLowerCase().includes(query) ||
         p.skills?.some(s => s.toLowerCase().includes(query)) ||
         p.rp_rank_code?.toLowerCase().includes(query)
       );
