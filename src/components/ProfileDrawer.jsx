@@ -341,7 +341,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             {/* Actions */}
             {!isOwnProfile &&
             <div className="space-y-3 mb-6">
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2 text-sm px-3">
                     <MessageCircle className="w-4 h-4" />
                     Message
@@ -349,10 +349,6 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                   <Button onClick={handleBook} variant="outline" className="rounded-xl gap-2 text-sm px-3 border-violet-300 text-violet-700 hover:bg-violet-50">
                     <Calendar className="w-4 h-4" />
                     Book
-                  </Button>
-                  <Button onClick={handleInviteToZoom} disabled={zoomLoading} className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl gap-2 text-sm px-3">
-                    {zoomLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
-                    Zoom
                   </Button>
                 </div>
                 <FriendRequestButton
@@ -379,6 +375,10 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
                     className="rounded-xl text-xs px-3 h-8"
                   />
                 </div>
+                <Button onClick={handleInviteToZoom} disabled={zoomLoading} className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl gap-2 text-sm mt-2">
+                  {zoomLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
+                  Zoom
+                </Button>
               </div>
             }
           </div>
