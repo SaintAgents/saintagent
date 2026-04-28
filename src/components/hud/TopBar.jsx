@@ -1012,11 +1012,9 @@ export default function TopBar({
               {/* Menu Items */}
               <ScrollArea className="max-h-[60vh]">
                 <div className="py-2">
-                  <DropdownMenuItem asChild>
-                    <Link to={createPageUrl('Profile')} className="flex items-center gap-3 px-4 py-2.5">
-                      <User className="w-4 h-4 text-slate-500" />
-                      <span>My Dashboard/Profile</span>
-                    </Link>
+                  <DropdownMenuItem onClick={() => { window.location.href = createPageUrl('Profile'); }} className="flex items-center gap-3 px-4 py-2.5 cursor-pointer">
+                    <User className="w-4 h-4 text-slate-500" />
+                    <span>My Dashboard/Profile</span>
                   </DropdownMenuItem>
                   {myBusinessEntities.length > 0 && myBusinessEntities.map(biz => (
                     <DropdownMenuItem key={biz.id} asChild>
