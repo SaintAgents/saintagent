@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard, Database } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard, Database, Mic } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -51,6 +51,7 @@ import LearnPopupSettings from '@/components/admin/LearnPopupSettings';
 import UserActivityLog from '@/components/admin/UserActivityLog';
 import AdminProgressTab from '@/components/admin/AdminProgressTab';
 import CacheAdminTab from '@/components/admin/CacheAdminTab';
+import DeepDisclosureAdmin from '@/components/broadcast/DeepDisclosureAdmin';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -285,6 +286,10 @@ export default function Admin() {
               <Database className="w-4 h-4" />
               Cache
             </TabsTrigger>
+            <TabsTrigger value="deep-disclosure" className="gap-2 px-3 py-2">
+              <Mic className="w-4 h-4" />
+              Podcast
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -479,6 +484,10 @@ export default function Admin() {
 
           <TabsContent value="cache">
             <CacheAdminTab />
+          </TabsContent>
+
+          <TabsContent value="deep-disclosure">
+            <DeepDisclosureAdmin />
           </TabsContent>
         </Tabs>
       </div>
