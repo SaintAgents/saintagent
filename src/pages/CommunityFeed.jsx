@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
+import ReactMarkdown from 'react-markdown';
 import MiniProfile from '@/components/profile/MiniProfile';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
@@ -490,8 +491,10 @@ export default function CommunityFeed() {
                       </div>
                     </div>
 
-                    {/* Post Content */}
-                    <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+                    {/* Post Content - renders markdown */}
+                    <div className="text-sm text-slate-700 leading-relaxed prose prose-sm prose-slate max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_h1]:text-lg [&_h1]:font-bold [&_h1]:mt-3 [&_h1]:mb-1 [&_h2]:text-base [&_h2]:font-bold [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_p]:my-1.5 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_blockquote]:border-l-2 [&_blockquote]:border-violet-300 [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:text-slate-500 [&_hr]:my-3 [&_hr]:border-slate-200">
+                      <ReactMarkdown>{post.content}</ReactMarkdown>
+                    </div>
 
                     {/* Media */}
                     {post.image_urls && post.image_urls.length > 0 && (
