@@ -1,76 +1,55 @@
 import React from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import FeedbackDialog from './FeedbackDialog';
-import { format } from 'date-fns';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CalendarCheck, Clock, CheckCircle, Inbox } from 'lucide-react';
+import SessionCard from './SessionCard';
 
 export default function SessionList() {
-  const qc = useQueryClient();
   const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me() });
 
   const { data: sessions = [] } = useQuery({
     queryKey: ['mentorshipSessions', user?.email],
-    queryFn: async () => user?.email ? base44.entities.MentorshipSession.filter({ $or: [{ mentor_id: user.email }, { mentee_id: user.email }] }, '-created_date', 100) : [],
-    enabled: !!user?.email
+    queryFn: () => base44.entities.MentorshipSession.list('-created_date', 100),
+    enabled: !!user?.email,
   });
 
-  const update = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.MentorshipSession.update(id, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['mentorshipSessions'] })
+  const { data: allUserProfiles = [] } = useQuery({
+    queryKey: ['userProfilesAll'],
+    queryFn: () => base44.entities.UserProfile.list('-updated_date', 500),
   });
 
-  const [scheduleData, setScheduleData] = React.useState({});
+  const userProfileMap = React.useMemo(
+    () => Object.fromEntries((allUserProfiles || []).map(p => [p.user_id, p])),
+    [allUserProfiles]
+  );
 
-  const handleSchedule = (s) => {
-    const dt = scheduleData[s.id];
-    if (!dt) return;
-    update.mutate({ id: s.id, data: { scheduled_time: new Date(dt).toISOString(), status: 'scheduled' } });
-  };
+  const mySessions = sessions.filter(s => s.mentor_id === user?.email || s.mentee_id === user?.email);
+  const requested = mySessions.filter(s => s.status === 'requested');
+  const scheduled = mySessions.filter(s => s.status === 'scheduled');
+  const completed = mySessions.filter(s => s.status === 'completed');
 
-  const handleFeedback = (s, who) => async ({ rating, comment }) => {
-    const patch = who === 'mentor'
-      ? { feedback_mentor_rating: rating, feedback_mentor_comment: comment, status: 'completed' }
-      : { feedback_mentee_rating: rating, feedback_mentee_comment: comment, status: 'completed' };
-    update.mutate({ id: s.id, data: patch });
+  const renderList = (list, emptyMsg) => {
+    if (list.length === 0) return <p className="text-sm text-slate-400 text-center py-8">{emptyMsg}</p>;
+    return (
+      <div className="space-y-3">
+        {list.map(s => <SessionCard key={s.id} session={s} currentUser={user} userProfileMap={userProfileMap} />)}
+      </div>
+    );
   };
 
   return (
-    <div className="space-y-3">
-      {sessions.length === 0 && <p className="text-sm text-slate-500">No sessions yet</p>}
-      {sessions.map((s) => {
-        const isMentor = s.mentor_id === user?.email;
-        const when = s.scheduled_time ? format(new Date(s.scheduled_time), 'PP p') : 'Not scheduled';
-        return (
-          <Card key={s.id}>
-            <CardContent className="p-4">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                <div>
-                  <div className="text-sm text-slate-500">Status: <span className="font-medium text-slate-700 capitalize">{s.status}</span></div>
-                  <div className="text-sm">When: {when}</div>
-                  {s.objectives && <div className="text-xs text-slate-500 mt-1">Objectives: {s.objectives}</div>}
-                </div>
-                <div className="flex items-center gap-2">
-                  {s.status === 'requested' && isMentor && (
-                    <div className="flex items-center gap-2">
-                      <Input type="datetime-local" value={scheduleData[s.id] || ''} onChange={(e) => setScheduleData({ ...scheduleData, [s.id]: e.target.value })} className="w-56" />
-                      <Button size="sm" className="bg-violet-600 hover:bg-violet-700" onClick={() => handleSchedule(s)}>Schedule</Button>
-                    </div>
-                  )}
-                  {s.status !== 'completed' && (
-                    <FeedbackDialog
-                      trigger={<Button size="sm" variant="outline">Leave Feedback</Button>}
-                      onSubmit={handleFeedback(s, isMentor ? 'mentor' : 'mentee')}
-                    />
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        );
-      })}
-    </div>
+    <Tabs defaultValue="all" className="w-full">
+      <TabsList className="mb-4">
+        <TabsTrigger value="all" className="gap-1 text-xs"><Inbox className="w-3.5 h-3.5" /> All ({mySessions.length})</TabsTrigger>
+        <TabsTrigger value="requested" className="gap-1 text-xs"><Clock className="w-3.5 h-3.5" /> Pending ({requested.length})</TabsTrigger>
+        <TabsTrigger value="scheduled" className="gap-1 text-xs"><CalendarCheck className="w-3.5 h-3.5" /> Scheduled ({scheduled.length})</TabsTrigger>
+        <TabsTrigger value="completed" className="gap-1 text-xs"><CheckCircle className="w-3.5 h-3.5" /> Completed ({completed.length})</TabsTrigger>
+      </TabsList>
+      <TabsContent value="all">{renderList(mySessions, 'No sessions yet. Request one from a mentor!')}</TabsContent>
+      <TabsContent value="requested">{renderList(requested, 'No pending requests')}</TabsContent>
+      <TabsContent value="scheduled">{renderList(scheduled, 'No scheduled sessions')}</TabsContent>
+      <TabsContent value="completed">{renderList(completed, 'No completed sessions')}</TabsContent>
+    </Tabs>
   );
 }

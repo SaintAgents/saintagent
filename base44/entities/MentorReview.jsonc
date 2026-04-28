@@ -1,0 +1,56 @@
+{
+  "name": "MentorReview",
+  "type": "object",
+  "properties": {
+    "mentor_id": {
+      "type": "string",
+      "description": "Email of the mentor being reviewed"
+    },
+    "reviewer_id": {
+      "type": "string",
+      "description": "Email of the reviewer"
+    },
+    "reviewer_name": {
+      "type": "string"
+    },
+    "reviewer_avatar": {
+      "type": "string"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Reference to the mentorship session"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "communication_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "knowledge_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "helpfulness_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "comment": {
+      "type": "string"
+    },
+    "would_recommend": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "mentor_id",
+    "reviewer_id",
+    "rating"
+  ]
+}
