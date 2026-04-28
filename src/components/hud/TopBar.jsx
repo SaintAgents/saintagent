@@ -246,12 +246,13 @@ export default function TopBar({
   ];
 
   // Search data - LAZY: only fetch when user focuses search or types
-  const { data: searchProfiles = [] } = useQuery({
-    queryKey: ['topbarSearchProfiles'],
+  // Share cache key with allProfiles to avoid duplicate fetches
+  const { data: searchProfiles = [], isLoading: searchProfilesLoading } = useQuery({
+    queryKey: ['allProfiles'],
     queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
     enabled: searchFocused || searchQuery.length > 0,
-    staleTime: 300000,
-    gcTime: 600000,
+    staleTime: 600000,
+    gcTime: 1200000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -552,7 +553,12 @@ export default function TopBar({
             style={{ zIndex: 999999, pointerEvents: 'auto', minHeight: '100px' }}
             onMouseDown={(e) => e.preventDefault()}
           >
-            {totalResults === 0 ? (
+            {searchProfilesLoading ? (
+              <div className="p-6 text-center text-slate-500">
+                <div className="w-6 h-6 border-2 border-violet-300 border-t-violet-600 rounded-full animate-spin mx-auto mb-2" />
+                <p className="text-sm">Searching...</p>
+              </div>
+            ) : totalResults === 0 ? (
               <div className="p-6 text-center text-slate-500">
                 <Search className="w-8 h-8 mx-auto mb-2 opacity-40" />
                 <p>No results found for "{searchQuery}"</p>
