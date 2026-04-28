@@ -1,0 +1,104 @@
+{
+  "name": "MentorshipProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User email/id"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "mentor",
+        "mentee",
+        "both"
+      ],
+      "description": "Mentorship role"
+    },
+    "skills_offering": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Skills the mentor offers"
+    },
+    "skills_seeking": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Skills the mentee seeks"
+    },
+    "goals": {
+      "type": "string",
+      "description": "Short goals statement"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short bio for mentorship"
+    },
+    "availability": {
+      "type": "string",
+      "description": "Free text availability notes"
+    },
+    "hourly_rate_ggg": {
+      "type": "number",
+      "default": 0,
+      "description": "Hourly rate in GGG tokens (0 = free)"
+    },
+    "session_rate_usd": {
+      "type": "number",
+      "default": 0,
+      "description": "Session rate in USD (0 = free/GGG only)"
+    },
+    "is_free": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether mentorship is offered for free"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "business",
+        "technology",
+        "leadership",
+        "spirituality",
+        "healing",
+        "finance",
+        "creative",
+        "marketing",
+        "personal_growth",
+        "other"
+      ],
+      "default": "other",
+      "description": "Primary mentorship category"
+    },
+    "experience_years": {
+      "type": "number",
+      "default": 0,
+      "description": "Years of experience in their field"
+    },
+    "sessions_completed": {
+      "type": "number",
+      "default": 0
+    },
+    "average_rating": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "user_id",
+    "role"
+  ]
+}
