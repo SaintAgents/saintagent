@@ -8,7 +8,7 @@ export const VIEW_MODE_CONFIG = {
   simple: {
     label: 'Simple',
     description: 'Top 5 essential features',
-    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials', 'communityFeed', 'spiritTube'],
+    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials', 'communityFeed', 'spiritTube', 'deepDisclosure'],
     // Nav items that correspond to simple mode (used by Sidebar and MobileMenu) - excludes insights
     navIds: ['command', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'spirittube', 'gggcrypto', 'g3dex', 'broadcast', 'deals', 'projecttrack', 'glossary', 'settings']
   },
@@ -19,7 +19,7 @@ export const VIEW_MODE_CONFIG = {
       'quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators',
       'communityFeed', 'circles', 'leaderboard', 'affirmations', 'leaderPathway',
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
-      'market', 'influence', 'leader', 'dailyops', 'news', 'insights', 'videos', 'testimonials', 'heroGallery'
+      'market', 'influence', 'leader', 'dailyops', 'news', 'insights', 'videos', 'testimonials', 'heroGallery', 'deepDisclosure'
     ],
     navIds: null // null means show all nav items (includes authority144, topgggmission, videos, broadcast)
   },

@@ -70,7 +70,7 @@ import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import NewsCard from '@/components/news/NewsCard';
-import { Newspaper, Image, MessageCircle } from 'lucide-react';
+import { Newspaper, Image, MessageCircle, Mic } from 'lucide-react';
 import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
 import { TestimonialsCompact } from '@/components/testimonials/TestimonialsMarquee';
 import SpiritTubeCard from '@/components/videos/SpiritTubeCard';
@@ -79,6 +79,7 @@ import HeroImageSlideshow from '@/components/hud/HeroImageSlideshow';
 import AIProfileCompletionPrompt from '@/components/ai/AIProfileCompletionPrompt';
 import ControlsDeck from '@/components/hud/ControlsDeck';
 import MatchScanPulse from '@/components/hud/MatchScanPulse';
+import DeepDisclosureDeckCard from '@/components/broadcast/DeepDisclosureDeckCard';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -297,7 +298,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       heroGallery: 'Hero Gallery',
       videos: 'SaintTube Videos',
       spiritTube: 'SpiritTube',
-      globalSchedule: 'Global Schedule'
+      globalSchedule: 'Global Schedule',
+      deepDisclosure: 'Deep Disclosure Podcast'
     };
     return titles[id] || id;
   };
@@ -328,7 +330,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     heroGallery: Image,
     videos: Play,
     spiritTube: Play,
-    globalSchedule: Calendar
+    globalSchedule: Calendar,
+    deepDisclosure: Mic
   };
 
   // Toss card to side panel storage
@@ -1688,9 +1691,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <SpiritTubeCard />
             </CollapsibleCard>}
 
-            {isCardVisible('globalSchedule') && <CollapsibleCard title="Global Schedule" cardId="globalSchedule" icon={Calendar} badge="Live" badgeColor="emerald" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c1538f946_meets.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('globalSchedule')} onToggleHide={() => toggleCardVisibility('globalSchedule')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Schedule')}>
-              <GlobalScheduleCard />
-            </CollapsibleCard>}
+            {isCardVisible('deepDisclosure') && <CollapsibleCard title="Deep Disclosure Podcast" cardId="deepDisclosure" icon={Mic} badge="Podcast" badgeColor="violet" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('deepDisclosure')} onToggleHide={() => toggleCardVisibility('deepDisclosure')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Broadcast')} navigateTo={createPageUrl('Broadcast')}><DeepDisclosureDeckCard /></CollapsibleCard>}
+            {isCardVisible('globalSchedule') && <CollapsibleCard title="Global Schedule" cardId="globalSchedule" icon={Calendar} badge="Live" badgeColor="emerald" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c1538f946_meets.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('globalSchedule')} onToggleHide={() => toggleCardVisibility('globalSchedule')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Schedule')}><GlobalScheduleCard /></CollapsibleCard>}
 
             {isCardVisible('leaderPathway') && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
               <LeaderPathway profile={profile} />

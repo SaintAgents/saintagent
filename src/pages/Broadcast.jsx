@@ -16,6 +16,7 @@ import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import CreateBroadcastModal from '@/components/broadcast/CreateBroadcastModal';
 import BroadcastCard from '@/components/broadcast/BroadcastCard';
+import DeepDisclosureSection from '@/components/broadcast/DeepDisclosureSection';
 
 const BROADCAST_TYPE_COLORS = {
   podcast: 'bg-violet-100 text-violet-700',
@@ -39,6 +40,18 @@ export default function Broadcast() {
   const [tab, setTab] = useState('upcoming');
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  // Auto-open contact dialog if ?contact=true
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('contact') === 'true') {
+      // Scroll to Deep Disclosure section after a tick
+      setTimeout(() => {
+        const section = document.querySelector('[data-dd-section]');
+        if (section) section.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+  }, []);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -188,6 +201,17 @@ export default function Broadcast() {
       </div>
 
       <div className="max-w-5xl mx-auto p-6 -mt-6 relative z-[5]">
+        {/* Deep Disclosure Featured Section */}
+        <div data-dd-section>
+          <DeepDisclosureSection 
+            broadcasts={broadcasts}
+            currentUser={currentUser}
+            onInterested={handleInterested}
+            onGoing={handleGoing}
+            isAdmin={isAdmin}
+          />
+        </div>
+
         {/* Live Now Banner */}
         {live.length > 0 && (
           <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white">
