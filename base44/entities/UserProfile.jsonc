@@ -170,6 +170,19 @@
       },
       "default": {}
     },
+    "interest_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Tags the user subscribes to for targeted notifications about new missions and business entities"
+    },
+    "interest_alerts_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to receive notifications when new content matches interest tags"
+    },
     "auto_scan_prefs": {
       "type": "object",
       "properties": {

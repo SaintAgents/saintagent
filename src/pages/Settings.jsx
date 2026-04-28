@@ -29,6 +29,7 @@ import {
 "lucide-react";
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import TaskNotificationSettings from '@/components/notifications/TaskNotificationSettings';
+import InterestTagsSettings from '@/components/settings/InterestTagsSettings';
 import BackButton from '@/components/hud/BackButton';
 import BackgroundSettings from '@/components/settings/BackgroundSettings';
 import AutoScanSettings from '@/components/settings/AutoScanSettings';
@@ -435,6 +436,16 @@ export default function Settings() {
               onChange={(newPrefs) => {
                 if (profile) {
                   updateMutation.mutate({ task_notification_prefs: newPrefs });
+                }
+              }}
+            />
+
+            <InterestTagsSettings
+              tags={profile?.interest_tags || []}
+              alertsEnabled={profile?.interest_alerts_enabled !== false}
+              onChange={(updates) => {
+                if (profile) {
+                  updateMutation.mutate(updates);
                 }
               }}
             />
