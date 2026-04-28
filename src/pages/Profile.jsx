@@ -107,6 +107,7 @@ import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import MyContactsTab from '@/components/profile/MyContactsTab';
 import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
 import MilestoneProgressTracker from '@/components/profile/MilestoneProgressTracker';
+import ProfileActionButtons from '@/components/profile/ProfileActionButtons';
 import {
   Tooltip,
   TooltipContent,
@@ -655,21 +656,7 @@ export default function Profile() {
                                           </Button>
                                         </div> :
 
-              <div className="flex items-center gap-2">
-                                          <FriendRequestButton
-                    targetUserId={profile?.user_id}
-                    targetUserName={profile?.display_name}
-                    targetUserAvatar={profile?.avatar_url}
-                    currentUser={currentUser}
-                    currentUserProfile={currentUserProfile}
-                  />
-                                          <TipButton
-                    toUserId={profile?.user_id}
-                    toUserName={profile?.display_name}
-                    contextType="profile"
-                    contextId={profile?.id} />
-
-                                        </div>
+              <ProfileActionButtons profile={profile} currentUser={currentUser} currentUserProfile={currentUserProfile} />
               }
             </div>
           </CardContent>
