@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 import BroadcastCard from './BroadcastCard';
 
 const DD_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png";
+const DD_HERO = "https://media.base44.com/images/public/694f3e0401b05e6e8a042002/43728b5ca_75599821b1c16779b020fc2e8aefd93d4c316333d32cd534c3ef36bac3f75dc3.png";
 
 export default function DeepDisclosureSection({ broadcasts = [], currentUser, onInterested, onGoing, isAdmin }) {
   const [hidden, setHidden] = useState(() => {
@@ -94,14 +95,18 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
 
   return (
     <div className="mb-8">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-violet-300/30">
-            <Mic className="w-6 h-6 text-white" />
-          </div>
+      {/* Hero Banner */}
+      <div className="relative rounded-2xl overflow-hidden mb-4 shadow-xl">
+        <img 
+          src={DD_HERO} 
+          alt="Deep Disclosure" 
+          className="w-full h-48 md:h-64 object-cover hero-image"
+          data-no-filter="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
               Deep Disclosure
               {liveEpisode && (
                 <Badge className="bg-red-500 text-white text-xs gap-1 animate-pulse">
@@ -109,26 +114,26 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
                 </Badge>
               )}
             </h2>
-            <p className="text-sm text-slate-500">Uplift Community Podcast — Truth, Transformation & Disclosure</p>
+            <p className="text-sm text-white/80 mt-1">Real Stories. Raw Truths. Meaningful Connections.</p>
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2 text-violet-600 border-violet-200 hover:bg-violet-50"
-            onClick={() => setContactOpen(true)}
-          >
-            <MessageCircle className="w-4 h-4" />
-            Contact for Interview
-          </Button>
-          <button
-            onClick={toggleHidden}
-            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-            title={hidden ? 'Show Deep Disclosure' : 'Hide Deep Disclosure'}
-          >
-            {hidden ? <EyeOff className="w-4 h-4 text-slate-400" /> : <Eye className="w-4 h-4 text-slate-500" />}
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              size="sm"
+              className="gap-2 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
+              onClick={() => setContactOpen(true)}
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">Contact for Interview</span>
+              <span className="sm:hidden">Interview</span>
+            </Button>
+            <button
+              onClick={toggleHidden}
+              className="p-2 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
+              title={hidden ? 'Show Deep Disclosure' : 'Hide Deep Disclosure'}
+            >
+              {hidden ? <EyeOff className="w-4 h-4 text-white/70" /> : <Eye className="w-4 h-4 text-white/80" />}
+            </button>
+          </div>
         </div>
       </div>
 
