@@ -11,15 +11,16 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { 
-  Mic, Play, Clock, Users, Eye, EyeOff, 
-  MessageCircle, ExternalLink, Radio, ChevronDown, ChevronUp
+  Mic, Play, Pause, Clock, Users, Eye, EyeOff, 
+  MessageCircle, ExternalLink, Radio, ChevronDown, ChevronUp, Headphones, Volume2
 } from "lucide-react";
 import { format, parseISO, isAfter } from "date-fns";
 import { toast } from 'sonner';
 import BroadcastCard from './BroadcastCard';
+import EmbeddedMediaPlayer from './EmbeddedMediaPlayer';
 
 const DD_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png";
-const DD_HERO = "https://media.base44.com/images/public/694f3e0401b05e6e8a042002/43728b5ca_75599821b1c16779b020fc2e8aefd93d4c316333d32cd534c3ef36bac3f75dc3.png";
+const DD_HERO = "https://media.base44.com/images/public/694f3e0401b05e6e8a042002/d659d2e42_generated_image.png";
 
 export default function DeepDisclosureSection({ broadcasts = [], currentUser, onInterested, onGoing, isAdmin }) {
   const [hidden, setHidden] = useState(() => {
@@ -28,6 +29,7 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
   const [contactOpen, setContactOpen] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', topic: '', message: '' });
   const [sending, setSending] = useState(false);
+  const [playingEpisode, setPlayingEpisode] = useState(null);
 
   const toggleHidden = () => {
     const next = !hidden;
@@ -96,46 +98,76 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
   return (
     <div className="mb-8">
       {/* Hero Banner */}
-      <div className="relative rounded-2xl overflow-hidden mb-4 shadow-xl">
+      <div className="relative rounded-2xl overflow-hidden mb-4 shadow-2xl">
         <img 
           src={DD_HERO} 
           alt="Deep Disclosure" 
-          className="w-full h-48 md:h-64 object-cover hero-image"
+          className="w-full h-56 md:h-72 object-cover hero-image"
           data-no-filter="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-5 flex items-end justify-between">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-              Deep Disclosure
-              {liveEpisode && (
-                <Badge className="bg-red-500 text-white text-xs gap-1 animate-pulse">
-                  <div className="w-1.5 h-1.5 bg-white rounded-full" /> LIVE
-                </Badge>
-              )}
-            </h2>
-            <p className="text-sm text-white/80 mt-1">Real Stories. Raw Truths. Meaningful Connections.</p>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-violet-950/40 to-transparent" />
+        
+        {/* Top-right controls */}
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+          {liveEpisode && (
+            <Badge className="bg-red-500 text-white text-xs gap-1 animate-pulse px-3 py-1">
+              <div className="w-2 h-2 bg-white rounded-full" /> LIVE NOW
+            </Badge>
+          )}
+          <button
+            onClick={toggleHidden}
+            className="p-2 rounded-lg bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-colors"
+            title={hidden ? 'Show Deep Disclosure' : 'Hide Deep Disclosure'}
+          >
+            {hidden ? <EyeOff className="w-4 h-4 text-white/70" /> : <Eye className="w-4 h-4 text-white/80" />}
+          </button>
+        </div>
+
+        {/* Hero Content */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+          <div className="flex items-center gap-2 mb-2">
+            <Headphones className="w-5 h-5 text-violet-300" />
+            <span className="text-xs font-semibold tracking-widest uppercase text-violet-300">The Podcast</span>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}>
+            Deep Disclosure
+          </h2>
+          <p className="text-base md:text-lg text-white/80 max-w-lg mb-1">
+            Unveiling What Lies Beneath the Surface
+          </p>
+          <p className="text-sm text-white/60 max-w-md mb-4">
+            Real Stories. Raw Truths. Meaningful Connections.
+          </p>
+          <div className="flex items-center gap-3 flex-wrap">
             <Button
               size="sm"
-              className="gap-2 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
+              className="gap-2 bg-violet-600 hover:bg-violet-700 text-white shadow-lg"
               onClick={() => setContactOpen(true)}
             >
               <MessageCircle className="w-4 h-4" />
-              <span className="hidden sm:inline">Contact for Interview</span>
-              <span className="sm:hidden">Interview</span>
+              Contact for Interview
             </Button>
-            <button
-              onClick={toggleHidden}
-              className="p-2 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
-              title={hidden ? 'Show Deep Disclosure' : 'Hide Deep Disclosure'}
-            >
-              {hidden ? <EyeOff className="w-4 h-4 text-white/70" /> : <Eye className="w-4 h-4 text-white/80" />}
-            </button>
+            {ddEpisodes.length > 0 && (
+              <span className="text-xs text-white/50 flex items-center gap-1.5">
+                <Volume2 className="w-3.5 h-3.5" />
+                {ddEpisodes.length} episode{ddEpisodes.length !== 1 ? 's' : ''}
+              </span>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Embedded Player */}
+      {playingEpisode && (
+        <div className="mb-4">
+          <EmbeddedMediaPlayer 
+            url={playingEpisode.recording_url || playingEpisode.live_stream_url}
+            title={playingEpisode.title}
+            onClose={() => setPlayingEpisode(null)}
+          />
+        </div>
+      )}
 
       {/* Collapsible Content */}
       {!hidden && (
@@ -191,9 +223,9 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
                     {liveEpisode ? (
                       <Button 
                         className="bg-red-500 hover:bg-red-600 gap-2"
-                        onClick={() => window.open(liveEpisode.live_stream_url, '_blank')}
+                        onClick={() => setPlayingEpisode(liveEpisode)}
                       >
-                        <Play className="w-4 h-4" /> Join Live
+                        <Play className="w-4 h-4" /> Play Live
                       </Button>
                     ) : (
                       <>
@@ -223,18 +255,54 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
           {/* Past Episodes */}
           {pastEpisodes.length > 0 && (
             <div>
-              <h4 className="text-sm font-semibold text-slate-700 mb-3">Recent Episodes</h4>
-              <div className="space-y-3">
-                {pastEpisodes.map(ep => (
-                  <BroadcastCard 
-                    key={ep.id} 
-                    broadcast={ep} 
-                    currentUser={currentUser}
-                    onInterested={onInterested}
-                    onGoing={onGoing}
-                    isAdmin={isAdmin}
-                  />
-                ))}
+              <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                <Headphones className="w-4 h-4 text-violet-500" />
+                Recent Episodes
+              </h4>
+              <div className="space-y-2">
+                {pastEpisodes.map(ep => {
+                  const isPlaying = playingEpisode?.id === ep.id;
+                  const hasMedia = ep.recording_url || ep.live_stream_url;
+                  return (
+                    <div 
+                      key={ep.id}
+                      className={cn(
+                        "flex items-center gap-3 p-3 rounded-xl border bg-white hover:shadow-md transition-all cursor-pointer group",
+                        isPlaying && "ring-2 ring-violet-500 bg-violet-50"
+                      )}
+                      onClick={() => hasMedia && setPlayingEpisode(isPlaying ? null : ep)}
+                    >
+                      <div className={cn(
+                        "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+                        isPlaying 
+                          ? "bg-violet-600" 
+                          : hasMedia 
+                            ? "bg-violet-100 group-hover:bg-violet-200" 
+                            : "bg-slate-100"
+                      )}>
+                        {isPlaying ? (
+                          <Pause className="w-5 h-5 text-white" />
+                        ) : hasMedia ? (
+                          <Play className="w-5 h-5 text-violet-600" />
+                        ) : (
+                          <Mic className="w-5 h-5 text-slate-400" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-900 truncate">{ep.title}</p>
+                        <div className="flex items-center gap-3 text-xs text-slate-500 mt-0.5">
+                          <span>{format(parseISO(ep.scheduled_time), 'MMM d, yyyy')}</span>
+                          <span>{ep.duration_minutes} min</span>
+                        </div>
+                      </div>
+                      {hasMedia && !isPlaying && (
+                        <span className="text-xs text-violet-500 font-medium opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                          Play
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
