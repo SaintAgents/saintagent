@@ -498,7 +498,7 @@ export default function TopBar({
 
       {/* Search - hidden when collapsed */}
       <div ref={searchRef} className={cn(
-        "flex-1 max-w-md relative transition-all duration-300 hidden md:block mx-2",
+        "flex-1 max-w-md relative transition-all duration-300 hidden sm:block mx-2",
         isCollapsed && "!hidden"
       )} data-no-top style={{ zIndex: 9998 }}>
         <form onSubmit={handleSearch}>
