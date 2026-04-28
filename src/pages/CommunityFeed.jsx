@@ -348,6 +348,19 @@ export default function CommunityFeed() {
                     handleCreatePost();
                   }
                 }}
+                onPaste={(e) => {
+                  const html = e.clipboardData.getData('text/html');
+                  if (html && /<(h[1-6]|p|div|strong|em|ul|ol|li|br|table|span|a)\b/i.test(html)) {
+                    e.preventDefault();
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const plain = doc.body.textContent || doc.body.innerText || '';
+                    const cleaned = plain.replace(/\n{3,}/g, '\n\n').trim();
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    const current = newPostText || '';
+                    setNewPostText(current.slice(0, start) + cleaned + current.slice(end));
+                  }
+                }}
               />
             </div>
             
