@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Calendar, Clock, MapPin, Link as LinkIcon, ArrowLeft, Pencil } from 'lucide-react';
+import { Calendar, Clock, MapPin, Link as LinkIcon, ArrowLeft, Pencil, CheckCircle2, Heart, Users } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import EditEventModal from '@/components/community/EditEventModal';
 
 export default function EventDetail() {
@@ -28,7 +29,38 @@ export default function EventDetail() {
     enabled: !!eventId
   });
 
+  const queryClient = useQueryClient();
   const isHost = currentUser?.email && event?.host_id === currentUser.email;
+  const isGoing = event?.attendee_ids?.includes(currentUser?.email);
+  const isInterested = event?.interested_ids?.includes(currentUser?.email);
+
+  const goingMutation = useMutation({
+    mutationFn: async () => {
+      const current = event.attendee_ids || [];
+      const newList = isGoing
+        ? current.filter(id => id !== currentUser.email)
+        : [...current, currentUser.email];
+      return base44.entities.Event.update(event.id, {
+        attendee_ids: newList,
+        attendee_count: newList.length
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['event', eventId] })
+  });
+
+  const interestedMutation = useMutation({
+    mutationFn: async () => {
+      const current = event.interested_ids || [];
+      const newList = isInterested
+        ? current.filter(id => id !== currentUser.email)
+        : [...current, currentUser.email];
+      return base44.entities.Event.update(event.id, {
+        interested_ids: newList,
+        interested_count: newList.length
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['event', eventId] })
+  });
 
   if (isLoading) {
     return (
@@ -141,6 +173,53 @@ export default function EventDetail() {
             <CardContent className="p-6">
               <p className="text-xs text-slate-600 font-medium mb-2">Hosted by</p>
               <p className="font-semibold text-slate-800">{event.host_name || 'Unknown'}</p>
+            </CardContent>
+          </Card>
+
+          {/* Going / Interested */}
+          <Card>
+            <CardContent className="p-6 space-y-3">
+              <div className="flex items-center gap-3 text-sm text-slate-600">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span className="font-medium">{event.attendee_count || 0} Going</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Heart className={cn("w-4 h-4", isInterested ? "text-pink-600 fill-current" : "text-slate-400")} />
+                  <span className="font-medium">{event.interested_count || 0} Interested</span>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  className={cn(
+                    "flex-1 gap-2",
+                    isGoing
+                      ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                      : "bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700"
+                  )}
+                  variant={isGoing ? "default" : "outline"}
+                  onClick={() => goingMutation.mutate()}
+                  disabled={goingMutation.isPending}
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  {isGoing ? 'Going' : 'Go'}
+                </Button>
+                <Button
+                  className={cn(
+                    "flex-1 gap-2",
+                    isInterested
+                      ? "bg-pink-600 hover:bg-pink-700 text-white"
+                      : "bg-slate-100 hover:bg-pink-50 text-slate-700 hover:text-pink-700"
+                  )}
+                  variant={isInterested ? "default" : "outline"}
+                  onClick={() => interestedMutation.mutate()}
+                  disabled={interestedMutation.isPending}
+                >
+                  <Heart className={cn("w-4 h-4", isInterested && "fill-current")} />
+                  {isInterested ? 'Interested' : 'Interested?'}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
