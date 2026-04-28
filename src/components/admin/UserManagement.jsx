@@ -320,13 +320,18 @@ export default function UserManagement() {
                 key={profile.id}
                 className="flex items-center gap-4 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
 
-                  <Avatar 
-                    className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-emerald-400 transition-all"
-                    data-user-id={profile.user_id}
+                  <div 
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: profile.user_id } }));
+                    }}
                   >
-                    <AvatarImage src={profile.avatar_url} />
-                    <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
-                  </Avatar>
+                    <Avatar className="w-12 h-12 hover:ring-2 hover:ring-emerald-400 transition-all">
+                      <AvatarImage src={profile.avatar_url} />
+                      <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
