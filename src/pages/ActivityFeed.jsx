@@ -20,6 +20,7 @@ import { format } from 'date-fns';
 import UserActivityDashboard from '@/components/activity/UserActivityDashboard';
 import CommunityIntentionsPanel from '@/components/activity/CommunityIntentionsPanel';
 import TopReferrersLeaderboard from '@/components/affiliate/TopReferrersLeaderboard';
+import ActivityFeedBanner from '@/components/activity/ActivityFeedBanner';
 
 const TYPE_META = {
   announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-[#051C2C]', textColor: 'text-white' },
@@ -217,6 +218,9 @@ export default function ActivityFeed() {
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-8">
+        {/* Admin-managed Banner */}
+        <ActivityFeedBanner />
+
         {/* Personal Activity Dashboard */}
         {currentUser && scope === 'me' && (
           <UserActivityDashboard userId={currentUser.id} userEmail={currentUser.email} />

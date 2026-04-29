@@ -52,6 +52,7 @@ import UserActivityLog from '@/components/admin/UserActivityLog';
 import AdminProgressTab from '@/components/admin/AdminProgressTab';
 import CacheAdminTab from '@/components/admin/CacheAdminTab';
 import DeepDisclosureAdmin from '@/components/broadcast/DeepDisclosureAdmin';
+import ActivityBannerManager from '@/components/admin/ActivityBannerManager';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -286,6 +287,10 @@ export default function Admin() {
               <Database className="w-4 h-4" />
               Cache
             </TabsTrigger>
+            <TabsTrigger value="activity-banner" className="gap-2 px-3 py-2">
+              <Image className="w-4 h-4" />
+              Feed Banner
+            </TabsTrigger>
             <TabsTrigger value="deep-disclosure" className="gap-2 px-3 py-2">
               <Mic className="w-4 h-4" />
               Podcast
@@ -484,6 +489,10 @@ export default function Admin() {
 
           <TabsContent value="cache">
             <CacheAdminTab />
+          </TabsContent>
+
+          <TabsContent value="activity-banner">
+            <ActivityBannerManager />
           </TabsContent>
 
           <TabsContent value="deep-disclosure">
