@@ -98,7 +98,7 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
   return (
     <div className="mb-8">
       {/* Hero Banner */}
-      <div className="relative rounded-2xl overflow-hidden mb-4 shadow-2xl">
+      <div className="relative rounded-2xl overflow-hidden mb-8 shadow-2xl mt-6">
         <img 
           src={DD_HERO} 
           alt="Deep Disclosure" 
@@ -174,6 +174,11 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
         <div className="space-y-4">
           {/* Featured / Live / Next Episode */}
           {(liveEpisode || nextEpisode) && (
+            <>
+            <h4 className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-2">
+              <Radio className="w-4 h-4 text-violet-500" />
+              Featured:
+            </h4>
             <div className={cn(
               "p-5 rounded-2xl border-2 relative overflow-hidden",
               liveEpisode 
@@ -250,6 +255,7 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
                 </div>
               </div>
             </div>
+            </>
           )}
 
           {/* Past Episodes */}

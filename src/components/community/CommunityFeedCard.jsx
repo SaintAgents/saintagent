@@ -58,26 +58,38 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
   });
   const profile = profiles?.[0];
 
-  const { data: posts = [] } = useQuery({
+  const { data: posts = [], isLoading: postsLoading } = useQuery({
     queryKey: ['posts'],
     queryFn: () => base44.entities.Post.list('-created_date', 20),
-    staleTime: 0,
-    refetchOnMount: 'always',
+    staleTime: 30000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchInterval: 60000,
   });
 
   const { data: allLikes = [] } = useQuery({
     queryKey: ['postLikes'],
     queryFn: () => base44.entities.PostLike.list('-created_date', 100),
-    staleTime: 0,
-    refetchOnMount: 'always',
+    staleTime: 30000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const { data: allComments = [] } = useQuery({
     queryKey: ['postComments'],
     queryFn: () => base44.entities.PostComment.list('-created_date', 100),
-    staleTime: 0,
-    refetchOnMount: 'always',
+    staleTime: 30000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
+
+  // Real-time subscription for new posts
+  useEffect(() => {
+    const unsubscribe = base44.entities.Post.subscribe((event) => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+    });
+    return unsubscribe;
+  }, [queryClient]);
 
   const createPostMutation = useMutation({
     mutationFn: async (payload) => {
@@ -430,10 +442,15 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
         {/* Feed */}
         <ScrollArea style={{ maxHeight }} ref={scrollRef}>
           <div className="space-y-3 pr-2">
-            {posts.length === 0 ? (
+            {postsLoading ? (
+              <div className="text-center py-8 text-slate-400">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-violet-500 mx-auto mb-2" />
+                <p className="text-xs">Loading feed...</p>
+              </div>
+            ) : posts.length === 0 ? (
               <div className="text-center py-8 text-slate-400">
                 <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p className="text-xs">No posts yet</p>
+                <p className="text-xs">No posts yet — be the first to share!</p>
               </div>
             ) : (
               posts.slice(0, 10).map((post) => {
