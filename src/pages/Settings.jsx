@@ -536,6 +536,37 @@ export default function Settings() {
 
             <Card className="bg-violet-50/50">
               <CardHeader>
+                <CardTitle>Popups & Banners</CardTitle>
+                <CardDescription>Control which popups and banners appear</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Show Learn & Earn Popup</p>
+                    <p className="text-sm text-slate-500">Periodically shows tutorial tips with GGG rewards</p>
+                  </div>
+                  <Switch
+                    checked={!settings.visibility_settings?.learn_popup_hidden}
+                    onCheckedChange={(checked) => {
+                      const newVis = { ...settings.visibility_settings, learn_popup_hidden: !checked };
+                      setSettings({ ...settings, visibility_settings: newVis });
+                      // Also update localStorage for immediate effect
+                      try {
+                        if (!checked) {
+                          localStorage.setItem('learnPopup_hidden', 'true');
+                        } else {
+                          localStorage.removeItem('learnPopup_hidden');
+                        }
+                      } catch {}
+                    }}
+                    className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-violet-50/50">
+              <CardHeader>
                 <CardTitle>Device Optimization</CardTitle>
                 <CardDescription>Optimize for your device</CardDescription>
               </CardHeader>

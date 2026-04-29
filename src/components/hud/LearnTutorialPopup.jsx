@@ -113,6 +113,9 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
   const [visible, setVisible] = useState(false);
   const [selectedTutorial, setSelectedTutorial] = useState(null);
 
+  // Check if user has disabled via profile setting
+  const userDisabled = profile?.visibility_settings?.learn_popup_hidden === true;
+
   // Fetch admin settings
   const { data: settingsRecords } = useQuery({
     queryKey: ['platformSetting', 'learn_popup_config'],
@@ -129,6 +132,7 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
 
   useEffect(() => {
     if (!adminConfig.enabled) return;
+    if (userDisabled) return;
     const hidden = localStorage.getItem(STORAGE_KEY) === 'true';
     if (hidden) return;
     if (!canShowPopup(adminConfig.frequency)) return;
@@ -139,7 +143,7 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
     }, (adminConfig.delay_seconds || 5) * 1000);
 
     return () => clearTimeout(timer);
-  }, [adminConfig]);
+  }, [adminConfig, userDisabled]);
 
   // Listen for manual open event from avatar menu
   useEffect(() => {
@@ -162,6 +166,12 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
   const handleHidePermanently = () => {
     localStorage.setItem(STORAGE_KEY, 'true');
     setVisible(false);
+    // Also persist to profile so it stays hidden across devices
+    if (profile?.id) {
+      base44.entities.UserProfile.update(profile.id, {
+        visibility_settings: { ...(profile.visibility_settings || {}), learn_popup_hidden: true }
+      }).catch(() => {});
+    }
   };
 
   const handleDismiss = () => {
@@ -187,7 +197,7 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
     setVisible(false);
   };
 
-  if (!visible || availableTutorials.length === 0 || !adminConfig.enabled) return null;
+  if (!visible || availableTutorials.length === 0 || !adminConfig.enabled || userDisabled) return null;
 
   return (
     <AnimatePresence>
