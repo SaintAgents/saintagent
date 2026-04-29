@@ -20,7 +20,8 @@ import {
   RefreshCw,
   Heart,
   ChevronLeft,
-  TrendingUp
+  TrendingUp,
+  Compass
 } from "lucide-react";
 
 import { createPageUrl } from '@/utils';
@@ -35,6 +36,7 @@ import ForwardButton from '@/components/hud/ForwardButton';
 import BookingRequestModal from '@/components/meetings/BookingRequestModal';
 import SynchronicityHelpHint from '@/components/hud/SynchronicityHelpHint';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
+import RecommendationsTab from '@/components/matches/RecommendationsTab';
 
 export default function Matches() {
   const [tab, setTab] = useState('all');
@@ -376,7 +378,7 @@ export default function Matches() {
 
         {/* Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full grid grid-cols-7 h-12 bg-white rounded-xl border">
+          <TabsList className="w-full grid grid-cols-8 h-12 bg-white rounded-xl border">
             <TabsTrigger value="all" className="rounded-lg gap-2">
               All ({tabCounts.all})
             </TabsTrigger>
@@ -404,17 +406,23 @@ export default function Matches() {
               <Heart className="w-4 h-4" />
               Dating ({tabCounts.dating})
             </TabsTrigger>
+            <TabsTrigger value="recommendations" className="rounded-lg gap-2">
+              <Compass className="w-4 h-4" />
+              For You
+            </TabsTrigger>
           </TabsList>
         </Tabs>
 
         {/* AI Recommended Matches Section */}
-        {tab !== 'dating' && (
+        {tab !== 'dating' && tab !== 'recommendations' && (
           <div className="mb-8">
             <AIRecommendedMatches profile={profile} limit={6} />
           </div>
         )}
 
-        {tab === 'dating' ? (
+        {tab === 'recommendations' ? (
+          <RecommendationsTab profile={profile} />
+        ) : tab === 'dating' ? (
           <DatingTab profile={profile} />
         ) : (
           <>
