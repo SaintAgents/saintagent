@@ -487,12 +487,13 @@ export default function RightSideTabs() {
                   </Button>
                   <Button 
                     variant="ghost" 
-                    size="icon" 
-                    className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
+                    size="sm" 
+                    className="h-7 px-2 gap-1 text-white/90 hover:text-white hover:bg-white/20 font-medium text-xs"
                     onClick={toggleSuppressed}
-                    title="Hide help panel completely"
+                    title="Dismiss help panel"
                   >
                     <EyeOff className="w-4 h-4" />
+                    Dismiss
                   </Button>
                   <Button 
                     variant="ghost" 
