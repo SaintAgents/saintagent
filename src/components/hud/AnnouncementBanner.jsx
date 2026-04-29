@@ -22,7 +22,8 @@ export default function AnnouncementBanner({ sidebarCollapsed, topbarCollapsed }
     staleTime: 60000
   });
 
-  const announcement = settings?.[0]?.announcement_banner;
+  // Find the first PlatformSetting record that has a non-empty announcement_banner
+  const announcement = settings?.reduce((found, s) => found || s.announcement_banner, null) || null;
   const announcementId = announcement ? btoa(announcement).slice(0, 16) : null;
 
   // Reset dismissed state if announcement changed
