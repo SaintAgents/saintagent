@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe } from 'lucide-react';
+import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -222,6 +222,21 @@ export default function RightSideTabs() {
     return () => clearInterval(interval);
   }, [trackedPage]);
 
+  // Suppress help panel entirely - persisted preference
+  const [helpSuppressed, setHelpSuppressed] = useState(() => {
+    try { return localStorage.getItem('help_suppressed') === 'true'; } catch { return false; }
+  });
+
+  const toggleSuppressed = () => {
+    const newVal = !helpSuppressed;
+    setHelpSuppressed(newVal);
+    try { localStorage.setItem('help_suppressed', newVal ? 'true' : 'false'); } catch {}
+    if (newVal) {
+      setHelpOpen(false);
+      setHelpHovered(false);
+    }
+  };
+
   // Auto-open help toggle - persisted preference
   const [autoOpenHelp, setAutoOpenHelp] = useState(() => {
     try { return localStorage.getItem('help_auto_open') !== 'off'; } catch { return true; }
@@ -235,7 +250,7 @@ export default function RightSideTabs() {
 
   // Auto-open help on first visit to each page (if enabled) — desktop only
   useEffect(() => {
-    if (!autoOpenHelp) return;
+    if (!autoOpenHelp || helpSuppressed) return;
     // Never auto-open on mobile — it blocks the entire page
     if (window.innerWidth < 768) return;
     const currentPage = getCurrentPage();
@@ -363,6 +378,23 @@ export default function RightSideTabs() {
     };
   }, []);
 
+  if (helpSuppressed) {
+    return (
+      <>
+        <HelpPanelThemeOverrides />
+        <BetaFeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
+        {/* Tiny restore button */}
+        <button
+          onClick={toggleSuppressed}
+          className="fixed right-0 bottom-28 z-[60] hidden md:flex items-center justify-center w-8 h-8 rounded-l-lg bg-violet-600/60 hover:bg-violet-600 text-white/70 hover:text-white transition-all shadow-md"
+          title="Show help panel"
+        >
+          <HelpCircle className="w-4 h-4" />
+        </button>
+      </>
+    );
+  }
+
   return (
     <>
       <HelpPanelThemeOverrides />
@@ -452,6 +484,15 @@ export default function RightSideTabs() {
                     title={autoOpenHelp ? "Auto-open is ON — click to stop auto-opening on new pages" : "Auto-open is OFF — click to auto-open on new pages"}
                   >
                     {autoOpenHelp ? <BellRing className="w-4 h-4" /> : <BellOff className="w-4 h-4" />}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
+                    onClick={toggleSuppressed}
+                    title="Hide help panel completely"
+                  >
+                    <EyeOff className="w-4 h-4" />
                   </Button>
                   <Button 
                     variant="ghost" 
