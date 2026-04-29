@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { cn } from "@/lib/utils";
 import { X, Megaphone, AlertTriangle, Wrench, Calendar } from 'lucide-react';
 
-export default function AnnouncementBanner({ sidebarCollapsed, topbarCollapsed }) {
+export default function AnnouncementBanner() {
   const [dismissed, setDismissed] = useState(false);
   const [dismissedId, setDismissedId] = useState(null);
 
@@ -65,17 +65,12 @@ export default function AnnouncementBanner({ sidebarCollapsed, topbarCollapsed }
     return 'bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600';
   };
 
-  // Position below topbar
-  const topPosition = topbarCollapsed ? '40px' : '56px';
-
   return (
     <div 
       className={cn(
-        "fixed right-0 z-[50] text-white py-2 px-4 transition-all duration-300",
-        getBgClass(),
-        sidebarCollapsed ? "left-0 md:left-20" : "left-0 md:left-64"
+        "w-full z-[50] text-white py-2 px-4 transition-all duration-300",
+        getBgClass()
       )}
-      style={{ top: topPosition }}
     >
       <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 flex-1 justify-center">

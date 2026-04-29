@@ -1832,11 +1832,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Live Broadcast Banner - now rendered inside TopBar */}
 
-      {/* System-wide Announcement Banner */}
-      <AnnouncementBanner 
-        sidebarCollapsed={sidebarCollapsed} 
-        topbarCollapsed={topbarCollapsed} 
-      />
+      {/* Announcement Banner moved inside main */}
         <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
@@ -1863,6 +1859,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
         )}>
+        <AnnouncementBanner />
         {currentPageName === 'CommandDeck' ? 
           React.cloneElement(children, { theme, onThemeToggle: setTheme }) : 
           children
