@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Coins, RefreshCw, Zap } from 'lucide-react';
+import { Coins, RefreshCw, Zap, History } from 'lucide-react';
 
 export default function PlatformSettings() {
   const qc = useQueryClient();
@@ -231,6 +231,7 @@ export default function PlatformSettings() {
             <div>
               <Label>Announcement Banner</Label>
               <Input value={form.announcement_banner} onChange={(e) => handleChange('announcement_banner', e.target.value)} placeholder="Optional announcement shown across the app" />
+              <PreviousBanners settingsList={settingsList} onSelect={(text) => handleChange('announcement_banner', text)} />
             </div>
             <ToggleRow label="Maintenance Mode" value={form.maintenance_mode} onChange={(v) => handleChange('maintenance_mode', v)} />
           </CardContent>
@@ -317,6 +318,43 @@ function ToggleRow({ label, value, onChange }) {
     <div className="flex items-center justify-between p-3 rounded-lg border bg-slate-50">
       <div className="text-sm text-slate-800">{label}</div>
       <Switch checked={!!value} onCheckedChange={onChange} />
+    </div>
+  );
+}
+
+function PreviousBanners({ settingsList, onSelect }) {
+  // Collect unique non-empty announcement_banner values across all PlatformSetting records
+  const previous = React.useMemo(() => {
+    const seen = new Set();
+    return (settingsList || [])
+      .filter(s => s.announcement_banner && s.announcement_banner.trim())
+      .map(s => s.announcement_banner.trim())
+      .filter(text => {
+        if (seen.has(text)) return false;
+        seen.add(text);
+        return true;
+      });
+  }, [settingsList]);
+
+  if (previous.length === 0) return null;
+
+  return (
+    <div className="mt-2">
+      <p className="text-xs text-slate-500 flex items-center gap-1 mb-1.5">
+        <History className="w-3 h-3" /> Previous banners
+      </p>
+      <div className="space-y-1 max-h-32 overflow-y-auto">
+        {previous.map((text, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => onSelect(text)}
+            className="w-full text-left text-xs px-3 py-2 rounded-md border border-slate-200 bg-slate-50 hover:bg-violet-50 hover:border-violet-300 transition-colors truncate"
+          >
+            {text}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
