@@ -1,4 +1,4 @@
-const badgeRulesData = {
+{
   "sections": {
     "IDENTITY": [
       {
@@ -310,6 +310,4 @@ const badgeRulesData = {
       }
     ]
   }
-};
-
-export default badgeRulesData;
+}
