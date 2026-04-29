@@ -24,6 +24,7 @@ import Glossary from './pages/Glossary';
 import Milestones from './pages/Milestones';
 import CacheAdmin from './pages/CacheAdmin';
 import MissionManage from './pages/MissionManage';
+import MissionTimeline from './pages/MissionTimeline';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -95,6 +96,7 @@ const AuthenticatedApp = () => {
       <Route path="/Milestones" element={<LayoutWrapper currentPageName="Milestones"><Milestones /></LayoutWrapper>} />
       <Route path="/CacheAdmin" element={<LayoutWrapper currentPageName="CacheAdmin"><CacheAdmin /></LayoutWrapper>} />
       <Route path="/MissionManage" element={<LayoutWrapper currentPageName="MissionManage"><MissionManage /></LayoutWrapper>} />
+      <Route path="/MissionTimeline" element={<LayoutWrapper currentPageName="MissionTimeline"><MissionTimeline /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
