@@ -188,10 +188,14 @@ export default function RightSideTabs() {
 
 
 
-  // Auto-scroll help messages
+  // Auto-scroll help messages - scroll to top for initial greeting, bottom for new messages
   useEffect(() => {
     if (helpScrollRef.current) {
-      helpScrollRef.current.scrollTop = helpScrollRef.current.scrollHeight;
+      if (helpMessages.length <= 1) {
+        helpScrollRef.current.scrollTop = 0;
+      } else {
+        helpScrollRef.current.scrollTop = helpScrollRef.current.scrollHeight;
+      }
     }
   }, [helpMessages]);
 
