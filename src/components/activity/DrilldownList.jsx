@@ -138,7 +138,7 @@ export default function DrilldownList({ type, items, label, onClose }) {
           <X className="w-4 h-4" />
         </Button>
       </div>
-      <ScrollArea className="max-h-64">
+      <ScrollArea className="max-h-[50vh]">
         {items.length === 0 ? (
           <p className="text-sm text-slate-400 text-center py-6">No items found</p>
         ) : (
