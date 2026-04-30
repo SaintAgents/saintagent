@@ -25,7 +25,8 @@ import {
   CalendarDays,
   Clock,
   LayoutGrid,
-  Hash
+  Hash,
+  ChevronRight
 } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
@@ -340,21 +341,30 @@ export default function SearchModal({ open, onClose, onSelect }) {
                 <div>
                   {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">People</h3>}
                   {filteredProfiles.map(profile => (
-                    <button
-                      key={profile.id}
-                      onClick={() => setDrilldownProfile(profile)}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
-                    >
-                      <Avatar className="w-10 h-10 cursor-pointer" data-user-id={profile.user_id}>
-                        <AvatarImage src={profile.avatar_url} />
-                        <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div className="text-left flex-1">
-                        <p className="font-medium text-slate-900">{profile.display_name}</p>
-                        <p className="text-sm text-slate-500">@{profile.handle} {profile.sa_number && `• SA#${profile.sa_number}`}</p>
-                      </div>
-                      <span className="text-xs text-violet-600 font-medium">View all →</span>
-                    </button>
+                    <div key={profile.id} className="flex items-center gap-0 rounded-xl hover:bg-slate-50 group">
+                      <button
+                        onClick={() => {
+                          onSelect?.('profile', profile);
+                        }}
+                        className="flex items-center gap-3 p-3 flex-1 min-w-0 text-left"
+                      >
+                        <Avatar className="w-10 h-10 cursor-pointer" data-user-id={profile.user_id}>
+                          <AvatarImage src={profile.avatar_url} />
+                          <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900">{profile.display_name}</p>
+                          <p className="text-sm text-slate-500 truncate">@{profile.handle} {profile.sa_number && `• SA#${profile.sa_number}`} {profile.user_id && `• ${profile.user_id}`}</p>
+                        </div>
+                      </button>
+                      <button
+                        onClick={() => setDrilldownProfile(profile)}
+                        className="p-2 mr-2 rounded-lg hover:bg-violet-100 transition-colors shrink-0"
+                        title={`Drilldown: see all items for ${profile.display_name}`}
+                      >
+                        <ChevronRight className="w-5 h-5 text-violet-500" />
+                      </button>
+                    </div>
                   ))}
                 </div>
               )}
