@@ -14,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Users, Shield, Plus, Pencil, Trash2, Loader2, ChevronRight,
-  Lock, Eye, Settings, CheckCircle2, Layers, GitBranch, Grid3X3
+  Lock, Eye, Settings, CheckCircle2, Layers, GitBranch, Grid3X3, UserCog
 } from "lucide-react";
 import { 
   ROLE_ORDER, 
@@ -27,6 +27,7 @@ import { toast } from 'sonner';
 import RoleHierarchyTree from './RoleHierarchyTree';
 import PermissionsMatrix from './PermissionsMatrix';
 import RoleGroupUsersDrilldown from './RoleGroupUsersDrilldown';
+import RoleAssignmentPanel from './RoleAssignmentPanel';
 
 const GROUP_COLORS = ['slate', 'emerald', 'amber', 'violet', 'rose', 'blue', 'cyan', 'pink', 'orange', 'teal'];
 
@@ -86,10 +87,14 @@ export default function RoleGroupsManager() {
     <div className="space-y-6">
       {/* Main Tabs */}
       <Tabs defaultValue="groups" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="groups" className="gap-2">
             <Layers className="w-4 h-4" />
             Role Groups
+          </TabsTrigger>
+          <TabsTrigger value="assign" className="gap-2">
+            <UserCog className="w-4 h-4" />
+            Assign Users
           </TabsTrigger>
           <TabsTrigger value="hierarchy" className="gap-2">
             <GitBranch className="w-4 h-4" />
@@ -252,6 +257,10 @@ export default function RoleGroupsManager() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="assign">
+          <RoleAssignmentPanel roleGroups={roleGroups} />
         </TabsContent>
 
         <TabsContent value="hierarchy">
