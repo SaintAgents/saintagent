@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
+import UserDrilldown from "@/components/search/UserDrilldown";
 
 // Available pages for search
 const APP_PAGES = [
@@ -67,6 +68,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
   const [showAll, setShowAll] = useState(true); // Default to showing all results on arrival
+  const [drilldownProfile, setDrilldownProfile] = useState(null);
 
   const { data: profiles = [] } = useQuery({
     queryKey: ['searchProfiles', query],
@@ -220,7 +222,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
             <Input
               placeholder="Search people, offers, missions, circles... (press Enter to browse all)"
               value={query}
-              onChange={(e) => { setQuery(e.target.value); setShowAll(false); }}
+              onChange={(e) => { setQuery(e.target.value); setShowAll(false); setDrilldownProfile(null); }}
               onKeyDown={handleSearch}
               className="pl-10 pr-10 h-12 rounded-xl"
               autoFocus
@@ -238,6 +240,14 @@ export default function SearchModal({ open, onClose, onSelect }) {
           </div>
         </div>
 
+        {drilldownProfile ? (
+          <UserDrilldown
+            profile={drilldownProfile}
+            onBack={() => setDrilldownProfile(null)}
+            onSelect={onSelect}
+            onClose={onClose}
+          />
+        ) : (<>
         <Tabs value={tab} onValueChange={setTab} className="px-4">
           <TabsList className="w-full grid grid-cols-13 gap-0.5">
             <TabsTrigger value="all" title="All Results" className="text-xs px-1">All</TabsTrigger>
@@ -332,18 +342,18 @@ export default function SearchModal({ open, onClose, onSelect }) {
                   {filteredProfiles.map(profile => (
                     <button
                       key={profile.id}
-                      onClick={() => { onSelect?.('profile', profile); onClose(); }}
+                      onClick={() => setDrilldownProfile(profile)}
                       className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
                     >
                       <Avatar className="w-10 h-10 cursor-pointer" data-user-id={profile.user_id}>
                         <AvatarImage src={profile.avatar_url} />
                         <AvatarFallback>{profile.display_name?.charAt(0)}</AvatarFallback>
                       </Avatar>
-                      <div className="text-left">
+                      <div className="text-left flex-1">
                         <p className="font-medium text-slate-900">{profile.display_name}</p>
-                        <p className="text-sm text-slate-500">@{profile.handle}</p>
+                        <p className="text-sm text-slate-500">@{profile.handle} {profile.sa_number && `• SA#${profile.sa_number}`}</p>
                       </div>
-                      <Users className="w-4 h-4 text-slate-400 ml-auto" />
+                      <span className="text-xs text-violet-600 font-medium">View all →</span>
                     </button>
                   ))}
                 </div>
@@ -503,6 +513,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
             </div>
           )}
         </ScrollArea>
+        </>)}
       </DialogContent>
     </Dialog>
   );
