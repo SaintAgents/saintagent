@@ -95,6 +95,8 @@ export default function MBTIPromptBanner({ profile, onDismiss }) {
   };
 
   const handleComplete = (mbtiType) => {
+    sessionDismissed = true;
+    setDismissed(true);
     setShowAssessment(false);
     if (onDismiss) onDismiss();
   };

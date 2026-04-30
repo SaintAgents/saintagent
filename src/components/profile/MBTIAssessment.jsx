@@ -143,6 +143,7 @@ export default function MBTIAssessment({ profile, onComplete, onSkip }) {
       }
 
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
       
       if (onComplete) {
         onComplete(result);
