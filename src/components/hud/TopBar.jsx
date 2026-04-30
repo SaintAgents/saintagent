@@ -604,7 +604,7 @@ export default function TopBar({
                         </Avatar>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-slate-900 truncate">{p.display_name}</p>
-                          <p className="text-xs text-slate-500 truncate">@{p.handle}</p>
+                          <p className="text-xs text-slate-500 truncate">@{p.handle} {p.sa_number && `• SA#${p.sa_number}`}</p>
                         </div>
                         <Users className="w-4 h-4 text-slate-400" />
                       </button>
@@ -669,6 +669,19 @@ export default function TopBar({
                   </div>
                 )}
               </div>
+            )}
+
+            {/* View All button */}
+            {totalResults > 0 && (
+              <button
+                onClick={() => {
+                  setAdvancedSearchOpen(true);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-3 py-3 border-t border-slate-100 text-sm font-medium text-violet-600 hover:bg-violet-50 transition-colors"
+              >
+                <Search className="w-4 h-4" />
+                View All Results →
+              </button>
             )}
           </div>
         )}
