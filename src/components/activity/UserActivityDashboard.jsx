@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { 
   FileText, Target, Users, MessageSquare, Calendar, Star, 
-  TrendingUp, Activity, Zap, Award, Clock, BarChart3, Flame
+  TrendingUp, Activity, Zap, Award, Clock, BarChart3, Flame, RefreshCcw
 } from 'lucide-react';
 import { format, subDays, isAfter, parseISO, startOfWeek, differenceInDays } from 'date-fns';
 
@@ -100,15 +101,17 @@ function RecentActivityList({ activities }) {
 }
 
 export default function UserActivityDashboard({ userId, userEmail }) {
+  const queryClient = useQueryClient();
+
   // Fetch all user activity data in a single query to reduce API calls
-  const { data: activityData } = useQuery({
+  const { data: activityData, isFetching } = useQuery({
     queryKey: ['userActivityAll', userEmail],
     queryFn: async () => {
-      // Stagger requests to avoid rate limits - fetch in 2 batches
+      // Batch 1: posts by author_id, missions, meetings involving user
       const [posts, missions, meetings] = await Promise.all([
-        base44.entities.Post.filter({ created_by: userEmail }, '-created_date', 30),
+        base44.entities.Post.filter({ author_id: userEmail }, '-created_date', 30),
         base44.entities.Mission.list('-created_date', 50),
-        base44.entities.Meeting.filter({ created_by: userEmail }, '-scheduled_time', 20),
+        base44.entities.Meeting.list('-scheduled_time', 40),
       ]);
       
       // Small delay before second batch
@@ -119,16 +122,23 @@ export default function UserActivityDashboard({ userId, userEmail }) {
         base44.entities.Testimonial.filter({ author_id: userEmail }, '-created_date', 20),
         base44.entities.Follow.filter({ follower_id: userEmail }, '-created_date', 50),
       ]);
+
+      // Filter meetings that involve this user
+      const myMeetings = meetings.filter(m => m.host_id === userEmail || m.guest_id === userEmail);
       
-      return { posts, missions, meetings, circles, testimonials, follows };
+      return { posts, missions, meetings: myMeetings, circles, testimonials, follows };
     },
     enabled: !!userEmail,
-    staleTime: 600000,
+    staleTime: 300000,
     gcTime: 900000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: 1,
   });
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ['userActivityAll', userEmail] });
+  };
 
   const posts = activityData?.posts || [];
   const missions = activityData?.missions || [];
@@ -148,9 +158,9 @@ export default function UserActivityDashboard({ userId, userEmail }) {
     const postsThisWeek = posts.filter(p => p.created_date && isAfter(new Date(p.created_date), weekAgo)).length;
     const postsThisMonth = posts.filter(p => p.created_date && isAfter(new Date(p.created_date), monthAgo)).length;
 
-    // Missions joined (check participant_user_ids)
+    // Missions joined (check participant_ids array or creator)
     const joinedMissions = missions.filter(m => 
-      m.participant_user_ids?.includes(userEmail) || m.created_by === userEmail
+      m.participant_ids?.includes(userEmail) || m.creator_id === userEmail || m.created_by === userEmail
     );
     const missionsThisMonth = joinedMissions.filter(m => 
       m.created_date && isAfter(new Date(m.created_date), monthAgo)
@@ -257,6 +267,16 @@ export default function UserActivityDashboard({ userId, userEmail }) {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isFetching}
+              className="gap-2 text-slate-500 hover:text-violet-600"
+            >
+              <RefreshCcw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+              {isFetching ? 'Refreshing…' : 'Refresh'}
+            </Button>
             {metrics.streak > 0 && (
               <Badge className="bg-orange-100 text-orange-700 gap-1">
                 <Flame className="w-3 h-3" />
