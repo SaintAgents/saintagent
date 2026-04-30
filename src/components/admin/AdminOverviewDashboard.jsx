@@ -58,7 +58,7 @@ function StatTile({ icon: Icon, label, value, color }) {
 
 function timeAgo(dateStr) {
   if (!dateStr) return '';
-  return formatDistanceToNow(parseISO(dateStr), { addSuffix: true });
+  return format(parseISO(dateStr), 'MMM d, yyyy h:mm a');
 }
 
 export default function AdminOverviewDashboard({ onNavigateTab }) {
