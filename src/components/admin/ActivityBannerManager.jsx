@@ -79,10 +79,14 @@ export default function ActivityBannerManager() {
           <h2 className="text-xl font-bold text-slate-900">Activity Feed Banner</h2>
           <p className="text-sm text-slate-500">Configure the promotional banner on the Activity Feed page</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-2">
-            <Label className="text-sm">Enabled</Label>
+            <Label className="text-sm">Activity Feed</Label>
             <Switch checked={banner.enabled} onCheckedChange={v => update('enabled', v)} />
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm">Command Deck</Label>
+            <Switch checked={banner.show_on_command_deck || false} onCheckedChange={v => update('show_on_command_deck', v)} />
           </div>
           <Button onClick={handleSave} disabled={saving} className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
             <Save className="w-4 h-4" />

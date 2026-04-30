@@ -1467,7 +1467,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
             <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">Dashboard</div>
           </div>
-          <ActivityFeedBanner />
+          <ActivityFeedBanner context="commanddeck" />
           {/* Hero Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
             {/* Gold Price Ticker - GGG = 1 gram gold */}

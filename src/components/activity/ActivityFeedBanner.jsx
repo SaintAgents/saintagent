@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Play, Pause, Volume2, VolumeX, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export default function ActivityFeedBanner() {
+export default function ActivityFeedBanner({ context = 'activity' }) {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -21,6 +21,9 @@ export default function ActivityFeedBanner() {
     if (!settings?.[0]?.value) return null;
     try {
       const parsed = JSON.parse(settings[0].value);
+      if (context === 'commanddeck') {
+        return parsed.show_on_command_deck ? parsed : null;
+      }
       return parsed.enabled ? parsed : null;
     } catch { return null; }
   }, [settings]);

@@ -71,10 +71,11 @@ export default function SearchModal({ open, onClose, onSelect }) {
   const [showAll, setShowAll] = useState(true); // Default to showing all results on arrival
   const [drilldownProfile, setDrilldownProfile] = useState(null);
 
-  const { data: profiles = [] } = useQuery({
-    queryKey: ['searchProfiles', query],
+  const { data: profiles = [], isLoading: profilesLoading } = useQuery({
+    queryKey: ['searchProfiles'],
     queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   const { data: listings = [] } = useQuery({
@@ -359,10 +360,10 @@ export default function SearchModal({ open, onClose, onSelect }) {
                       </button>
                       <button
                         onClick={() => setDrilldownProfile(profile)}
-                        className="p-2 mr-2 rounded-lg hover:bg-violet-100 transition-colors shrink-0"
+                        className="p-2 mr-2 rounded-lg bg-violet-50 hover:bg-violet-100 transition-colors shrink-0 border border-violet-200"
                         title={`Drilldown: see all items for ${profile.display_name}`}
                       >
-                        <ChevronRight className="w-5 h-5 text-violet-500" />
+                        <ChevronRight className="w-5 h-5 text-violet-600" />
                       </button>
                     </div>
                   ))}
@@ -517,7 +518,14 @@ export default function SearchModal({ open, onClose, onSelect }) {
                filteredMeetings.length === 0 && filteredEvents.length === 0 &&
                filteredHashtags.length === 0 && (
                 <div className="text-center py-12 text-slate-400">
-                  <p>No results found{query ? ` for "${query}"` : ''}</p>
+                  {profilesLoading ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-violet-500" />
+                      <p>Loading...</p>
+                    </div>
+                  ) : (
+                    <p>No results found{query ? ` for "${query}"` : ''}</p>
+                  )}
                 </div>
               )}
             </div>
