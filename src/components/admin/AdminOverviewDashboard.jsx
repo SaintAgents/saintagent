@@ -91,14 +91,16 @@ export default function AdminOverviewDashboard({ onNavigateTab }) {
 
   const { data: feedback = [] } = useQuery({
     queryKey: ['admin-overview-feedback'],
-    queryFn: () => base44.entities.BetaFeedback.filter({ status: 'pending' }, '-created_date', 10),
-    staleTime: 60000,
+    queryFn: () => base44.entities.BetaFeedback.filter({ status: 'pending' }, '-created_date', 50),
+    staleTime: 5000,
+    refetchOnMount: 'always',
   });
 
   const { data: forumReports = [] } = useQuery({
     queryKey: ['admin-overview-reports'],
-    queryFn: () => base44.entities.ForumReport.filter({ status: 'pending' }, '-created_date', 10),
-    staleTime: 60000,
+    queryFn: () => base44.entities.ForumReport.filter({ status: 'pending' }, '-created_date', 50),
+    staleTime: 5000,
+    refetchOnMount: 'always',
   });
 
   const { data: payouts = [] } = useQuery({
@@ -129,6 +131,7 @@ export default function AdminOverviewDashboard({ onNavigateTab }) {
     feedback.length + forumReports.length + payouts.length + missionJoins.length + projects.length;
 
   const urgentRequests = adminRequests.filter(r => r.priority === 'urgent' || r.priority === 'high');
+  const bugFeedback = feedback.filter(f => f.feedback_type === 'bug');
   const criticalBugs = feedback.filter(f => f.severity === 'critical' || f.severity === 'high');
 
   const nav = (tab) => () => onNavigateTab?.(tab);
@@ -165,7 +168,7 @@ export default function AdminOverviewDashboard({ onNavigateTab }) {
         <StatTile icon={Inbox} label="Admin Requests" value={adminRequests.length} color="bg-violet-500" />
         <StatTile icon={Folder} label="Project Claims" value={projects.length} color="bg-blue-500" />
         <StatTile icon={Wallet} label="Withdrawals" value={withdrawals.length} color="bg-emerald-500" />
-        <StatTile icon={AlertTriangle} label="Reports & Bugs" value={forumReports.length + criticalBugs.length} color="bg-red-500" />
+        <StatTile icon={AlertTriangle} label="Reports & Bugs" value={forumReports.length + bugFeedback.length} color="bg-red-500" />
       </div>
 
       {/* Attention Cards Grid */}
