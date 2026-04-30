@@ -90,36 +90,36 @@ export default function MastersMessagesTicker() {
   const [currentIndex, setCurrentIndex] = useState(() => 
     Math.floor(Math.random() * MASTERS_MESSAGES.length)
   );
+  const containerRef = React.useRef(null);
   
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Pick a truly random index different from current
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * MASTERS_MESSAGES.length);
-      } while (newIndex === currentIndex && MASTERS_MESSAGES.length > 1);
-      setCurrentIndex(newIndex);
-    }, 133200); // 2.22 minutes (133.2 seconds = 133200ms)
-    return () => clearInterval(interval);
-  }, [currentIndex]);
+  const pickNext = () => {
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * MASTERS_MESSAGES.length);
+    } while (newIndex === currentIndex && MASTERS_MESSAGES.length > 1);
+    setCurrentIndex(newIndex);
+  };
   
   const current = MASTERS_MESSAGES[currentIndex];
   
   return (
-    <div className="flex-1 overflow-hidden mx-2 md:mx-4 min-w-0">
-      <div className="flex items-center gap-2 animate-marquee">
+    <div ref={containerRef} className="flex-1 overflow-hidden mx-2 md:mx-4 min-w-0">
+      <div 
+        className="flex items-center gap-2 masters-marquee"
+        onAnimationIteration={pickNext}
+      >
         <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 whitespace-nowrap">{current.master}:</span>
         <div className="text-xs text-slate-700 dark:text-amber-200 italic whitespace-nowrap">
           "{current.text}"
         </div>
       </div>
       <style>{`
-        @keyframes marquee {
+        @keyframes mastersMarquee {
           0% { transform: translateX(100%); }
           100% { transform: translateX(-100%); }
         }
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
+        .masters-marquee {
+          animation: mastersMarquee 20s linear infinite;
         }
       `}</style>
     </div>
