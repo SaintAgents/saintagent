@@ -209,8 +209,7 @@
             "notification",
             "pulse"
           ],
-          "default": "pulse",
-          "description": "notification = toast/bell alert, pulse = subtle glow on nav icon"
+          "default": "pulse"
         },
         "last_scan_at": {
           "type": "string",
@@ -434,6 +433,42 @@
     },
     "sun_card": {
       "type": "string"
+    },
+    "spiritual_practices": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Selected spiritual practices"
+    },
+    "practices_description": {
+      "type": "string",
+      "description": "Additional description of spiritual practices"
+    },
+    "lineage_tradition": {
+      "type": "string",
+      "description": "Primary spiritual lineage or tradition"
+    },
+    "lineage_custom": {
+      "type": "string",
+      "description": "Custom description of lineage or tradition"
+    },
+    "symbolic_groups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Symbolic spiritual groups the user resonates with"
+    },
+    "consciousness_orientation": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Self-perceived spiritual orientation"
     }
   },
   "required": [

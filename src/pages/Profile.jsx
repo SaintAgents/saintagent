@@ -331,6 +331,8 @@ export default function Profile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+      queryClient.refetchQueries({ queryKey: ['userProfile', targetUserId] });
+      queryClient.refetchQueries({ queryKey: ['myProfile'] });
       setIsEditing(false);
       // Track challenge progress for updating profile
       if (userIdentifier) {
