@@ -72,35 +72,53 @@ export default function CommunityFeed() {
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me(),
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
   });
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile', currentUser?.email],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
   });
   const profile = profiles?.[0];
 
-  const { data: posts = [] } = useQuery({
+  const { data: posts = [], isLoading: postsLoading } = useQuery({
     queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 50)
+    queryFn: () => base44.entities.Post.list('-created_date', 50),
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+    retry: 3,
+    retryDelay: (attempt) => Math.min(2000 * (attempt + 1), 10000),
   });
 
   const { data: allLikes = [] } = useQuery({
     queryKey: ['postLikes'],
-    queryFn: () => base44.entities.PostLike.list()
+    queryFn: () => base44.entities.PostLike.list(),
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+    retry: 3,
+    retryDelay: (attempt) => Math.min(2000 * (attempt + 1), 10000),
   });
 
   const { data: allComments = [] } = useQuery({
     queryKey: ['postComments'],
-    queryFn: () => base44.entities.PostComment.list('-created_date')
+    queryFn: () => base44.entities.PostComment.list('-created_date'),
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
+    retry: 3,
+    retryDelay: (attempt) => Math.min(2000 * (attempt + 1), 10000),
   });
 
   const { data: follows = [] } = useQuery({
     queryKey: ['follows', profile?.user_id],
     queryFn: () => base44.entities.Follow.filter({ follower_id: profile.user_id }),
-    enabled: !!profile?.user_id
+    enabled: !!profile?.user_id,
+    staleTime: 300000,
+    refetchOnWindowFocus: false,
   });
   const followingIds = follows.map(f => f.following_id);
 
@@ -484,11 +502,16 @@ export default function CommunityFeed() {
 
         {/* Posts Feed */}
         <div className="space-y-4">
-          {filteredPosts.length === 0 ? (
+          {postsLoading ? (
+            <div className="text-center py-16">
+              <div className="w-8 h-8 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-slate-500">Loading posts...</p>
+            </div>
+          ) : filteredPosts.length === 0 ? (
             <div className="text-center py-16">
               <Sparkles className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">No posts yet</h3>
-              <p className="text-slate-500">Be the first to share something with the community!</p>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">{searchQuery ? 'No matching posts' : 'No posts yet'}</h3>
+              <p className="text-slate-500">{searchQuery ? 'Try different search terms' : 'Be the first to share something with the community!'}</p>
             </div>
           ) : (
             filteredPosts.map((post) => {
