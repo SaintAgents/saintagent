@@ -8,8 +8,9 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Save, Upload, Trash2, Image, Music, Eye, EyeOff, Palette } from 'lucide-react';
+import { Save, Upload, Trash2, Image, Music, Eye, Palette, RotateCcw, CheckCircle2, Clock } from 'lucide-react';
 import { toast } from 'sonner';
+import PreviousBannersList from './PreviousBannersList';
 
 const DEFAULT_BANNER = {
   enabled: false,
@@ -40,6 +41,11 @@ export default function ActivityBannerManager() {
     queryFn: () => base44.entities.PlatformSetting.filter({ key: 'activity_banner' }),
   });
 
+  const { data: historySettings } = useQuery({
+    queryKey: ['platformSettings', 'activity_banner_history'],
+    queryFn: () => base44.entities.PlatformSetting.filter({ key: 'activity_banner_history' }),
+  });
+
   useEffect(() => {
     if (settings?.[0]) {
       setSettingId(settings[0].id);
@@ -50,6 +56,24 @@ export default function ActivityBannerManager() {
     }
   }, [settings]);
 
+  const getHistory = () => {
+    if (!historySettings?.[0]?.value) return [];
+    try { return JSON.parse(historySettings[0].value); } catch { return []; }
+  };
+
+  const saveToHistory = async (bannerData) => {
+    const history = getHistory();
+    const entry = { ...bannerData, saved_at: new Date().toISOString(), id: Date.now().toString() };
+    const updated = [entry, ...history].slice(0, 20);
+    const histPayload = { key: 'activity_banner_history', value: JSON.stringify(updated) };
+    if (historySettings?.[0]?.id) {
+      await base44.entities.PlatformSetting.update(historySettings[0].id, histPayload);
+    } else {
+      await base44.entities.PlatformSetting.create(histPayload);
+    }
+    queryClient.invalidateQueries({ queryKey: ['platformSettings', 'activity_banner_history'] });
+  };
+
   const handleSave = async () => {
     setSaving(true);
     const payload = { key: 'activity_banner', value: JSON.stringify(banner) };
@@ -59,9 +83,16 @@ export default function ActivityBannerManager() {
       const created = await base44.entities.PlatformSetting.create(payload);
       setSettingId(created.id);
     }
+    await saveToHistory(banner);
     queryClient.invalidateQueries({ queryKey: ['platformSettings', 'activity_banner'] });
     setSaving(false);
     toast.success('Banner saved');
+  };
+
+  const handleLoadPrevious = (prevBanner) => {
+    const { saved_at, id, ...bannerData } = prevBanner;
+    setBanner({ ...DEFAULT_BANNER, ...bannerData });
+    toast.success('Banner loaded — click Save to activate');
   };
 
   const handleFileUpload = async (file, type) => {
@@ -74,6 +105,30 @@ export default function ActivityBannerManager() {
 
   return (
     <div className="space-y-6">
+      {/* Active Banner Status */}
+      <Card className={banner.enabled ? 'border-emerald-300 bg-emerald-50/50' : 'border-slate-200'}>
+        <CardContent className="py-3 px-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {banner.enabled ? (
+              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+            ) : (
+              <Clock className="w-5 h-5 text-slate-400" />
+            )}
+            <div>
+              <p className="text-sm font-semibold text-slate-800">
+                {banner.enabled ? 'Banner Active' : 'Banner Inactive'}
+              </p>
+              <p className="text-xs text-slate-500">
+                {banner.enabled && banner.title ? `"${banner.title}"` : 'No banner is currently live'}
+              </p>
+            </div>
+          </div>
+          {banner.enabled && banner.show_on_command_deck && (
+            <span className="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-medium">Also on Command Deck</span>
+          )}
+        </CardContent>
+      </Card>
+
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-slate-900">Activity Feed Banner</h2>
@@ -220,6 +275,9 @@ export default function ActivityBannerManager() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Previous Banners */}
+      <PreviousBannersList history={getHistory()} onLoad={handleLoadPrevious} />
     </div>
   );
 }
