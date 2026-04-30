@@ -20,9 +20,20 @@ const RISK_GRADE_COLORS = {
 const STATUS_STYLES = {
   approved: "bg-emerald-100 text-emerald-700",
   pending_review: "bg-amber-100 text-amber-700",
+  declined: "bg-rose-100 text-rose-700",
   rejected: "bg-rose-100 text-rose-700",
   flagged: "bg-red-100 text-red-700",
-  draft: "bg-slate-100 text-slate-700"
+  draft: "bg-slate-100 text-slate-700",
+  phase1_review: "bg-blue-100 text-blue-700",
+  phase2_scoring: "bg-violet-100 text-violet-700",
+  phase3_risk: "bg-orange-100 text-orange-700",
+  phase4_decision: "bg-indigo-100 text-indigo-700",
+  incubate: "bg-amber-100 text-amber-700",
+  rfi_pending: "bg-blue-100 text-blue-700",
+  funded: "bg-emerald-100 text-emerald-700",
+  in_progress: "bg-blue-100 text-blue-700",
+  completed: "bg-emerald-100 text-emerald-700",
+  on_hold: "bg-amber-100 text-amber-700",
 };
 
 export default function ProjectMiniCard({ project, onClick }) {
@@ -52,7 +63,7 @@ export default function ProjectMiniCard({ project, onClick }) {
               {project.title || "Untitled Project"}
             </CardTitle>
             <Badge className={STATUS_STYLES[status] || STATUS_STYLES.pending_review}>
-              {status.replace(/_/g, " ")}
+              {status === 'rfi_pending' ? 'RFI Pending' : status.replace(/_/g, " ")}
             </Badge>
           </div>
           {project.description &&

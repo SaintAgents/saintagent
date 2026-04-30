@@ -439,7 +439,7 @@ export default function AdviceDetailPage() {
             </div>
 
             {/* Submit Answer */}
-            {question.allow_public_replies && (
+            {(question.allow_public_replies !== false) && (
               <Card className="bg-white border-slate-200">
                 <CardContent className="p-6">
                   <h3 className="text-lg font-semibold text-slate-900 mb-4">Share Your Wisdom</h3>

@@ -40,10 +40,10 @@ export default function NotificationBell({ notifications = [], onAction }) {
   const [isClearing, setIsClearing] = useState(false);
   const queryClient = useQueryClient();
   
-  // Track cleared notification IDs in session to prevent them from reappearing
+  // Track cleared notification IDs to prevent them from reappearing
   const [clearedIds, setClearedIds] = useState(() => {
     try {
-      const saved = sessionStorage.getItem('clearedNotificationIds');
+      const saved = localStorage.getItem('clearedNotificationIds');
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   });
@@ -51,7 +51,7 @@ export default function NotificationBell({ notifications = [], onAction }) {
   // Track when all notifications were last cleared (timestamp)
   const [clearedAllTimestamp, setClearedAllTimestamp] = useState(() => {
     try {
-      return parseInt(sessionStorage.getItem('clearedNotificationsTimestamp') || '0', 10);
+      return parseInt(localStorage.getItem('clearedNotificationsTimestamp') || '0', 10);
     } catch { return 0; }
   });
   
@@ -152,8 +152,8 @@ export default function NotificationBell({ notifications = [], onAction }) {
                   setClearedAllTimestamp(clearTimestamp);
                   
                   try {
-                    sessionStorage.setItem('clearedNotificationIds', JSON.stringify(newClearedIds));
-                    sessionStorage.setItem('clearedNotificationsTimestamp', String(clearTimestamp));
+                    localStorage.setItem('clearedNotificationIds', JSON.stringify(newClearedIds));
+                    localStorage.setItem('clearedNotificationsTimestamp', String(clearTimestamp));
                   } catch {}
                   
                   // Delete notifications in background (don't wait)

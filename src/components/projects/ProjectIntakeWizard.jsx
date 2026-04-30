@@ -32,9 +32,27 @@ const INITIAL_FORM = {
 
 export default function ProjectIntakeWizard({ open, onClose, currentUser, profile }) {
   const queryClient = useQueryClient();
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState(INITIAL_FORM);
+  const [step, setStep] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('projectIntakeStep');
+      return saved ? parseInt(saved, 10) : 1;
+    } catch { return 1; }
+  });
+  const [formData, setFormData] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('projectIntakeData');
+      return saved ? { ...INITIAL_FORM, ...JSON.parse(saved) } : INITIAL_FORM;
+    } catch { return INITIAL_FORM; }
+  });
   const [tutorialOpen, setTutorialOpen] = useState(false);
+
+  // Persist form data and step to sessionStorage
+  React.useEffect(() => {
+    try {
+      sessionStorage.setItem('projectIntakeData', JSON.stringify(formData));
+      sessionStorage.setItem('projectIntakeStep', String(step));
+    } catch {}
+  }, [formData, step]);
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Project.create(data),
@@ -45,6 +63,10 @@ export default function ProjectIntakeWizard({ open, onClose, currentUser, profil
       onClose();
       setStep(1);
       setFormData(INITIAL_FORM);
+      try {
+        sessionStorage.removeItem('projectIntakeData');
+        sessionStorage.removeItem('projectIntakeStep');
+      } catch {}
     }
   });
 
