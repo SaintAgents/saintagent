@@ -127,10 +127,14 @@ export default function CommunityFeed() {
     if (filterTab === 'following' && !followingIds.includes(p.author_id)) return false;
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
+      const qNoHash = q.startsWith('#') ? q.slice(1) : q;
+      const content = (p.content || '').toLowerCase();
       const matchesAuthor = p.author_name?.toLowerCase().includes(q);
       const matchesEmail = p.author_id?.toLowerCase().includes(q);
-      const matchesContent = p.content?.toLowerCase().includes(q);
-      if (!matchesAuthor && !matchesEmail && !matchesContent) return false;
+      const matchesContent = content.includes(q);
+      // Also match hashtags: searching "mission" matches "#mission", "#FirstMission", etc.
+      const matchesHashtag = qNoHash && content.match(/#\w*/g)?.some(tag => tag.toLowerCase().includes(qNoHash));
+      if (!matchesAuthor && !matchesEmail && !matchesContent && !matchesHashtag) return false;
     }
     return true;
   });
@@ -551,7 +555,7 @@ export default function CommunityFeed() {
                     </div>
 
                     {/* Post Content - renders HTML or markdown */}
-                    <PostContent content={post.content} />
+                    <PostContent content={post.content} highlightQuery={searchQuery} />
 
                     {/* Media */}
                     {post.image_urls && post.image_urls.length > 0 && (

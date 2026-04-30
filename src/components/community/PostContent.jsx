@@ -33,7 +33,33 @@ function extractBodyContent(html) {
   return cleaned;
 }
 
-export default function PostContent({ content }) {
+// Highlights all occurrences of query in text with a yellow background
+function highlightText(text, query) {
+  if (!query || !text) return text;
+  const q = query.trim();
+  if (!q) return text;
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escaped})`, 'gi');
+  const parts = text.split(regex);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    regex.test(part) ? <mark key={i} className="bg-yellow-200 text-yellow-900 rounded px-0.5">{part}</mark> : part
+  );
+}
+
+// For HTML content, inject <mark> tags around matches
+function highlightHtml(html, query) {
+  if (!query || !html) return html;
+  const q = query.trim();
+  if (!q) return html;
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Only highlight text content, not inside HTML tags
+  return html.replace(new RegExp(`(?<=>)([^<]*?)(?=<)`, 'g'), (segment) => {
+    return segment.replace(new RegExp(`(${escaped})`, 'gi'), '<mark style="background:#fef08a;color:#713f12;border-radius:2px;padding:0 2px">$1</mark>');
+  });
+}
+
+export default function PostContent({ content, highlightQuery }) {
   const { isHtml, displayContent } = useMemo(() => {
     if (!content) return { isHtml: false, displayContent: '' };
     
@@ -47,6 +73,7 @@ export default function PostContent({ content }) {
   if (!content) return null;
 
   if (isHtml) {
+    const finalHtml = highlightQuery ? highlightHtml(displayContent, highlightQuery) : displayContent;
     return (
       <div 
         className="text-sm text-slate-700 leading-relaxed prose prose-sm prose-slate max-w-none
@@ -62,8 +89,18 @@ export default function PostContent({ content }) {
           [&_blockquote]:border-l-4 [&_blockquote]:border-violet-300 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-3 [&_blockquote]:bg-violet-50/50 [&_blockquote]:rounded-r-lg [&_blockquote]:italic [&_blockquote]:text-slate-600
           [&_hr]:my-4 [&_hr]:border-slate-200
           [&_a]:text-violet-600 [&_a]:underline [&_a]:hover:text-violet-800"
-        dangerouslySetInnerHTML={{ __html: displayContent }} 
+        dangerouslySetInnerHTML={{ __html: finalHtml }} 
       />
+    );
+  }
+
+  // For plain text / markdown with highlighting
+  if (highlightQuery?.trim()) {
+    // Render as highlighted plain text (skip markdown to preserve highlight marks)
+    return (
+      <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+        {highlightText(content, highlightQuery)}
+      </div>
     );
   }
 
