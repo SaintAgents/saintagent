@@ -330,6 +330,7 @@ export default function Profile() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
       setIsEditing(false);
       // Track challenge progress for updating profile
       if (userIdentifier) {
