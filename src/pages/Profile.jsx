@@ -60,7 +60,8 @@ import {
   Folder,
   BarChart3,
   Contact,
-  Activity
+  Activity,
+  Network
 } from
 "lucide-react";
 
@@ -103,6 +104,7 @@ import ProjectsTab from '@/components/profile/ProjectsTab';
 import PersonalAnalyticsDashboard from '@/components/profile/PersonalAnalyticsDashboard';
 import ImpactDashboardTab from '@/components/impact/ImpactDashboardTab.jsx';
 import MissionDashboardTab from '@/components/profile/MissionDashboardTab';
+import MissionGridLauncher from '@/components/profile/MissionGridLauncher';
 import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import MyContactsTab from '@/components/profile/MyContactsTab';
 import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
@@ -781,6 +783,12 @@ export default function Profile() {
                 <TabsTrigger value="missions" className="text-xs sm:text-sm px-2 sm:px-3" title="Missions">
                   <span className="hidden sm:inline">Missions</span>
                   <Target className="sm:hidden w-4 h-4" />
+                </TabsTrigger>
+              )}
+              {isOwnProfile && (
+                <TabsTrigger value="mission-grid" className="text-xs sm:text-sm px-2 sm:px-3" title="Grid Viz">
+                  <span className="hidden sm:inline">Grid Viz</span>
+                  <Network className="sm:hidden w-4 h-4" />
                 </TabsTrigger>
               )}
               {isOwnProfile && (
@@ -1843,6 +1851,11 @@ export default function Profile() {
           {isOwnProfile && (
             <TabsContent value="missions" className="space-y-6">
               <MissionDashboardTab currentUser={currentUser} profile={profile} />
+            </TabsContent>
+          )}
+          {isOwnProfile && (
+            <TabsContent value="mission-grid">
+              <MissionGridLauncher />
             </TabsContent>
           )}
           {isOwnProfile && (
