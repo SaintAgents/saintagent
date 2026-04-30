@@ -12,7 +12,8 @@ import Step1Identity from '@/components/onboarding/Step1Identity';
 import StepMystical from '@/components/onboarding/StepMystical';
 import Step2Region from '@/components/onboarding/Step2Region';
 import StepValues from '@/components/onboarding/StepValues';
-import Step3Skills from '@/components/onboarding/Step3Skills';
+import Step3SkillAssessment from '@/components/onboarding/Step3SkillAssessment';
+import StepSkillResults from '@/components/onboarding/StepSkillResults';
 import Step4Desires from '@/components/onboarding/Step4Desires';
 import Step5Hopes from '@/components/onboarding/Step5Hopes';
 import Step6Actions from '@/components/onboarding/Step6Actions';
@@ -48,18 +49,19 @@ const STEPS = [
   { id: 3, title: "Mystical", component: StepMystical, skippable: true },
   { id: 4, title: "Region", component: Step2Region, skippable: true },
   { id: 5, title: "Values", component: StepValues, skippable: false },
-  { id: 6, title: "Skills", component: Step3Skills, skippable: false },
-  { id: 7, title: "Desires", component: Step4Desires, skippable: false },
-  { id: 8, title: "Hopes", component: Step5Hopes, skippable: true },
+  { id: 6, title: "Skills", component: Step3SkillAssessment, skippable: false },
+  { id: 7, title: "Skill Matches", component: StepSkillResults, skippable: true },
+  { id: 8, title: "Desires", component: Step4Desires, skippable: false },
+  { id: 9, title: "Hopes", component: Step5Hopes, skippable: true },
   // Dating onboarding flow with explanations
-  { id: 9, title: "Dating Intro", component: StepDatingIntro, skippable: true },
-  { id: 10, title: "Attachment", component: StepAttachmentStyle, skippable: true },
-  { id: 11, title: "Conflict Style", component: StepConflictStyle, skippable: true },
-  { id: 12, title: "Relationship Values", component: StepRelationshipValues, skippable: true },
-  { id: 13, title: "Connection", component: Step7Dating, skippable: true },
-  { id: 14, title: "Partner Preferences", component: StepPartnerPreferences, skippable: true },
-  { id: 15, title: "Match Tutorial", component: StepCompatibilityTutorial, skippable: true },
-  { id: 16, title: "Actions", component: Step6Actions, skippable: false }
+  { id: 10, title: "Dating Intro", component: StepDatingIntro, skippable: true },
+  { id: 11, title: "Attachment", component: StepAttachmentStyle, skippable: true },
+  { id: 12, title: "Conflict Style", component: StepConflictStyle, skippable: true },
+  { id: 13, title: "Relationship Values", component: StepRelationshipValues, skippable: true },
+  { id: 14, title: "Connection", component: Step7Dating, skippable: true },
+  { id: 15, title: "Partner Preferences", component: StepPartnerPreferences, skippable: true },
+  { id: 16, title: "Match Tutorial", component: StepCompatibilityTutorial, skippable: true },
+  { id: 17, title: "Actions", component: Step6Actions, skippable: false }
 ];
 
 export default function Onboarding() {
@@ -345,7 +347,7 @@ export default function Onboarding() {
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-8 mb-6">
           {CurrentStepComponent && (
             <CurrentStepComponent
-              data={stepData[currentStep] || {}}
+              data={STEPS[currentStep]?.title === 'Skill Matches' ? (stepData[currentStep - 1] || {}) : (stepData[currentStep] || {})}
               onComplete={handleStepComplete}
               onNext={() => handleStepComplete(stepData[currentStep] || {})}
               onUpdate={async (data) => {
@@ -358,6 +360,7 @@ export default function Onboarding() {
               }}
               profile={stepData[currentStep]}
               user={user}
+              allStepData={stepData}
             />
           )}
         </div>

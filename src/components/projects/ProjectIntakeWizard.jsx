@@ -41,7 +41,9 @@ export default function ProjectIntakeWizard({ open, onClose, currentUser, profil
   const [formData, setFormData] = useState(() => {
     try {
       const saved = sessionStorage.getItem('projectIntakeData');
-      return saved ? { ...INITIAL_FORM, ...JSON.parse(saved) } : INITIAL_FORM;
+      const onboardingDraft = sessionStorage.getItem('projectIntakeForm');
+      const base = saved ? { ...INITIAL_FORM, ...JSON.parse(saved) } : INITIAL_FORM;
+      return onboardingDraft ? { ...base, ...JSON.parse(onboardingDraft) } : base;
     } catch { return INITIAL_FORM; }
   });
   const [tutorialOpen, setTutorialOpen] = useState(false);
