@@ -83,14 +83,21 @@ export default function ActivityFeedBanner({ context = 'activity' }) {
 
           <div className="flex items-center gap-3 mt-3 flex-wrap" style={{ justifyContent: banner.layout === 'center' ? 'center' : banner.layout === 'right' ? 'flex-end' : 'flex-start' }}>
             {/* CTA Button */}
-            {banner.cta_text && banner.cta_url && (
-              <Link to={banner.cta_url}>
+            {banner.cta_text && banner.cta_url && (() => {
+              const isExternal = /^https?:\/\//.test(banner.cta_url) || /^www\./.test(banner.cta_url);
+              const href = isExternal && !/^https?:\/\//.test(banner.cta_url) ? `https://${banner.cta_url}` : banner.cta_url;
+              const btn = (
                 <Button size="sm" className="gap-2 font-semibold shadow-md" style={{ backgroundColor: banner.accent_color, color: banner.bg_color }}>
                   {banner.cta_text}
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Button>
-              </Link>
-            )}
+              );
+              return isExternal ? (
+                <a href={href} target="_blank" rel="noopener noreferrer">{btn}</a>
+              ) : (
+                <Link to={banner.cta_url}>{btn}</Link>
+              );
+            })()}
 
             {/* Audio Player */}
             {banner.audio_url && (
