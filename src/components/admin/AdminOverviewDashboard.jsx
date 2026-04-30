@@ -367,7 +367,10 @@ export default function AdminOverviewDashboard({ onNavigateTab }) {
             {allUsers.slice(0, 5).map(u => (
               <div key={u.id} className="flex items-center justify-between p-2 rounded-lg bg-slate-50">
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-7 h-7 rounded-full bg-violet-100 flex items-center justify-center text-xs font-bold text-violet-600 shrink-0">
+                  <div 
+                    data-user-id={u.email} 
+                    className="w-7 h-7 rounded-full bg-violet-100 flex items-center justify-center text-xs font-bold text-violet-600 shrink-0 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all"
+                  >
                     {u.full_name?.[0] || '?'}
                   </div>
                   <div className="min-w-0">
