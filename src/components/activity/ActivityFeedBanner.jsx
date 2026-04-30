@@ -53,7 +53,7 @@ export default function ActivityFeedBanner({ context = 'activity' }) {
   const align = banner.layout === 'center' ? 'items-center text-center' : banner.layout === 'right' ? 'items-end text-right' : 'items-start text-left';
 
   return (
-    <div className="w-full mb-8 rounded-none md:rounded-xl overflow-hidden shadow-lg relative" style={{ height: 150, backgroundColor: banner.bg_color }}>
+    <div className="w-full mb-8 rounded-none md:rounded-xl overflow-hidden shadow-lg relative" style={{ height: 300, backgroundColor: banner.bg_color }}>
       {/* Background Image */}
       {banner.image_url && (
         <>
@@ -66,17 +66,17 @@ export default function ActivityFeedBanner({ context = 'activity' }) {
       <div className={`relative z-10 flex flex-col justify-center h-full px-6 md:px-10 ${align}`}>
         <div className="max-w-2xl">
           {banner.title && (
-            <h2 className="text-xl md:text-2xl font-bold leading-tight" style={{ color: banner.text_color }}>
+            <h2 className="text-2xl md:text-4xl font-bold leading-tight" style={{ color: banner.text_color }}>
               {banner.title}
             </h2>
           )}
           {banner.subtitle && (
-            <p className="text-sm md:text-base mt-1 opacity-85" style={{ color: banner.text_color }}>
+            <p className="text-base md:text-lg mt-2 opacity-85" style={{ color: banner.text_color }}>
               {banner.subtitle}
             </p>
           )}
           {banner.description && (
-            <p className="text-xs md:text-sm mt-2 opacity-70 line-clamp-2" style={{ color: banner.text_color }}>
+            <p className="text-sm md:text-base mt-3 opacity-70 line-clamp-2" style={{ color: banner.text_color }}>
               {banner.description}
             </p>
           )}
