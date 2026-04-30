@@ -136,6 +136,9 @@ export default function LearnTutorialPopup({ profile, onRewardGGG }) {
     const hidden = localStorage.getItem(STORAGE_KEY) === 'true';
     if (hidden) return;
     if (!canShowPopup(adminConfig.frequency)) return;
+    // Don't show during the onboarding tour
+    const tourDismissed = localStorage.getItem('tourDismissed') === '1';
+    if (!tourDismissed) return;
 
     const timer = setTimeout(() => {
       setVisible(true);

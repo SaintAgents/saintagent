@@ -380,15 +380,6 @@ export default function SidebarLeaderboard({
                   variant="ghost" 
                   size="icon" 
                   className="h-6 w-6"
-                  onClick={() => setLeaderboardHidden(true)}
-                  title="Hide leaderboard"
-                >
-                  <EyeOff className="w-3.5 h-3.5 text-slate-400" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6"
                   onClick={() => setLeadersPopupOpen(true)}
                   title="Pop out"
                 >
@@ -416,6 +407,15 @@ export default function SidebarLeaderboard({
                   ) : (
                     <ChevronUp className="w-4 h-4 text-slate-500" />
                   )}
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-6 w-6"
+                  onClick={() => setLeaderboardHidden(true)}
+                  title="Hide leaderboard"
+                >
+                  <EyeOff className="w-3.5 h-3.5 text-slate-400" />
                 </Button>
               </div>
             )}

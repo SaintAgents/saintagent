@@ -4,6 +4,10 @@ import { cn } from "@/lib/utils";
 export default function HelpHint({ content, side = 'right', align = 'start', className = '', size = 16, float = false }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Hide during onboarding tour
+  const tourDismissed = typeof window !== 'undefined' && localStorage.getItem('tourDismissed') === '1';
+  if (!tourDismissed) return null;
+
   return (
     <div 
       className="relative inline-block"
