@@ -105,6 +105,7 @@ import PersonalAnalyticsDashboard from '@/components/profile/PersonalAnalyticsDa
 import ImpactDashboardTab from '@/components/impact/ImpactDashboardTab.jsx';
 import MissionDashboardTab from '@/components/profile/MissionDashboardTab';
 import MissionGridLauncher from '@/components/profile/MissionGridLauncher';
+import ReputationActivityBreakdown from '@/components/reputation/ReputationActivityBreakdown';
 import Leader144KProgress from '@/components/leader/Leader144KProgress';
 import MyContactsTab from '@/components/profile/MyContactsTab';
 import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
@@ -1665,6 +1666,9 @@ export default function Profile() {
 
             {/* Mission Milestone Tracker */}
             <MilestoneProgressTracker profile={profile} />
+
+            {/* Reputation Activity Breakdown */}
+            <ReputationActivityBreakdown userId={profile?.user_id} profile={profile} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Right Column - Stats */}
