@@ -28,14 +28,14 @@ import {
 import { formatDistanceToNow, format, isAfter, isBefore } from 'date-fns';
 
 const THEME_CONFIG = {
-  numbers: { label: '11:11 Awareness', color: 'bg-violet-500/20 text-violet-300 border-violet-500/30' },
-  dreams: { label: 'Dream Journaling', color: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' },
-  encounters: { label: 'Meaningful Meetings', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
-  signs: { label: 'Symbol Spotting', color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
-  timing: { label: 'Divine Timing', color: 'bg-rose-500/20 text-rose-300 border-rose-500/30' },
-  patterns: { label: 'Pattern Recognition', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' },
-  messages: { label: 'Message Decoding', color: 'bg-pink-500/20 text-pink-300 border-pink-500/30' },
-  general: { label: 'Open Challenge', color: 'bg-slate-500/20 text-slate-300 border-slate-500/30' }
+  numbers: { label: '11:11 Awareness', color: 'bg-violet-100 text-violet-700 border-violet-300' },
+  dreams: { label: 'Dream Journaling', color: 'bg-indigo-100 text-indigo-700 border-indigo-300' },
+  encounters: { label: 'Meaningful Meetings', color: 'bg-emerald-100 text-emerald-700 border-emerald-300' },
+  signs: { label: 'Symbol Spotting', color: 'bg-amber-100 text-amber-700 border-amber-300' },
+  timing: { label: 'Divine Timing', color: 'bg-rose-100 text-rose-700 border-rose-300' },
+  patterns: { label: 'Pattern Recognition', color: 'bg-cyan-100 text-cyan-700 border-cyan-300' },
+  messages: { label: 'Message Decoding', color: 'bg-pink-100 text-pink-700 border-pink-300' },
+  general: { label: 'Open Challenge', color: 'bg-slate-100 text-slate-700 border-slate-300' }
 };
 
 function CreateChallengeDialog({ open, onOpenChange, profile, onCreated }) {
@@ -180,7 +180,7 @@ function ChallengeCard({ challenge, userId, progress, onJoin }) {
   const progressPct = progress ? Math.min(100, (progress.entries_count / challenge.goal_count) * 100) : 0;
 
   return (
-    <Card className="bg-slate-800/50 border-slate-700 hover:border-violet-500/30 transition-colors">
+    <Card className="bg-white border-slate-200 hover:border-violet-400 transition-colors shadow-sm">
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
@@ -189,27 +189,27 @@ function ChallengeCard({ challenge, userId, progress, onJoin }) {
                 {themeConfig.label}
               </Badge>
               {challenge.featured && (
-                <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-xs">
+                <Badge className="bg-amber-100 text-amber-700 border-amber-300 text-xs">
                   <Star className="w-3 h-3 mr-1" />
                   Featured
                 </Badge>
               )}
             </div>
-            <h3 className="font-semibold text-white">{challenge.title}</h3>
+            <h3 className="font-semibold text-slate-900">{challenge.title}</h3>
           </div>
           {isActive ? (
-            <Badge className="bg-emerald-500/20 text-emerald-300">Active</Badge>
+            <Badge className="bg-emerald-100 text-emerald-700 border-emerald-300">Active</Badge>
           ) : (
-            <Badge className="bg-slate-600/50 text-slate-400">Ended</Badge>
+            <Badge className="bg-slate-100 text-slate-500 border-slate-300">Ended</Badge>
           )}
         </div>
 
         {challenge.description && (
-          <p className="text-sm text-slate-400 mb-3 line-clamp-2">{challenge.description}</p>
+          <p className="text-sm text-slate-600 mb-3 line-clamp-2">{challenge.description}</p>
         )}
 
         {/* Stats */}
-        <div className="flex items-center gap-4 text-xs text-slate-400 mb-3">
+        <div className="flex items-center gap-4 text-xs text-slate-500 mb-3">
           <span className="flex items-center gap-1">
             <Users className="w-3 h-3" />
             {challenge.participant_count || 0} joined
@@ -228,12 +228,12 @@ function ChallengeCard({ challenge, userId, progress, onJoin }) {
         {isJoined && progress && (
           <div className="mb-3">
             <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-slate-400">Your Progress</span>
-              <span className="text-violet-300">{progress.entries_count}/{challenge.goal_count}</span>
+              <span className="text-slate-500">Your Progress</span>
+              <span className="text-violet-600 font-medium">{progress.entries_count}/{challenge.goal_count}</span>
             </div>
             <Progress value={progressPct} className="h-2" />
             {progress.completed && (
-              <div className="flex items-center gap-1 mt-1 text-emerald-400 text-xs">
+              <div className="flex items-center gap-1 mt-1 text-emerald-600 text-xs font-medium">
                 <Award className="w-3 h-3" />
                 Completed!
               </div>
@@ -242,26 +242,26 @@ function ChallengeCard({ challenge, userId, progress, onJoin }) {
         )}
 
         {/* Creator */}
-        <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-200">
           <div className="flex items-center gap-2">
             <Avatar className="w-6 h-6">
               <AvatarImage src={challenge.creator_avatar} />
-              <AvatarFallback className="text-xs">{challenge.creator_name?.[0]}</AvatarFallback>
+              <AvatarFallback className="text-xs bg-violet-100 text-violet-700">{challenge.creator_name?.[0]}</AvatarFallback>
             </Avatar>
-            <span className="text-xs text-slate-400">by {challenge.creator_name}</span>
+            <span className="text-xs text-slate-500">by {challenge.creator_name}</span>
           </div>
           
           {isActive && !isJoined && (
             <Button 
               size="sm" 
               onClick={() => onJoin?.(challenge)}
-              className="bg-violet-600 hover:bg-violet-500"
+              className="bg-violet-600 hover:bg-violet-500 text-white"
             >
               Join Challenge
             </Button>
           )}
           {isJoined && !progress?.completed && (
-            <Button size="sm" variant="outline" className="text-violet-300 border-violet-500/30">
+            <Button size="sm" variant="outline" className="text-violet-600 border-violet-300 hover:bg-violet-50">
               <Sparkles className="w-3 h-3 mr-1" />
               Share Entry
             </Button>
@@ -321,13 +321,13 @@ export default function SynchronicityChallenges({ userId, profile }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-amber-400" />
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-amber-500" />
             Community Challenges
           </h2>
-          <p className="text-sm text-slate-400">Join themed challenges to deepen your awareness</p>
+          <p className="text-sm text-slate-500">Join themed challenges to deepen your awareness</p>
         </div>
-        <Button onClick={() => setCreateOpen(true)} className="bg-amber-600 hover:bg-amber-500">
+        <Button onClick={() => setCreateOpen(true)} className="bg-amber-600 hover:bg-amber-500 text-white">
           <Plus className="w-4 h-4 mr-2" />
           Create Challenge
         </Button>
@@ -336,8 +336,8 @@ export default function SynchronicityChallenges({ userId, profile }) {
       {/* My Active Challenges */}
       {myChallenges.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
-            <Flame className="w-4 h-4 text-orange-400" />
+          <h3 className="text-sm font-medium text-slate-700 mb-3 flex items-center gap-2">
+            <Flame className="w-4 h-4 text-orange-500" />
             Your Active Challenges
           </h3>
           <div className="grid gap-4 md:grid-cols-2">
@@ -355,12 +355,12 @@ export default function SynchronicityChallenges({ userId, profile }) {
 
       {/* Available Challenges */}
       <div>
-        <h3 className="text-sm font-medium text-slate-300 mb-3">Available Challenges</h3>
+        <h3 className="text-sm font-medium text-slate-700 mb-3">Available Challenges</h3>
         {availableChallenges.length === 0 ? (
-          <Card className="bg-slate-800/30 border-slate-700">
+          <Card className="bg-white border-slate-200 shadow-sm">
             <CardContent className="py-8 text-center">
-              <Trophy className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-400">No challenges available right now</p>
+              <Trophy className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+              <p className="text-slate-600">No challenges available right now</p>
               <p className="text-sm text-slate-500 mt-1">Be the first to create one!</p>
             </CardContent>
           </Card>
