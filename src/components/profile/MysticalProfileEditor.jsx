@@ -18,6 +18,15 @@ const RANKS = ['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','T
 const SUITS = ['Clubs','Diamonds','Hearts','Spades'];
 const PLAYING_CARDS = RANKS.flatMap(r => SUITS.map(s => `${r} of ${s}`));
 
+const TAROT_MAJOR_ARCANA = [
+  '0 - The Fool','I - The Magician','II - The High Priestess','III - The Empress',
+  'IV - The Emperor','V - The Hierophant','VI - The Lovers','VII - The Chariot',
+  'VIII - Strength','IX - The Hermit','X - Wheel of Fortune','XI - Justice',
+  'XII - The Hanged Man','XIII - Death','XIV - Temperance','XV - The Devil',
+  'XVI - The Tower','XVII - The Star','XVIII - The Moon','XIX - The Sun',
+  'XX - Judgement','XXI - The World'
+];
+
 export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
   const [formData, setFormData] = useState({
     mystical_identifier: profile?.mystical_identifier || '',
@@ -277,16 +286,16 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
           </div>
 
           <div>
-            <Label>Birth Card</Label>
+            <Label>Birth Card (Tarot)</Label>
             <Select
               value={formData.birth_card}
               onValueChange={(v) => setFormData({ ...formData, birth_card: v })}
             >
               <SelectTrigger className="mt-2">
-                <SelectValue placeholder="Select card" />
+                <SelectValue placeholder="Select tarot card" />
               </SelectTrigger>
               <SelectContent className="max-h-64">
-                {PLAYING_CARDS.map((c) => (
+                {TAROT_MAJOR_ARCANA.map((c) => (
                   <SelectItem key={c} value={c}>{c}</SelectItem>
                 ))}
               </SelectContent>
