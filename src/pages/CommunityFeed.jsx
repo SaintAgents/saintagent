@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import EmojiPicker from '@/components/messages/EmojiPicker';
-import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight, Link2, MoreHorizontal, Trash2, FileText, Download } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Send, Video, Mic, Image as ImageIcon, Sparkles, X, ChevronLeft, ChevronRight, Link2, MoreHorizontal, Trash2, FileText, Download, Search } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,6 +46,7 @@ export default function CommunityFeed() {
   const [linkUrl, setLinkUrl] = useState('');
   const [docFiles, setDocFiles] = useState([]);
   const [docNames, setDocNames] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const openLightbox = (images, index) => {
     setLightboxImages(images);
@@ -104,9 +105,15 @@ export default function CommunityFeed() {
   const followingIds = follows.map(f => f.following_id);
 
   const filteredPosts = posts.filter(p => {
-    if (filterTab === 'all') return true;
-    if (filterTab === 'me') return p.author_id === profile?.user_id;
-    if (filterTab === 'following') return followingIds.includes(p.author_id);
+    if (filterTab === 'me' && p.author_id !== profile?.user_id) return false;
+    if (filterTab === 'following' && !followingIds.includes(p.author_id)) return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesAuthor = p.author_name?.toLowerCase().includes(q);
+      const matchesEmail = p.author_id?.toLowerCase().includes(q);
+      const matchesContent = p.content?.toLowerCase().includes(q);
+      if (!matchesAuthor && !matchesEmail && !matchesContent) return false;
+    }
     return true;
   });
 
@@ -317,14 +324,30 @@ export default function CommunityFeed() {
       </div>
 
       <div className="max-w-3xl mx-auto p-6">
-        {/* Filter Tabs */}
-        <Tabs value={filterTab} onValueChange={setFilterTab} className="mb-6">
-          <TabsList className="grid w-full max-w-md grid-cols-3">
-            <TabsTrigger value="all">All Posts</TabsTrigger>
-            <TabsTrigger value="following">Following</TabsTrigger>
-            <TabsTrigger value="me">My Posts</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {/* Filter Tabs + Search */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-6">
+          <Tabs value={filterTab} onValueChange={setFilterTab} className="flex-shrink-0">
+            <TabsList className="grid w-full max-w-md grid-cols-3">
+              <TabsTrigger value="all">All Posts</TabsTrigger>
+              <TabsTrigger value="following">Following</TabsTrigger>
+              <TabsTrigger value="me">My Posts</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <div className="relative flex-1 w-full sm:w-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search posts, people, #tags..."
+              className="pl-9 pr-8 h-9 text-sm rounded-lg"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
 
         {/* Create Post Card */}
         <Card className="mb-6 bg-white/[0.04] backdrop-blur-sm">
