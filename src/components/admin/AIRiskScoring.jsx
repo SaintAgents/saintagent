@@ -244,25 +244,41 @@ export default function AIRiskScoring() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card className="border-red-200 bg-red-50/30">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-red-600 mb-1"><XCircle className="w-4 h-4" /><span className="text-xs font-medium">Critical</span></div>
+            <div className="flex items-center gap-2 text-red-600 mb-1"><XCircle className="w-4 h-4" /><span className="text-xs font-medium">Critical (70-100)</span></div>
             <div className="text-2xl font-bold text-red-700">{criticalCount}</div>
           </CardContent>
         </Card>
         <Card className="border-orange-200 bg-orange-50/30">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-orange-600 mb-1"><AlertTriangle className="w-4 h-4" /><span className="text-xs font-medium">High Risk</span></div>
+            <div className="flex items-center gap-2 text-orange-600 mb-1"><AlertTriangle className="w-4 h-4" /><span className="text-xs font-medium">High (45-69)</span></div>
             <div className="text-2xl font-bold text-orange-700">{highCount}</div>
           </CardContent>
         </Card>
         <Card className="border-slate-200">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-slate-500 mb-1"><Zap className="w-4 h-4" /><span className="text-xs">Monitored</span></div>
+            <div className="flex items-center gap-2 text-amber-600 mb-1"><AlertCircle className="w-4 h-4" /><span className="text-xs font-medium">Medium (25-44)</span></div>
+            <div className="text-2xl font-bold text-amber-700">{scored.filter(s => s.risk.grade === 'medium').length}</div>
+          </CardContent>
+        </Card>
+        <Card className="border-emerald-200 bg-emerald-50/30">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 text-emerald-600 mb-1"><Shield className="w-4 h-4" /><span className="text-xs font-medium">Low (0-24)</span></div>
+            <div className="text-2xl font-bold text-emerald-700">{scored.filter(s => s.risk.grade === 'low').length}</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Monitored & Avg */}
+      <div className="grid grid-cols-2 gap-3">
+        <Card className="border-slate-200">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 text-slate-500 mb-1"><Zap className="w-4 h-4" /><span className="text-xs">Monitored Projects</span></div>
             <div className="text-2xl font-bold">{scored.length}</div>
           </CardContent>
         </Card>
         <Card className="border-slate-200">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-slate-500 mb-1"><TrendingDown className="w-4 h-4" /><span className="text-xs">Avg Risk</span></div>
+            <div className="flex items-center gap-2 text-slate-500 mb-1"><TrendingDown className="w-4 h-4" /><span className="text-xs">Avg Risk Score</span></div>
             <div className="text-2xl font-bold" style={{ color: avgRisk >= 45 ? '#f97316' : avgRisk >= 25 ? '#f59e0b' : '#10b981' }}>{avgRisk}/100</div>
           </CardContent>
         </Card>
