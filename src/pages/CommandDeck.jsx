@@ -80,6 +80,7 @@ import AIProfileCompletionPrompt from '@/components/ai/AIProfileCompletionPrompt
 import ControlsDeck from '@/components/hud/ControlsDeck';
 import MatchScanPulse from '@/components/hud/MatchScanPulse';
 import DeepDisclosureDeckCard from '@/components/broadcast/DeepDisclosureDeckCard';
+import ActivityFeedBanner from '@/components/activity/ActivityFeedBanner';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -548,8 +549,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   }, [queryStage]);
 
-  // DISABLE matches - causing rate limits
-  const matches = [];
+  const matches = []; // matches disabled
 
   const { data: meetingsRaw = [] } = useQuery({
     queryKey: ['dashboardMeetings'],
@@ -586,8 +586,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     staleTime: 300000, refetchOnWindowFocus: false,
   });
 
-  // DISABLE notifications - causing rate limits
-  const notifications = [];
+  const notifications = []; // notifications disabled
 
   // DISABLE challenges - causing rate limits
   const challenges = [];
@@ -1468,7 +1467,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
             <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">Dashboard</div>
           </div>
-
+          <ActivityFeedBanner />
           {/* Hero Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
             {/* Gold Price Ticker - GGG = 1 gram gold */}
