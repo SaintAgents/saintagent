@@ -371,8 +371,13 @@ export default function Forum() {
               placeholder="Search discussions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 rounded-xl"
+              className="pl-9 pr-9 rounded-xl"
             />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-40 rounded-xl">

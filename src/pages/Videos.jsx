@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { 
   Upload, Search, Play, Flame, Clock, TrendingUp, 
-  Film, Gamepad2, Music, GraduationCap, Newspaper, Dumbbell, Cpu, Heart
+  Film, Gamepad2, Music, GraduationCap, Newspaper, Dumbbell, Cpu, Heart, X
 } from 'lucide-react';
 import BackButton from '@/components/hud/BackButton';
 import VideoCard from '@/components/videos/VideoCard';
@@ -109,8 +109,13 @@ export default function Videos() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search videos..."
-                  className="pl-10 h-10 bg-slate-50 border-slate-200"
+                  className="pl-10 pr-9 h-10 bg-slate-50 border-slate-200"
                 />
+                {searchQuery && (
+                  <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
 

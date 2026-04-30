@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Newspaper, Video, Link2, Eye, Calendar, User, ExternalLink, Star, ChevronRight } from 'lucide-react';
+import { Newspaper, Video, Link2, Eye, Calendar, User, ExternalLink, Star, ChevronRight, Search, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { format, parseISO } from 'date-fns';
 import ReactMarkdown from 'react-markdown';
 import BackButton from '@/components/hud/BackButton';
@@ -100,6 +101,7 @@ export default function News() {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [activeTab, setActiveTab] = useState('all');
   const [showAdmin, setShowAdmin] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -118,9 +120,17 @@ export default function News() {
   });
 
   const featured = articles.filter(a => a.is_featured);
-  const filtered = activeTab === 'all' 
+  const filtered = (activeTab === 'all' 
     ? articles 
-    : articles.filter(a => a.type === activeTab);
+    : articles.filter(a => a.type === activeTab)
+  ).filter(a => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return a.title?.toLowerCase().includes(q) ||
+      a.summary?.toLowerCase().includes(q) ||
+      a.author_name?.toLowerCase().includes(q) ||
+      a.category?.toLowerCase().includes(q);
+  });
 
   const handleArticleClick = async (article) => {
     setSelectedArticle(article);
@@ -166,14 +176,28 @@ export default function News() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pb-12">
-        {/* Admin Button */}
-        {isAdmin && (
-          <div className="flex justify-end mb-4">
+        {/* Search & Admin */}
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              placeholder="Search news by title, author, tag..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 pr-9 rounded-xl"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          {isAdmin && (
             <Button onClick={() => setShowAdmin(true)} className="gap-2 bg-violet-600 hover:bg-violet-700">
               <Newspaper className="w-4 h-4" /> Manage News
             </Button>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Featured Section */}
         {featured.length > 0 && (

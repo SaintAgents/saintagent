@@ -21,7 +21,8 @@ import {
   Grid3X3,
   List,
   Package,
-  Repeat } from
+  Repeat,
+  X } from
 "lucide-react";
 
 import ListingCard from '@/components/hud/ListingCard';
@@ -138,10 +139,14 @@ export default function Marketplace() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <Input
               placeholder="Search listings..."
-              className="pl-12 h-12 rounded-xl bg-white"
+              className="pl-12 pr-10 h-12 rounded-xl bg-white"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)} />
-
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
           <Button variant="outline" className="bg-slate-50 text-stone-950 px-4 py-2 text-sm font-medium rounded-xl inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-12 gap-2" onClick={() => setShowFilters((v) => !v)}>
             <Filter className="w-4 h-4" />

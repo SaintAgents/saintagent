@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Play, Upload, Search, Filter, Clock, Eye, Heart, 
   MessageCircle, Share2, TrendingUp, Sparkles, User,
-  Video, Plus, Grid, List
+  Video, Plus, Grid, List, X
 } from 'lucide-react';
 import BackButton from '@/components/hud/BackButton';
 import { createPageUrl } from '@/utils';
@@ -143,8 +143,13 @@ export default function SpiritTube() {
               placeholder="Search videos..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 pr-9"
             />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <Button

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, Plus, Search, MapPin, Video, Sparkles } from "lucide-react";
+import { Calendar, Plus, Search, MapPin, Video, Sparkles, X } from "lucide-react";
 import CreateEventModal from '@/components/community/CreateEventModal';
 import EventCard from '@/components/community/EventCard';
 import BackButton from '@/components/hud/BackButton';
@@ -148,8 +148,13 @@ export default function Events() {
               placeholder="Search events..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 rounded-xl bg-white"
+              className="pl-12 pr-10 h-12 rounded-xl bg-white"
             />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
             <SelectTrigger className="w-40 h-12 rounded-xl">
