@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { base44 } from '@/api/base44Client';
-import { RefreshCw, Loader2 } from 'lucide-react';
+import { RefreshCw, Loader2, Sparkles } from 'lucide-react';
+import {
+  calcBirthCards, calcSunSign, calcLifePath,
+  calcDestinyNumber, calcSoulUrge, calcPersonalityNumber
+} from '@/lib/mysticalCalc';
 
 const ZODIAC_SIGNS = [
   'Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'
@@ -13,10 +17,6 @@ const ZODIAC_SIGNS = [
 
 const LIFE_PATH_OPTIONS = ['1','2','3','4','5','6','7','8','9','11','22','33'];
 const ENNEAGRAM_TYPES = ['1','2','3','4','5','6','7','8','9'];
-
-const RANKS = ['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Jack','Queen','King'];
-const SUITS = ['Clubs','Diamonds','Hearts','Spades'];
-const PLAYING_CARDS = RANKS.flatMap(r => SUITS.map(s => `${r} of ${s}`));
 
 const TAROT_MAJOR_ARCANA = [
   '0 - The Fool','I - The Magician','II - The High Priestess','III - The Empress',
@@ -45,6 +45,37 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
   });
   const [isRecalculating, setIsRecalculating] = useState(false);
 
+  // Auto-calculate all deterministic fields from birthday + name
+  const runAutoCalc = useCallback((birthday, name) => {
+    const updates = {};
+    if (birthday) {
+      const cards = calcBirthCards(birthday);
+      if (cards) {
+        updates.birth_card = cards.birth_card;
+        updates.planetary_ruling_card = cards.planetary_ruling_card;
+        updates.sun_card = cards.sun_card;
+      }
+      updates.astrological_sign = calcSunSign(birthday) || undefined;
+      updates.numerology_life_path = calcLifePath(birthday) || undefined;
+    }
+    if (name) {
+      updates.numerology_destiny = calcDestinyNumber(name) || undefined;
+      updates.numerology_soul_urge = calcSoulUrge(name) || undefined;
+      updates.numerology_personality = calcPersonalityNumber(name) || undefined;
+    }
+    // Only set fields that produced a value
+    const cleaned = {};
+    for (const [k, v] of Object.entries(updates)) {
+      if (v !== undefined) cleaned[k] = v;
+    }
+    return cleaned;
+  }, []);
+
+  const handleBirthdayChange = (newDate) => {
+    const autoFields = runAutoCalc(newDate, profile?.display_name);
+    setFormData(prev => ({ ...prev, birthday: newDate, ...autoFields }));
+  };
+
   const handleSave = () => {
     const payload = {
       ...formData,
@@ -56,54 +87,12 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
     onSave(payload);
   };
 
-  const handleRecalculate = async () => {
+  const handleRecalculate = () => {
     if (!formData.birthday && !profile?.display_name) return;
     setIsRecalculating(true);
-    
-    const prompt = `Calculate mystical profile data based on the following information:
-${formData.birthday ? `Birthday: ${formData.birthday}` : ''}
-${profile?.display_name ? `Full Name: ${profile.display_name}` : ''}
-
-Please calculate:
-1. Sun sign (zodiac) from the birthday
-2. Life Path number - reduce the full birth date (MM+DD+YYYY) to single digit or master number (11, 22, 33)
-3. Destiny/Expression number - using Pythagorean numerology (A=1...I=9, J=1...R=9, S=1...Z=8), sum all letters of full name, reduce to single digit or master number
-4. Soul Urge/Heart's Desire number - sum only VOWELS (A, E, I, O, U) in the name using same system
-5. Personality number - sum only CONSONANTS in the name using same system
-6. Birth card - the playing card associated with their birthday in the Destiny Cards system
-7. Planetary ruling card - the secondary/planetary card in the Destiny Cards system
-
-Return exact values. For cards use format like "King of Spades", "Seven of Hearts", etc.`;
-
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          sun_sign: { type: "string" },
-          life_path: { type: "number" },
-          destiny_number: { type: "number" },
-          soul_urge_number: { type: "number" },
-          personality_number: { type: "number" },
-          birth_card: { type: "string" },
-          planetary_ruling_card: { type: "string" }
-        }
-      }
-    });
-
-    if (result) {
-      setFormData(prev => ({
-        ...prev,
-        astrological_sign: result.sun_sign || prev.astrological_sign,
-        numerology_life_path: result.life_path ? String(result.life_path) : prev.numerology_life_path,
-        numerology_destiny: result.destiny_number ? String(result.destiny_number) : prev.numerology_destiny,
-        numerology_soul_urge: result.soul_urge_number ? String(result.soul_urge_number) : prev.numerology_soul_urge,
-        numerology_personality: result.personality_number ? String(result.personality_number) : prev.numerology_personality,
-        birth_card: result.birth_card || prev.birth_card,
-        planetary_ruling_card: result.planetary_ruling_card || prev.planetary_ruling_card
-      }));
-    }
-    setIsRecalculating(false);
+    const autoFields = runAutoCalc(formData.birthday, profile?.display_name);
+    setFormData(prev => ({ ...prev, ...autoFields }));
+    setTimeout(() => setIsRecalculating(false), 300);
   };
 
   return (
@@ -117,8 +106,8 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
             disabled={isRecalculating || (!formData.birthday && !profile?.display_name)}
             className="gap-2"
           >
-            {isRecalculating ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-            Recalculate
+            {isRecalculating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+            Auto-Calculate
           </Button>
           <Button variant="outline" onClick={onCancel}>Cancel</Button>
           <Button className="bg-violet-600 hover:bg-violet-700" onClick={handleSave}>Save</Button>
@@ -142,9 +131,9 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
               type="date"
               className="mt-2"
               value={formData.birthday}
-              onChange={(e) => setFormData({ ...formData, birthday: e.target.value })}
+              onChange={(e) => handleBirthdayChange(e.target.value)}
             />
-            <p className="text-xs text-slate-500 mt-1">Used for mystical calculations</p>
+            <p className="text-xs text-slate-500 mt-1">Auto-calculates birth cards, sun sign & life path</p>
           </div>
 
           <div>
@@ -292,7 +281,7 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
               onValueChange={(v) => setFormData({ ...formData, birth_card: v })}
             >
               <SelectTrigger className="mt-2">
-                <SelectValue placeholder="Select tarot card" />
+                <SelectValue placeholder="Auto-calculated from birthday" />
               </SelectTrigger>
               <SelectContent className="max-h-64">
                 {TAROT_MAJOR_ARCANA.map((c) => (
@@ -300,6 +289,7 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
                 ))}
               </SelectContent>
             </Select>
+            <p className="text-xs text-violet-500 mt-1">Primary life purpose card</p>
           </div>
 
           <div>
@@ -309,14 +299,15 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
               onValueChange={(v) => setFormData({ ...formData, planetary_ruling_card: v })}
             >
               <SelectTrigger className="mt-2">
-                <SelectValue placeholder="Select card" />
+                <SelectValue placeholder="Auto-calculated from birthday" />
               </SelectTrigger>
               <SelectContent className="max-h-64">
-                {PLAYING_CARDS.map((c) => (
+                {TAROT_MAJOR_ARCANA.map((c) => (
                   <SelectItem key={c} value={c}>{c}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            <p className="text-xs text-violet-500 mt-1">Personality expression card</p>
           </div>
 
           <div>
@@ -326,14 +317,15 @@ Return exact values. For cards use format like "King of Spades", "Seven of Heart
               onValueChange={(v) => setFormData({ ...formData, sun_card: v })}
             >
               <SelectTrigger className="mt-2">
-                <SelectValue placeholder="Select card" />
+                <SelectValue placeholder="Auto-calculated from birthday" />
               </SelectTrigger>
               <SelectContent className="max-h-64">
-                {PLAYING_CARDS.map((c) => (
+                {TAROT_MAJOR_ARCANA.map((c) => (
                   <SelectItem key={c} value={c}>{c}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            <p className="text-xs text-violet-500 mt-1">Core essence card</p>
           </div>
         </div>
       </CardContent>
