@@ -26,10 +26,14 @@ import {
   Lock,
   Calendar,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Heart,
+  Flame
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from 'date-fns';
+import AlignmentActivityPicker from '@/components/journal/AlignmentActivityPicker';
+import AlignmentStreakTracker from '@/components/journal/AlignmentStreakTracker';
 
 const MOODS = [
   { value: 'grateful', label: '🙏 Grateful', color: 'bg-amber-100 text-amber-700' },
@@ -41,6 +45,14 @@ const MOODS = [
   { value: 'neutral', label: '😐 Neutral', color: 'bg-slate-100 text-slate-700' },
 ];
 
+const ENTRY_TYPES = [
+  { value: 'general', label: 'General Reflection' },
+  { value: 'heart_coherence', label: '💗 Heart Coherence' },
+  { value: 'alignment', label: '✨ Alignment Practice' },
+  { value: 'grid_mission', label: '🔮 Grid Mission' },
+  { value: 'transformative', label: '🔥 Transformative' },
+];
+
 const GGG_THRESHOLD = 33;
 const GGG_REWARD = 0.030;
 
@@ -50,6 +62,9 @@ export default function JournalTab({ profile }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [mood, setMood] = useState('neutral');
+  const [entryType, setEntryType] = useState('general');
+  const [alignmentActivities, setAlignmentActivities] = useState([]);
+  const [coherenceMinutes, setCoherenceMinutes] = useState(0);
   const [expandedEntries, setExpandedEntries] = useState({});
   const queryClient = useQueryClient();
 
@@ -58,6 +73,12 @@ export default function JournalTab({ profile }) {
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ['journalEntries', userId],
     queryFn: () => base44.entities.JournalEntry.filter({ user_id: userId }, '-created_date', 100),
+    enabled: !!userId
+  });
+
+  const { data: userBadges = [] } = useQuery({
+    queryKey: ['userBadges', userId],
+    queryFn: () => base44.entities.Badge.filter({ user_id: userId, status: 'active' }),
     enabled: !!userId
   });
 
@@ -119,15 +140,22 @@ export default function JournalTab({ profile }) {
     setTitle('');
     setContent('');
     setMood('neutral');
+    setEntryType('general');
+    setAlignmentActivities([]);
+    setCoherenceMinutes(0);
   };
 
   const handleSave = () => {
     if (!content.trim()) return;
 
+    const isAlignmentType = entryType !== 'general';
     const data = {
       title: title.trim() || null,
       content: content.trim(),
-      mood
+      mood,
+      entry_type: entryType,
+      alignment_activities: isAlignmentType ? alignmentActivities : [],
+      coherence_duration_minutes: entryType === 'heart_coherence' ? coherenceMinutes : 0
     };
 
     if (editingId) {
@@ -142,6 +170,9 @@ export default function JournalTab({ profile }) {
     setTitle(entry.title || '');
     setContent(entry.content);
     setMood(entry.mood || 'neutral');
+    setEntryType(entry.entry_type || 'general');
+    setAlignmentActivities(entry.alignment_activities || []);
+    setCoherenceMinutes(entry.coherence_duration_minutes || 0);
     setIsWriting(true);
   };
 
@@ -159,6 +190,9 @@ export default function JournalTab({ profile }) {
 
   return (
     <div className="space-y-6">
+      {/* Alignment Badge Progress */}
+      <AlignmentStreakTracker entries={entries} badges={userBadges} />
+
       {/* Progress Card */}
       <Card className="bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200">
         <CardContent className="pt-6">
@@ -232,8 +266,21 @@ export default function JournalTab({ profile }) {
               onChange={(e) => setContent(e.target.value)}
               className="min-h-[200px] resize-none"
             />
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-slate-600 mb-1 block">Entry Type</label>
+                <Select value={entryType} onValueChange={setEntryType}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ENTRY_TYPES.map((t) => (
+                      <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
                 <label className="text-sm text-slate-600 mb-1 block">How are you feeling?</label>
                 <Select value={mood} onValueChange={setMood}>
                   <SelectTrigger>
@@ -241,14 +288,32 @@ export default function JournalTab({ profile }) {
                   </SelectTrigger>
                   <SelectContent>
                     {MOODS.map((m) => (
-                      <SelectItem key={m.value} value={m.value}>
-                        {m.label}
-                      </SelectItem>
+                      <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
+
+            {entryType !== 'general' && (
+              <div className="space-y-3 p-4 bg-violet-50/50 rounded-lg border border-violet-100">
+                <label className="text-sm font-medium text-slate-700 block">Activities Practiced</label>
+                <AlignmentActivityPicker selected={alignmentActivities} onChange={setAlignmentActivities} />
+                {entryType === 'heart_coherence' && (
+                  <div className="flex items-center gap-3 mt-2">
+                    <label className="text-sm text-slate-600">Duration (minutes):</label>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={480}
+                      value={coherenceMinutes}
+                      onChange={(e) => setCoherenceMinutes(parseInt(e.target.value) || 0)}
+                      className="w-24"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
             <div className="flex items-center justify-between pt-2">
               <div className="flex items-center gap-2 text-slate-500">
                 <Lock className="w-4 h-4" />
@@ -312,6 +377,19 @@ export default function JournalTab({ profile }) {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2 flex-wrap">
+                          {entry.entry_type && entry.entry_type !== 'general' && (
+                            <Badge className={cn("text-xs", 
+                              entry.entry_type === 'heart_coherence' ? 'bg-pink-100 text-pink-700' :
+                              entry.entry_type === 'alignment' ? 'bg-violet-100 text-violet-700' :
+                              entry.entry_type === 'grid_mission' ? 'bg-indigo-100 text-indigo-700' :
+                              'bg-amber-100 text-amber-700'
+                            )}>
+                              {entry.entry_type === 'heart_coherence' ? '💗 Coherence' :
+                               entry.entry_type === 'alignment' ? '✨ Alignment' :
+                               entry.entry_type === 'grid_mission' ? '🔮 Grid' :
+                               '🔥 Transformative'}
+                            </Badge>
+                          )}
                           <Badge className={cn("text-xs", moodDisplay.color)}>
                             {moodDisplay.label}
                           </Badge>

@@ -1,0 +1,78 @@
+{
+  "name": "JournalEntry",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User who owns this journal entry"
+    },
+    "title": {
+      "type": "string",
+      "description": "Optional title for the entry"
+    },
+    "content": {
+      "type": "string",
+      "description": "The journal entry content"
+    },
+    "mood": {
+      "type": "string",
+      "enum": [
+        "grateful",
+        "peaceful",
+        "inspired",
+        "reflective",
+        "challenged",
+        "growing",
+        "neutral"
+      ],
+      "description": "Mood or feeling associated with the entry"
+    },
+    "entry_type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "heart_coherence",
+        "alignment",
+        "grid_mission",
+        "transformative"
+      ],
+      "default": "general",
+      "description": "Type of journal entry for badge tracking"
+    },
+    "alignment_activities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Alignment activities completed (meditation, breathwork, prayer, energy_work, gratitude, service, study)"
+    },
+    "coherence_duration_minutes": {
+      "type": "number",
+      "default": 0,
+      "description": "Duration of heart coherence practice in minutes"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Tags for categorizing entries"
+    },
+    "is_private": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether entry is private or shareable"
+    },
+    "ggg_claimed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether GGG reward has been claimed for this entry"
+    }
+  },
+  "required": [
+    "user_id",
+    "content"
+  ]
+}
