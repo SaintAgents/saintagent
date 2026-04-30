@@ -240,6 +240,25 @@ export default function Missions() {
 
   const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8d702dc79_gemini-25-flash-image_A_sacred_futuristic_council_chamber_within_Saint_Agents_World_blending_ancient_w-6.jpg";
 
+  const INSPIRATION_MESSAGES = [
+    "Join Collaborative Missions to Earn GGG, Rank Points & Boosts",
+    "Unite with fellow agents — every mission strengthens the collective",
+    "Your skills are needed. Find a mission that aligns with your purpose.",
+    "Small actions, massive impact. Start a mission today.",
+    "The world changes one mission at a time. Lead or join the charge.",
+    "Collaborate, create, and earn — missions are where magic happens.",
+    "Every completed mission raises your rank and trust score.",
+    "Turn your vision into action. Launch a mission and rally your team.",
+    "Missions aren't just tasks — they're pathways to transformation.",
+    "Ready to make a difference? Your next mission awaits.",
+    "Together we build what none of us can alone. Join a mission.",
+    "Earn while you serve. Missions reward impact, not just effort.",
+    "From idea to impact — missions turn dreams into reality.",
+    "The council needs you. Step up and accept the call.",
+    "Align your energy with purpose. There's a mission for every gift."
+  ];
+  const [heroMessage] = useState(() => INSPIRATION_MESSAGES[Math.floor(Math.random() * INSPIRATION_MESSAGES.length)]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none dark:from-transparent dark:via-transparent dark:to-transparent relative">
       {/* Hero Section */}
@@ -264,7 +283,7 @@ export default function Missions() {
             </div>
             <div className="p-4 rounded-2xl bg-black/[0.04] backdrop-blur-sm border border-white/20 mt-4">
               <p className="text-emerald-200/[0.92] text-base tracking-wider drop-shadow-lg">
-                Join Collaborative Missions to Earn GGG, Rank Points & Boosts
+                {heroMessage}
               </p>
             </div>
           </div>
