@@ -254,7 +254,7 @@ export default function AIRiskScoring() {
             <div className="text-2xl font-bold text-orange-700">{highCount}</div>
           </CardContent>
         </Card>
-        <Card className="border-slate-200">
+        <Card className="border-amber-200 bg-amber-50/30">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-amber-600 mb-1"><AlertCircle className="w-4 h-4" /><span className="text-xs font-medium">Medium (25-44)</span></div>
             <div className="text-2xl font-bold text-amber-700">{scored.filter(s => s.risk.grade === 'medium').length}</div>
