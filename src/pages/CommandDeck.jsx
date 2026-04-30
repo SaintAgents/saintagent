@@ -1588,7 +1588,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         {/* Main Grid - Collapsible Cards */}
         <div className="px-0 md:px-6 relative min-h-[1200px] w-full max-w-full overflow-x-hidden">
           <div className="block space-y-6">
-            {isCardVisible('news') && <CollapsibleCard title="News & Updates" cardId="news" icon={Newspaper} badge="New" badgeColor="violet" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/news_hero.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('news')} onToggleHide={() => toggleCardVisibility('news')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('News')} navigateTo={createPageUrl('News')}>
+            {isCardVisible('news') && <CollapsibleCard title="News & Updates" cardId="news" icon={Newspaper} badge="New" badgeColor="violet" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/news_hero.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('news')} onToggleHide={() => toggleCardVisibility('news')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('News')} navigateTo={createPageUrl('News')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['newsArticles'] })}>
               <NewsCard />
             </CollapsibleCard>}
 
@@ -1650,11 +1650,12 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               isHidden={hiddenCards.has('challenges')} 
               onToggleHide={() => toggleCardVisibility('challenges')} 
               onTossToSidePanel={handleTossToSidePanel}
+              onRefresh={() => queryClient.refetchQueries({ queryKey: ['challenges'] })}
             >
               <GamificationWidget profile={profile} />
             </CollapsibleCard>}
 
-            {isCardVisible('inbox') && <CollapsibleCard title="Inbox & Signals" cardId="inbox" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('inbox')} onToggleHide={() => toggleCardVisibility('inbox')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('inbox') && <CollapsibleCard title="Inbox & Signals" cardId="inbox" icon={Radio} badge={notifications.length} badgeColor="rose" backgroundImage="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" onPopout={() => setInboxPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('inbox')} onToggleHide={() => toggleCardVisibility('inbox')} onTossToSidePanel={handleTossToSidePanel} onRefresh={() => queryClient.refetchQueries({ queryKey: ['notifications', currentUser?.email] })}>
               <InboxSignals notifications={notifications} />
             </CollapsibleCard>}
 
@@ -1662,15 +1663,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <CollaborationSuggestions profile={profile} compact={false} />
             </CollapsibleCard>}
 
-            {isCardVisible('communityFeed') && <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+            {isCardVisible('communityFeed') && <CollapsibleCard title="Community Feed" cardId="communityFeed" icon={Sparkles} backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/ae589aa03_universal_upscale_0_56f51cb9-0490-420c-a398-fabdc48611df_0.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('communityFeed')} onToggleHide={() => toggleCardVisibility('communityFeed')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}} onRefresh={() => queryClient.refetchQueries({ queryKey: ['communityPosts'] })}>
               <CommunityFeedCard maxHeight="400px" />
             </CollapsibleCard>}
 
-            {isCardVisible('circles') && <CollapsibleCard title="Circles & Regions" cardId="circles" icon={Users} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('circles')} onToggleHide={() => toggleCardVisibility('circles')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('circles') && <CollapsibleCard title="Circles & Regions" cardId="circles" icon={Users} defaultOpen={false} backgroundImage="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" onPopout={() => setCirclesPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('circles')} onToggleHide={() => toggleCardVisibility('circles')} onTossToSidePanel={handleTossToSidePanel} onRefresh={() => queryClient.refetchQueries({ queryKey: ['circles'] })}>
               <CirclesRegions />
             </CollapsibleCard>}
 
-            {isCardVisible('leaderboard') && <CollapsibleCard title="Leaderboard" cardId="leaderboard" icon={Trophy} backgroundImage="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leaderboard')} onToggleHide={() => toggleCardVisibility('leaderboard')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}}>
+            {isCardVisible('leaderboard') && <CollapsibleCard title="Leaderboard" cardId="leaderboard" icon={Trophy} backgroundImage="https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('leaderboard')} onToggleHide={() => toggleCardVisibility('leaderboard')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => {}} onRefresh={() => queryClient.refetchQueries({ queryKey: ['leaderboard'] })}>
               <LeaderboardMiniCard />
             </CollapsibleCard>}
 
@@ -1678,11 +1679,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <StGermainAffirmations />
             </CollapsibleCard>}
 
-            {isCardVisible('testimonials') && <CollapsibleCard title="Community Voices" cardId="testimonials" icon={MessageCircle} badge="Live" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('testimonials')} onToggleHide={() => toggleCardVisibility('testimonials')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Profiles')}>
+            {isCardVisible('testimonials') && <CollapsibleCard title="Community Voices" cardId="testimonials" icon={MessageCircle} badge="Live" badgeColor="emerald" backgroundImage="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('testimonials')} onToggleHide={() => toggleCardVisibility('testimonials')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Profiles')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['testimonials'] })}>
               <TestimonialsCompact limit={5} />
             </CollapsibleCard>}
 
-            {isCardVisible('videos') && <CollapsibleCard title="SaintTube Videos" cardId="videos" icon={Play} badge="20 min max" badgeColor="red" backgroundImage="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('videos')} onToggleHide={() => toggleCardVisibility('videos')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Videos')}>
+            {isCardVisible('videos') && <CollapsibleCard title="SaintTube Videos" cardId="videos" icon={Play} badge="20 min max" badgeColor="red" backgroundImage="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&q=80" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('videos')} onToggleHide={() => toggleCardVisibility('videos')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Videos')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['videos'] })}>
               <VideosDashboardCard profile={profile} currentUser={currentUser} />
             </CollapsibleCard>}
 
@@ -1691,7 +1692,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             </CollapsibleCard>}
 
             {isCardVisible('deepDisclosure') && <CollapsibleCard title="Deep Disclosure Podcast" cardId="deepDisclosure" icon={Mic} badge="Podcast" badgeColor="violet" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('deepDisclosure')} onToggleHide={() => toggleCardVisibility('deepDisclosure')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Broadcast')} navigateTo={createPageUrl('Broadcast')}><DeepDisclosureDeckCard /></CollapsibleCard>}
-            {isCardVisible('globalSchedule') && <CollapsibleCard title="Global Schedule" cardId="globalSchedule" icon={Calendar} badge="Live" badgeColor="emerald" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c1538f946_meets.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('globalSchedule')} onToggleHide={() => toggleCardVisibility('globalSchedule')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Schedule')}><GlobalScheduleCard /></CollapsibleCard>}
+            {isCardVisible('globalSchedule') && <CollapsibleCard title="Global Schedule" cardId="globalSchedule" icon={Calendar} badge="Live" badgeColor="emerald" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c1538f946_meets.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('globalSchedule')} onToggleHide={() => toggleCardVisibility('globalSchedule')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Schedule')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['globalSchedule'] })}><GlobalScheduleCard /></CollapsibleCard>}
 
             {isCardVisible('leaderPathway') && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
               <LeaderPathway profile={profile} />
@@ -1706,7 +1707,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </CollapsibleCard>}
 
-            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint />{profile?.auto_scan_prefs?.new_matches_count > 0 && <MatchScanPulse count={profile.auto_scan_prefs.new_matches_count} variant="badge" />}</span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Matches')}>
+            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint />{profile?.auto_scan_prefs?.new_matches_count > 0 && <MatchScanPulse count={profile.auto_scan_prefs.new_matches_count} variant="badge" />}</span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Matches')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['matches'] })}>
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
@@ -1740,7 +1741,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </Tabs>
             </CollapsibleCard>}
 
-            {isCardVisible('meetings') && <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('meetings')} onToggleHide={() => toggleCardVisibility('meetings')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Meetings')}>
+            {isCardVisible('meetings') && <CollapsibleCard title="Meetings & Momentum" cardId="meetings" icon={Calendar} badge={pendingMeetings.length > 0 ? `${pendingMeetings.length} pending` : undefined} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" onPopout={() => setMeetingsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('meetings')} onToggleHide={() => toggleCardVisibility('meetings')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Meetings')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['dashboardMeetings'], exact: true })}>
               <div className="space-y-3">
                 {scheduledMeetings.length === 0 && pendingMeetings.length === 0 ?
                 <div className="text-center py-6">
@@ -1758,7 +1759,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </CollapsibleCard>}
 
-            {isCardVisible('missions') && <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('missions')} onToggleHide={() => toggleCardVisibility('missions')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Missions')}>
+            {isCardVisible('missions') && <CollapsibleCard title="Missions" cardId="missions" icon={Target} badge={missions.length} badgeColor="amber" backgroundImage="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" onPopout={() => setMissionsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('missions')} onToggleHide={() => toggleCardVisibility('missions')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Missions')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['dashboardMissions', currentUser?.email], exact: true })}>
               <div className="space-y-3">
                 {missions.length === 0 ?
                 <div className="text-center py-6">
@@ -1776,7 +1777,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
             </CollapsibleCard>}
 
-            {isCardVisible('projects') && <CollapsibleCard title="Projects" cardId="projects" icon={Folder} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('projects')} onToggleHide={() => toggleCardVisibility('projects')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Projects')}>
+            {isCardVisible('projects') && <CollapsibleCard title="Projects" cardId="projects" icon={Folder} defaultOpen={true} backgroundImage="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=800&q=80" onPopout={() => setProjectsPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('projects')} onToggleHide={() => toggleCardVisibility('projects')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Projects')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['dashboardProjects', currentUser?.email], exact: true })}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                 <div className="p-3 rounded-xl bg-slate-50 border"><div className="text-xs text-slate-500">Total</div><div className="text-xl font-bold">{totalProjects}</div></div>
                 <div className="p-3 rounded-xl bg-violet-50 border"><div className="text-xs text-violet-700">Submitted</div><div className="text-xl font-bold text-violet-700">{submittedCount}</div></div>
@@ -1825,7 +1826,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         {(dragProvided) =>
                     <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
                             {id === 'market' &&
-                      <CollapsibleCard title="Marketplace: Earn & Learn" cardId="market" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('market')} onToggleHide={() => toggleCardVisibility('market')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Marketplace')}>
+                      <CollapsibleCard title="Marketplace: Earn & Learn" cardId="market" icon={ShoppingBag} backgroundImage="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" onPopout={() => setMarketPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('market')} onToggleHide={() => toggleCardVisibility('market')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Marketplace')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['listings'] })}>
                                 <Tabs defaultValue="offers" className="w-full">
                                   <TabsList className="w-full grid grid-cols-3 mb-4">
                                     <TabsTrigger value="offers" className="text-xs">My Offers</TabsTrigger>

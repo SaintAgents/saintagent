@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDown, Pin, MoreHorizontal, ExternalLink, Eye, EyeOff, Maximize2, PanelRight, ArrowRight } from "lucide-react";
+import { ChevronDown, Pin, MoreHorizontal, ExternalLink, Eye, EyeOff, Maximize2, PanelRight, ArrowRight, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -35,8 +35,10 @@ export default function CollapsibleCard({
   isHidden,
   onToggleHide,
   onTossToSidePanel, // Prop for toss functionality (button only)
-  navigateTo // Navigation URL or page name
+  navigateTo, // Navigation URL or page name
+  onRefresh // Optional refresh callback
 }) {
+  const [refreshing, setRefreshing] = React.useState(false);
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const cardRef = useRef(null);
 
@@ -138,6 +140,23 @@ export default function CollapsibleCard({
           }
         </div>
         <div className="flex items-center gap-1">
+          {onRefresh && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 hover:bg-violet-100"
+              disabled={refreshing}
+              onClick={async (e) => {
+                e.stopPropagation();
+                setRefreshing(true);
+                try { await onRefresh(); } catch {}
+                setTimeout(() => setRefreshing(false), 1000);
+              }}
+              title="Refresh data"
+            >
+              <RefreshCw className={`w-4 h-4 text-slate-400 hover:text-violet-600 ${refreshing ? 'animate-spin' : ''}`} />
+            </Button>
+          )}
           {onTossToSidePanel && (
             <Button
               variant="ghost"
