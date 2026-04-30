@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,11 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { 
   FileText, Target, Users, MessageSquare, Calendar, Star, 
-  TrendingUp, Activity, Zap, Award, Clock, BarChart3, Flame, RefreshCcw
+  TrendingUp, Activity, Zap, Award, Clock, BarChart3, Flame, RefreshCcw, ChevronDown
 } from 'lucide-react';
 import { format, subDays, isAfter, parseISO, startOfWeek, differenceInDays } from 'date-fns';
+import DrilldownList from './DrilldownList';
 
-function StatCard({ icon: Icon, label, value, subtext, color = 'violet', trend }) {
+function StatCard({ icon: Icon, label, value, subtext, color = 'violet', trend, onClick, active }) {
   const colorClasses = {
     violet: 'bg-violet-100 text-violet-600',
     emerald: 'bg-emerald-100 text-emerald-600',
@@ -21,17 +22,33 @@ function StatCard({ icon: Icon, label, value, subtext, color = 'violet', trend }
     cyan: 'bg-cyan-100 text-cyan-600',
   };
 
+  const borderColor = {
+    violet: 'border-violet-400',
+    emerald: 'border-emerald-400',
+    amber: 'border-amber-400',
+    blue: 'border-blue-400',
+    pink: 'border-pink-400',
+    cyan: 'border-cyan-400',
+  };
+
   return (
-    <div className="bg-white border border-slate-200 p-4 hover:shadow-md transition-shadow">
+    <div
+      onClick={onClick}
+      className={`bg-white border p-4 hover:shadow-md transition-all cursor-pointer select-none ${
+        active ? `${borderColor[color]} border-2 shadow-md` : 'border-slate-200'
+      }`}
+    >
       <div className="flex items-start justify-between">
         <div className={`p-2 rounded-lg ${colorClasses[color]}`}>
           <Icon className="w-5 h-5" />
         </div>
-        {trend !== undefined && (
+        {active ? (
+          <ChevronDown className="w-4 h-4 text-slate-400" />
+        ) : trend !== undefined ? (
           <Badge variant="outline" className={trend >= 0 ? 'text-emerald-600 border-emerald-300' : 'text-red-600 border-red-300'}>
             {trend >= 0 ? '+' : ''}{trend}%
           </Badge>
-        )}
+        ) : null}
       </div>
       <div className="mt-3">
         <p className="text-2xl font-bold text-slate-900">{value}</p>
@@ -102,6 +119,11 @@ function RecentActivityList({ activities }) {
 
 export default function UserActivityDashboard({ userId, userEmail }) {
   const queryClient = useQueryClient();
+  const [expandedCard, setExpandedCard] = useState(null);
+
+  const toggleCard = (cardKey) => {
+    setExpandedCard(prev => prev === cardKey ? null : cardKey);
+  };
 
   // Fetch all user activity data in a single query to reduce API calls
   const { data: activityData, isFetching } = useQuery({
@@ -240,8 +262,10 @@ export default function UserActivityDashboard({ userId, userEmail }) {
       postsThisWeek,
       postsThisMonth,
       joinedMissions: joinedMissions.length,
+      joinedMissionsList: joinedMissions,
       missionsThisMonth,
       circleInteractions: circleInteractions.length,
+      circleInteractionsList: circleInteractions,
       totalMeetings,
       meetingsThisWeek,
       totalTestimonials,
@@ -293,14 +317,30 @@ export default function UserActivityDashboard({ userId, userEmail }) {
 
       <div className="p-6">
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          <StatCard icon={FileText} label="Total Posts" value={metrics.totalPosts} subtext={`${metrics.postsThisWeek} this week`} color="pink" />
-          <StatCard icon={Target} label="Missions" value={metrics.joinedMissions} subtext={`${metrics.missionsThisMonth} this month`} color="amber" />
-          <StatCard icon={Users} label="Circles" value={metrics.circleInteractions} color="blue" />
-          <StatCard icon={Calendar} label="Meetings" value={metrics.totalMeetings} subtext={`${metrics.meetingsThisWeek} upcoming`} color="cyan" />
-          <StatCard icon={Star} label="Testimonials" value={metrics.totalTestimonials} subtext="Given" color="emerald" />
-          <StatCard icon={MessageSquare} label="Following" value={metrics.followingCount} color="violet" />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-2">
+          <StatCard icon={FileText} label="Total Posts" value={metrics.totalPosts} subtext={`${metrics.postsThisWeek} this week`} color="pink" onClick={() => toggleCard('posts')} active={expandedCard === 'posts'} />
+          <StatCard icon={Target} label="Missions" value={metrics.joinedMissions} subtext={`${metrics.missionsThisMonth} this month`} color="amber" onClick={() => toggleCard('missions')} active={expandedCard === 'missions'} />
+          <StatCard icon={Users} label="Circles" value={metrics.circleInteractions} color="blue" onClick={() => toggleCard('circles')} active={expandedCard === 'circles'} />
+          <StatCard icon={Calendar} label="Meetings" value={metrics.totalMeetings} subtext={`${metrics.meetingsThisWeek} upcoming`} color="cyan" onClick={() => toggleCard('meetings')} active={expandedCard === 'meetings'} />
+          <StatCard icon={Star} label="Testimonials" value={metrics.totalTestimonials} subtext="Given" color="emerald" onClick={() => toggleCard('testimonials')} active={expandedCard === 'testimonials'} />
+          <StatCard icon={MessageSquare} label="Following" value={metrics.followingCount} color="violet" onClick={() => toggleCard('following')} active={expandedCard === 'following'} />
         </div>
+
+        {/* Drilldown Panel */}
+        {expandedCard && (
+          <DrilldownList
+            type={expandedCard}
+            label={
+              { posts: 'Posts', missions: 'Missions', circles: 'Circles', meetings: 'Meetings', testimonials: 'Testimonials', following: 'Following' }[expandedCard]
+            }
+            items={
+              { posts, missions: metrics.joinedMissionsList, circles: metrics.circleInteractionsList, meetings, testimonials, following: follows }[expandedCard] || []
+            }
+            onClose={() => setExpandedCard(null)}
+          />
+        )}
+
+        <div className="mb-6" />
 
         {/* Activity Pattern & Recent Activity */}
         <div className="grid md:grid-cols-2 gap-6">
