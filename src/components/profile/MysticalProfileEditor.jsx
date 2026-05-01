@@ -27,6 +27,13 @@ const TAROT_MAJOR_ARCANA = [
   'XX - Judgement','XXI - The World'
 ];
 
+const SUITS = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+const RANKS = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
+const ALL_PLAYING_CARDS = [
+  ...SUITS.flatMap(suit => RANKS.map(rank => `${rank} of ${suit}`)),
+  'Joker'
+];
+
 export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
   const [formData, setFormData] = useState({
     mystical_identifier: profile?.mystical_identifier || '',
@@ -317,23 +324,39 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
 
           <div>
             <Label>Sun Card (Playing Card)</Label>
-            <Input
-              className="mt-2"
-              value={formData.sun_card}
-              readOnly
-              placeholder="Auto-calculated from birthday"
-            />
+            <Select
+              value={formData.sun_card || 'none'}
+              onValueChange={(v) => setFormData({ ...formData, sun_card: v === 'none' ? '' : v })}
+            >
+              <SelectTrigger className="mt-2">
+                <SelectValue placeholder="Auto-calculated from birthday" />
+              </SelectTrigger>
+              <SelectContent className="max-h-64">
+                <SelectItem value="none">None</SelectItem>
+                {ALL_PLAYING_CARDS.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <p className="text-xs text-violet-500 mt-1">Cards of Destiny — core essence</p>
           </div>
 
           <div>
-            <Label>Planetary Ruling Card (Playing Card)</Label>
-            <Input
-              className="mt-2"
-              value={formData.planetary_ruling_card}
-              readOnly
-              placeholder="Auto-calculated from birthday"
-            />
+            <Label>Secondary Card (Playing Card)</Label>
+            <Select
+              value={formData.planetary_ruling_card || 'none'}
+              onValueChange={(v) => setFormData({ ...formData, planetary_ruling_card: v === 'none' ? '' : v })}
+            >
+              <SelectTrigger className="mt-2">
+                <SelectValue placeholder="Auto-calculated from birthday" />
+              </SelectTrigger>
+              <SelectContent className="max-h-64">
+                <SelectItem value="none">None</SelectItem>
+                {ALL_PLAYING_CARDS.map((c) => (
+                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <p className="text-xs text-violet-500 mt-1">Cards of Destiny — planetary ruler</p>
           </div>
         </div>

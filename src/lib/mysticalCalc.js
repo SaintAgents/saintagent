@@ -122,7 +122,7 @@ const CARD_OF_DESTINY_SUN = {
   "05-13": "8 of Clubs", "05-14": "6 of Diamonds", "05-15": "4 of Hearts",
   "05-16": "2 of Clubs", "05-17": "King of Diamonds", "05-18": "Jack of Clubs",
   "05-19": "9 of Spades", "05-20": "7 of Hearts", "05-21": "5 of Clubs",
-  "05-22": "3 of Diamonds", "05-23": "Ace of Hearts", "05-24": "Queen of Clubs",
+  "05-22": "8 of Diamonds", "05-23": "Ace of Hearts", "05-24": "Queen of Clubs",
   "05-25": "10 of Spades", "05-26": "8 of Hearts", "05-27": "6 of Clubs",
   "05-28": "4 of Diamonds", "05-29": "2 of Hearts", "05-30": "King of Clubs",
   "05-31": "Jack of Spades",
@@ -209,19 +209,10 @@ const CARD_OF_DESTINY_SUN = {
   "12-31": "Joker"
 };
 
-// Secondary / Planetary Ruling playing card — shifted by one position in the cycle
+// Secondary / Planetary Ruling playing card
+// Only partial entries shown — fallback returns empty string for unmapped dates
 const CARD_OF_DESTINY_PLANETARY = {
-  "01-01": "Ace of Spades", "01-02": "9 of Clubs", "01-03": "6 of Spades",
-  "01-04": "4 of Clubs", "01-05": "2 of Diamonds", "01-06": "King of Hearts",
-  "01-07": "Jack of Diamonds", "01-08": "9 of Clubs", "01-09": "7 of Spades",
-  "01-10": "5 of Diamonds", "01-11": "3 of Clubs", "01-12": "Ace of Spades",
-  "01-13": "Queen of Diamonds", "01-14": "10 of Clubs", "01-15": "8 of Spades",
-  "01-16": "6 of Hearts", "01-17": "4 of Clubs", "01-18": "2 of Spades",
-  "01-19": "King of Hearts", "01-20": "Jack of Diamonds", "01-21": "9 of Spades",
-  "01-22": "7 of Diamonds", "01-23": "5 of Clubs", "01-24": "3 of Spades",
-  "01-25": "Ace of Diamonds", "01-26": "Queen of Hearts", "01-27": "10 of Spades",
-  "01-28": "8 of Diamonds", "01-29": "6 of Clubs", "01-30": "4 of Spades",
-  "01-31": "2 of Diamonds"
+  "05-22": "10 of Clubs"
 };
 
 /**
