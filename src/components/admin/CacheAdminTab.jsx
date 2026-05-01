@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import CacheStatsBar from '@/components/admin/CacheStatsBar';
 import CacheGroupEditor from '@/components/admin/CacheGroupEditor';
+import LoadBalanceAnalyzer from '@/components/admin/LoadBalanceAnalyzer';
 
 const DEFAULT_CONFIG = {
   groups: {
@@ -150,6 +151,19 @@ export default function CacheAdminTab() {
 
       {/* Stats */}
       <CacheStatsBar stats={cacheStats} />
+
+      {/* Load Balance Analyzer */}
+      <LoadBalanceAnalyzer 
+        config={config} 
+        onApplySuggestion={(optimized) => {
+          setConfig(prev => ({
+            ...prev,
+            groups: { ...prev.groups, ...(optimized.groups || {}) },
+            globalDefaults: { ...prev.globalDefaults, ...(optimized.globalDefaults || {}) },
+          }));
+          setDirty(true);
+        }}
+      />
 
       {/* Quick Actions */}
       <Card>

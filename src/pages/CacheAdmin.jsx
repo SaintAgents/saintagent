@@ -15,6 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import CacheStatsBar from '@/components/admin/CacheStatsBar';
 import CacheGroupEditor from '@/components/admin/CacheGroupEditor';
+import LoadBalanceAnalyzer from '@/components/admin/LoadBalanceAnalyzer';
 
 const DEFAULT_CONFIG = {
   groups: {
@@ -209,6 +210,19 @@ export default function CacheAdmin() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 mt-8 space-y-8">
+        {/* Load Balance Analyzer */}
+        <LoadBalanceAnalyzer 
+          config={config} 
+          onApplySuggestion={(optimized) => {
+            setConfig(prev => ({
+              ...prev,
+              groups: { ...prev.groups, ...(optimized.groups || {}) },
+              globalDefaults: { ...prev.globalDefaults, ...(optimized.globalDefaults || {}) },
+            }));
+            setDirty(true);
+          }}
+        />
+
         {/* Quick Actions */}
         <Card>
           <CardHeader className="pb-3">
