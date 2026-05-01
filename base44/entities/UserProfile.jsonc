@@ -426,13 +426,20 @@
       "type": "string"
     },
     "birth_card": {
-      "type": "string"
+      "type": "string",
+      "description": "Tarot Birth Card 1"
+    },
+    "birth_card_2": {
+      "type": "string",
+      "description": "Tarot Birth Card 2"
     },
     "planetary_ruling_card": {
-      "type": "string"
+      "type": "string",
+      "description": "Playing card Sun Card from Cards of Destiny"
     },
     "sun_card": {
-      "type": "string"
+      "type": "string",
+      "description": "Playing card Secondary Card from Cards of Destiny"
     },
     "spiritual_practices": {
       "type": "array",

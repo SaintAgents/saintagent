@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { base44 } from '@/api/base44Client';
 import { RefreshCw, Loader2, Sparkles } from 'lucide-react';
 import {
-  calcBirthCards, calcSunSign, calcLifePath,
+  calcBirthCards, calcPlayingCards, calcSunSign, calcLifePath,
   calcDestinyNumber, calcSoulUrge, calcPersonalityNumber
 } from '@/lib/mysticalCalc';
 
@@ -40,6 +40,7 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
     numerology_personality: profile?.numerology_personality != null ? String(profile?.numerology_personality) : '',
     enneagram_type: profile?.enneagram_type || '',
     birth_card: profile?.birth_card || '',
+    birth_card_2: profile?.birth_card_2 || '',
     planetary_ruling_card: profile?.planetary_ruling_card || '',
     sun_card: profile?.sun_card || ''
   });
@@ -49,11 +50,15 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
   const runAutoCalc = useCallback((birthday, name) => {
     const updates = {};
     if (birthday) {
-      const cards = calcBirthCards(birthday);
-      if (cards) {
-        updates.birth_card = cards.birth_card;
-        updates.planetary_ruling_card = cards.planetary_ruling_card;
-        updates.sun_card = cards.sun_card;
+      const tarotCards = calcBirthCards(birthday);
+      if (tarotCards) {
+        updates.birth_card = tarotCards.birth_card;
+        updates.birth_card_2 = tarotCards.birth_card_2;
+      }
+      const playingCards = calcPlayingCards(birthday);
+      if (playingCards) {
+        updates.sun_card = playingCards.sun_card;
+        updates.planetary_ruling_card = playingCards.planetary_ruling_card;
       }
       updates.astrological_sign = calcSunSign(birthday) || undefined;
       updates.numerology_life_path = calcLifePath(birthday) || undefined;
@@ -275,7 +280,7 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
           </div>
 
           <div>
-            <Label>Birth Card (Tarot)</Label>
+            <Label>Birth Card 1 (Tarot)</Label>
             <Select
               value={formData.birth_card}
               onValueChange={(v) => setFormData({ ...formData, birth_card: v })}
@@ -293,10 +298,10 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
           </div>
 
           <div>
-            <Label>Planetary Ruling Card</Label>
+            <Label>Birth Card 2 (Tarot)</Label>
             <Select
-              value={formData.planetary_ruling_card}
-              onValueChange={(v) => setFormData({ ...formData, planetary_ruling_card: v })}
+              value={formData.birth_card_2}
+              onValueChange={(v) => setFormData({ ...formData, birth_card_2: v })}
             >
               <SelectTrigger className="mt-2">
                 <SelectValue placeholder="Auto-calculated from birthday" />
@@ -307,25 +312,29 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs text-violet-500 mt-1">Personality expression card</p>
+            <p className="text-xs text-violet-500 mt-1">Secondary birth card</p>
           </div>
 
           <div>
-            <Label>Sun Card</Label>
-            <Select
+            <Label>Sun Card (Playing Card)</Label>
+            <Input
+              className="mt-2"
               value={formData.sun_card}
-              onValueChange={(v) => setFormData({ ...formData, sun_card: v })}
-            >
-              <SelectTrigger className="mt-2">
-                <SelectValue placeholder="Auto-calculated from birthday" />
-              </SelectTrigger>
-              <SelectContent className="max-h-64">
-                {TAROT_MAJOR_ARCANA.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-violet-500 mt-1">Core essence card</p>
+              readOnly
+              placeholder="Auto-calculated from birthday"
+            />
+            <p className="text-xs text-violet-500 mt-1">Cards of Destiny — core essence</p>
+          </div>
+
+          <div>
+            <Label>Planetary Ruling Card (Playing Card)</Label>
+            <Input
+              className="mt-2"
+              value={formData.planetary_ruling_card}
+              readOnly
+              placeholder="Auto-calculated from birthday"
+            />
+            <p className="text-xs text-violet-500 mt-1">Cards of Destiny — planetary ruler</p>
           </div>
         </div>
       </CardContent>
