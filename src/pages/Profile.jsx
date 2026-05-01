@@ -363,12 +363,11 @@ export default function Profile() {
   };
 
   const handleSpiritualProfileSave = async (spiritualData) => {
-    try {
-      await updateMutation.mutateAsync(spiritualData);
-      setEditingSpiritualProfile(false);
-    } catch (err) {
-      console.error('Failed to save spiritual profile:', err);
-    }
+    await base44.entities.UserProfile.update(profile.id, spiritualData);
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+    queryClient.refetchQueries({ queryKey: ['userProfile', targetUserId] });
+    setEditingSpiritualProfile(false);
   };
 
   const handleMysticalProfileSave = async (data) => {

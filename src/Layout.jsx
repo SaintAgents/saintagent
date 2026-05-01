@@ -1712,13 +1712,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
             mix-blend-mode: normal !important;
           }
 
-          /* HACKER THEME - ALL images get green monochrome filter EXCEPT gauge images */
-          [data-theme='hacker'] img:not(.gauge-image):not([data-no-filter="true"]),
-          [data-theme='hacker'] img.hero-image:not(.gauge-image),
-          [data-theme='hacker'] .hero-image:not(.gauge-image),
-          html[data-theme='hacker'] img:not(.gauge-image):not([data-no-filter="true"]),
-          html[data-theme='hacker'] img.hero-image:not(.gauge-image),
-          html[data-theme='hacker'] .hero-image:not(.gauge-image) { 
+          /* HACKER THEME - ALL images get green monochrome filter - NO EXCEPTIONS */
+          [data-theme='hacker'] img,
+          html[data-theme='hacker'] img { 
             filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important; 
             -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
           }
@@ -1733,37 +1729,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
             filter: none !important; 
           }
 
-          /* HACKER THEME - Force green filter on ALL images including avatars, badges, everything */
-          [data-theme='hacker'] .mission-card img:not(.gauge-image),
-          [data-theme='hacker'] .mission-image,
-          [data-theme='hacker'] .rank-badge-img,
-          [data-theme='hacker'] [class*='Avatar'] img,
-          [data-theme='hacker'] .avatar-image,
-          [data-theme='hacker'] [data-slot='avatar'] img,
-          [data-theme='hacker'] svg:not(.gauge-image *),
-          [data-theme='hacker'] [data-user-id] img:not(.gauge-image):not([alt="Trust Gauge"]),
-          [data-theme='hacker'] [data-avatar-card] img:not(.gauge-image):not([alt="Trust Gauge"]),
-          html[data-theme='hacker'] [data-user-id] img:not(.gauge-image):not([alt="Trust Gauge"]),
-          html[data-theme='hacker'] [data-avatar-card] img:not(.gauge-image):not([alt="Trust Gauge"]),
-          [data-theme='hacker'] .rounded-full img:not(.gauge-image):not([alt="Trust Gauge"]) {
-            filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-            -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-          }
-
-          /* HACKER THEME - Gauge images get green monochrome filter */
-          html[data-theme='hacker'] img.gauge-image,
-          html[data-theme='hacker'] .gauge-image,
-          [data-theme='hacker'] img.gauge-image,
-          [data-theme='hacker'] .gauge-image,
-          html[data-theme='hacker'] img[alt="Trust Gauge"],
-          [data-theme='hacker'] img[alt="Trust Gauge"] {
-            filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-            -webkit-filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(70deg) saturate(500%) !important;
-            opacity: 1 !important;
-            display: block !important;
-            visibility: visible !important;
-            mix-blend-mode: normal !important;
-          }
+          /* HACKER THEME - covered by universal img rule above */
 
           /* DARK/LIGHT THEME - Gauge images preserve original colors */
           html[data-theme='dark'] img[alt="Trust Gauge"],
