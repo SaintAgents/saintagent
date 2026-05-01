@@ -371,7 +371,8 @@ export default function Profile() {
   };
 
   const handleMysticalProfileSave = async (data) => {
-    await updateMutation.mutateAsync(data);
+    await base44.entities.UserProfile.update(profile.id, data);
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] }); queryClient.invalidateQueries({ queryKey: ['myProfile'] });
     setEditingMysticalProfile(false);
   };
 
