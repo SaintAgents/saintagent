@@ -37,12 +37,24 @@ Deno.serve(async (req) => {
 
     const results = [];
 
-    // Announcements / News Articles
+    // Announcements / News Articles — keep visible for 30 days
     if (types.includes('announcements')) {
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+      // News articles from the last 30 days
       let recentArticles = [];
       try {
-        recentArticles = await base44.entities.NewsArticle.filter({ is_published: true }, '-created_date', 30) || [];
-      } catch (_) {}
+        recentArticles = await base44.entities.NewsArticle.filter(
+          { is_published: true, created_date: { $gte: thirtyDaysAgo } },
+          '-created_date', 100
+        ) || [];
+      } catch (_) {
+        // Fallback if $gte filter not supported — fetch recent and filter manually
+        try {
+          recentArticles = (await base44.entities.NewsArticle.filter({ is_published: true }, '-created_date', 100) || [])
+            .filter(a => new Date(a.published_date || a.created_date) >= new Date(thirtyDaysAgo));
+        } catch (_2) {}
+      }
       for (const a of recentArticles) {
         if (filterByMe && a.author_id !== me.email) continue;
         if (filterByFriends && !followingIds.has(a.author_id)) continue;
@@ -55,6 +67,26 @@ Deno.serve(async (req) => {
           description: a.summary || a.content?.substring(0, 150) || '',
         }));
       }
+
+      // Platform announcement banner — also show as a feed item for 30 days
+      try {
+        const allSettings = await base44.entities.PlatformSetting.list() || [];
+        for (const s of allSettings) {
+          if (s.announcement_banner && s.announcement_banner.trim()) {
+            const bannerDate = new Date(s.updated_date || s.created_date);
+            if (bannerDate >= new Date(thirtyDaysAgo)) {
+              results.push(toEvent({
+                type: 'announcements',
+                source: { id: `banner-${s.id}`, created_date: s.updated_date || s.created_date },
+                createdAt: s.updated_date || s.created_date,
+                actorId: 'platform',
+                title: '📢 Platform Announcement',
+                description: s.announcement_banner,
+              }));
+            }
+          }
+        }
+      } catch (_) {}
     }
 
     // Listings
