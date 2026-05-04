@@ -73,6 +73,7 @@ Name: ${profile?.display_name || 'Seeker'}`;
       throw new Error('Failed to generate image');
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       setIsGenerating(false);
     },
@@ -112,6 +113,7 @@ Name: ${profile?.display_name || 'Seeker'}`;
       await base44.entities.UserProfile.update(profile.id, {
         mystical_id_image: file_url
       });
+      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
     } catch (err) {
       setError('Upload failed');

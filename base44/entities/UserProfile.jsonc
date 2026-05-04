@@ -28,6 +28,10 @@
       "type": "string",
       "description": "Banner/hero image URL"
     },
+    "mystical_id_image": {
+      "type": "string",
+      "description": "URL of the generated mystical ID seal image"
+    },
     "bio": {
       "type": "string",
       "description": "Short bio (max 500 characters)"
