@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 // Trust Score computation weights (sum caps to 100)
 const MAXES = {
@@ -73,13 +73,13 @@ Deno.serve(async (req) => {
     else presenceScore = 0;
 
     // RP rank / points contribution (up to 15)
-    const rpPoints = Number(profile?.rp_points || 0);
+    const rpPoints = Number(profile?.rank_points || 0);
     const rpScore = clamp(Math.round(Math.min(rpPoints / 7200, 1) * MAXES.rp), 0, MAXES.rp);
 
     const score = clamp(Math.round(tScore + collabScore + interactionsScore + presenceScore + rpScore), 0, 100);
 
-    // Persist
-    await base44.entities.UserProfile.update(profile.id, { trust_score: score });
+    // Persist using service role to ensure write succeeds
+    await base44.asServiceRole.entities.UserProfile.update(profile.id, { trust_score: score });
     // Log event (best-effort)
     try {
       await base44.entities.TrustEvent.create({

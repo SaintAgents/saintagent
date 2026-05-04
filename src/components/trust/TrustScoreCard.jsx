@@ -21,17 +21,18 @@ export default function TrustScoreCard({ userId, onUpdated }) {
     staleTime: 30000,
   });
   const profile = profiles?.[0];
-  const score = profile?.trust_score || 0;
+  const [liveScore, setLiveScore] = React.useState(null);
+  const score = liveScore ?? profile?.trust_score ?? 0;
 
   const recompute = async () => {
     setRefreshing(true);
     try {
       const { data } = await base44.functions.invoke('computeTrustScore', { target_user_id: userId });
-      if (data?.breakdown) {
-        setBreakdown(data.breakdown);
-      }
+      if (data?.score != null) setLiveScore(data.score);
+      if (data?.breakdown) setBreakdown(data.breakdown);
       qc.invalidateQueries({ queryKey: ['trustProfile', userId] });
       qc.invalidateQueries({ queryKey: ['userProfile'] });
+      qc.invalidateQueries({ queryKey: ['myProfile'] });
       onUpdated?.(data?.score);
     } catch (err) {
       console.error('Trust score refresh error:', err);

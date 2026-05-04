@@ -320,6 +320,11 @@
       "type": "number",
       "default": 0
     },
+    "trust_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Computed trust score (0-100)"
+    },
     "rank_code": {
       "type": "string",
       "enum": [
