@@ -21,6 +21,7 @@ import UserActivityDashboard from '@/components/activity/UserActivityDashboard';
 import CommunityIntentionsPanel from '@/components/activity/CommunityIntentionsPanel';
 import TopReferrersLeaderboard from '@/components/affiliate/TopReferrersLeaderboard';
 import ActivityFeedBanner from '@/components/activity/ActivityFeedBanner';
+import AlignedMissionsCard from '@/components/activity/AlignedMissionsCard';
 
 const TYPE_META = {
   announcements: { label: 'Announcements', icon: Megaphone, color: 'bg-[#051C2C]', textColor: 'text-white' },
@@ -255,43 +256,24 @@ export default function ActivityFeed() {
                 <h3 className="font-semibold text-lg text-slate-900">Recommended Reading</h3>
               </div>
               <div className="space-y-3">
-                {['Saint Germain Transmission', 'Deep Disclosure Update', '7th Seal Gaia Bank'].map((title, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
-                    <span className="text-sm text-slate-700 font-medium">{title}</span>
+                {[
+                  { title: 'Saint Germain Transmission', page: 'Authority144' },
+                  { title: 'Deep Disclosure Update', page: 'News' },
+                  { title: '7th Seal Gaia Bank', page: 'GaiaGlobalTreasury' }
+                ].map((item, i) => (
+                  <Link key={i} to={createPageUrl(item.page)} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
+                    <span className="text-sm text-slate-700 font-medium">{item.title}</span>
                     <ChevronRight className="w-4 h-4 text-slate-400" />
-                  </div>
+                  </Link>
                 ))}
               </div>
               <p className="text-xs text-slate-500 italic mt-4">
-                These articles cover a range of topics that may inspire and engage the user, particularly in realms of spiritual growth, community updates, and spiritual economics, given the absence of current skills and focus areas.
+                Explore spiritual growth, community updates, and sacred economics across the platform.
               </p>
             </div>
 
             {/* Aligned Missions */}
-            <div className="bg-white border border-slate-200 rounded-lg p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Target className="w-5 h-5 text-violet-600" />
-                <h3 className="font-semibold text-lg text-slate-900">Aligned Missions</h3>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { title: 'Soul Purpose Discovery', joined: '1 joined' },
-                  { title: 'Gather 144K', joined: '0 joined' },
-                  { title: 'Non-Profit Networking Fellowship', joined: '1 joined' }
-                ].map((mission, i) => (
-                  <div key={i} className="p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-slate-900 font-medium">{mission.title}</span>
-                      <ChevronRight className="w-4 h-4 text-slate-400" />
-                    </div>
-                    <span className="text-xs text-slate-500">{mission.joined}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-slate-500 italic mt-4">
-                The selected missions are aligned with self-discovery, community building, and networking, which can resonate with someone who is looking to find direction and make connections without specific prior focus or intentions.
-              </p>
-            </div>
+            <AlignedMissionsCard />
           </div>
         </div>
 
