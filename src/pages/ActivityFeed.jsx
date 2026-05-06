@@ -257,11 +257,11 @@ export default function ActivityFeed() {
               </div>
               <div className="space-y-3">
                 {[
-                  { title: 'Saint Germain Transmission', page: 'Authority144' },
-                  { title: 'Deep Disclosure Update', page: 'News' },
-                  { title: '7th Seal Gaia Bank', page: 'GaiaGlobalTreasury' }
+                  { title: 'Saint Germain Transmission', path: '/Authority144' },
+                  { title: 'Deep Disclosure Update', path: '/News' },
+                  { title: '7th Seal Gaia Bank', path: '/GaiaGlobalTreasury' }
                 ].map((item, i) => (
-                  <Link key={i} to={createPageUrl(item.page)} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
+                  <Link key={i} to={item.path} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
                     <span className="text-sm text-slate-700 font-medium">{item.title}</span>
                     <ChevronRight className="w-4 h-4 text-slate-400" />
                   </Link>

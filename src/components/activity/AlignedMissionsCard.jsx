@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Target, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+
 
 export default function AlignedMissionsCard() {
   const { data: missions = [] } = useQuery({
@@ -37,7 +37,7 @@ export default function AlignedMissionsCard() {
           ))
         )}
       </div>
-      <Link to={createPageUrl('Missions')} className="block mt-4">
+      <Link to="/Missions" className="block mt-4">
         <p className="text-xs text-violet-600 font-medium hover:text-violet-800 transition-colors">
           View all missions →
         </p>
