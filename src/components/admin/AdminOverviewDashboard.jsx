@@ -370,6 +370,11 @@ export default function AdminOverviewDashboard({ onNavigateTab }) {
                   <div 
                     data-user-id={u.email} 
                     className="w-7 h-7 rounded-full bg-violet-100 flex items-center justify-center text-xs font-bold text-violet-600 shrink-0 cursor-pointer hover:ring-2 hover:ring-violet-300 transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId: u.email } }));
+                    }}
+                    title={`View ${u.full_name || u.email}'s profile`}
                   >
                     {u.full_name?.[0] || '?'}
                   </div>
