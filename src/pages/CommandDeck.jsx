@@ -1575,7 +1575,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         <div className="px-0 md:px-6 mb-6">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1 md:gap-4">
             <ModeCard mode="earn" title="Earn" icon={DollarSign} stats="Marketplace" onClick={() => window.location.href = createPageUrl('Marketplace')} />
-            <ModeCard mode="learn" title="Learn" icon={TrendingUp} stats="Courses" onClick={() => window.location.href = createPageUrl('Marketplace')} />
+            <ModeCard mode="learn" title="Learn" icon={TrendingUp} stats="Guide" onClick={() => window.location.href = createPageUrl('Learn')} />
             <ModeCard mode="build" title="Build" icon={Target} stats="Missions" onClick={() => window.location.href = createPageUrl('Missions')} />
             <ModeCard mode="teach" title="Teach" icon={Users} stats="Studio" onClick={() => window.location.href = createPageUrl('Studio')} />
             <ModeCard mode="lead" title="Lead" icon={Sparkles} stats={profile?.leader_tier !== 'none' ? 'Active' : 'Apply'} onClick={() => window.location.href = createPageUrl('LeaderChannel')} />
