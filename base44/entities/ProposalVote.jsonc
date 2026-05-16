@@ -1,0 +1,27 @@
+{
+  "name": "ProposalVote",
+  "type": "object",
+  "properties": {
+    "proposal_id": {
+      "type": "string",
+      "description": "Reference to the Proposal"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Email of the voter"
+    },
+    "vote": {
+      "type": "string",
+      "enum": [
+        "for",
+        "against"
+      ],
+      "description": "Vote direction"
+    }
+  },
+  "required": [
+    "proposal_id",
+    "user_id",
+    "vote"
+  ]
+}

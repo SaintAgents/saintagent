@@ -1,0 +1,84 @@
+{
+  "name": "Proposal",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Proposal title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the proposal"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "rewards",
+        "platform",
+        "governance",
+        "community",
+        "technical",
+        "other"
+      ],
+      "default": "platform",
+      "description": "Proposal category"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "passed",
+        "rejected",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "creator_id": {
+      "type": "string",
+      "description": "Email of the proposal creator"
+    },
+    "creator_name": {
+      "type": "string"
+    },
+    "creator_avatar": {
+      "type": "string"
+    },
+    "votes_for": {
+      "type": "number",
+      "default": 0
+    },
+    "votes_against": {
+      "type": "number",
+      "default": 0
+    },
+    "total_votes": {
+      "type": "number",
+      "default": 0
+    },
+    "required_votes": {
+      "type": "number",
+      "default": 50,
+      "description": "Quorum: minimum votes needed"
+    },
+    "pass_threshold": {
+      "type": "number",
+      "default": 60,
+      "description": "Percentage of 'for' votes needed to pass"
+    },
+    "ends_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When voting ends"
+    },
+    "duration_days": {
+      "type": "number",
+      "default": 7,
+      "description": "Voting period in days"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "creator_id"
+  ]
+}
