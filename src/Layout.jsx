@@ -21,6 +21,7 @@ import MobileWalletSheet from '@/components/hud/MobileWalletSheet';
 import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
 import FullscreenMatchesSwiper from '@/components/hud/FullscreenMatchesSwiper';
 import MobileCloseButton from '@/components/hud/MobileCloseButton';
+import LiveAchievementToasts from '@/components/gamification/LiveAchievementToasts';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
@@ -1927,6 +1928,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
                 open={fullscreenMatchesOpen}
                 onClose={() => setFullscreenMatchesOpen(false)}
               />
+
+      {/* Live Achievement Toasts */}
+      <LiveAchievementToasts />
 
       {/* Interactive Onboarding Tour */}
       {userTourOpen && (
