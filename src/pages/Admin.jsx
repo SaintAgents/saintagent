@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard, Database, Mic, Vote } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard, Database, Mic, Vote, Zap } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -54,6 +54,7 @@ import CacheAdminTab from '@/components/admin/CacheAdminTab';
 import DeepDisclosureAdmin from '@/components/broadcast/DeepDisclosureAdmin';
 import ActivityBannerManager from '@/components/admin/ActivityBannerManager';
 import AdminProposalsPanel from '@/components/admin/AdminProposalsPanel';
+import LiveToastsAdmin from '@/components/admin/LiveToastsAdmin';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -300,6 +301,10 @@ export default function Admin() {
               <Vote className="w-4 h-4" />
               Proposals
             </TabsTrigger>
+            <TabsTrigger value="live-toasts" className="gap-2 px-3 py-2">
+              <Zap className="w-4 h-4" />
+              Live Toasts
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -506,6 +511,10 @@ export default function Admin() {
 
           <TabsContent value="proposals">
             <AdminProposalsPanel />
+          </TabsContent>
+
+          <TabsContent value="live-toasts">
+            <LiveToastsAdmin />
           </TabsContent>
         </Tabs>
       </div>

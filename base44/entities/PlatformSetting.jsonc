@@ -162,6 +162,69 @@
       "type": "number",
       "default": 0,
       "description": "Total feedback submitted in last bonus period"
+    },
+    "live_toasts_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Master switch for live achievement toasts"
+    },
+    "live_toasts_show_ggg": {
+      "type": "boolean",
+      "default": true,
+      "description": "Show GGG earning toasts"
+    },
+    "live_toasts_show_badges": {
+      "type": "boolean",
+      "default": true,
+      "description": "Show badge earning toasts"
+    },
+    "live_toasts_show_missions": {
+      "type": "boolean",
+      "default": true,
+      "description": "Show mission completion toasts"
+    },
+    "live_toasts_duration_ms": {
+      "type": "number",
+      "default": 6000,
+      "description": "How long each toast displays (ms)"
+    },
+    "live_toasts_cooldown_ms": {
+      "type": "number",
+      "default": 3000,
+      "description": "Min gap between toasts (ms)"
+    },
+    "live_toasts_max_visible": {
+      "type": "number",
+      "default": 3,
+      "description": "Max toasts visible at once"
+    },
+    "live_toasts_position": {
+      "type": "string",
+      "enum": [
+        "top-right",
+        "top-left",
+        "bottom-right",
+        "bottom-left",
+        "top-center",
+        "bottom-center"
+      ],
+      "default": "top-right",
+      "description": "Screen position for toasts"
+    },
+    "live_toasts_include_self": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show toasts for your own achievements too"
+    },
+    "live_toasts_min_ggg": {
+      "type": "number",
+      "default": 0,
+      "description": "Minimum GGG amount to trigger a toast (0 = show all)"
+    },
+    "live_toasts_sound": {
+      "type": "boolean",
+      "default": false,
+      "description": "Play sound on toast"
     }
   },
   "required": []
