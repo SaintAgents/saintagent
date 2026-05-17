@@ -5,10 +5,13 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import MiniProfile from '@/components/profile/MiniProfile';
-import { Clock, Share2, MapPin, Video, Zap, CheckCircle2, Repeat } from 'lucide-react';
+import { Clock, Share2, MapPin, Video, Zap, CheckCircle2, Repeat, Star } from 'lucide-react';
 import Breadcrumb from '@/components/hud/Breadcrumb';
 import RecurringBookingModal from '@/components/marketplace/RecurringBookingModal';
 import ProviderAvailabilityManager from '@/components/marketplace/ProviderAvailabilityManager';
+import ListingReviewForm from '@/components/marketplace/ListingReviewForm';
+import ListingReviewsList from '@/components/marketplace/ListingReviewsList';
+import { SellerStatsBar } from '@/components/marketplace/SellerBadge';
 
 export default function ListingDetail() {
   const queryClient = useQueryClient();
@@ -16,9 +19,25 @@ export default function ListingDetail() {
   const listingId = urlParams.get('id');
   const [recurringModalOpen, setRecurringModalOpen] = React.useState(false);
 
+  const [reviewSubmitted, setReviewSubmitted] = React.useState(false);
+
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
+  });
+
+  const { data: myProfiles = [] } = useQuery({
+    queryKey: ['myProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1),
+    enabled: !!currentUser?.email,
+    staleTime: 1800000,
+  });
+  const myProfile = myProfiles?.[0];
+
+  const { data: myExistingReviews = [] } = useQuery({
+    queryKey: ['myListingReview', listingId, currentUser?.email],
+    queryFn: () => base44.entities.ListingReview.filter({ listing_id: listingId, reviewer_id: currentUser.email }),
+    enabled: !!listingId && !!currentUser?.email,
   });
 
   const { data: listings = [], isLoading } = useQuery({
@@ -156,6 +175,9 @@ export default function ListingDetail() {
         <div className="bg-white rounded-xl border p-4">
           <h3 className="font-semibold text-slate-900 mb-3">Hosted by</h3>
           <MiniProfile userId={listing.owner_id} name={listing.owner_name} avatar={listing.owner_avatar} size={40} />
+          <div className="mt-2">
+            <SellerStatsBar sellerId={listing.owner_id} />
+          </div>
           <div className="flex items-center gap-4 mt-3 pt-3 border-t border-slate-100 text-sm">
             <div className="flex items-center gap-1.5 text-emerald-600">
               <Zap className="w-4 h-4" />
@@ -168,6 +190,37 @@ export default function ListingDetail() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="bg-white rounded-xl border p-4">
+          <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+            <Star className="w-5 h-5 text-amber-400" />
+            Reviews
+          </h3>
+          <ListingReviewsList listingId={listingId} />
+          
+          {/* Review Form - only show if not the owner and hasn't reviewed yet */}
+          {currentUser && listing.owner_id !== currentUser.email && myExistingReviews.length === 0 && !reviewSubmitted && (
+            <div className="mt-4 pt-4 border-t border-slate-100">
+              <ListingReviewForm
+                listing={listing}
+                currentUser={currentUser}
+                profile={myProfile}
+                onSuccess={() => setReviewSubmitted(true)}
+              />
+            </div>
+          )}
+          {reviewSubmitted && (
+            <div className="mt-4 p-3 rounded-lg bg-emerald-50 text-emerald-700 text-sm text-center">
+              Thanks for your review!
+            </div>
+          )}
+          {myExistingReviews.length > 0 && (
+            <div className="mt-4 p-3 rounded-lg bg-slate-50 text-slate-500 text-sm text-center">
+              You've already reviewed this listing
+            </div>
+          )}
         </div>
       </div>
 

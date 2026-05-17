@@ -26,6 +26,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SellerStatsBar } from '@/components/marketplace/SellerBadge';
 
 
 const getCategoryImage = (category) => {
@@ -152,12 +153,9 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
             </Avatar>
             <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{listing.owner_name}</span>
           </div>
-          {listing.rating && (
-            <div className="flex items-center gap-1 ml-auto">
-              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{listing.rating}</span>
-            </div>
-          )}
+        </div>
+        <div className="mt-2">
+          <SellerStatsBar sellerId={listing.owner_id} compact />
         </div>
 
         <div className="flex items-center gap-4 mt-3 text-sm text-slate-500 dark:text-slate-400">
