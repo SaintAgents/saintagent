@@ -70,8 +70,7 @@ import RescheduleDialog from '@/components/meetings/RescheduleDialog';
 import DeckViewModeSelector, { VIEW_MODE_CONFIG, getDefaultCustomCards } from '@/components/hud/DeckViewModeSelector';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 import NewsCard from '@/components/news/NewsCard';
-import { Newspaper, Image, MessageCircle, Mic } from 'lucide-react';
-import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
+import { Newspaper, Image, MessageCircle, Mic } from 'lucide-react';import VideosDashboardCard from '@/components/videos/VideosDashboardCard';
 import { TestimonialsCompact } from '@/components/testimonials/TestimonialsMarquee';
 import SpiritTubeCard from '@/components/videos/SpiritTubeCard';
 import GlobalScheduleCard from '@/components/hud/GlobalScheduleCard';
@@ -81,6 +80,7 @@ import ControlsDeck from '@/components/hud/ControlsDeck';
 import MatchScanPulse from '@/components/hud/MatchScanPulse';
 import DeepDisclosureDeckCard from '@/components/broadcast/DeepDisclosureDeckCard';
 import ActivityFeedBanner from '@/components/activity/ActivityFeedBanner';
+import CommandDeckCards from '@/components/hud/CommandDeckCards';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
   
@@ -256,7 +256,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Store all cards to side panel
   const storeAllCards = () => {
-    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube', 'globalSchedule'];
+    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube', 'globalSchedule', 'deepDisclosure', 'drx', 'broadcast', 'events'];
     // Create fresh array with all cards (icons will be resolved when rendering)
     const newStoredCards = allCardIds.map(id => ({ id, title: getCardTitle(id) }));
     console.log('Stowing all cards:', newStoredCards);
@@ -300,9 +300,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       videos: 'SaintTube Videos',
       spiritTube: 'SpiritTube',
       globalSchedule: 'Global Schedule',
-      deepDisclosure: 'Deep Disclosure Podcast'
-    };
-    return titles[id] || id;
+      deepDisclosure: 'Deep Disclosure Podcast',
+      drx: 'Digital Rights Exchange',
+      broadcast: 'Broadcasts',
+      events: 'Events'
+    };return titles[id] || id;
   };
 
   // Card icon mapping for stored cards (icons can't be serialized to localStorage)
@@ -332,7 +334,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     videos: Play,
     spiritTube: Play,
     globalSchedule: Calendar,
-    deepDisclosure: Mic
+    deepDisclosure: Mic, drx: Zap, broadcast: Radio, events: Calendar
   };
 
   // Toss card to side panel storage
@@ -1694,11 +1696,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             {isCardVisible('deepDisclosure') && <CollapsibleCard title="Deep Disclosure Podcast" cardId="deepDisclosure" icon={Mic} badge="Podcast" badgeColor="violet" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('deepDisclosure')} onToggleHide={() => toggleCardVisibility('deepDisclosure')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Broadcast')} navigateTo={createPageUrl('Broadcast')}><DeepDisclosureDeckCard /></CollapsibleCard>}
             {isCardVisible('globalSchedule') && <CollapsibleCard title="Global Schedule" cardId="globalSchedule" icon={Calendar} badge="Live" badgeColor="emerald" backgroundImage="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/c1538f946_meets.jpg" defaultOpen={true} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('globalSchedule')} onToggleHide={() => toggleCardVisibility('globalSchedule')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => window.location.href = createPageUrl('Schedule')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['globalSchedule'] })}><GlobalScheduleCard /></CollapsibleCard>}
 
-            {isCardVisible('leaderPathway') && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}>
-              <LeaderPathway profile={profile} />
-            </CollapsibleCard>}
+            {isCardVisible('leaderPathway') && <CollapsibleCard title="Leader Pathway" cardId="leaderPathway" icon={Sparkles} defaultOpen={true} onPopout={() => setLeaderPopupOpen(true)} forceOpen={cardsForceOpen} className="leader-pathway-card" isHidden={hiddenCards.has('leaderPathway')} onToggleHide={() => toggleCardVisibility('leaderPathway')} onTossToSidePanel={handleTossToSidePanel}><LeaderPathway profile={profile} /></CollapsibleCard>}
+            <CommandDeckCards isCardVisible={isCardVisible} hiddenCards={hiddenCards} toggleCardVisibility={toggleCardVisibility} handleTossToSidePanel={handleTossToSidePanel} forceOpen={cardsForceOpen} />
           </div>
-
           <div className="block space-y-6 mt-6">
             {isCardVisible('aiDiscover') && <CollapsibleCard title={<span className="flex items-center gap-1">AI Discover <SynchronicityHelpHint /></span>} cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="space-y-4">
@@ -1954,7 +1954,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         {dailyOpsPopupOpen && <FloatingPanel title="Daily Ops" cardId="dailyops" onTossToSidePanel={handleTossToSidePanel} onClose={() => setDailyOpsPopupOpen(false)}><div className="flex items-center justify-between"><div><div className="text-xs text-slate-500">Today's GGG</div><div className="text-2xl font-bold text-slate-900">{dailyGGG.toFixed(2)} GGG</div></div><div className="text-right"><div className="text-xs text-slate-500">Done • In Progress</div><div className="text-2xl font-bold text-slate-900">{dailyCompleted} • {dailyInProgress}</div></div></div><div className="mt-3 text-right"><Button className="rounded-xl bg-violet-600 hover:bg-violet-700" onClick={() => {window.location.href = createPageUrl('DailyOps');}}>Open DO</Button></div></FloatingPanel>}
         {quickActionsPopupOpen && <FloatingPanel title="Quick Actions" cardId="quickActions" onTossToSidePanel={handleTossToSidePanel} onClose={() => setQuickActionsPopupOpen(false)}><div className="grid grid-cols-2 gap-3"><Button className="h-20 flex-col gap-2 bg-violet-600 hover:bg-violet-700 rounded-xl" onClick={() => {setQuickCreateType('meeting');setQuickCreateOpen(true);}}><Calendar className="w-5 h-5" /><span className="text-xs">Book Meeting</span></Button><Button variant="outline" className="bg-violet-100 text-stone-950 rounded-xl h-20 flex-col gap-2" onClick={() => {setQuickCreateType('post');setQuickCreateOpen(true);}}><Plus className="w-5 h-5" /><span className="text-xs">Post Update</span></Button><Button variant="outline" className="bg-violet-100 text-stone-950 rounded-xl h-20 flex-col gap-2" onClick={() => {setQuickCreateType('mission');setQuickCreateOpen(true);}}><Target className="w-5 h-5" /><span className="text-xs">Launch Mission</span></Button><Button variant="outline" className="bg-violet-100 text-neutral-950 rounded-xl h-20 flex-col gap-2" onClick={() => {setQuickCreateType('offer');setQuickCreateOpen(true);}}><ShoppingBag className="w-5 h-5" /><span className="text-xs">Create Offer</span></Button></div></FloatingPanel>}
         {quickStartPopupOpen && <FloatingPanel title="Quick Start Checklist" cardId="quickStart" onTossToSidePanel={handleTossToSidePanel} onClose={() => setQuickStartPopupOpen(false)}><QuickStartChecklist /></FloatingPanel>}
-        {leaderChannelPopupOpen && <FloatingPanel title="144K Leader Channel" cardId="leader" onTossToSidePanel={handleTossToSidePanel} onClose={() => setLeaderChannelPopupOpen(false)}><div className="text-center py-6"><div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4"><Radio className="w-8 h-8 text-amber-600" /></div><h4 className="font-semibold text-slate-900 mb-2">Become a Verified Leader</h4><p className="text-sm text-slate-500 mb-4">Join the 144,000 Super-Conscious Leaders with special broadcast privileges.</p><Button variant="outline" className="rounded-xl" onClick={() => {window.location.href = createPageUrl('LeaderChannel');}}>{profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply for Verification'}</Button></div></FloatingPanel>}
+        {leaderChannelPopupOpen && <FloatingPanel title="144K Leader Channel" cardId="leader" onTossToSidePanel={handleTossToSidePanel} onClose={() => setLeaderChannelPopupOpen(false)}><div className="text-center py-6"><Radio className="w-8 h-8 text-amber-600 mx-auto mb-4" /><h4 className="font-semibold text-slate-900 mb-2">Become a Verified Leader</h4><p className="text-sm text-slate-500 mb-4">Join the 144K Leaders.</p><Button variant="outline" className="rounded-xl" onClick={() => {window.location.href = createPageUrl('LeaderChannel');}}>{profile?.leader_tier && profile.leader_tier !== 'none' ? 'Open Leader Dashboard' : 'Apply'}</Button></div></FloatingPanel>}
         {challengesPopupOpen && <FloatingPanel title="Challenges & Rewards" cardId="challenges" onTossToSidePanel={handleTossToSidePanel} onClose={() => setChallengesPopupOpen(false)}><GamificationWidget profile={profile} /></FloatingPanel>}
         {collaboratorsPopupOpen && <FloatingPanel title="Potential Collaborators" cardId="collaborators" onTossToSidePanel={handleTossToSidePanel} onClose={() => setCollaboratorsPopupOpen(false)}><CollaborationSuggestions profile={profile} compact={false} /></FloatingPanel>}
         {aiDiscoverPopupOpen && <FloatingPanel title="AI Discover" cardId="aiDiscover" onTossToSidePanel={handleTossToSidePanel} onClose={() => setAiDiscoverPopupOpen(false)}><AIDiscoverMatches profile={profile} /></FloatingPanel>}
