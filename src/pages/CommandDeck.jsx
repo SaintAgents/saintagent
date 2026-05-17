@@ -575,8 +575,12 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     staleTime: 300000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
   });
 
-  // DISABLE listings - causing rate limits
-  const listings = [];
+  const { data: listings = [] } = useQuery({
+    queryKey: ['dashboardListings', currentUser?.email],
+    queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 30),
+    enabled: queryStage >= 3 && !!currentUser?.email,
+    staleTime: 300000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
+  });
 
   const { data: projects = [] } = useQuery({
     queryKey: ['dashboardProjects', currentUser?.email],
