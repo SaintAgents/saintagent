@@ -54,7 +54,8 @@ const TOUR_STEPS = [
       { icon: Star, label: 'GGG Balance & Earnings' },
       { icon: Users, label: 'Match Suggestions' },
       { icon: Target, label: 'Active Missions' },
-      { icon: Trophy, label: 'Rank & Achievements' }
+      { icon: Trophy, label: 'Rank & Achievements' },
+      { icon: GraduationCap, label: 'Learn button — guided tutorials with GGG rewards' }
     ]
   },
   {
@@ -133,10 +134,15 @@ const TOUR_STEPS = [
     description: 'You now know the essentials. Start by completing your profile, then explore matches and join your first mission!',
     icon: CheckCircle2,
     color: 'green',
+    tips: [
+      'Tap the "Learn" card on your Command Deck for step-by-step tutorials that earn you GGG',
+      'Complete your profile first — it powers better AI matching',
+      'Replay this tour anytime via the ? icon on the Command Deck'
+    ],
     actions: [
       { label: 'Complete Profile', page: 'Profile', primary: true },
       { label: 'View Matches', page: 'Matches' },
-      { label: 'Explore Missions', page: 'Missions' }
+      { label: 'Start Learning', page: 'Learn' }
     ]
   }
 ];
