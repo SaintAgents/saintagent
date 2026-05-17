@@ -530,15 +530,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Stage 1: Essential data (matches, meetings) - loads after profile
   useEffect(() => {
     if (profile && queryStage === 0) {
-      const timer = setTimeout(() => setQueryStage(1), 100);
+      const timer = setTimeout(() => setQueryStage(1), 300);
       return () => clearTimeout(timer);
     }
   }, [profile, queryStage]);
   
-  // Stage 2: Secondary data - loads after stage 1
+  // Stage 2: Secondary data (missions, projects) - loads after stage 1
   useEffect(() => {
     if (queryStage === 1) {
-      const timer = setTimeout(() => setQueryStage(2), 500);
+      const timer = setTimeout(() => setQueryStage(2), 1500);
       return () => clearTimeout(timer);
     }
   }, [queryStage]);
@@ -546,7 +546,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Stage 3: Tertiary data - loads after stage 2
   useEffect(() => {
     if (queryStage === 2) {
-      const timer = setTimeout(() => setQueryStage(3), 500);
+      const timer = setTimeout(() => setQueryStage(3), 1500);
       return () => clearTimeout(timer);
     }
   }, [queryStage]);
@@ -556,7 +556,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const { data: meetingsRaw = [] } = useQuery({
     queryKey: ['dashboardMeetings'],
     queryFn: () => base44.entities.Meeting.list('-scheduled_time', 50),
-    enabled: queryStage >= 1, staleTime: 120000, refetchOnWindowFocus: false,
+    enabled: queryStage >= 1, staleTime: 120000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
   });
   const meetings = meetingsRaw.filter(m => m.host_id === currentUser?.email || m.guest_id === currentUser?.email);
 
@@ -565,11 +565,14 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     queryFn: async () => {
       const email = currentUser?.email;
       const saNum = profile?.sa_number;
-      const allActive = await base44.entities.Mission.filter({ status: 'active' }, '-created_date', 50);
-      return allActive.filter(m => m.creator_id === email || m.participant_ids?.includes(email) || (saNum && m.participant_ids?.includes(saNum)));
+      const allMissions = await base44.entities.Mission.list('-created_date', 50);
+      return allMissions.filter(m => {
+        const isParticipant = m.creator_id === email || m.participant_ids?.includes(email) || (saNum && (m.creator_id === saNum || m.participant_ids?.includes(saNum)));
+        return isParticipant && m.status !== 'cancelled';
+      });
     },
     enabled: queryStage >= 2 && !!currentUser?.email,
-    staleTime: 300000, refetchOnWindowFocus: false,
+    staleTime: 300000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
   });
 
   // DISABLE listings - causing rate limits
@@ -585,7 +588,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return [...owned, ...claimed].filter(p => { if (seen.has(p.id)) return false; seen.add(p.id); return true; });
     },
     enabled: queryStage >= 2 && !!currentUser?.email,
-    staleTime: 300000, refetchOnWindowFocus: false,
+    staleTime: 300000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
   });
 
   const notifications = []; // notifications disabled
