@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
+
 import {
   Sparkles,
   Loader2,
-  AlertCircle,
   CheckCircle2,
   User,
   Heart,
@@ -22,13 +16,16 @@ import {
   Target,
   MapPin,
   Star,
-  ChevronRight,
   X,
   Lightbulb,
-  TrendingUp
+  TrendingUp,
+  Wand2,
+  ArrowRight,
+  RotateCw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
+import ProfileFieldEditDialog from './ProfileFieldEditDialog';
 
 const FIELD_CONFIG = {
   bio: {
@@ -89,20 +86,6 @@ const FIELD_CONFIG = {
   }
 };
 
-const SUGGESTED_VALUES = [
-  'compassion', 'integrity', 'authenticity', 'growth', 'service', 'community',
-  'creativity', 'wisdom', 'love', 'freedom', 'joy', 'peace', 'harmony', 'purpose'
-];
-
-const SUGGESTED_PRACTICES = [
-  'meditation', 'yoga', 'breathwork', 'prayer', 'journaling', 'mindfulness',
-  'energy_work', 'sound_healing', 'tarot', 'astrology', 'qigong', 'tai_chi'
-];
-
-const SUGGESTED_SKILLS = [
-  'coaching', 'writing', 'design', 'programming', 'marketing', 'teaching',
-  'healing', 'consulting', 'facilitation', 'speaking', 'art', 'music'
-];
 
 export default function AIProfileCompletionPrompt({ profile, showCard = true, onComplete }) {
   const queryClient = useQueryClient();
@@ -110,6 +93,8 @@ export default function AIProfileCompletionPrompt({ profile, showCard = true, on
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeField, setActiveField] = useState(null);
   const [formData, setFormData] = useState({});
+  const [magicFilling, setMagicFilling] = useState(false);
+  const [magicResults, setMagicResults] = useState(null);
   const [dismissed, setDismissed] = useState(() => {
     try {
       return localStorage.getItem('profileCompletionDismissed') === 'true';
@@ -207,6 +192,62 @@ Provide:
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  // Magic Fill All - AI generates all missing fields at once
+  const handleMagicFill = async () => {
+    if (!profile) return;
+    setMagicFilling(true);
+    try {
+      const profileContext = `Name: ${profile.display_name}\nBio: ${profile.bio || 'Not set'}\nSkills: ${(profile.skills || []).join(', ') || 'None'}\nInterests: ${(profile.interests || []).join(', ') || 'None'}\nPractices: ${(profile.spiritual_practices || []).join(', ') || 'None'}\nValues: ${(profile.core_values || []).join(', ') || 'None'}\nLocation: ${profile.location || 'Not set'}\nMystical ID: ${profile.mystical_identifier || ''}\nSign: ${profile.astrological_sign || ''}`;
+      
+      const missing = missingFields.map(f => f.field).filter(f => f !== 'avatar_url');
+      
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate profile content for these missing fields: ${missing.join(', ')}
+        
+Based on this existing profile:\n${profileContext}
+
+For each field, generate the best possible content that feels authentic and personal.
+- bio: 2-3 engaging sentences
+- skills: array of 5-8 specific skills  
+- interests: array of 5-8 interest topics
+- spiritual_practices: array of 3-5 practices (use snake_case like "sound_healing")
+- core_values: array of 4-6 values
+- location: best guess city/country format
+
+Only include fields that are in the missing list: ${missing.join(', ')}`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            bio: { type: "string" },
+            skills: { type: "array", items: { type: "string" } },
+            interests: { type: "array", items: { type: "string" } },
+            spiritual_practices: { type: "array", items: { type: "string" } },
+            core_values: { type: "array", items: { type: "string" } },
+            location: { type: "string" },
+            summary: { type: "string" }
+          }
+        }
+      });
+      
+      // Filter to only missing fields
+      const filtered = {};
+      missing.forEach(f => {
+        if (response[f]) filtered[f] = response[f];
+      });
+      setMagicResults({ fields: filtered, summary: response.summary });
+    } catch (err) {
+      console.error('Magic fill failed:', err);
+    } finally {
+      setMagicFilling(false);
+    }
+  };
+
+  const applyMagicResults = async () => {
+    if (!magicResults?.fields || !profile?.id) return;
+    updateMutation.mutate(magicResults.fields);
+    setMagicResults(null);
   };
 
   // Auto-analyze on mount if profile is incomplete
@@ -326,264 +367,197 @@ Provide:
         </CardHeader>
 
         <CardContent className="pt-0">
-          {/* AI Analysis */}
-          {analysis ? (
-            <div className="space-y-4">
-              <div className="p-3 rounded-lg bg-white border">
-                <p className="text-sm text-slate-700">{analysis.completeness_assessment}</p>
-                {analysis.match_quality_boost && (
-                  <div className="flex items-center gap-2 mt-2">
-                    <TrendingUp className="w-4 h-4 text-emerald-500" />
-                    <span className="text-xs text-emerald-600">
-                      Complete profile for up to {analysis.match_quality_boost}% better matches
-                    </span>
-                  </div>
-                )}
+          {/* Magic Fill Results Preview */}
+          {magicResults ? (
+            <div className="space-y-3">
+              <div className="p-3 rounded-lg bg-gradient-to-r from-violet-100 to-indigo-100 border border-violet-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Wand2 className="w-4 h-4 text-violet-600" />
+                  <span className="text-sm font-semibold text-violet-800">AI-Generated Profile</span>
+                </div>
+                <p className="text-xs text-violet-700">{magicResults.summary}</p>
               </div>
 
-              {/* Priority fields */}
-              <div className="space-y-2">
-                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Recommended to complete
-                </p>
-                {(analysis.priority_fields || []).slice(0, 3).map((item, idx) => {
-                  const fieldConfig = FIELD_CONFIG[item.field];
-                  if (!fieldConfig) return null;
-                  const Icon = fieldConfig.icon;
-                  
+              <div className="space-y-2 max-h-56 overflow-y-auto">
+                {Object.entries(magicResults.fields).map(([field, value]) => {
+                  const config = FIELD_CONFIG[field];
+                  if (!config) return null;
+                  const Icon = config.icon;
                   return (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveField(item.field)}
-                      className="w-full flex items-start gap-3 p-3 rounded-lg bg-white border hover:border-violet-300 hover:shadow-sm transition-all text-left"
-                    >
-                      <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center shrink-0", fieldConfig.bg)}>
-                        <Icon className={cn("w-4 h-4", fieldConfig.color)} />
+                    <div key={field} className="p-3 rounded-lg bg-white border border-emerald-200">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Icon className={cn("w-4 h-4", config.color)} />
+                        <span className="text-xs font-medium text-slate-700">{config.label}</span>
+                        <CheckCircle2 className="w-3 h-3 text-emerald-500 ml-auto" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-900">{fieldConfig.label}</p>
-                        <p className="text-xs text-slate-500 line-clamp-2">{item.suggestion}</p>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-slate-400 shrink-0 mt-1" />
-                    </button>
+                      <p className="text-xs text-slate-600">
+                        {Array.isArray(value) ? value.join(', ') : value}
+                      </p>
+                    </div>
                   );
                 })}
               </div>
 
-              <p className="text-xs text-slate-500 italic">{analysis.motivation_message}</p>
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1" onClick={() => setMagicResults(null)}>
+                  Discard
+                </Button>
+                <Button 
+                  className="flex-1 gap-2 bg-emerald-600 hover:bg-emerald-700" 
+                  onClick={applyMagicResults}
+                  disabled={updateMutation.isPending}
+                >
+                  {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                  Apply All
+                </Button>
+              </div>
             </div>
           ) : (
-            /* Missing fields list */
-            <div className="space-y-2">
-              {missingFields.slice(0, 4).map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.field}
-                    onClick={() => setActiveField(item.field)}
-                    className="w-full flex items-center gap-3 p-3 rounded-lg bg-white border hover:border-violet-300 hover:shadow-sm transition-all"
-                  >
-                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center shrink-0", item.bg)}>
-                      <Icon className={cn("w-4 h-4", item.color)} />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <p className="text-sm font-medium text-slate-900">{item.label}</p>
-                      <p className="text-xs text-slate-500">{item.description}</p>
-                    </div>
-                    <Badge variant="outline" className="text-xs shrink-0">
-                      +{item.weight}%
-                    </Badge>
-                  </button>
-                );
-              })}
-
-              <Button 
-                variant="outline" 
-                className="w-full gap-2 mt-2"
-                onClick={analyzeProfile}
-                disabled={isAnalyzing}
+            <div className="space-y-3">
+              {/* Magic Fill Button */}
+              <Button
+                className="w-full gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 shadow-md"
+                onClick={handleMagicFill}
+                disabled={magicFilling}
               >
-                {isAnalyzing ? (
+                {magicFilling ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Analyzing...
+                    AI is writing your profile...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4" />
-                    Get AI Suggestions
+                    <Wand2 className="w-4 h-4" />
+                    Magic Fill — Let AI Complete It
                   </>
                 )}
               </Button>
+
+              {/* AI Analysis */}
+              {analysis ? (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-white border">
+                    <p className="text-sm text-slate-700">{analysis.completeness_assessment}</p>
+                    {analysis.match_quality_boost && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <TrendingUp className="w-4 h-4 text-emerald-500" />
+                        <span className="text-xs text-emerald-600">
+                          Complete profile for up to {analysis.match_quality_boost}% better matches
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Priority fields */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Recommended to complete
+                    </p>
+                    <p className="text-xs text-violet-600 italic">{analysis.motivation_message}</p>
+                    {(analysis.priority_fields || []).slice(0, 3).map((item, idx) => {
+                      const fieldConfig = FIELD_CONFIG[item.field];
+                      if (!fieldConfig) return null;
+                      const Icon = fieldConfig.icon;
+                      
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => setActiveField(item.field)}
+                          className="w-full flex items-start gap-3 p-3 rounded-lg bg-white border hover:border-violet-300 hover:shadow-sm transition-all text-left group"
+                        >
+                          <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center shrink-0", fieldConfig.bg)}>
+                            <Icon className={cn("w-4 h-4", fieldConfig.color)} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-slate-900">{fieldConfig.label}</p>
+                            <p className="text-xs text-slate-500 line-clamp-2">{item.suggestion}</p>
+                            {item.example_values?.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-1.5">
+                                {item.example_values.slice(0, 3).map((v, i) => (
+                                  <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-violet-50 text-violet-600 border border-violet-100">{v}</span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-violet-500 shrink-0 mt-1 transition-colors" />
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="w-full gap-2 text-violet-600"
+                    onClick={analyzeProfile}
+                    disabled={isAnalyzing}
+                  >
+                    <RotateCw className={cn("w-3.5 h-3.5", isAnalyzing && "animate-spin")} />
+                    Re-analyze
+                  </Button>
+                </div>
+              ) : (
+                /* Missing fields list */
+                <div className="space-y-2">
+                  {missingFields.slice(0, 4).map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.field}
+                        onClick={() => setActiveField(item.field)}
+                        className="w-full flex items-center gap-3 p-3 rounded-lg bg-white border hover:border-violet-300 hover:shadow-sm transition-all"
+                      >
+                        <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center shrink-0", item.bg)}>
+                          <Icon className={cn("w-4 h-4", item.color)} />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                          <p className="text-xs text-slate-500">{item.description}</p>
+                        </div>
+                        <Badge variant="outline" className="text-xs shrink-0">
+                          +{item.weight}%
+                        </Badge>
+                      </button>
+                    );
+                  })}
+
+                  <Button 
+                    variant="outline" 
+                    className="w-full gap-2 mt-1"
+                    onClick={analyzeProfile}
+                    disabled={isAnalyzing}
+                  >
+                    {isAnalyzing ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        Get AI Suggestions
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </CardContent>
       </Card>
 
       {/* Field Edit Dialog */}
-      <Dialog open={!!activeField} onOpenChange={(open) => !open && setActiveField(null)}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              {activeField && FIELD_CONFIG[activeField] && (
-                <>
-                  {React.createElement(FIELD_CONFIG[activeField].icon, { 
-                    className: cn("w-5 h-5", FIELD_CONFIG[activeField].color) 
-                  })}
-                  Add {FIELD_CONFIG[activeField].label}
-                </>
-              )}
-            </DialogTitle>
-            <DialogDescription>
-              {activeField && FIELD_CONFIG[activeField]?.description}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-4">
-            {/* Bio field */}
-            {activeField === 'bio' && (
-              <Textarea
-                placeholder="Tell others about yourself, your journey, and what you're passionate about..."
-                value={formData.bio || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
-                className="min-h-[120px]"
-              />
-            )}
-
-            {/* Location field */}
-            {activeField === 'location' && (
-              <Input
-                placeholder="City, Country"
-                value={formData.location || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-              />
-            )}
-
-            {/* Skills field */}
-            {activeField === 'skills' && (
-              <div className="space-y-3">
-                <p className="text-sm text-slate-500">Select or add your skills:</p>
-                <div className="flex flex-wrap gap-2">
-                  {SUGGESTED_SKILLS.map((skill) => {
-                    const isSelected = (formData.skills || profile?.skills || []).includes(skill);
-                    return (
-                      <Badge
-                        key={skill}
-                        variant={isSelected ? "default" : "outline"}
-                        className={cn("cursor-pointer capitalize", isSelected && "bg-amber-500")}
-                        onClick={() => toggleArrayItem('skills', skill)}
-                      >
-                        {skill}
-                      </Badge>
-                    );
-                  })}
-                </div>
-                <Input
-                  placeholder="Add custom skill (comma separated)"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      const newSkills = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-                      setFormData(prev => ({
-                        ...prev,
-                        skills: [...(prev.skills || profile?.skills || []), ...newSkills]
-                      }));
-                      e.target.value = '';
-                    }
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Core Values field */}
-            {activeField === 'core_values' && (
-              <div className="space-y-3">
-                <p className="text-sm text-slate-500">What principles guide your life?</p>
-                <div className="flex flex-wrap gap-2">
-                  {SUGGESTED_VALUES.map((value) => {
-                    const isSelected = (formData.core_values || profile?.core_values || []).includes(value);
-                    return (
-                      <Badge
-                        key={value}
-                        variant={isSelected ? "default" : "outline"}
-                        className={cn("cursor-pointer capitalize", isSelected && "bg-emerald-500")}
-                        onClick={() => toggleArrayItem('core_values', value)}
-                      >
-                        {value}
-                      </Badge>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Spiritual Practices field */}
-            {activeField === 'spiritual_practices' && (
-              <div className="space-y-3">
-                <p className="text-sm text-slate-500">Select your practices:</p>
-                <div className="flex flex-wrap gap-2">
-                  {SUGGESTED_PRACTICES.map((practice) => {
-                    const isSelected = (formData.spiritual_practices || profile?.spiritual_practices || []).includes(practice);
-                    return (
-                      <Badge
-                        key={practice}
-                        variant={isSelected ? "default" : "outline"}
-                        className={cn("cursor-pointer capitalize", isSelected && "bg-violet-500")}
-                        onClick={() => toggleArrayItem('spiritual_practices', practice)}
-                      >
-                        {practice.replace(/_/g, ' ')}
-                      </Badge>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Interests field */}
-            {activeField === 'interests' && (
-              <div className="space-y-3">
-                <Textarea
-                  placeholder="What topics excite you? (comma separated)"
-                  value={Array.isArray(formData.interests) ? formData.interests.join(', ') : formData.interests || ''}
-                  onChange={(e) => setFormData(prev => ({ ...prev, interests: e.target.value }))}
-                />
-              </div>
-            )}
-
-            {/* Avatar hint */}
-            {activeField === 'avatar_url' && (
-              <div className="text-center py-4">
-                <User className="w-16 h-16 text-slate-300 mx-auto mb-3" />
-                <p className="text-sm text-slate-600 mb-4">
-                  Add a profile photo to help others recognize and connect with you.
-                </p>
-                <Button onClick={() => window.location.href = createPageUrl('Profile') + '?edit=true'}>
-                  Go to Profile Settings
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {activeField !== 'avatar_url' && (
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setActiveField(null)}>
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleSaveField}
-                disabled={updateMutation.isPending}
-                className="gap-2"
-              >
-                {updateMutation.isPending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <CheckCircle2 className="w-4 h-4" />
-                )}
-                Save
-              </Button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <ProfileFieldEditDialog
+        activeField={activeField}
+        onClose={() => setActiveField(null)}
+        fieldConfig={FIELD_CONFIG}
+        profile={profile}
+        formData={formData}
+        setFormData={setFormData}
+        toggleArrayItem={toggleArrayItem}
+        onSave={handleSaveField}
+        isSaving={updateMutation.isPending}
+      />
     </>
   );
 }
