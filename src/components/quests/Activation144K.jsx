@@ -123,37 +123,43 @@ export default function Activation144K({ profile, onComplete }) {
 
   const badgeMutation = useMutation({
     mutationFn: async () => {
-      // Award Frequency Stabilizer badge
-      await base44.entities.Badge.create({
-        user_id: profile.user_id,
-        code: 'frequency_stabilizer',
-        name: 'Frequency Stabilizer',
-        category: 'accomplishment',
-        description: 'Completed the 144K Activation and became a node in the planetary grid',
-        status: 'active',
-        meta_variance_level: coherence
-      });
-      
-      // Award RP and GGG
-      await base44.entities.UserProfile.update(profile.id, {
-        rp_points: (profile.rp_points || 0) + rewards.rp,
-        ggg_balance: (profile.ggg_balance || 0) + parseFloat(rewards.ggg),
-        engagement_points: (profile.engagement_points || 0) + 100
-      });
-      
-      // Log transaction
-      await base44.entities.GGGTransaction.create({
-        user_id: profile.user_id,
-        source_type: 'mission',
-        delta: parseFloat(rewards.ggg),
-        reason_code: '144k_activation',
-        description: '144K Activation completed at coherence level ' + coherence,
-        balance_after: (profile.ggg_balance || 0) + parseFloat(rewards.ggg)
-      });
+      // Check if badge already exists
+      const existing = await base44.entities.Badge.filter({ user_id: profile.user_id, code: 'frequency_stabilizer' });
+      if (existing.length === 0) {
+        await base44.entities.Badge.create({
+          user_id: profile.user_id,
+          code: 'frequency_stabilizer',
+          badge_code: 'frequency_stabilizer',
+          badge_name: 'Frequency Stabilizer',
+          category: 'accomplishment',
+          description: 'Completed the 144K Activation and became a node in the planetary grid',
+          status: 'active'
+        });
+        
+        // Award RP and GGG only on first completion
+        await base44.entities.UserProfile.update(profile.id, {
+          rank_points: (profile.rank_points || 0) + rewards.rp,
+          ggg_balance: (profile.ggg_balance || 0) + parseFloat(rewards.ggg)
+        });
+        
+        await base44.entities.GGGTransaction.create({
+          user_id: profile.user_id,
+          source_type: 'mission',
+          delta: parseFloat(rewards.ggg),
+          reason_code: '144k_activation',
+          description: '144K Activation completed at coherence level ' + coherence,
+          balance_after: (profile.ggg_balance || 0) + parseFloat(rewards.ggg)
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       queryClient.invalidateQueries({ queryKey: ['userBadges'] });
+      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+      onComplete?.();
+    },
+    onError: () => {
+      // Even on error, let user exit
       onComplete?.();
     }
   });

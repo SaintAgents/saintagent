@@ -294,37 +294,43 @@ export default function SeventhSealInitiation({ profile, onComplete }) {
 
   const badgeMutation = useMutation({
     mutationFn: async () => {
-      // Award 7th Seal Initiated badge
-      await base44.entities.Badge.create({
-        user_id: profile.user_id,
-        code: '7th_seal_initiated',
-        name: '7th Seal Initiated',
-        category: 'verification',
-        description: 'Completed the Seventh Seal Initiation meditation',
-        status: 'active',
-        meta_variance_level: coherence,
-        initiation_choices: choices
-      });
-      
-      // Award rewards
-      await base44.entities.UserProfile.update(profile.id, {
-        rp_points: (profile.rp_points || 0) + rewards.rp,
-        ggg_balance: (profile.ggg_balance || 0) + parseFloat(rewards.ggg),
-        engagement_points: (profile.engagement_points || 0) + 200
-      });
-      
-      await base44.entities.GGGTransaction.create({
-        user_id: profile.user_id,
-        source_type: 'mission',
-        delta: parseFloat(rewards.ggg),
-        reason_code: '7th_seal_initiation',
-        description: '7th Seal Initiation completed at coherence ' + coherence,
-        balance_after: (profile.ggg_balance || 0) + parseFloat(rewards.ggg)
-      });
+      // Check if badge already exists
+      const existing = await base44.entities.Badge.filter({ user_id: profile.user_id, code: '7th_seal_initiated' });
+      if (existing.length === 0) {
+        await base44.entities.Badge.create({
+          user_id: profile.user_id,
+          code: '7th_seal_initiated',
+          badge_code: '7th_seal_initiated',
+          badge_name: '7th Seal Initiated',
+          category: 'verification',
+          description: 'Completed the Seventh Seal Initiation meditation',
+          status: 'active'
+        });
+        
+        // Award rewards only on first completion
+        await base44.entities.UserProfile.update(profile.id, {
+          rank_points: (profile.rank_points || 0) + rewards.rp,
+          ggg_balance: (profile.ggg_balance || 0) + parseFloat(rewards.ggg)
+        });
+        
+        await base44.entities.GGGTransaction.create({
+          user_id: profile.user_id,
+          source_type: 'mission',
+          delta: parseFloat(rewards.ggg),
+          reason_code: '7th_seal_initiation',
+          description: '7th Seal Initiation completed at coherence ' + coherence,
+          balance_after: (profile.ggg_balance || 0) + parseFloat(rewards.ggg)
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       queryClient.invalidateQueries({ queryKey: ['userBadges'] });
+      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+      onComplete?.();
+    },
+    onError: () => {
+      // Even on error, let user exit
       onComplete?.();
     }
   });
