@@ -55,6 +55,7 @@ import DeepDisclosureAdmin from '@/components/broadcast/DeepDisclosureAdmin';
 import ActivityBannerManager from '@/components/admin/ActivityBannerManager';
 import AdminProposalsPanel from '@/components/admin/AdminProposalsPanel';
 import LiveToastsAdmin from '@/components/admin/LiveToastsAdmin';
+import UsageAnalyticsTab from '@/components/admin/UsageAnalyticsTab';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -305,6 +306,10 @@ export default function Admin() {
               <Zap className="w-4 h-4" />
               Live Toasts
             </TabsTrigger>
+            <TabsTrigger value="usage" className="gap-2 px-3 py-2">
+              <Activity className="w-4 h-4" />
+              Usage
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -515,6 +520,10 @@ export default function Admin() {
 
           <TabsContent value="live-toasts">
             <LiveToastsAdmin />
+          </TabsContent>
+
+          <TabsContent value="usage">
+            <UsageAnalyticsTab />
           </TabsContent>
         </Tabs>
       </div>
