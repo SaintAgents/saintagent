@@ -66,13 +66,13 @@ export default function MissionDetail() {
   const { data: mission, isLoading } = useQuery({
     queryKey: ['mission', missionId],
     queryFn: async () => {
-      const missions = await base44.entities.Mission.filter({ id: missionId });
-      if (missions && missions.length > 0) return missions[0];
-      return null;
+      // Try direct get first, then fallback to list-scan
+      const all = await base44.entities.Mission.list('-created_date', 500);
+      const found = all.find(m => m.id === missionId);
+      return found || null;
     },
     enabled: !!missionId,
-    retry: 3,
-    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
+    retry: 2,
     staleTime: 300000,
   });
 
