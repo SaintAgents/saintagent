@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from '@/components/hud/HeroImageData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard, Database, Mic, Vote, Zap } from "lucide-react";
+import { Shield, Users, Coins, Crown, Settings, BarChart3, Share2, Folder, Network, MessageSquare, Award, TrendingUp, Target, Percent, Newspaper, Bell, Radio, BookOpen, Gift, Image, Mail, Activity, Eye, Star, AlertTriangle, UserPlus, Inbox, FileText, Layers, Wallet, Map, Shuffle, Gauge, LayoutDashboard, Database, Mic, Vote, Zap, LogIn } from "lucide-react";
 import BackButton from '@/components/hud/BackButton';
 
 import UserManagement from '@/components/admin/UserManagement';
@@ -56,6 +56,7 @@ import ActivityBannerManager from '@/components/admin/ActivityBannerManager';
 import AdminProposalsPanel from '@/components/admin/AdminProposalsPanel';
 import LiveToastsAdmin from '@/components/admin/LiveToastsAdmin';
 import UsageAnalyticsTab from '@/components/admin/UsageAnalyticsTab';
+import SignInsTab from '@/components/admin/SignInsTab';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -310,6 +311,10 @@ export default function Admin() {
               <Activity className="w-4 h-4" />
               Usage
             </TabsTrigger>
+            <TabsTrigger value="signins" className="gap-2 px-3 py-2">
+              <LogIn className="w-4 h-4" />
+              Sign-Ins
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -524,6 +529,10 @@ export default function Admin() {
 
           <TabsContent value="usage">
             <UsageAnalyticsTab />
+          </TabsContent>
+
+          <TabsContent value="signins">
+            <SignInsTab />
           </TabsContent>
         </Tabs>
       </div>
