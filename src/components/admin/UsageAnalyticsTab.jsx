@@ -129,8 +129,14 @@ export default function UsageAnalyticsTab() {
 
   // Merge profiles with usage
   const userRows = useMemo(() => {
+    const seen = new Set();
     return profiles
-      .filter(p => !p.user_id?.includes('demo_'))
+      .filter(p => {
+        if (p.user_id?.includes('demo_')) return false;
+        if (seen.has(p.user_id)) return false;
+        seen.add(p.user_id);
+        return true;
+      })
       .map(p => {
         const usage = userUsageMap[p.user_id] || { posts: 0, messages_sent: 0, meetings: 0, missions_joined: 0, journals: 0, badges_earned: 0, bookings: 0, last_active: null };
         const totalActions = usage.posts + usage.messages_sent + usage.meetings + usage.missions_joined + usage.journals + usage.bookings;
