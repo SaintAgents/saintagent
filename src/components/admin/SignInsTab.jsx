@@ -22,11 +22,11 @@ function getRecencyBadge(dateStr) {
 
 export default function SignInsTab() {
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('all'); // all, recent, inactive
+  const [filter, setFilter] = useState('recent'); // all, recent, inactive
 
   const { data: users = [], isLoading: loadingUsers } = useQuery({
     queryKey: ['admin-signins-users'],
-    queryFn: () => base44.entities.User.list('-created_date', 500),
+    queryFn: () => base44.entities.User.list('-updated_date', 500),
     staleTime: 60000,
   });
 
