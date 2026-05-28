@@ -10,18 +10,20 @@ import { format, parseISO } from 'date-fns';
 import { createPageUrl } from '@/utils';
 
 export default function BroadcastCard() {
-  const { data: broadcasts = [] } = useQuery({
+  const { data: rawBroadcasts } = useQuery({
     queryKey: ['upcomingBroadcasts'],
     queryFn: () => base44.entities.Broadcast.filter({ status: 'upcoming' }, '-start_time', 5),
     staleTime: 60000
   });
   
-  const { data: liveBroadcasts = [] } = useQuery({
+  const { data: rawLiveBroadcasts } = useQuery({
     queryKey: ['liveBroadcasts'],
     queryFn: () => base44.entities.Broadcast.filter({ status: 'live' }, '-created_date', 3),
     refetchInterval: 10000
   });
   
+  const broadcasts = Array.isArray(rawBroadcasts) ? rawBroadcasts : [];
+  const liveBroadcasts = Array.isArray(rawLiveBroadcasts) ? rawLiveBroadcasts : [];
   const allBroadcasts = [...liveBroadcasts, ...broadcasts].slice(0, 3);
   
   return (
