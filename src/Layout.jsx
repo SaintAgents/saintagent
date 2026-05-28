@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
+import { useAuth } from '@/lib/AuthContext';
 import Sidebar from '@/components/hud/Sidebar';
 import TopBar from '@/components/hud/TopBar';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
@@ -299,18 +300,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
     return pageMap[pageName] || 'command';
   };
 
-  // Fetch user profile and current user
-  const { data: currentUser } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: async () => {
-      try {
-        return await base44.auth.me();
-      } catch (error) {
-        return null;
-      }
-    },
-    staleTime: 300000 // Cache for 5 minutes
-  });
+  // Use AuthContext as the single source of truth for current user
+  // This avoids duplicate auth.me() calls that can get rate-limited and cause blank pages
+  const { user: authUser } = useAuth();
+  const currentUser = authUser;
 
   const { data: profiles } = useQuery({
     queryKey: ['myProfile', currentUser?.email],
@@ -376,7 +369,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
     gcTime: 7200000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    retry: false,
+    retry: 1,
   });
   const onboarding = onboardingRecords?.[0];
 
@@ -466,7 +459,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   const handleCreate = async (type, data) => {
     if (type === 'message') {
-      const me = await base44.auth.me();
+      const me = currentUser;
       // resolve recipient (email or @handle)
       let recipientEmail = null;
       let recipientProfile = null;
@@ -493,7 +486,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
         content: data.content || ''
       });
     } else if (type === 'event') {
-      const me = await base44.auth.me();
+      const me = currentUser;
       await base44.entities.Event.create({
         title: data.title,
         description: data.description || '',
@@ -509,23 +502,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
     }
   };
 
-  // Redirect unauthenticated users to login
-    useEffect(() => {
-              if (currentUser === null) {
-                base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
-              }
-            }, [currentUser]);
-
-  // Safety timeout: if auth state is still undefined after 8 seconds, force redirect to login
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (currentUser === undefined) {
-        console.warn('Auth state stuck undefined for 8s, forcing login redirect');
-        base44.auth.redirectToLogin(createPageUrl('CommandDeck'));
-      }
-    }, 8000);
-    return () => clearTimeout(timer);
-  }, []);
+  // Auth is handled by AuthContext in App.jsx — no need to redirect here.
+  // If currentUser is null, AuthContext will handle the redirect to login.
 
   // Scroll to top on page change
   useEffect(() => {
@@ -543,7 +521,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       // Safety: if localStorage says onboarding is done, don't block on slow query
       if (onboardingCompleteFlag) {
         // Skip waiting — let the page render
-        const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
+        const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
         if (genericPages.includes(currentPageName)) {
           window.location.href = createPageUrl('CommandDeck');
         }
@@ -579,24 +557,16 @@ function AuthenticatedLayout({ children, currentPageName }) {
     try { localStorage.setItem('onboardingComplete', '1'); } catch {}
 
     // For returning users with complete onboarding, redirect to Command Deck if on generic pages
-    const genericPages = ['Home', 'home', 'Landing', 'Welcome'];
+    const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
     if (onboarding?.status === 'complete' && genericPages.includes(currentPageName)) {
       window.location.href = createPageUrl('CommandDeck');
       return;
     }
   }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
 
-  // If auth state is still loading (undefined), show loading spinner
-  if (currentUser === undefined) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
-      </div>
-    );
-  }
-
-  // If no user and not public page, show blank while redirecting to login
-  if (currentUser === null) {
+  // If no user yet (AuthContext still loading or user not authenticated),
+  // show loading spinner. AuthContext handles the redirect to login if needed.
+  if (!currentUser) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />

@@ -210,7 +210,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "ActivityFeed",
+    mainPage: "CommandDeck",
     Pages: PAGES,
     Layout: __Layout,
 };
