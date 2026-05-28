@@ -361,7 +361,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   }, [currentUser?.email, queryClient]);
 
   // Onboarding progress for redirect - cached heavily
-  const { data: onboardingRecords, isLoading: onboardingLoading } = useQuery({
+  const { data: onboardingRecords, isLoading: onboardingLoading, isError: onboardingError } = useQuery({
     queryKey: ['onboardingProgress', currentUser?.email],
     queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
     enabled: !!currentUser?.email,
@@ -517,7 +517,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
     const onboardingCompleteFlag = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
     const tourDismissed = typeof window !== 'undefined' && localStorage.getItem('tourDismissed') === '1';
     if (!currentUser || currentPageName === 'Onboarding') return;
-    if (onboardingRecords === undefined || onboardingLoading) {
+    if ((onboardingRecords === undefined && !onboardingError) || (onboardingLoading && !onboardingError)) {
       // Safety: if localStorage says onboarding is done, don't block on slow query
       if (onboardingCompleteFlag) {
         // Skip waiting — let the page render
@@ -574,9 +574,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
     );
   }
 
-  // If onboarding data is still loading, show loading spinner — but not if localStorage says complete
+  // If onboarding data is still loading, show loading spinner — but not if localStorage says complete or query errored
   const onboardingCompleteFlag = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
-  if (onboardingLoading && !onboardingCompleteFlag) {
+  if (onboardingLoading && !onboardingCompleteFlag && !onboardingError) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />

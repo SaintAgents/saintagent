@@ -15,6 +15,12 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkAppState();
+    // Safety timeout: if auth check takes more than 8 seconds, stop loading to prevent blank page
+    const timeout = setTimeout(() => {
+      setIsLoadingPublicSettings(false);
+      setIsLoadingAuth(false);
+    }, 8000);
+    return () => clearTimeout(timeout);
   }, []);
 
   const checkAppState = async () => {
