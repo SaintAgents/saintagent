@@ -94,7 +94,10 @@ export default function Onboarding() {
   // If progress already complete (e.g., user skipped through fast), go to Command Deck
   useEffect(() => {
     if (progress?.status === 'complete') {
-      try { localStorage.setItem('onboardingJustCompleted', '1'); } catch {}
+      try { 
+        localStorage.setItem('onboardingJustCompleted', '1'); 
+        localStorage.setItem('onboardingComplete', '1'); 
+      } catch {}
       window.location.href = createPageUrl('CommandDeck');
     }
   }, [progress]);
@@ -290,7 +293,10 @@ export default function Onboarding() {
           }
 
           // Mark local completion to avoid race redirection and go to Command Deck
-          try { localStorage.setItem('onboardingJustCompleted', '1'); } catch {}
+          try { 
+            localStorage.setItem('onboardingJustCompleted', '1'); 
+            localStorage.setItem('onboardingComplete', '1'); 
+          } catch {}
           window.location.href = createPageUrl('CommandDeck');
         } else {
           setCurrentStep(currentStep + 1);

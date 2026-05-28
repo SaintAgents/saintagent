@@ -530,7 +530,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Stage 1: Essential data (matches, meetings) - loads after profile
   useEffect(() => {
     if (profile && queryStage === 0) {
-      const timer = setTimeout(() => setQueryStage(1), 300);
+      const timer = setTimeout(() => setQueryStage(1), 200);
       return () => clearTimeout(timer);
     }
   }, [profile, queryStage]);
@@ -538,7 +538,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Stage 2: Secondary data (missions, projects) - loads after stage 1
   useEffect(() => {
     if (queryStage === 1) {
-      const timer = setTimeout(() => setQueryStage(2), 1500);
+      const timer = setTimeout(() => setQueryStage(2), 500);
       return () => clearTimeout(timer);
     }
   }, [queryStage]);
@@ -546,7 +546,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Stage 3: Tertiary data - loads after stage 2
   useEffect(() => {
     if (queryStage === 2) {
-      const timer = setTimeout(() => setQueryStage(3), 1500);
+      const timer = setTimeout(() => setQueryStage(3), 500);
       return () => clearTimeout(timer);
     }
   }, [queryStage]);
