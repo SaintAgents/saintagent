@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isMobileDevice, DATA_LIMITS } from '@/components/services/dataService';
 import { createPageUrl } from '@/utils';
+import { useAuth } from '@/lib/AuthContext';
 import VideoMeetingModal from '@/components/VideoMeetingModal';
 import BoostModal from '@/components/BoostModal';
 import ProfileBoostModal from '@/components/boost/ProfileBoostModal';
@@ -371,17 +372,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     setStoredCards(prev => prev.filter(c => c.id !== cardId));
   };
 
-  // Current user (safe for public use)
-  const { data: currentUser } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: async () => {
-      try {
-        return await base44.auth.me();
-      } catch {
-        return null;
-      }
-    }
-  });
+  // Use AuthContext for current user - avoids duplicate auth.me() calls
+  const { user: currentUser } = useAuth();
 
   // Fetch user profile (only when authenticated)
   // IMPORTANT: Use same queryKey as Layout to share cache and prevent duplicate fetches
@@ -525,7 +517,12 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   
   // STAGGERED QUERIES - Use delays to prevent rate limiting
   // Each query waits for previous data to be loaded before firing
-  const [queryStage, setQueryStage] = useState(0);
+  // Start at stage 3 if we already have cached profile (returning to page)
+  const [queryStage, setQueryStage] = useState(() => {
+    if (!currentUser?.email) return 0;
+    const cached = queryClient.getQueryData(['myProfile', currentUser.email]);
+    return cached?.[0] ? 3 : 0;
+  });
   
   // Stage 1: Essential data (matches, meetings) - loads after profile
   useEffect(() => {
@@ -556,7 +553,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const { data: meetingsRaw = [] } = useQuery({
     queryKey: ['dashboardMeetings'],
     queryFn: () => base44.entities.Meeting.list('-scheduled_time', 50),
-    enabled: queryStage >= 1, staleTime: 120000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
+    enabled: queryStage >= 1, staleTime: 300000, gcTime: 600000, refetchOnWindowFocus: false, refetchOnMount: false, retry: 2, retryDelay: 2000,
   });
   const meetings = meetingsRaw.filter(m => m.host_id === currentUser?.email || m.guest_id === currentUser?.email);
 
@@ -572,14 +569,14 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       });
     },
     enabled: queryStage >= 2 && !!currentUser?.email,
-    staleTime: 300000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
+    staleTime: 300000, gcTime: 600000, refetchOnWindowFocus: false, refetchOnMount: false, retry: 2, retryDelay: 2000,
   });
 
   const { data: listings = [] } = useQuery({
     queryKey: ['dashboardListings', currentUser?.email],
     queryFn: () => base44.entities.Listing.filter({ status: 'active' }, '-created_date', 30),
     enabled: queryStage >= 3 && !!currentUser?.email,
-    staleTime: 300000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
+    staleTime: 300000, gcTime: 600000, refetchOnWindowFocus: false, refetchOnMount: false, retry: 2, retryDelay: 2000,
   });
 
   const { data: projects = [] } = useQuery({
@@ -592,7 +589,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return [...owned, ...claimed].filter(p => { if (seen.has(p.id)) return false; seen.add(p.id); return true; });
     },
     enabled: queryStage >= 2 && !!currentUser?.email,
-    staleTime: 300000, refetchOnWindowFocus: false, retry: 2, retryDelay: 2000,
+    staleTime: 300000, gcTime: 600000, refetchOnWindowFocus: false, refetchOnMount: false, retry: 2, retryDelay: 2000,
   });
 
   const notifications = []; // notifications disabled
