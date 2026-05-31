@@ -460,7 +460,7 @@ export default function UserManagement() {
           </DialogHeader>
 
           {selectedUser &&
-          <ScrollArea className="flex-1 max-h-[70vh] pr-4">
+          <ScrollArea className="flex-1 max-h-[85vh] pr-4">
           <div className="space-y-6 pb-4">
               {/* User Info */}
               <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-50">
@@ -473,6 +473,24 @@ export default function UserManagement() {
                   <p className="text-sm text-slate-500">@{selectedUser.handle}</p>
                   <p className="text-xs text-slate-400">{selectedUser.user_id}</p>
                 </div>
+              </div>
+
+              {/* User Role - FIRST so admins see it immediately */}
+              <div className="p-4 rounded-lg border-2 border-violet-300 bg-violet-50">
+                <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-violet-600" />
+                  User Role (System)
+                </h3>
+                <Select
+                  value={userRecord?.role || 'user'}
+                  onValueChange={(v) => handleChangeUserRole(v)}>
+                  <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-slate-500 mt-2">Admin = full platform access. User = standard access.</p>
               </div>
 
               {/* GGG Balance Controls */}
@@ -589,21 +607,6 @@ export default function UserManagement() {
                 <div className="text-right mt-3">
                   <Button size="sm" className="rounded-lg" onClick={handleProfileSave}>Save Profile</Button>
                 </div>
-              </div>
-
-              {/* User Role */}
-              <div>
-                <h3 className="font-semibold text-slate-900 mb-3">User Role</h3>
-                <Select
-                value={userRecord?.role || 'user'}
-                onValueChange={(v) => handleChangeUserRole(v)}>
-
-                  <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               {/* Danger Zone */}
