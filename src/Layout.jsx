@@ -361,7 +361,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   }, [currentUser?.email, queryClient]);
 
   // Onboarding progress for redirect - cached heavily
-  const { data: onboardingRecords, isLoading: onboardingLoading, isError: onboardingError } = useQuery({
+  const { data: onboardingRecords, isLoading: onboardingLoading, isError: onboardingError, isFetched: onboardingFetched } = useQuery({
     queryKey: ['onboardingProgress', currentUser?.email],
     queryFn: () => base44.entities.OnboardingProgress.filter({ user_id: currentUser.email }),
     enabled: !!currentUser?.email,
@@ -372,6 +372,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
     retry: 1,
   });
   const onboarding = onboardingRecords?.[0];
+
+  // Safety: if onboarding query hasn't resolved after 5 seconds for a new user,
+  // redirect to onboarding rather than spinning forever
+  const [onboardingTimeout, setOnboardingTimeout] = useState(false);
+  useEffect(() => {
+    if (!currentUser?.email) return;
+    const onboardingCompleteFlag = localStorage.getItem('onboardingComplete') === '1';
+    if (onboardingCompleteFlag) return; // Already done, no timeout needed
+    const timer = setTimeout(() => setOnboardingTimeout(true), 5000);
+    return () => clearTimeout(timer);
+  }, [currentUser?.email]);
 
 
 
@@ -525,6 +536,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
         if (genericPages.includes(currentPageName)) {
           window.location.href = createPageUrl('CommandDeck');
         }
+      } else if (onboardingTimeout) {
+        // Query took too long (likely rate-limited) — redirect new user to onboarding
+        window.location.href = createPageUrl('Onboarding');
       }
       return;
     }
@@ -574,9 +588,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
     );
   }
 
-  // If onboarding data is still loading, show loading spinner — but not if localStorage says complete or query errored
+  // If onboarding data is still loading, show loading spinner — but not if localStorage says complete, query errored, or timeout hit
   const onboardingCompleteFlag = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
-  if (onboardingLoading && !onboardingCompleteFlag && !onboardingError) {
+  if (onboardingLoading && !onboardingCompleteFlag && !onboardingError && !onboardingTimeout) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
