@@ -576,7 +576,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       window.location.href = createPageUrl('CommandDeck');
       return;
     }
-  }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName]);
+  }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName, onboardingTimeout]);
 
   // If no user yet (AuthContext still loading or user not authenticated),
   // show loading spinner. AuthContext handles the redirect to login if needed.
