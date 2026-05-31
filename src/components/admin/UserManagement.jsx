@@ -454,13 +454,12 @@ export default function UserManagement() {
 
       {/* User Management Modal */}
       <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <DialogHeader className="sticky top-0 z-10 bg-white dark:bg-slate-900 pb-2">
             <DialogTitle>Manage User: {selectedUser?.display_name}</DialogTitle>
           </DialogHeader>
 
           {selectedUser &&
-          <ScrollArea className="flex-1 max-h-[85vh] pr-4">
           <div className="space-y-6 pb-4">
               {/* User Info */}
               <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-50">
@@ -820,7 +819,6 @@ export default function UserManagement() {
                 )}
               </div>
             </div>
-          </ScrollArea>
           }
         </DialogContent>
       </Dialog>
