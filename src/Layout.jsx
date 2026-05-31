@@ -302,7 +302,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   // Use AuthContext as the single source of truth for current user
   // This avoids duplicate auth.me() calls that can get rate-limited and cause blank pages
-  const { user: authUser } = useAuth();
+  const { user: authUser, isLoadingAuth, isLoadingPublicSettings, navigateToLogin } = useAuth();
   const currentUser = authUser;
 
   const { data: profiles } = useQuery({
@@ -578,9 +578,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
     }
   }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName, onboardingTimeout]);
 
-  // If no user yet (AuthContext still loading or user not authenticated),
-  // show loading spinner. AuthContext handles the redirect to login if needed.
+  // If no user yet — either still loading or not authenticated.
+  // If auth is done loading and there's no user, redirect to login instead of spinning forever.
   if (!currentUser) {
+    if (!isLoadingAuth && !isLoadingPublicSettings) {
+      // Auth finished but no user — redirect to login
+      navigateToLogin();
+      return null;
+    }
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
