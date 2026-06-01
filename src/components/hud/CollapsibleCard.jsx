@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDown, Pin, MoreHorizontal, ExternalLink, Eye, EyeOff, Maximize2, PanelRight, ArrowRight, RefreshCw } from "lucide-react";
+import { ChevronDown, Pin, MoreHorizontal, ExternalLink, Eye, EyeOff, Maximize2, PanelRight, ArrowRight, RefreshCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -36,7 +36,8 @@ export default function CollapsibleCard({
   onToggleHide,
   onTossToSidePanel, // Prop for toss functionality (button only)
   navigateTo, // Navigation URL or page name
-  onRefresh // Optional refresh callback
+  onRefresh, // Optional refresh callback
+  onAdd // Optional add/create callback - shows + button in header
 }) {
   const [refreshing, setRefreshing] = React.useState(false);
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -140,6 +141,20 @@ export default function CollapsibleCard({
           }
         </div>
         <div className="flex items-center gap-1">
+          {onAdd && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 hover:bg-emerald-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAdd();
+              }}
+              title="Create new"
+            >
+              <Plus className="w-4 h-4 text-emerald-600 hover:text-emerald-700" />
+            </Button>
+          )}
           {onRefresh && (
             <Button
               variant="ghost"

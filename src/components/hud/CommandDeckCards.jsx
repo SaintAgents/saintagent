@@ -1,5 +1,6 @@
 import React from 'react';
 import { Key, Radio, CircleDot, Calendar } from 'lucide-react';
+import { createPageUrl } from '@/utils';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import DRXCard from '@/components/hud/DRXCard';
 import BroadcastCard from '@/components/hud/BroadcastCard';
@@ -48,6 +49,7 @@ export default function CommandDeckCards({
           onToggleHide={() => toggleCardVisibility('broadcast')} 
           onTossToSidePanel={handleTossToSidePanel}
           onPopout={() => {}}
+          onAdd={() => window.location.href = createPageUrl('Broadcast')}
         >
           <BroadcastCard />
         </CollapsibleCard>
@@ -67,6 +69,7 @@ export default function CommandDeckCards({
           onToggleHide={() => toggleCardVisibility('events')} 
           onTossToSidePanel={handleTossToSidePanel}
           onPopout={() => {}}
+          onAdd={() => window.location.href = createPageUrl('Events')}
         >
           <EventsCard />
         </CollapsibleCard>
