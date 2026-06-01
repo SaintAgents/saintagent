@@ -178,18 +178,22 @@ export default function DatingMatchesPopup({ currentUser }) {
     enabled: !!currentUser?.email && isDatingOptedIn
   });
 
-  // Only fetch dating profiles if no existing matches found
+  // Always fetch dating profiles when opted in - needed for gender filtering on existing matches too
   const { data: datingProfiles = [] } = useQuery({
     queryKey: ['datingProfilesPopup', currentUser?.email],
     queryFn: () => base44.entities.DatingProfile.filter({ opt_in: true, visible: true }, '-updated_date', 50),
-    enabled: !!currentUser?.email && isDatingOptedIn && existingMatches.length === 0 && !isLoadingMatches
+    enabled: !!currentUser?.email && isDatingOptedIn && !isLoadingMatches,
+    staleTime: 300000,
+    refetchOnWindowFocus: false
   });
 
   // Fetch user profiles for additional info - always call hook but conditionally enable
   const { data: userProfiles = [] } = useQuery({
     queryKey: ['userProfilesForDating'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 200),
-    enabled: !!currentUser?.email && isDatingOptedIn && (existingMatches.length > 0 || datingProfiles.length > 0)
+    enabled: !!currentUser?.email && isDatingOptedIn,
+    staleTime: 300000,
+    refetchOnWindowFocus: false
   });
 
   // Get my dating profile preferences
@@ -241,8 +245,9 @@ export default function DatingMatchesPopup({ currentUser }) {
     return true;
   });
 
+  // Use dating profiles as fallback when no existing matches pass filtering
   const otherProfiles = isDatingOptedIn 
-    ? (hasExistingMatches ? [] : filteredDatingProfiles) 
+    ? (filteredExistingMatches.length > 0 ? [] : filteredDatingProfiles) 
     : [];
 
   // Enrich with user profile data and assign unique demo avatars
@@ -250,29 +255,25 @@ export default function DatingMatchesPopup({ currentUser }) {
   const usedFemaleIdx = new Set();
 
   // Build enriched matches from existing Match records first, then fall back to dating profiles
-  // IMPORTANT: Also filter existing matches by gender preference!
+  // Apply gender filtering only when dating profiles data is available
   const filteredExistingMatches = hasExistingMatches 
     ? existingMatches.filter(m => {
-        // Find the dating profile for this match target to check their gender
         const targetDatingProfile = datingProfiles.find(dp => dp.user_id === m.target_id);
         const candidateGender = targetDatingProfile?.gender;
         
-        // If we can't find their gender, reject them to be safe
+        // If dating profiles haven't loaded yet, KEEP the match (don't reject)
         if (!candidateGender) {
-          console.log(`[Existing Match Filter] Rejected ${m.target_id}: No dating profile/gender found`);
-          return false;
+          return true;
         }
         
         // Check if I'm interested in their gender
         if (myInterestedIn.length > 0 && !myInterestedIn.includes('all')) {
           const candidateInterestKey = genderToInterest[candidateGender];
           if (!candidateInterestKey || !myInterestedIn.includes(candidateInterestKey)) {
-            console.log(`[Existing Match Filter] Rejected ${m.target_id}: I want ${myInterestedIn.join(',')}, they are ${candidateGender}`);
             return false;
           }
         }
         
-        console.log(`[Existing Match Filter] ACCEPTED ${m.target_id}: gender=${candidateGender}`);
         return true;
       })
     : [];
