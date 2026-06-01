@@ -490,13 +490,25 @@ export default function SidePanel({
     return counts;
   }, [allUserProfiles]);
 
-  // Recently joined users (last 7 days)
+  // Recently joined users (last 30 days) — based on User entity created_date (actual signup),
+  // NOT UserProfile created_date (which can be recreated/updated)
   const recentJoins = React.useMemo(() => {
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    // Get emails of users who signed up recently from User entity
+    const recentUserEmails = new Set(
+      allUsers
+        .filter(u => new Date(u.created_date) > thirtyDaysAgo)
+        .map(u => u.email)
+    );
+    // Match to profiles for display data, sorted by User signup date
     return allUserProfiles
-      .filter(u => new Date(u.created_date) > sevenDaysAgo)
-      .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-  }, [allUserProfiles]);
+      .filter(p => recentUserEmails.has(p.user_id))
+      .map(p => {
+        const user = allUsers.find(u => u.email === p.user_id);
+        return { ...p, _joinDate: user?.created_date || p.created_date };
+      })
+      .sort((a, b) => new Date(b._joinDate) - new Date(a._joinDate));
+  }, [allUserProfiles, allUsers]);
 
   // Seed demo data - DISABLED to prevent 500 errors and rate limits
   // React.useEffect(() => {
@@ -1243,7 +1255,7 @@ export default function SidePanel({
           <CollapsibleCard title="Recently Joined" icon={Users} badge={recentJoins.length} badgeColor="emerald" onPopout={() => setRecentJoinsPopupOpen(true)}>
             <div className="space-y-2">
               {recentJoins.length === 0 ? (
-                <p className="text-sm text-slate-400 py-4 text-center">No new members this week</p>
+                <p className="text-sm text-slate-400 py-4 text-center">No new members in the last 30 days</p>
               ) : (
                 recentJoins.slice(0, 5).map((user) => {
                   const userValues = user.values_tags || [];
@@ -1283,7 +1295,7 @@ export default function SidePanel({
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-slate-500">{format(parseISO(user.created_date), 'MMM d')}</p>
+                          <p className="text-xs text-slate-500">Joined {format(parseISO(user._joinDate || user.created_date), 'MMM d')}</p>
                         </div>
                       </div>
                       {userValues.length > 0 && (
