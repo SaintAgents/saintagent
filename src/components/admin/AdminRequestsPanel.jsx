@@ -15,7 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Inbox, Check, X, Clock, AlertCircle, MessageSquare, Target, 
   Award, Shield, Loader2, ExternalLink, Filter, Search, Coins,
-  ArrowUpDown, ArrowUp, ArrowDown, UserPlus, CheckSquare, Users
+  ArrowUpDown, ArrowUp, ArrowDown, UserPlus, CheckSquare, Users, RefreshCw
 } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from 'react-router-dom';
@@ -276,10 +276,16 @@ export default function AdminRequestsPanel() {
     }
   });
 
-  const { data: requests = [], isLoading } = useQuery({
+  const { data: requests = [], isLoading, isFetching } = useQuery({
     queryKey: ['adminRequests'],
     queryFn: () => base44.entities.AdminRequest.list('-created_date', 200)
   });
+
+  const handleRefreshAll = () => {
+    queryClient.invalidateQueries({ queryKey: ['adminRequests'] });
+    queryClient.invalidateQueries({ queryKey: ['pendingRoleRequests'] });
+    queryClient.invalidateQueries({ queryKey: ['pendingWithdrawals'] });
+  };
 
   // Also fetch pending role requests from UserRole entity
   const { data: pendingRoleRequests = [] } = useQuery({
@@ -597,6 +603,16 @@ export default function AdminRequestsPanel() {
               </CardTitle>
               <CardDescription>Review and manage user requests</CardDescription>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefreshAll}
+              disabled={isFetching}
+              className="gap-2"
+            >
+              <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
