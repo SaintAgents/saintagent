@@ -111,7 +111,7 @@ export default function BroadcastCard() {
                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                   <span className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {format(parseISO(bc.start_time), 'MMM d, h:mm a')}
+                    {(bc.start_time || bc.scheduled_time) ? format(parseISO(bc.start_time || bc.scheduled_time), 'MMM d, h:mm a') : 'TBD'}
                   </span>
                   {bc.attendee_count > 0 && (
                     <span className="text-xs text-slate-500 dark:text-slate-500 flex items-center gap-1">
