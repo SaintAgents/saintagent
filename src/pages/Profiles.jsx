@@ -366,11 +366,12 @@ export default function Profiles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
       {/* Hero Section */}
-      <div className="page-hero relative overflow-hidden mt-[100px]">
+      <div className="page-hero relative overflow-hidden">
         <img
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1e9ff4ff2_universal_upscale_0_9f257f95-48b1-44e8-a0f9-60663ca8cf9d_0.jpg"
           alt="Community Profiles"
-          className="hero-image absolute inset-0 w-full h-full object-cover"
+          className="hero-image absolute inset-0 w-full h-full object-cover object-center"
+          style={{ objectPosition: 'center 30%' }}
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-slate-50 dark:to-[#050505]" />
