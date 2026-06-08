@@ -143,7 +143,17 @@ export default function MiniProfile({
           
           {/* Avatar and info side by side, avatar at top where data starts */}
           <div className="flex items-start gap-4 px-3 pt-3">
-            <div className="relative shrink-0">
+            <div 
+              className="relative shrink-0 cursor-pointer"
+              onClickCapture={(e) => {
+                if (e.target.closest('button')) return;
+                e.stopPropagation();
+                e.preventDefault();
+                if (userId) {
+                  document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId } }));
+                }
+              }}
+            >
               <RankedAvatar
                 src={avatar || profile?.avatar_url}
                 name={displayName}
@@ -155,7 +165,6 @@ export default function MiniProfile({
                 rpPoints={profile?.rp_points || profile?.rank_points}
                 showPhotoIcon={true}
                 galleryImages={profile?.gallery_images || []}
-                onClick={handleAvatarClick}
               />
             </div>
             
@@ -206,7 +215,17 @@ export default function MiniProfile({
         </div>
       ) : (
         <div className="flex items-start gap-3 relative">
-        <div className="relative shrink-0">
+        <div 
+          className="relative shrink-0 cursor-pointer"
+          onClickCapture={(e) => {
+            if (e.target.closest('button')) return;
+            e.stopPropagation();
+            e.preventDefault();
+            if (userId) {
+              document.dispatchEvent(new CustomEvent('openProfile', { detail: { userId } }));
+            }
+          }}
+        >
           <RankedAvatar
             src={avatar || profile?.avatar_url}
             name={displayName}
@@ -218,7 +237,6 @@ export default function MiniProfile({
             rpPoints={profile?.rp_points || profile?.rank_points}
             showPhotoIcon={true}
             galleryImages={profile?.gallery_images || []}
-            onClick={handleAvatarClick}
           />
         </div>
         {(showName || showHandle) && (
