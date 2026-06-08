@@ -451,7 +451,7 @@ export default function AdminBetaFeedback() {
                   />
                   <Button 
                     size="sm" 
-                    className="mt-2"
+                    className="mt-2 bg-violet-600 hover:bg-violet-700 text-white"
                     onClick={handleSaveNotes}
                     disabled={updateMutation.isPending}
                   >
