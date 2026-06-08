@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import PostContent from '@/components/community/PostContent';
 import MiniProfile from '@/components/profile/MiniProfile';
+import { earnGGG } from '@/hooks/useEarnGGG';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
@@ -155,8 +156,9 @@ export default function CommunityFeed() {
         file_names: payload.file_names || []
       });
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      earnGGG('posting');
       setNewPostText('');
       if (videoPreview) { try { URL.revokeObjectURL(videoPreview); } catch {} }
       setVideoFile(null);
@@ -190,6 +192,7 @@ export default function CommunityFeed() {
         if (post) {
           await base44.entities.Post.update(postId, { likes_count: (post.likes_count || 0) + 1 });
         }
+        earnGGG('like_react', postId);
       }
     },
     onSuccess: () => {
@@ -211,6 +214,7 @@ export default function CommunityFeed() {
       if (post) {
         await base44.entities.Post.update(postId, { comments_count: (post.comments_count || 0) + 1 });
       }
+      earnGGG('comment', postId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });

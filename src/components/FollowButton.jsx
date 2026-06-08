@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { UserPlus, UserMinus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { earnGGG } from '@/hooks/useEarnGGG';
 
 export default function FollowButton({ targetUserId, className }) {
   const queryClient = useQueryClient();
@@ -60,6 +61,7 @@ export default function FollowButton({ targetUserId, className }) {
         await base44.entities.UserProfile.update(current.id, {
           following_count: (current.following_count || 0) + 1
         });
+        earnGGG('follow', target.user_id);
       }
     },
     onSuccess: () => {
