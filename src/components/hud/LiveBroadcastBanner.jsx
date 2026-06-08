@@ -8,12 +8,15 @@ export default function LiveBroadcastBanner() {
   const { data: settingsList = [] } = useQuery({
     queryKey: ['platformSettings'],
     queryFn: () => base44.entities.PlatformSetting.list(),
-    staleTime: 30000,
+    staleTime: 60000,
+    gcTime: 300000,
+    refetchOnWindowFocus: false,
   });
   const broadcastsEnabled = settingsList[0]?.broadcasts_enabled !== false;
 
-  // Fetch broadcasts — when kill switch is ON, also grab the most recent one as fallback
-  const { data: broadcasts = [] } = useQuery({
+  // Always fetch broadcasts — don't gate on broadcastsEnabled to avoid query toggling
+  // which clears cached data and makes the LIVE pill disappear
+  const { data: broadcasts = { live: [], scheduled: [] } } = useQuery({
     queryKey: ['liveBroadcasts'],
     queryFn: async () => {
       const [live, scheduled] = await Promise.all([
@@ -23,8 +26,10 @@ export default function LiveBroadcastBanner() {
       return { live, scheduled };
     },
     refetchInterval: 30000,
-    staleTime: 15000,
-    enabled: broadcastsEnabled,
+    staleTime: 20000,
+    gcTime: 120000,
+    refetchOnWindowFocus: false,
+    retry: 2,
   });
 
   const now = Date.now();
