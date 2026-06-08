@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,6 @@ import { Sparkles, Loader2, Zap } from "lucide-react";
 
 export default function AIMatchGenerator({ profile }) {
   const queryClient = useQueryClient();
-  const [isGenerating, setIsGenerating] = useState(false);
 
   const { data: allProfiles = [] } = useQuery({
     queryKey: ['allProfiles'],
@@ -34,8 +33,6 @@ export default function AIMatchGenerator({ profile }) {
 
   const generateMatchesMutation = useMutation({
     mutationFn: async () => {
-      setIsGenerating(true);
-      
       // Get blocked users list
       const blockedUsers = enginePrefs?.blocked_users || [];
       
@@ -277,30 +274,49 @@ Return ONLY the 5 best matches.`;
       });
 
       await Promise.all(matchPromises);
-      setIsGenerating(false);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['matches'] });
+    },
+    onError: (error) => {
+      console.error('Match generation failed:', error);
     }
   });
 
+  const isPending = generateMatchesMutation.isPending;
+  const isError = generateMatchesMutation.isError;
+  const isSuccess = generateMatchesMutation.isSuccess;
+
   return (
-    <Button
-      onClick={() => generateMatchesMutation.mutate()}
-      disabled={isGenerating || generateMatchesMutation.isPending}
-      className="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] text-white rounded-xl gap-2 transition-all duration-200 dark:from-[#00ff88]/20 dark:to-emerald-900/40 dark:border dark:border-[#00ff88]/50 dark:hover:border-[#00ff88] dark:hover:shadow-[0_0_25px_rgba(0,255,136,0.5)]"
-    >
-      {isGenerating ? (
-        <>
-          <Loader2 className="w-4 h-4 animate-spin" />
-          Analyzing Profiles...
-        </>
-      ) : (
-        <>
-          <Sparkles className="w-4 h-4" />
-          Generate AI Matches
-        </>
+    <div className="flex items-center gap-2">
+      <Button
+        onClick={() => generateMatchesMutation.mutate()}
+        disabled={isPending}
+        className="bg-gradient-to-br from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] text-white rounded-xl gap-2 transition-all duration-200 dark:from-[#00ff88]/20 dark:to-emerald-900/40 dark:border dark:border-[#00ff88]/50 dark:hover:border-[#00ff88] dark:hover:shadow-[0_0_25px_rgba(0,255,136,0.5)]"
+      >
+        {isPending ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Analyzing...
+          </>
+        ) : isError ? (
+          <>
+            <Zap className="w-4 h-4" />
+            Retry Analysis
+          </>
+        ) : (
+          <>
+            <Sparkles className="w-4 h-4" />
+            Generate AI Matches
+          </>
+        )}
+      </Button>
+      {isError && (
+        <span className="text-xs text-red-500">Analysis failed — try again</span>
       )}
-    </Button>
+      {isSuccess && !isPending && (
+        <span className="text-xs text-emerald-600">✓ Done</span>
+      )}
+    </div>
   );
 }

@@ -144,7 +144,7 @@ export default function AIDiscoverMatches({ profile, compact = false }) {
         .slice(0, 15);
 
       if (candidates.length === 0) {
-        return { discoveries: [] };
+        throw new Error('No candidates available. Complete your dating profile and check back when more users join.');
       }
 
       // Build rich context
@@ -303,6 +303,9 @@ For each, explain the UNIQUE insight that makes them special - something the use
     },
     onSuccess: (data) => {
       setDiscoveries(data.discoveries);
+    },
+    onError: (error) => {
+      console.error('Discovery failed:', error);
     }
   });
 
