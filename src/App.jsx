@@ -29,7 +29,7 @@ import MissionGrid from './pages/MissionGrid';
 import Learn from './pages/Learn';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import ErrorBoundary from '@/components/ErrorBoundary';
+// ErrorBoundary used per-page in Layout, not at app level
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -120,12 +120,10 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <ErrorBoundary>
-          <Router>
-            <NavigationTracker />
-            <AuthenticatedApp />
-          </Router>
-        </ErrorBoundary>
+        <Router>
+          <NavigationTracker />
+          <AuthenticatedApp />
+        </Router>
         <Toaster />
         <SonnerToaster />
       </QueryClientProvider>

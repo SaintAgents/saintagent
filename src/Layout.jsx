@@ -1984,8 +1984,9 @@ export default function Layout({ children, currentPageName }) {
   }
   
   // Non-public pages use the authenticated layout with hooks, wrapped in error boundary
+  // key={currentPageName} resets the error boundary on page navigation
   return (
-    <ErrorBoundary>
+    <ErrorBoundary key={currentPageName}>
       <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>
     </ErrorBoundary>
   );
