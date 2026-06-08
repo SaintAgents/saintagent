@@ -1,0 +1,118 @@
+{
+  "name": "Boost",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "boost_type": {
+      "type": "string",
+      "enum": [
+        "post",
+        "offer",
+        "mission",
+        "event",
+        "profile"
+      ],
+      "default": "profile"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "budget_ggg": {
+      "type": "number"
+    },
+    "duration_hours": {
+      "type": "number",
+      "default": 24
+    },
+    "visibility_level": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "priority",
+        "spotlight",
+        "superboost"
+      ],
+      "default": "standard",
+      "description": "Level of visibility boost"
+    },
+    "boost_multiplier": {
+      "type": "number",
+      "default": 1.5,
+      "description": "Multiplier for visibility in search/matches"
+    },
+    "targeting": {
+      "type": "object",
+      "properties": {
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rank_range": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "interests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "cancelled",
+        "scheduled"
+      ],
+      "default": "active"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0
+    },
+    "conversions": {
+      "type": "number",
+      "default": 0
+    },
+    "profile_views": {
+      "type": "number",
+      "default": 0
+    },
+    "matches_generated": {
+      "type": "number",
+      "default": 0
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "boost_type",
+    "budget_ggg"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "ProjectAttachment",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Reference to ProjectTask (optional)"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded file"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original file name"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "MIME type of file"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "uploaded_by_id": {
+      "type": "string"
+    },
+    "uploaded_by_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "file_url",
+    "file_name"
+  ]
+}

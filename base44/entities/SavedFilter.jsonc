@@ -1,0 +1,57 @@
+{
+  "name": "SavedFilter",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owner of the saved filter"
+    },
+    "name": {
+      "type": "string",
+      "description": "Filter name"
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "all",
+        "people",
+        "missions",
+        "circles",
+        "offers",
+        "events",
+        "projects"
+      ],
+      "default": "all"
+    },
+    "filters": {
+      "type": "object",
+      "description": "Filter criteria object"
+    },
+    "sort_by": {
+      "type": "string",
+      "description": "Sort field"
+    },
+    "sort_order": {
+      "type": "string",
+      "enum": [
+        "asc",
+        "desc"
+      ],
+      "default": "desc"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "use_count": {
+      "type": "number",
+      "default": 0,
+      "description": "How many times this filter has been used"
+    }
+  },
+  "required": [
+    "user_id",
+    "name",
+    "filters"
+  ]
+}

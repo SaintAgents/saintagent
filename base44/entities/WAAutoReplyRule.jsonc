@@ -1,0 +1,65 @@
+{
+  "name": "WAAutoReplyRule",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": [
+        "keyword",
+        "intent",
+        "first_message",
+        "after_hours",
+        "sentiment",
+        "always"
+      ],
+      "default": "keyword"
+    },
+    "trigger_value": {
+      "type": "string",
+      "description": "Keyword, intent name, or condition"
+    },
+    "response_template": {
+      "type": "string",
+      "description": "Static response text or prompt for AI"
+    },
+    "use_ai": {
+      "type": "boolean",
+      "default": false,
+      "description": "Use LLM to generate response instead of static template"
+    },
+    "ai_instructions": {
+      "type": "string",
+      "description": "Custom instructions for the AI when generating response"
+    },
+    "require_approval": {
+      "type": "boolean",
+      "default": false,
+      "description": "Hold AI reply for human review before sending"
+    },
+    "confidence_threshold": {
+      "type": "number",
+      "default": 80,
+      "description": "Min AI confidence to auto-send (0-100)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "priority": {
+      "type": "number",
+      "default": 0,
+      "description": "Higher = checked first"
+    },
+    "times_triggered": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "trigger_type"
+  ]
+}

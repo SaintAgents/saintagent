@@ -1,0 +1,183 @@
+{
+  "name": "ProjectEvaluation",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "evaluation_type": {
+      "type": "string",
+      "enum": [
+        "ai_bulk",
+        "ai_single",
+        "human_review",
+        "human_override",
+        "calibration"
+      ],
+      "default": "ai_single"
+    },
+    "evaluator_id": {
+      "type": "string",
+      "description": "User ID for human evaluations"
+    },
+    "phase1_result": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "uncertain"
+      ]
+    },
+    "phase1_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "phase1_rationale": {
+      "type": "string"
+    },
+    "phase1_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question_id": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          },
+          "evidence_snippets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "phase2_scores": {
+      "type": "object",
+      "description": "Full subcriterion scoring object"
+    },
+    "phase2_base_score": {
+      "type": "number"
+    },
+    "phase2_confidence": {
+      "type": "number"
+    },
+    "phase2_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "phase2_evidence_quality": {
+      "type": "object"
+    },
+    "phase3_execution_risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "risk_id": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "number"
+          },
+          "likelihood": {
+            "type": "number"
+          },
+          "mitigation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "phase3_execution_multiplier": {
+      "type": "number"
+    },
+    "phase3_harm_gates": {
+      "type": "object"
+    },
+    "phase3_risk_grade": {
+      "type": "string"
+    },
+    "phase3_derisking_plan": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "final_score": {
+      "type": "number"
+    },
+    "decision_tier": {
+      "type": "string"
+    },
+    "decision_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "derived_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "portfolio_fit_scores": {
+      "type": "object"
+    },
+    "anti_gaming_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lane_benchmark_comparison": {
+      "type": "object"
+    },
+    "stage_adjustments": {
+      "type": "object"
+    },
+    "raw_ai_output": {
+      "type": "object",
+      "description": "Original AI response for audit"
+    },
+    "token_usage": {
+      "type": "object"
+    },
+    "processing_time_ms": {
+      "type": "number"
+    },
+    "model_version": {
+      "type": "string"
+    },
+    "is_override": {
+      "type": "boolean",
+      "default": false
+    },
+    "override_reason": {
+      "type": "string"
+    },
+    "override_from_evaluation_id": {
+      "type": "string"
+    },
+    "calibration_project": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "project_id",
+    "evaluation_type"
+  ]
+}

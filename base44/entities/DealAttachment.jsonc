@@ -1,0 +1,36 @@
+{
+  "name": "DealAttachment",
+  "type": "object",
+  "properties": {
+    "deal_id": {
+      "type": "string",
+      "description": "Reference to Deal"
+    },
+    "filename": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "MIME type or extension"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "Size in bytes"
+    },
+    "uploader_id": {
+      "type": "string"
+    },
+    "uploader_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "deal_id",
+    "filename",
+    "file_url",
+    "uploader_id"
+  ]
+}

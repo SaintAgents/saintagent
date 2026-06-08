@@ -1,0 +1,35 @@
+{
+  "name": "VideoComment",
+  "type": "object",
+  "properties": {
+    "video_id": {
+      "type": "string",
+      "description": "Reference to the video"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "user_avatar": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "likes": {
+      "type": "number",
+      "default": 0
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "For replies to comments"
+    }
+  },
+  "required": [
+    "video_id",
+    "user_id",
+    "content"
+  ]
+}

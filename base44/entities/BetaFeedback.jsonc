@@ -1,0 +1,131 @@
+{
+  "name": "BetaFeedback",
+  "type": "object",
+  "properties": {
+    "reporter_id": {
+      "type": "string",
+      "description": "Email/ID of the user who submitted feedback"
+    },
+    "reporter_name": {
+      "type": "string"
+    },
+    "feedback_type": {
+      "type": "string",
+      "enum": [
+        "bug",
+        "suggestion",
+        "comment",
+        "other"
+      ],
+      "default": "comment"
+    },
+    "description": {
+      "type": "string",
+      "description": "User's description of the feedback"
+    },
+    "screenshot_url": {
+      "type": "string",
+      "description": "URL of uploaded screenshot"
+    },
+    "page_url": {
+      "type": "string",
+      "description": "URL/page where feedback was submitted"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "in_progress",
+        "resolved",
+        "dismissed"
+      ],
+      "default": "pending"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Notes from admin reviewing the feedback"
+    },
+    "ai_analysis": {
+      "type": "string",
+      "description": "JSON string of AI analysis results"
+    },
+    "repair_checklist": {
+      "type": "string",
+      "description": "JSON string tracking fix/test/confirm workflow"
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of likes on this feedback"
+    },
+    "loves_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of loves on this feedback"
+    },
+    "liked_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User IDs who liked"
+    },
+    "loved_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User IDs who loved"
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "user_name": {
+            "type": "string"
+          },
+          "user_avatar": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [],
+      "description": "User comments on this feedback"
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of views/clicks"
+    }
+  },
+  "required": [
+    "reporter_id",
+    "description"
+  ]
+}

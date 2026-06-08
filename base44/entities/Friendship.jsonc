@@ -1,0 +1,44 @@
+{
+  "name": "Friendship",
+  "type": "object",
+  "properties": {
+    "requester_id": {
+      "type": "string",
+      "description": "User who sent the friend request"
+    },
+    "requester_name": {
+      "type": "string"
+    },
+    "requester_avatar": {
+      "type": "string"
+    },
+    "recipient_id": {
+      "type": "string",
+      "description": "User who received the friend request"
+    },
+    "recipient_name": {
+      "type": "string"
+    },
+    "recipient_avatar": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined",
+        "blocked"
+      ],
+      "default": "pending"
+    },
+    "accepted_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "requester_id",
+    "recipient_id"
+  ]
+}

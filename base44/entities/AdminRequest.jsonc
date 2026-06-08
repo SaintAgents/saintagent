@@ -1,0 +1,104 @@
+{
+  "name": "AdminRequest",
+  "type": "object",
+  "properties": {
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "mission_ggg_approval",
+        "badge_request",
+        "role_request",
+        "feature_request",
+        "deal_approval",
+        "withdrawal_request",
+        "other"
+      ],
+      "description": "Type of admin request"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "needs_info"
+      ],
+      "default": "pending"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "requester_id": {
+      "type": "string"
+    },
+    "requester_name": {
+      "type": "string"
+    },
+    "requester_avatar": {
+      "type": "string"
+    },
+    "reference_type": {
+      "type": "string",
+      "enum": [
+        "mission",
+        "user",
+        "project",
+        "deal",
+        "other"
+      ],
+      "description": "Type of entity this request references"
+    },
+    "reference_id": {
+      "type": "string",
+      "description": "ID of the referenced entity"
+    },
+    "requested_value": {
+      "type": "object",
+      "description": "The values being requested (e.g., GGG amount, badge code)"
+    },
+    "admin_note": {
+      "type": "string"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Admin email assigned to review this request"
+    },
+    "assigned_to_name": {
+      "type": "string",
+      "description": "Display name of assigned admin"
+    },
+    "assigned_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "assigned_by": {
+      "type": "string",
+      "description": "Email of admin who assigned this request"
+    }
+  },
+  "required": [
+    "request_type",
+    "title",
+    "requester_id"
+  ]
+}

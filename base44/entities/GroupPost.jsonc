@@ -1,0 +1,59 @@
+{
+  "name": "GroupPost",
+  "type": "object",
+  "properties": {
+    "circle_id": {
+      "type": "string",
+      "description": "The group/circle this post belongs to"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "post_type": {
+      "type": "string",
+      "enum": [
+        "discussion",
+        "question",
+        "announcement",
+        "resource",
+        "poll"
+      ],
+      "default": "discussion"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "replies_count": {
+      "type": "number",
+      "default": 0
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "circle_id",
+    "author_id",
+    "content"
+  ]
+}

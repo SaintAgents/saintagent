@@ -1,0 +1,93 @@
+{
+  "name": "Introduction",
+  "type": "object",
+  "properties": {
+    "contact_id": {
+      "type": "string"
+    },
+    "introducer_id": {
+      "type": "string",
+      "description": "SA making the introduction"
+    },
+    "recipient_id": {
+      "type": "string",
+      "description": "SA receiving the introduction"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "intro_message": {
+      "type": "string",
+      "description": "Introduction message/context"
+    },
+    "contact_method": {
+      "type": "string",
+      "enum": [
+        "email",
+        "phone",
+        "in_person",
+        "video_call"
+      ],
+      "default": "email",
+      "description": "Method of introduction"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "connected",
+        "declined",
+        "no_response"
+      ],
+      "default": "pending"
+    },
+    "outcome_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Recipient's rating of intro quality"
+    },
+    "outcome_notes": {
+      "type": "string"
+    },
+    "project_funded": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this introduction led to project funding"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Project that was funded from this introduction"
+    },
+    "funding_amount": {
+      "type": "number",
+      "description": "Amount of funding received"
+    },
+    "commission_rate": {
+      "type": "number",
+      "default": 0.05,
+      "description": "Commission rate (default 5%)"
+    },
+    "commission_earned": {
+      "type": "number",
+      "default": 0,
+      "description": "GGG commission earned from funded project"
+    },
+    "commission_paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether commission has been paid to introducer"
+    },
+    "ggg_awarded": {
+      "type": "number",
+      "default": 0,
+      "description": "GGG earned from this introduction"
+    }
+  },
+  "required": [
+    "contact_id",
+    "introducer_id",
+    "recipient_id"
+  ]
+}

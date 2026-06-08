@@ -1,0 +1,116 @@
+{
+  "name": "RoleGroup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Group name (e.g., 'Content Team', 'Moderation Team')"
+    },
+    "code": {
+      "type": "string",
+      "description": "Unique group code"
+    },
+    "description": {
+      "type": "string"
+    },
+    "color": {
+      "type": "string",
+      "description": "Badge color for the group"
+    },
+    "hierarchy_level": {
+      "type": "number",
+      "default": 0,
+      "description": "Higher levels have more authority (0=base, 10=top)"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Role codes that belong to this group"
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "can_manage_users": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_content": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_moderate": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_roles": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_missions": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_projects": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_events": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_circles": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_marketplace": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_crm": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_view_admin_panel": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_view_analytics": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_approve_requests": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_ggg": {
+          "type": "boolean",
+          "default": false
+        },
+        "can_manage_settings": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "default": {}
+    },
+    "section_access": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Page/section names this group can access"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "code"
+  ]
+}

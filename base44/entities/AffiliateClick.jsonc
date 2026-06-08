@@ -1,0 +1,58 @@
+{
+  "name": "AffiliateClick",
+  "type": "object",
+  "properties": {
+    "affiliate_code": {
+      "type": "string"
+    },
+    "affiliate_code_id": {
+      "type": "string",
+      "description": "Reference to the specific AffiliateCode record"
+    },
+    "campaign_name": {
+      "type": "string",
+      "description": "Campaign name if from a campaign link"
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "listing",
+        "event",
+        "mission"
+      ],
+      "default": "general"
+    },
+    "target_id": {
+      "type": "string",
+      "description": "ID of the target listing/event/mission"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Browser session identifier"
+    },
+    "ip_hash": {
+      "type": "string",
+      "description": "Hashed IP for fraud detection"
+    },
+    "user_agent": {
+      "type": "string"
+    },
+    "referrer_url": {
+      "type": "string"
+    },
+    "landing_page": {
+      "type": "string"
+    },
+    "converted": {
+      "type": "boolean",
+      "default": false
+    },
+    "converted_user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "affiliate_code"
+  ]
+}

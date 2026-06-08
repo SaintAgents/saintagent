@@ -1,0 +1,50 @@
+{
+  "name": "ReputationEvent",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "delta": {
+      "type": "number",
+      "description": "Positive increases RP, negative decreases"
+    },
+    "reason_code": {
+      "type": "string",
+      "description": "Machine-readable reason for RP change"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "mission",
+        "meeting",
+        "booking",
+        "testimonial",
+        "badge",
+        "moderation",
+        "system",
+        "post",
+        "comment",
+        "synchronicity"
+      ],
+      "default": "system"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "rp_after": {
+      "type": "number"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "user_id",
+    "delta",
+    "reason_code"
+  ]
+}

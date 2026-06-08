@@ -1,0 +1,114 @@
+{
+  "name": "AdviceQuestion",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short question headline"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed question description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "relationships",
+        "business",
+        "spiritual",
+        "health",
+        "family",
+        "personal_growth",
+        "finance",
+        "legal",
+        "technology",
+        "other"
+      ],
+      "default": "other"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "is_anonymous": {
+      "type": "boolean",
+      "default": false
+    },
+    "allow_public_replies": {
+      "type": "boolean",
+      "default": true
+    },
+    "request_ai_insight": {
+      "type": "boolean",
+      "default": true
+    },
+    "ai_response": {
+      "type": "object",
+      "properties": {
+        "core_issue": {
+          "type": "string"
+        },
+        "emotional_layer": {
+          "type": "string"
+        },
+        "practical_advice": {
+          "type": "string"
+        },
+        "strategic_view": {
+          "type": "string"
+        },
+        "long_term_consideration": {
+          "type": "string"
+        },
+        "caution_factors": {
+          "type": "string"
+        },
+        "confidence_score": {
+          "type": "number"
+        },
+        "generated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "upvote_count": {
+      "type": "number",
+      "default": 0
+    },
+    "like_count": {
+      "type": "number",
+      "default": 0
+    },
+    "resonance_count": {
+      "type": "number",
+      "default": 0
+    },
+    "answer_count": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "resolved",
+        "closed"
+      ],
+      "default": "open"
+    },
+    "accepted_answer_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "category",
+    "author_id"
+  ]
+}

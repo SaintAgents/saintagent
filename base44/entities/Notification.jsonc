@@ -1,0 +1,81 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "match",
+        "meeting",
+        "mission",
+        "booking",
+        "message",
+        "follow",
+        "ggg",
+        "rank",
+        "system",
+        "collaboration",
+        "post",
+        "event",
+        "task_assigned",
+        "task_due",
+        "task_dependency",
+        "project",
+        "peer_review",
+        "task_update",
+        "milestone",
+        "business_listing",
+        "digital_product",
+        "project_update"
+      ],
+      "default": "system"
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "action_url": {
+      "type": "string"
+    },
+    "action_label": {
+      "type": "string"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "source_user_id": {
+      "type": "string",
+      "description": "User who triggered the notification"
+    },
+    "source_user_name": {
+      "type": "string"
+    },
+    "source_user_avatar": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "type",
+    "title"
+  ]
+}

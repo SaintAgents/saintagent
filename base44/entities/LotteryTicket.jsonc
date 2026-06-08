@@ -1,0 +1,39 @@
+{
+  "name": "LotteryTicket",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Email of the user who bought the ticket"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "ticket_number": {
+      "type": "string",
+      "description": "6-digit ticket number (000000-999999)"
+    },
+    "lottery_month": {
+      "type": "string",
+      "description": "Month of the lottery in YYYY-MM format"
+    },
+    "ggg_spent": {
+      "type": "number",
+      "default": 0.007724
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "won",
+        "lost"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "user_id",
+    "ticket_number",
+    "lottery_month"
+  ]
+}

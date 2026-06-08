@@ -1,0 +1,291 @@
+{
+  "name": "DatingProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User email/id"
+    },
+    "opt_in": {
+      "type": "boolean",
+      "default": false
+    },
+    "visible": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_demo": {
+      "type": "boolean",
+      "default": false
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "man",
+        "woman",
+        "non_binary",
+        "other",
+        "prefer_not_to_say"
+      ],
+      "description": "User's gender identity"
+    },
+    "interested_in": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "men",
+          "women",
+          "non_binary",
+          "all"
+        ]
+      },
+      "default": [],
+      "description": "Genders the user is interested in dating"
+    },
+    "seeking": {
+      "type": "string"
+    },
+    "synchronicity_note": {
+      "type": "string"
+    },
+    "is_boosted": {
+      "type": "boolean",
+      "default": false
+    },
+    "boost_expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "boost_multiplier": {
+      "type": "number",
+      "default": 1
+    },
+    "domain_weights": {
+      "type": "object",
+      "properties": {
+        "identity_values": {
+          "type": "number",
+          "default": 0.3
+        },
+        "emotional_stability": {
+          "type": "number",
+          "default": 0.25
+        },
+        "communication": {
+          "type": "number",
+          "default": 0.2
+        },
+        "growth": {
+          "type": "number",
+          "default": 0.15
+        },
+        "lifestyle": {
+          "type": "number",
+          "default": 0.1
+        }
+      },
+      "default": {}
+    },
+    "strict_dealbreakers": {
+      "type": "boolean",
+      "default": true
+    },
+    "domains_enabled": {
+      "type": "object",
+      "properties": {
+        "identity_values": {
+          "type": "boolean",
+          "default": true
+        },
+        "emotional_stability": {
+          "type": "boolean",
+          "default": true
+        },
+        "communication": {
+          "type": "boolean",
+          "default": true
+        },
+        "growth": {
+          "type": "boolean",
+          "default": true
+        },
+        "lifestyle": {
+          "type": "boolean",
+          "default": true
+        },
+        "synchronicity": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "default": {}
+    },
+    "core_values_ranked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "life_priorities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "ethical_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "dealbreakers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "regulation_style": {
+      "type": "string",
+      "enum": [
+        "calm_regulator",
+        "expressive_processor",
+        "internal_processor",
+        "adaptive"
+      ]
+    },
+    "conflict_response": {
+      "type": "string",
+      "enum": [
+        "direct_repair",
+        "reflective_space",
+        "avoidant",
+        "assertive"
+      ]
+    },
+    "stress_tolerance": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "comm_depth": {
+      "type": "string",
+      "enum": [
+        "light",
+        "balanced",
+        "deep"
+      ],
+      "default": "balanced"
+    },
+    "comm_frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "few_times_week",
+        "weekly"
+      ],
+      "default": "daily"
+    },
+    "responsiveness_boundaries": {
+      "type": "string"
+    },
+    "feedback_receptivity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "growth_orientation": {
+      "type": "string",
+      "enum": [
+        "steady",
+        "accelerated",
+        "seasonal"
+      ],
+      "default": "steady"
+    },
+    "learning_mindset": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ],
+      "default": "intermediate"
+    },
+    "long_term_vision": {
+      "type": "string"
+    },
+    "relationship_intent": {
+      "type": "string",
+      "enum": [
+        "companionship",
+        "partnership",
+        "co_creation",
+        "undecided"
+      ],
+      "default": "companionship"
+    },
+    "location_mobility": {
+      "type": "string",
+      "enum": [
+        "fixed",
+        "flexible",
+        "nomadic"
+      ],
+      "default": "flexible"
+    },
+    "daily_rhythm": {
+      "type": "string",
+      "enum": [
+        "introvert",
+        "ambivert",
+        "extrovert"
+      ],
+      "default": "ambivert"
+    },
+    "work_life_balance": {
+      "type": "string",
+      "enum": [
+        "work_leaning",
+        "balanced",
+        "life_leaning"
+      ],
+      "default": "balanced"
+    },
+    "health_lifestyle": {
+      "type": "string"
+    },
+    "synchronicity_enabled": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_id",
+    "opt_in"
+  ]
+}

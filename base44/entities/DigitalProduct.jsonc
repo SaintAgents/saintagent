@@ -1,0 +1,160 @@
+{
+  "name": "DigitalProduct",
+  "type": "object",
+  "properties": {
+    "creator_id": {
+      "type": "string",
+      "description": "Creator's user ID"
+    },
+    "creator_name": {
+      "type": "string"
+    },
+    "creator_avatar": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "product_type": {
+      "type": "string",
+      "enum": [
+        "course",
+        "template",
+        "ebook",
+        "guide",
+        "toolkit",
+        "audio",
+        "video",
+        "bundle",
+        "other"
+      ],
+      "default": "guide"
+    },
+    "price_ggg": {
+      "type": "number",
+      "description": "Price in GGG"
+    },
+    "compare_at_price_ggg": {
+      "type": "number",
+      "description": "Original price for showing discount"
+    },
+    "cover_image_url": {
+      "type": "string"
+    },
+    "preview_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Main downloadable file URL"
+    },
+    "file_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Multiple files for bundles"
+    },
+    "content_modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "content_url": {
+            "type": "string"
+          },
+          "duration_minutes": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Course modules for courses"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of what's included"
+    },
+    "requirements": {
+      "type": "string",
+      "description": "Prerequisites or requirements"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "spiritual",
+        "business",
+        "creative",
+        "wellness",
+        "technology",
+        "personal_development",
+        "other"
+      ],
+      "default": "personal_development"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "paused",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "subscribers_only",
+        "private"
+      ],
+      "default": "public"
+    },
+    "required_tier_level": {
+      "type": "number",
+      "description": "Minimum tier level for subscribers_only visibility"
+    },
+    "sales_count": {
+      "type": "number",
+      "default": 0
+    },
+    "total_revenue_ggg": {
+      "type": "number",
+      "default": 0
+    },
+    "rating": {
+      "type": "number"
+    },
+    "reviews_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "creator_id",
+    "title",
+    "price_ggg",
+    "product_type"
+  ]
+}

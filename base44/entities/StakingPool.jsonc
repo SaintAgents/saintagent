@@ -1,0 +1,103 @@
+{
+  "name": "StakingPool",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "token": {
+      "type": "string",
+      "enum": [
+        "GGG",
+        "GGR",
+        "GAU",
+        "GGK",
+        "GGT"
+      ],
+      "default": "GGG"
+    },
+    "base_apy": {
+      "type": "number",
+      "description": "Base APY percentage"
+    },
+    "lock_period_days": {
+      "type": "number"
+    },
+    "apy_multiplier": {
+      "type": "number",
+      "default": 1.0,
+      "description": "APY multiplier based on lock period"
+    },
+    "total_staked": {
+      "type": "number",
+      "default": 0
+    },
+    "total_stakers": {
+      "type": "number",
+      "default": 0
+    },
+    "total_rewards_distributed": {
+      "type": "number",
+      "default": 0
+    },
+    "min_stake": {
+      "type": "number"
+    },
+    "max_stake": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "closed"
+      ],
+      "default": "active"
+    },
+    "referral_bonus_percent": {
+      "type": "number",
+      "default": 5,
+      "description": "Bonus APY for referred stakers"
+    },
+    "referrer_reward_percent": {
+      "type": "number",
+      "default": 2,
+      "description": "Reward percent for referrer"
+    },
+    "pool_type": {
+      "type": "string",
+      "enum": [
+        "single_asset",
+        "liquidity_pair",
+        "neo_nft"
+      ],
+      "default": "single_asset"
+    },
+    "paired_token": {
+      "type": "string",
+      "description": "For liquidity pairs"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "image_url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "token",
+    "base_apy",
+    "lock_period_days"
+  ]
+}

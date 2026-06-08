@@ -1,0 +1,62 @@
+{
+  "name": "Conversation",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "group"
+      ],
+      "default": "direct"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name for group conversations"
+    },
+    "participant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails of participants"
+    },
+    "participant_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "participant_avatars": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conversation_key": {
+      "type": "string",
+      "description": "Stable key for direct chats (e.g., sorted emails)"
+    },
+    "last_message": {
+      "type": "string"
+    },
+    "last_message_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_muted_for": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "icon": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "participant_ids"
+  ]
+}

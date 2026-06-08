@@ -1,0 +1,110 @@
+{
+  "name": "GeoFenceZone",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "zone_type": {
+      "type": "string",
+      "enum": [
+        "authorized",
+        "restricted",
+        "treaty_corridor",
+        "custom"
+      ],
+      "default": "authorized"
+    },
+    "owner_id": {
+      "type": "string",
+      "description": "User who created this zone (for custom zones)"
+    },
+    "is_global": {
+      "type": "boolean",
+      "default": false,
+      "description": "System-wide zone vs user-defined"
+    },
+    "countries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "coordinates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number"
+          },
+          "lng": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Polygon coordinates for custom zones"
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "can_trade": {
+          "type": "boolean",
+          "default": true
+        },
+        "can_transfer": {
+          "type": "boolean",
+          "default": true
+        },
+        "can_store": {
+          "type": "boolean",
+          "default": true
+        },
+        "requires_kyc": {
+          "type": "boolean",
+          "default": false
+        },
+        "requires_dna": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "asset_types_allowed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "compliance_status": {
+      "type": "string",
+      "enum": [
+        "compliant",
+        "pending_review",
+        "non_compliant"
+      ],
+      "default": "compliant"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "color": {
+      "type": "string",
+      "description": "Display color for map visualization"
+    }
+  },
+  "required": [
+    "name",
+    "zone_type"
+  ]
+}

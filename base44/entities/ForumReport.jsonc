@@ -1,0 +1,91 @@
+{
+  "name": "ForumReport",
+  "type": "object",
+  "properties": {
+    "reporter_id": {
+      "type": "string",
+      "description": "User ID of reporter"
+    },
+    "reporter_name": {
+      "type": "string"
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "post",
+        "reply",
+        "question",
+        "answer"
+      ],
+      "description": "Whether reporting a post, reply, question, or answer"
+    },
+    "target_id": {
+      "type": "string",
+      "description": "ID of the content being reported"
+    },
+    "target_author_id": {
+      "type": "string",
+      "description": "Author of the reported content"
+    },
+    "target_author_name": {
+      "type": "string"
+    },
+    "content_preview": {
+      "type": "string",
+      "description": "Snippet of the reported content"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "spam",
+        "harassment",
+        "misinformation",
+        "inappropriate",
+        "off_topic",
+        "other"
+      ],
+      "default": "other"
+    },
+    "details": {
+      "type": "string",
+      "description": "Additional details from reporter"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "resolved",
+        "dismissed"
+      ],
+      "default": "pending"
+    },
+    "action_taken": {
+      "type": "string",
+      "enum": [
+        "none",
+        "content_removed",
+        "user_warned",
+        "user_blocked"
+      ],
+      "description": "What action the moderator took"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Admin who reviewed the report"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolution_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "reporter_id",
+    "target_type",
+    "target_id",
+    "reason"
+  ]
+}

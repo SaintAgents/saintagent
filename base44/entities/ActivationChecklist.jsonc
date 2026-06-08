@@ -1,0 +1,88 @@
+{
+  "name": "ActivationChecklist",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "phase_1_profile": {
+      "type": "boolean",
+      "default": false,
+      "description": "Claimed SA number & set up profile"
+    },
+    "phase_1_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phase_2_assessments": {
+      "type": "boolean",
+      "default": false,
+      "description": "Completed spiritual & skills assessments"
+    },
+    "phase_2_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phase_3_matches": {
+      "type": "boolean",
+      "default": false,
+      "description": "Viewed first AI-powered matches"
+    },
+    "phase_3_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phase_4_mission": {
+      "type": "boolean",
+      "default": false,
+      "description": "Joined or created first mission"
+    },
+    "phase_4_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phase_5_introduction": {
+      "type": "boolean",
+      "default": false,
+      "description": "Made first introduction or connection"
+    },
+    "phase_5_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phase_6_ggg": {
+      "type": "boolean",
+      "default": false,
+      "description": "Earned first GGG rewards"
+    },
+    "phase_6_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phase_7_synchronicity": {
+      "type": "boolean",
+      "default": false,
+      "description": "Activated Synchronicity Engine"
+    },
+    "phase_7_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fully_activated": {
+      "type": "boolean",
+      "default": false
+    },
+    "activated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_ggg_earned": {
+      "type": "number",
+      "default": 0,
+      "description": "Total GGG earned from activation phases"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

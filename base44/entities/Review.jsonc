@@ -1,0 +1,98 @@
+{
+  "name": "Review",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to the project being reviewed"
+    },
+    "reviewer_id": {
+      "type": "string",
+      "description": "Email of the reviewer"
+    },
+    "reviewer_name": {
+      "type": "string"
+    },
+    "reviewer_avatar": {
+      "type": "string"
+    },
+    "overall_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Overall project rating 1-5"
+    },
+    "feasibility_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "How feasible is the project?"
+    },
+    "impact_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Expected positive impact"
+    },
+    "execution_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Quality of execution/planning"
+    },
+    "team_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Team capability and composition"
+    },
+    "innovation_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Novelty and creativity"
+    },
+    "strengths": {
+      "type": "string",
+      "description": "What the project does well"
+    },
+    "improvements": {
+      "type": "string",
+      "description": "Suggested improvements"
+    },
+    "comments": {
+      "type": "string",
+      "description": "General comments/feedback"
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": [
+        "strongly_recommend",
+        "recommend",
+        "neutral",
+        "not_recommend"
+      ],
+      "default": "neutral",
+      "description": "Would you recommend this project?"
+    },
+    "weighted_score": {
+      "type": "number",
+      "description": "Calculated weighted average of all ratings"
+    },
+    "decision_status": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "rejected",
+        "pending",
+        "flagged"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "project_id",
+    "reviewer_id",
+    "overall_rating"
+  ]
+}

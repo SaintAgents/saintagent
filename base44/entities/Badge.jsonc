@@ -1,0 +1,85 @@
+{
+  "name": "Badge",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User who earned the badge"
+    },
+    "badge_code": {
+      "type": "string",
+      "description": "Unique code for the badge type"
+    },
+    "code": {
+      "type": "string",
+      "description": "Alternative code field for backward compatibility"
+    },
+    "badge_name": {
+      "type": "string",
+      "description": "Display name of the badge"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "identity",
+        "marketplace",
+        "agent",
+        "security",
+        "mission",
+        "alignment",
+        "achievement",
+        "streak",
+        "social",
+        "soul_resonance",
+        "quest_type",
+        "verification"
+      ],
+      "default": "achievement",
+      "description": "Category of the badge"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of how to earn this badge"
+    },
+    "icon_url": {
+      "type": "string",
+      "description": "URL to badge icon image"
+    },
+    "earned_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "revoked"
+      ],
+      "default": "active"
+    },
+    "points_awarded": {
+      "type": "number",
+      "default": 0,
+      "description": "Points awarded when badge was earned"
+    },
+    "ggg_reward": {
+      "type": "number",
+      "default": 0,
+      "description": "GGG amount awarded when badge is earned"
+    },
+    "rarity": {
+      "type": "string",
+      "enum": [
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "legendary"
+      ],
+      "default": "common"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

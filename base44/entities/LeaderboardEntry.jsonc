@@ -1,0 +1,57 @@
+{
+  "name": "LeaderboardEntry",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "period": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "all_time"
+      ],
+      "default": "weekly"
+    },
+    "period_key": {
+      "type": "string",
+      "description": "e.g., 2026-W01 for week 1"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "overall",
+        "meetings",
+        "missions",
+        "ggg",
+        "social",
+        "reputation"
+      ],
+      "default": "overall"
+    },
+    "points": {
+      "type": "number",
+      "default": 0
+    },
+    "rank": {
+      "type": "number"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "badge_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "user_id",
+    "period",
+    "category"
+  ]
+}

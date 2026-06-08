@@ -1,0 +1,92 @@
+{
+  "name": "SkillEndorsement",
+  "type": "object",
+  "properties": {
+    "from_user_id": {
+      "type": "string",
+      "description": "User giving the endorsement"
+    },
+    "to_user_id": {
+      "type": "string",
+      "description": "User receiving the endorsement"
+    },
+    "endorsement_type": {
+      "type": "string",
+      "enum": [
+        "skill",
+        "quality",
+        "expertise",
+        "collaboration"
+      ],
+      "default": "skill"
+    },
+    "skill_or_quality": {
+      "type": "string",
+      "description": "The skill or quality being endorsed"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "technical",
+        "creative",
+        "spiritual",
+        "leadership",
+        "collaboration",
+        "communication",
+        "reliability",
+        "expertise"
+      ],
+      "default": "technical"
+    },
+    "strength_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "default": 3,
+      "description": "How strongly they endorse (1-5)"
+    },
+    "context": {
+      "type": "string",
+      "description": "Context where this was demonstrated"
+    },
+    "context_type": {
+      "type": "string",
+      "enum": [
+        "mission",
+        "project",
+        "meeting",
+        "collaboration",
+        "mentorship",
+        "general"
+      ],
+      "default": "general"
+    },
+    "context_id": {
+      "type": "string",
+      "description": "ID of related mission/project/etc"
+    },
+    "endorsement_text": {
+      "type": "string",
+      "description": "Optional written endorsement"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether platform verified this endorsement"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "connections_only",
+        "private"
+      ],
+      "default": "public"
+    }
+  },
+  "required": [
+    "from_user_id",
+    "to_user_id",
+    "skill_or_quality"
+  ]
+}

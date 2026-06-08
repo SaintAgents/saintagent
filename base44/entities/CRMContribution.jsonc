@@ -1,0 +1,38 @@
+{
+  "name": "CRMContribution",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User who made the contribution"
+    },
+    "total_contacts": {
+      "type": "number",
+      "default": 0,
+      "description": "Total contacts uploaded"
+    },
+    "federated_contacts": {
+      "type": "number",
+      "default": 0,
+      "description": "Contacts shared to federated network"
+    },
+    "import_ggg_awarded": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether GGG was awarded for initial CSV import"
+    },
+    "total_ggg_earned": {
+      "type": "number",
+      "default": 0,
+      "description": "Total GGG earned from CRM contributions"
+    },
+    "introduction_commissions_earned": {
+      "type": "number",
+      "default": 0,
+      "description": "Total GGG earned from introduction commissions"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

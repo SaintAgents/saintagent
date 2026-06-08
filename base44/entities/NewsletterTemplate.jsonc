@@ -1,0 +1,102 @@
+{
+  "name": "NewsletterTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Template name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the template"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "newsletter",
+        "announcement",
+        "promotional",
+        "digest",
+        "event",
+        "update",
+        "custom"
+      ],
+      "default": "newsletter",
+      "description": "Template category"
+    },
+    "subject_template": {
+      "type": "string",
+      "description": "Pre-filled subject line"
+    },
+    "body_template": {
+      "type": "string",
+      "description": "Pre-filled body content"
+    },
+    "header_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Default header image URLs"
+    },
+    "include_articles": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether template expects article embeds"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as default template"
+    },
+    "version": {
+      "type": "number",
+      "default": 1,
+      "description": "Template version number"
+    },
+    "version_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number"
+          },
+          "subject_template": {
+            "type": "string"
+          },
+          "body_template": {
+            "type": "string"
+          },
+          "header_images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "updated_at": {
+            "type": "string"
+          },
+          "updated_by": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [],
+      "description": "Previous versions of this template"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times this template has been used"
+    },
+    "last_used_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time this template was used"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

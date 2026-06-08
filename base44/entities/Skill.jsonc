@@ -1,0 +1,40 @@
+{
+  "name": "Skill",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "skill_name": {
+      "type": "string"
+    },
+    "proficiency": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "default": 3
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "offer",
+        "seek"
+      ],
+      "default": "offer"
+    },
+    "proof_links": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_id",
+    "skill_name"
+  ]
+}

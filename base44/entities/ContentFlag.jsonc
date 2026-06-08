@@ -1,0 +1,101 @@
+{
+  "name": "ContentFlag",
+  "type": "object",
+  "properties": {
+    "flagged_user_id": {
+      "type": "string",
+      "description": "User who posted the flagged content"
+    },
+    "flagged_user_name": {
+      "type": "string"
+    },
+    "flagged_user_email": {
+      "type": "string"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "post",
+        "comment",
+        "message",
+        "forum_post",
+        "forum_reply",
+        "profile",
+        "other"
+      ],
+      "default": "other"
+    },
+    "content_id": {
+      "type": "string",
+      "description": "ID of the flagged content"
+    },
+    "content_text": {
+      "type": "string",
+      "description": "The actual flagged content"
+    },
+    "flag_reason": {
+      "type": "string",
+      "enum": [
+        "protected_topic_violation",
+        "defamatory",
+        "harassment",
+        "spam",
+        "inappropriate",
+        "other"
+      ],
+      "default": "other"
+    },
+    "detected_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Keywords that triggered the flag"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_review",
+        "confirmed_violation",
+        "dismissed",
+        "user_warned",
+        "user_blocked"
+      ],
+      "default": "pending_review"
+    },
+    "reviewer_id": {
+      "type": "string"
+    },
+    "reviewer_name": {
+      "type": "string"
+    },
+    "review_notes": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "action_taken": {
+      "type": "string",
+      "enum": [
+        "none",
+        "content_removed",
+        "user_warned",
+        "user_blocked"
+      ],
+      "default": "none"
+    },
+    "auto_flagged": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this was auto-flagged by system"
+    }
+  },
+  "required": [
+    "flagged_user_id",
+    "content_text",
+    "flag_reason"
+  ]
+}

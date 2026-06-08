@@ -1,0 +1,59 @@
+{
+  "name": "LiveStatus",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "online",
+        "away",
+        "busy",
+        "live_streaming",
+        "in_meeting",
+        "offline"
+      ],
+      "default": "offline"
+    },
+    "status_message": {
+      "type": "string",
+      "description": "Custom status message"
+    },
+    "current_activity": {
+      "type": "string",
+      "description": "What the user is currently doing"
+    },
+    "activity_context_id": {
+      "type": "string",
+      "description": "ID of circle, event, or meeting user is in"
+    },
+    "activity_context_type": {
+      "type": "string",
+      "enum": [
+        "circle_chat",
+        "event",
+        "meeting",
+        "browsing"
+      ]
+    },
+    "last_heartbeat": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "visible_to": {
+      "type": "string",
+      "enum": [
+        "everyone",
+        "followers",
+        "circles",
+        "nobody"
+      ],
+      "default": "everyone"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

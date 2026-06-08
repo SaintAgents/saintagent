@@ -1,0 +1,193 @@
+{
+  "name": "Deal",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Deal title/name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Deal description"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Deal value/amount"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "prospecting",
+        "qualification",
+        "proposal",
+        "negotiation",
+        "closed_won",
+        "closed_lost"
+      ],
+      "default": "prospecting",
+      "description": "Current pipeline stage"
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Admin approval status for new deals"
+    },
+    "owner_id": {
+      "type": "string",
+      "description": "User ID of deal owner (submitter)"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "owner_avatar": {
+      "type": "string"
+    },
+    "assigned_closer_id": {
+      "type": "string",
+      "description": "User ID of the assigned deal closer / lead negotiator"
+    },
+    "assigned_closer_name": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Company/client name"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "expected_close_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "probability": {
+      "type": "number",
+      "default": 0,
+      "description": "Win probability percentage"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "referral",
+        "website",
+        "cold_call",
+        "social_media",
+        "event",
+        "partner",
+        "other"
+      ],
+      "default": "other"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project created when deal is closed_won"
+    },
+    "funding_status": {
+      "type": "string",
+      "enum": [
+        "not_applicable",
+        "pending_review",
+        "approved",
+        "funded",
+        "rejected"
+      ],
+      "default": "not_applicable",
+      "description": "Funding status after deal closes"
+    },
+    "funded_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the project was funded"
+    },
+    "commission_rate": {
+      "type": "number",
+      "default": 10,
+      "description": "Commission percentage for SaintAgent"
+    },
+    "commission_paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether commission has been paid to the agent"
+    },
+    "commission_amount": {
+      "type": "number",
+      "description": "Calculated commission amount"
+    },
+    "commission_paid_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reminder_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "reminder_days_before": {
+      "type": "number",
+      "default": 7,
+      "description": "Days before expected close to send reminder"
+    },
+    "last_reminder_sent": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "team_member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "ai_synergy_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0,
+      "description": "AI-calculated alignment/synergy score for this deal"
+    },
+    "ai_synergy_summary": {
+      "type": "string",
+      "description": "AI-generated summary of why this deal aligns with the platform"
+    },
+    "route_to_nft": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this deal should be routed to Neo-NFT provenance tracking"
+    },
+    "nft_asset_id": {
+      "type": "string",
+      "description": "Reference to NeoNFT asset if routed"
+    }
+  },
+  "required": [
+    "title",
+    "amount",
+    "owner_id"
+  ]
+}

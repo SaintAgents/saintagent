@@ -1,0 +1,71 @@
+{
+  "name": "UserRole",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User email/id"
+    },
+    "role_code": {
+      "type": "string",
+      "enum": [
+        "contributor",
+        "moderator",
+        "guardian_role",
+        "reviewer",
+        "council_member",
+        "administrator",
+        "architect",
+        "founder_custodian"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "denied",
+        "revoked"
+      ],
+      "default": "pending"
+    },
+    "assigned_by": {
+      "type": "string",
+      "description": "Admin who approved/assigned the role"
+    },
+    "assigned_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "request_message": {
+      "type": "string",
+      "description": "User's reason for requesting the role"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "evidence_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "role_group": {
+      "type": "string",
+      "description": "The role group this role belongs to"
+    }
+  },
+  "required": [
+    "user_id",
+    "role_code"
+  ]
+}

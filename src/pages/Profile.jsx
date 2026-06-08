@@ -172,7 +172,7 @@ export default function Profile() {
   const targetUserId = viewingUserId || currentUser?.email;
   const isOwnProfile = !viewingUserId || viewingUserId === currentUser?.email;
 
-  const { data: profiles } = useQuery({
+  const { data: profiles, isLoading: profilesLoading } = useQuery({
     queryKey: ['userProfile', targetUserId],
     queryFn: async () => {
       if (viewingUserId) {
@@ -187,8 +187,6 @@ export default function Profile() {
     staleTime: viewingUserId ? 30000 : 600000,
     refetchOnWindowFocus: false,
   });
-
-  // Also fetch dating profile for the target user (for demo profiles that may not have UserProfile)
   const { data: datingProfiles } = useQuery({
     queryKey: ['datingProfile', targetUserId],
     queryFn: () => base44.entities.DatingProfile.filter({ user_id: targetUserId }, '-updated_date', 1),
@@ -442,9 +440,11 @@ export default function Profile() {
     retry: false
   });
 
-  // Profile not found - show inside main return to avoid hooks order issues
+  // Show loading spinner while profile is being fetched to prevent white flash
+  if (profilesLoading || (!profile && profiles === undefined)) {
+    return (<div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" /></div>);
+  }
   const profileNotFound = viewingUserId && profiles !== undefined && datingProfiles !== undefined && !profile;
-
   if (profileNotFound) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-6 flex items-center justify-center">
@@ -453,17 +453,10 @@ export default function Profile() {
             <User className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <h2 className="text-xl font-bold text-slate-900 mb-2">Profile Not Found</h2>
             <p className="text-slate-500 mb-6">This user profile doesn't exist or may have been removed.</p>
-            <Button
-              onClick={() => window.history.back()}
-              variant="outline"
-              className="rounded-xl">
-
-              Go Back
-            </Button>
+            <Button onClick={() => window.history.back()} variant="outline" className="rounded-xl">Go Back</Button>
           </CardContent>
         </Card>
       </div>);
-
   }
 
   return (

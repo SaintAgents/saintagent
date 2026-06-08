@@ -1,0 +1,138 @@
+{
+  "name": "Course",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Course title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Course description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "spiritual_growth",
+        "platform_mastery",
+        "collaboration",
+        "leadership",
+        "technical",
+        "wellness",
+        "creativity"
+      ],
+      "default": "platform_mastery"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ],
+      "default": "beginner"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "creator_id": {
+      "type": "string"
+    },
+    "creator_name": {
+      "type": "string"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 30
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "content_type": {
+            "type": "string",
+            "enum": [
+              "video",
+              "text",
+              "quiz",
+              "exercise"
+            ]
+          },
+          "content_url": {
+            "type": "string"
+          },
+          "duration_minutes": {
+            "type": "number"
+          },
+          "ggg_reward": {
+            "type": "number"
+          }
+        }
+      },
+      "default": []
+    },
+    "ggg_reward": {
+      "type": "number",
+      "default": 0.05,
+      "description": "GGG earned upon course completion"
+    },
+    "rp_reward": {
+      "type": "number",
+      "default": 5,
+      "description": "RP earned upon course completion"
+    },
+    "enrollment_count": {
+      "type": "number",
+      "default": 0
+    },
+    "completion_count": {
+      "type": "number",
+      "default": 0
+    },
+    "rating": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "published"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Course IDs that must be completed first"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

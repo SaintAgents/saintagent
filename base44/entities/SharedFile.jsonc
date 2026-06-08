@@ -1,0 +1,57 @@
+{
+  "name": "SharedFile",
+  "type": "object",
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "mission",
+        "project",
+        "circle",
+        "team"
+      ],
+      "description": "Type of entity this file belongs to"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID of the parent entity"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded file"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original filename"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "MIME type of the file"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "User ID who uploaded"
+    },
+    "uploader_name": {
+      "type": "string"
+    },
+    "uploader_avatar": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description"
+    }
+  },
+  "required": [
+    "entity_type",
+    "entity_id",
+    "file_url",
+    "file_name",
+    "uploaded_by"
+  ]
+}

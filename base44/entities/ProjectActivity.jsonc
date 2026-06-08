@@ -1,0 +1,59 @@
+{
+  "name": "ProjectActivity",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "milestone_id": {
+      "type": "string",
+      "description": "Reference to Milestone (optional)"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Reference to Task (optional)"
+    },
+    "activity_type": {
+      "type": "string",
+      "enum": [
+        "project_created",
+        "project_updated",
+        "status_changed",
+        "funding_approved",
+        "milestone_created",
+        "milestone_updated",
+        "milestone_completed",
+        "task_created",
+        "task_updated",
+        "task_assigned",
+        "task_completed",
+        "comment_added",
+        "attachment_added",
+        "team_member_added",
+        "team_member_removed"
+      ],
+      "default": "project_updated"
+    },
+    "description": {
+      "type": "string"
+    },
+    "actor_id": {
+      "type": "string"
+    },
+    "actor_name": {
+      "type": "string"
+    },
+    "old_value": {
+      "type": "string"
+    },
+    "new_value": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "activity_type",
+    "actor_id"
+  ]
+}

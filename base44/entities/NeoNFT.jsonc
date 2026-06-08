@@ -1,0 +1,211 @@
+{
+  "name": "NeoNFT",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "art",
+        "land",
+        "energy",
+        "commodities",
+        "sovereign",
+        "agriculture",
+        "minerals"
+      ],
+      "default": "commodities"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "owner_id": {
+      "type": "string",
+      "description": "Current owner user email"
+    },
+    "creator_id": {
+      "type": "string"
+    },
+    "creator_name": {
+      "type": "string"
+    },
+    "gold_backing_grams": {
+      "type": "number",
+      "description": "Gold backing in grams (1 GGG = 1 gram)"
+    },
+    "price_ggg": {
+      "type": "number"
+    },
+    "rarity": {
+      "type": "string",
+      "enum": [
+        "common",
+        "rare",
+        "epic",
+        "legendary",
+        "mythic"
+      ],
+      "default": "common"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "ucc_filing": {
+      "type": "string",
+      "description": "UCC filing reference number"
+    },
+    "serial_number": {
+      "type": "string"
+    },
+    "certification_proofs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of certification document URLs"
+    },
+    "custody_state": {
+      "type": "string",
+      "enum": [
+        "vault_secured",
+        "in_transit",
+        "delivered",
+        "pending_verification"
+      ],
+      "default": "vault_secured"
+    },
+    "custody_location": {
+      "type": "string"
+    },
+    "geo_fence_zones": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Permitted geographic zones for trading"
+    },
+    "geo_fence_restricted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Restricted geographic zones"
+    },
+    "dna_gating_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "dna_authority_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User IDs authorized for DNA verification"
+    },
+    "programmable_restrictions": {
+      "type": "object",
+      "properties": {
+        "min_hold_days": {
+          "type": "number"
+        },
+        "max_transfers_per_year": {
+          "type": "number"
+        },
+        "requires_kyc": {
+          "type": "boolean"
+        },
+        "jurisdiction_whitelist": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "usage_rights": {
+      "type": "string"
+    },
+    "proof_of_reserve": {
+      "type": "string",
+      "description": "URL to proof of reserve documentation"
+    },
+    "asset_type": {
+      "type": "string",
+      "description": "Physical asset type (e.g., Gold Bar, Diamond, Land Parcel)"
+    },
+    "asset_weight": {
+      "type": "string",
+      "description": "Weight or measurement of physical asset"
+    },
+    "asset_purity": {
+      "type": "string",
+      "description": "Purity grade (e.g., 99.99% for gold)"
+    },
+    "location": {
+      "type": "string"
+    },
+    "starchain_tx_hash": {
+      "type": "string"
+    },
+    "ownership_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "owner_id": {
+            "type": "string"
+          },
+          "from_date": {
+            "type": "string"
+          },
+          "to_date": {
+            "type": "string"
+          },
+          "transfer_type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "listed",
+        "in_escrow",
+        "transferred",
+        "flagged"
+      ],
+      "default": "active"
+    },
+    "listing_type": {
+      "type": "string",
+      "enum": [
+        "sale",
+        "barter",
+        "auction",
+        "not_listed"
+      ],
+      "default": "not_listed"
+    },
+    "barter_accepted_assets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Asset types accepted for barter"
+    }
+  },
+  "required": [
+    "title",
+    "owner_id",
+    "gold_backing_grams",
+    "price_ggg"
+  ]
+}

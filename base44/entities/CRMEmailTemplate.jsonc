@@ -1,0 +1,77 @@
+{
+  "name": "CRMEmailTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string",
+      "description": "Email body with {{placeholders}} for contact fields"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "follow_up",
+        "nurture",
+        "re_engagement",
+        "welcome",
+        "notification",
+        "custom",
+        "cold_pitch",
+        "warm_pitch",
+        "partnership",
+        "investor",
+        "referral"
+      ],
+      "default": "custom"
+    },
+    "pitch_type": {
+      "type": "string",
+      "enum": [
+        "one_time",
+        "repeat_sequence",
+        "drip"
+      ],
+      "default": "one_time",
+      "description": "How this pitch is intended to be used"
+    },
+    "owner_id": {
+      "type": "string"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false
+    },
+    "times_used": {
+      "type": "number",
+      "default": 0
+    },
+    "last_used_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "placeholders_used": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "name",
+    "subject",
+    "body"
+  ]
+}

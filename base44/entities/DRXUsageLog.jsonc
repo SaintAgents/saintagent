@@ -1,0 +1,40 @@
+{
+  "name": "DRXUsageLog",
+  "type": "object",
+  "properties": {
+    "rights_grant_id": {
+      "type": "string"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "view",
+        "stream",
+        "download",
+        "edit",
+        "share"
+      ],
+      "default": "view"
+    },
+    "duration_seconds": {
+      "type": "number"
+    },
+    "device_info": {
+      "type": "string"
+    },
+    "ip_address": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "rights_grant_id",
+    "user_id",
+    "action_type"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "QRLoginSession",
+  "type": "object",
+  "properties": {
+    "session_token": {
+      "type": "string",
+      "description": "Unique token for this QR login session"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "scanned",
+        "approved",
+        "expired",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Email of user who approved the login"
+    },
+    "device_info": {
+      "type": "string",
+      "description": "Browser/device info of the requesting device"
+    },
+    "ip_address": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "session_token",
+    "status"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "GGGTransaction",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "meeting",
+        "booking",
+        "event",
+        "mission",
+        "referral",
+        "testimonial",
+        "boost",
+        "purchase",
+        "reward",
+        "deal_commission"
+      ],
+      "default": "reward"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "delta": {
+      "type": "number",
+      "description": "Positive for earn, negative for spend"
+    },
+    "reason_code": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "balance_after": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "user_id",
+    "delta",
+    "reason_code"
+  ]
+}

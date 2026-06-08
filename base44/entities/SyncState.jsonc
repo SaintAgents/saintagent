@@ -1,0 +1,34 @@
+{
+  "name": "SyncState",
+  "type": "object",
+  "properties": {
+    "sync_type": {
+      "type": "string",
+      "enum": [
+        "gmail",
+        "google_calendar"
+      ],
+      "description": "Which service this sync state is for"
+    },
+    "history_id": {
+      "type": "string",
+      "description": "Gmail history ID for incremental sync"
+    },
+    "sync_token": {
+      "type": "string",
+      "description": "Google Calendar sync token"
+    },
+    "last_synced_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When last sync occurred"
+    },
+    "owner_email": {
+      "type": "string",
+      "description": "Email of the account being synced"
+    }
+  },
+  "required": [
+    "sync_type"
+  ]
+}

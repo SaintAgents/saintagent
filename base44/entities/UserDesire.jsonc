@@ -1,0 +1,41 @@
+{
+  "name": "UserDesire",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "desire_code": {
+      "type": "string",
+      "enum": [
+        "find_mentor",
+        "find_students",
+        "build_team",
+        "find_investors",
+        "launch_product",
+        "grow_audience",
+        "speak_teach",
+        "join_mission",
+        "create_mission",
+        "host_meetups",
+        "collaborate_content",
+        "deepen_practice",
+        "heal_integrate",
+        "build_community"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    }
+  },
+  "required": [
+    "user_id",
+    "desire_code"
+  ]
+}

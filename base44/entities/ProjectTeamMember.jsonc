@@ -1,0 +1,59 @@
+{
+  "name": "ProjectTeamMember",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to the project"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User email/ID"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "owner",
+        "lead",
+        "contributor",
+        "advisor",
+        "observer"
+      ],
+      "default": "contributor"
+    },
+    "skills_contributed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "invited",
+        "pending",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "joined_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contribution_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "user_id"
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "name": "EnginePreference",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User who owns these preferences"
+    },
+    "synchronicity_engine_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Opt-in for Synchronicity Engine scanning"
+    },
+    "match_notifications": {
+      "type": "boolean",
+      "default": true,
+      "description": "Receive notifications for new matches"
+    },
+    "match_types_enabled": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "spiritual",
+          "creative",
+          "mission",
+          "business",
+          "romantic",
+          "teaching",
+          "twin",
+          "collaboration",
+          "mentorship"
+        ]
+      },
+      "default": [
+        "spiritual",
+        "creative",
+        "mission",
+        "business"
+      ],
+      "description": "Types of matches to receive"
+    },
+    "minimum_match_score": {
+      "type": "number",
+      "default": 70,
+      "minimum": 50,
+      "maximum": 100,
+      "description": "Minimum score threshold for match notifications"
+    },
+    "location_sharing": {
+      "type": "boolean",
+      "default": false,
+      "description": "Allow location-based synchronicity detection"
+    },
+    "mystical_matching": {
+      "type": "boolean",
+      "default": true,
+      "description": "Include mystical/astrological matching"
+    },
+    "skills_seeking": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specific skills seeking in collaborators"
+    },
+    "skills_offering": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Skills available to share with others"
+    },
+    "commitment_level": {
+      "type": "string",
+      "enum": [
+        "explorer",
+        "contributor",
+        "dedicated",
+        "full_time"
+      ],
+      "default": "contributor"
+    },
+    "time_availability": {
+      "type": "string",
+      "enum": [
+        "1-5_hours_week",
+        "5-10_hours_week",
+        "10-20_hours_week",
+        "20+_hours_week"
+      ]
+    },
+    "spiritual_alignment_importance": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 5
+    },
+    "value_alignment_importance": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 7
+    },
+    "practices_alignment": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "consciousness_level_preference": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grounded_practical",
+          "heart_centered",
+          "contemplative",
+          "service_oriented",
+          "nondual_awareness",
+          "integrative",
+          "exploratory",
+          "any"
+        ]
+      },
+      "default": [
+        "any"
+      ]
+    },
+    "collaboration_style": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "structured",
+          "flexible",
+          "spontaneous",
+          "long_term",
+          "project_based",
+          "mentorship",
+          "peer_to_peer"
+        ]
+      }
+    },
+    "seeking_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "offering_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "energy_compatibility": {
+      "type": "boolean",
+      "default": true
+    },
+    "distance_preference": {
+      "type": "string",
+      "enum": [
+        "local_only",
+        "regional",
+        "national",
+        "global"
+      ],
+      "default": "global"
+    },
+    "blocked_users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "deep_match_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable AI deep matching analysis"
+    },
+    "deep_match_preferences": {
+      "type": "object",
+      "properties": {
+        "analyze_past_interactions": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_declared_intentions": {
+          "type": "boolean",
+          "default": true
+        },
+        "serendipity_level": {
+          "type": "string",
+          "enum": [
+            "conservative",
+            "balanced",
+            "adventurous"
+          ],
+          "default": "balanced"
+        },
+        "collaboration_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 5
+        },
+        "mission_alignment_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 5
+        },
+        "skill_complement_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 5
+        },
+        "value_resonance_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 7
+        },
+        "desired_skills_filter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "shared_values_filter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mission_interests_filter": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Granular preferences for AI deep matching"
+    },
+    "match_feedback": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "match_id": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "feedback_type": {
+            "type": "string",
+            "enum": [
+              "helpful",
+              "not_relevant",
+              "already_connected",
+              "timing_wrong"
+            ]
+          },
+          "comment": {
+            "type": "string"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "default": [],
+      "description": "User feedback on match quality for AI refinement"
+    },
+    "collaborator_preferences": {
+      "type": "object",
+      "properties": {
+        "project_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expertise_areas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "communication_style": {
+          "type": "string",
+          "enum": [
+            "async",
+            "sync",
+            "mixed"
+          ]
+        },
+        "timezone_flexibility": {
+          "type": "boolean",
+          "default": true
+        },
+        "experience_level": {
+          "type": "string",
+          "enum": [
+            "any",
+            "beginner",
+            "intermediate",
+            "expert"
+          ]
+        }
+      },
+      "description": "Detailed collaborator matching preferences"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

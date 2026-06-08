@@ -1,0 +1,89 @@
+{
+  "name": "WAMessage",
+  "type": "object",
+  "properties": {
+    "contact_phone": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "inbound",
+        "outbound"
+      ],
+      "default": "inbound"
+    },
+    "content": {
+      "type": "string"
+    },
+    "media_url": {
+      "type": "string"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image",
+        "video",
+        "audio",
+        "document",
+        "location",
+        "template"
+      ],
+      "default": "text"
+    },
+    "wa_message_id": {
+      "type": "string",
+      "description": "WhatsApp message ID"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "delivered",
+        "read",
+        "failed",
+        "pending_review",
+        "received"
+      ],
+      "default": "received"
+    },
+    "ai_generated": {
+      "type": "boolean",
+      "default": false
+    },
+    "ai_draft": {
+      "type": "string",
+      "description": "AI-suggested reply before approval"
+    },
+    "ai_confidence": {
+      "type": "number",
+      "description": "0-100 confidence in AI reply"
+    },
+    "sentiment": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "neutral",
+        "negative",
+        "urgent"
+      ],
+      "default": "neutral"
+    },
+    "intent": {
+      "type": "string",
+      "description": "Detected intent: question, complaint, booking, purchase, etc."
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "thread_id": {
+      "type": "string",
+      "description": "Groups messages into conversation threads"
+    }
+  },
+  "required": [
+    "contact_phone",
+    "content"
+  ]
+}

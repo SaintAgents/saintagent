@@ -1,0 +1,70 @@
+{
+  "name": "BusinessReview",
+  "type": "object",
+  "properties": {
+    "entity_id": {
+      "type": "string",
+      "description": "BusinessEntity5D record ID"
+    },
+    "reviewer_id": {
+      "type": "string",
+      "description": "Email of the reviewer"
+    },
+    "reviewer_name": {
+      "type": "string"
+    },
+    "reviewer_avatar": {
+      "type": "string"
+    },
+    "overall_rating": {
+      "type": "number",
+      "description": "1-5 star rating"
+    },
+    "service_name": {
+      "type": "string",
+      "description": "Which service was reviewed (optional)"
+    },
+    "transparency_rating": {
+      "type": "number",
+      "description": "1-5 transparency score"
+    },
+    "impact_rating": {
+      "type": "number",
+      "description": "1-5 impact score"
+    },
+    "communication_rating": {
+      "type": "number",
+      "description": "1-5 communication score"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string",
+      "description": "Review text"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the reviewer has interacted with the entity"
+    },
+    "helpful_count": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "published",
+        "hidden",
+        "flagged"
+      ],
+      "default": "published"
+    }
+  },
+  "required": [
+    "entity_id",
+    "reviewer_id",
+    "overall_rating"
+  ]
+}

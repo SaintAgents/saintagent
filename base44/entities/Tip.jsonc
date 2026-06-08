@@ -1,0 +1,62 @@
+{
+  "name": "Tip",
+  "type": "object",
+  "properties": {
+    "from_user_id": {
+      "type": "string",
+      "description": "Tipper's user ID"
+    },
+    "from_name": {
+      "type": "string"
+    },
+    "from_avatar": {
+      "type": "string"
+    },
+    "to_user_id": {
+      "type": "string",
+      "description": "Creator receiving the tip"
+    },
+    "to_name": {
+      "type": "string"
+    },
+    "amount_ggg": {
+      "type": "number",
+      "description": "Tip amount in GGG"
+    },
+    "message": {
+      "type": "string",
+      "description": "Optional message with the tip"
+    },
+    "is_anonymous": {
+      "type": "boolean",
+      "default": false
+    },
+    "context_type": {
+      "type": "string",
+      "enum": [
+        "profile",
+        "post",
+        "listing",
+        "mission",
+        "meeting"
+      ],
+      "default": "profile"
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "refunded"
+      ],
+      "default": "completed"
+    }
+  },
+  "required": [
+    "from_user_id",
+    "to_user_id",
+    "amount_ggg"
+  ]
+}

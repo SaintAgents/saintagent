@@ -1,0 +1,96 @@
+{
+  "name": "EmailCampaign",
+  "type": "object",
+  "properties": {
+    "owner_id": {
+      "type": "string",
+      "description": "User who sent the campaign"
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "Reference to Contact entity"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "template_used": {
+      "type": "string",
+      "enum": [
+        "intro",
+        "followup",
+        "meeting",
+        "value",
+        "custom",
+        "ai_generated"
+      ],
+      "default": "custom"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "delivered",
+        "opened",
+        "clicked",
+        "replied",
+        "bounced",
+        "failed"
+      ],
+      "default": "sent"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "opened_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "clicked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "replied_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lead_source": {
+      "type": "string",
+      "description": "Lead source of the contact at time of send"
+    },
+    "lead_status": {
+      "type": "string",
+      "description": "Lead status of the contact at time of send"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Domain of the contact"
+    },
+    "deal_value": {
+      "type": "number",
+      "default": 0,
+      "description": "Associated deal value if any"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "owner_id",
+    "contact_id",
+    "subject"
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "name": "Contact",
+  "type": "object",
+  "properties": {
+    "owner_id": {
+      "type": "string",
+      "description": "SA who owns this contact"
+    },
+    "name": {
+      "type": "string",
+      "description": "Contact name or alias"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string",
+      "description": "Job title or role"
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "finance",
+        "tech",
+        "governance",
+        "health",
+        "education",
+        "media",
+        "legal",
+        "spiritual",
+        "creative",
+        "nonprofit",
+        "other"
+      ],
+      "description": "Primary domain/industry"
+    },
+    "lead_source": {
+      "type": "string",
+      "enum": [
+        "referral",
+        "website",
+        "social_media",
+        "event",
+        "cold_outreach",
+        "inbound",
+        "partner",
+        "advertisement",
+        "content",
+        "friend",
+        "family",
+        "soul_fam",
+        "other"
+      ],
+      "description": "How this lead/contact was acquired"
+    },
+    "lead_source_detail": {
+      "type": "string",
+      "description": "Additional details about the lead source"
+    },
+    "lead_status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "qualified",
+        "proposal",
+        "negotiation",
+        "won",
+        "lost",
+        "nurturing"
+      ],
+      "default": "new",
+      "description": "Current status in the pipeline"
+    },
+    "relationship_strength": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "default": 3
+    },
+    "permission_level": {
+      "type": "string",
+      "enum": [
+        "private",
+        "signal_only",
+        "masked",
+        "shared"
+      ],
+      "default": "private"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "last_contact_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_followup_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "followup_note": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "social_links": {
+      "type": "object",
+      "properties": {
+        "linkedin": {
+          "type": "string"
+        },
+        "twitter": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        }
+      }
+    },
+    "quality_score": {
+      "type": "number",
+      "default": 0
+    },
+    "is_federated": {
+      "type": "boolean",
+      "default": false
+    },
+    "ggg_federated_awarded": {
+      "type": "boolean",
+      "default": false
+    },
+    "email_outreach_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_email_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ai_dossier": {
+      "type": "object",
+      "properties": {
+        "pain_point": {
+          "type": "string"
+        },
+        "recent_win": {
+          "type": "string"
+        },
+        "value_prop": {
+          "type": "string"
+        },
+        "talking_points": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "company_intel": {
+          "type": "string"
+        },
+        "recommended_approach": {
+          "type": "string"
+        }
+      },
+      "description": "AI-generated research dossier"
+    },
+    "sentiment_score": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1,
+      "description": "AI sentiment analysis score (-1 frustrated, 0 neutral, 1 high-intent)"
+    },
+    "sentiment_label": {
+      "type": "string",
+      "enum": [
+        "frustrated",
+        "cold",
+        "neutral",
+        "warm",
+        "hot"
+      ],
+      "description": "Human-readable sentiment label"
+    },
+    "intent_signals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Detected intent signals from AI analysis"
+    },
+    "last_enriched_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the AI dossier was last generated"
+    },
+    "stale_days": {
+      "type": "number",
+      "default": 0,
+      "description": "Days since last meaningful interaction"
+    },
+    "priority_tier": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium",
+      "description": "AI-calculated priority tier"
+    },
+    "revive_suggestion": {
+      "type": "string",
+      "description": "AI-generated re-engagement suggestion for stale contacts"
+    }
+  },
+  "required": [
+    "owner_id",
+    "name"
+  ]
+}

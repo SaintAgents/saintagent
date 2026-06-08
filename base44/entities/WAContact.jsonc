@@ -1,0 +1,69 @@
+{
+  "name": "WAContact",
+  "type": "object",
+  "properties": {
+    "phone": {
+      "type": "string",
+      "description": "WhatsApp phone number with country code"
+    },
+    "name": {
+      "type": "string"
+    },
+    "profile_pic_url": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "blocked",
+        "opted_out"
+      ],
+      "default": "active"
+    },
+    "sentiment": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "neutral",
+        "negative",
+        "unknown"
+      ],
+      "default": "unknown"
+    },
+    "lead_score": {
+      "type": "number",
+      "default": 0,
+      "description": "0-100 lead quality score"
+    },
+    "total_messages": {
+      "type": "number",
+      "default": 0
+    },
+    "last_message_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Staff member email handling this contact"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "linked_user_id": {
+      "type": "string",
+      "description": "Link to platform User if matched"
+    }
+  },
+  "required": [
+    "phone"
+  ]
+}

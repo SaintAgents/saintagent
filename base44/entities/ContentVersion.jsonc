@@ -1,0 +1,59 @@
+{
+  "name": "ContentVersion",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "version_number": {
+      "type": "number"
+    },
+    "content": {
+      "type": "string"
+    },
+    "content_json": {
+      "type": "object"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "change_summary": {
+      "type": "string"
+    },
+    "change_type": {
+      "type": "string",
+      "enum": [
+        "create",
+        "edit",
+        "major_revision",
+        "minor_edit",
+        "restore"
+      ],
+      "default": "edit"
+    },
+    "word_count": {
+      "type": "number",
+      "default": 0
+    },
+    "diff_stats": {
+      "type": "object",
+      "properties": {
+        "additions": {
+          "type": "number"
+        },
+        "deletions": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "required": [
+    "project_id",
+    "version_number",
+    "content",
+    "author_id"
+  ]
+}

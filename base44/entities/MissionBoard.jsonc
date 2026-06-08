@@ -1,0 +1,80 @@
+{
+  "name": "MissionBoard",
+  "type": "object",
+  "properties": {
+    "mission_id": {
+      "type": "string",
+      "description": "Reference to the mission"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "discussion",
+        "update",
+        "question",
+        "task_update",
+        "announcement",
+        "resource"
+      ],
+      "default": "discussion"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Related task ID if task_update"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "replies_count": {
+      "type": "number",
+      "default": 0
+    },
+    "parent_post_id": {
+      "type": "string",
+      "description": "For threaded replies"
+    }
+  },
+  "required": [
+    "mission_id",
+    "author_id",
+    "content"
+  ]
+}

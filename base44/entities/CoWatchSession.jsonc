@@ -1,0 +1,26 @@
+{
+  "name": "CoWatchSession",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string"
+    },
+    "media_url": {
+      "type": "string"
+    },
+    "is_playing": {
+      "type": "boolean",
+      "default": false
+    },
+    "position_seconds": {
+      "type": "number",
+      "default": 0
+    },
+    "updated_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "conversation_id"
+  ]
+}

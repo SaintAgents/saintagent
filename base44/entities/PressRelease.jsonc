@@ -1,0 +1,123 @@
+{
+  "name": "PressRelease",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Headline of the press release"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short summary or excerpt (1-2 sentences)"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full press release content (markdown supported)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "announcement",
+        "partnership",
+        "product_launch",
+        "update",
+        "event",
+        "community",
+        "financial"
+      ],
+      "default": "announcement"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Featured image URL"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "scheduled"
+      ],
+      "default": "draft"
+    },
+    "publish_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "external_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "distribution_channels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "twitter",
+          "linkedin",
+          "telegram",
+          "discord",
+          "email",
+          "newswire"
+        ]
+      },
+      "default": []
+    },
+    "distribution_status": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "channel": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "sent",
+              "failed"
+            ]
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "error_message": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [],
+      "description": "Tracks delivery status per distribution channel"
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "LeaderQuizAttempt",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "score": {
+      "type": "number",
+      "description": "Percentage score 0-100"
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "answers": {
+      "type": "object",
+      "description": "Question ID to answer mapping"
+    },
+    "attempt_number": {
+      "type": "number",
+      "default": 1
+    },
+    "can_retry_after": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date when user can retry if failed"
+    }
+  },
+  "required": [
+    "user_id",
+    "score",
+    "passed"
+  ]
+}

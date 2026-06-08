@@ -1,0 +1,46 @@
+{
+  "name": "ChallengeProgress",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "challenge_id": {
+      "type": "string"
+    },
+    "entries_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of synchronicities shared for this challenge"
+    },
+    "entry_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "IDs of synchronicities submitted for this challenge"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "streak_days": {
+      "type": "number",
+      "default": 0,
+      "description": "Consecutive days with entries"
+    },
+    "last_entry_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "user_id",
+    "challenge_id"
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "name": "AffiliatePayout",
+  "type": "object",
+  "properties": {
+    "affiliate_user_id": {
+      "type": "string",
+      "description": "User who is receiving the payout"
+    },
+    "affiliate_name": {
+      "type": "string"
+    },
+    "affiliate_avatar": {
+      "type": "string"
+    },
+    "amount_ggg": {
+      "type": "number",
+      "description": "Amount of GGG being paid out"
+    },
+    "amount_usd": {
+      "type": "number",
+      "description": "USD equivalent at time of payout"
+    },
+    "payout_type": {
+      "type": "string",
+      "enum": [
+        "commission",
+        "signup_bonus",
+        "bonus",
+        "adjustment"
+      ],
+      "default": "commission"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "payout_method": {
+      "type": "string",
+      "enum": [
+        "ggg_wallet",
+        "external",
+        "manual"
+      ],
+      "default": "ggg_wallet"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start of the period this payout covers"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End of the period this payout covers"
+    },
+    "referral_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of referrals included in this payout"
+    },
+    "referral_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "IDs of referrals included in this payout"
+    },
+    "processed_by": {
+      "type": "string",
+      "description": "Admin who processed the payout"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "Reference to GGGTransaction if paid to wallet"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "affiliate_user_id",
+    "amount_ggg"
+  ]
+}

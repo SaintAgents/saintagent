@@ -1,0 +1,75 @@
+{
+  "name": "UserAuditLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User who performed the action"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session identifier to group actions"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "page_view",
+        "click",
+        "create",
+        "update",
+        "delete",
+        "search",
+        "message",
+        "booking",
+        "mission_join",
+        "ggg_earned",
+        "ggg_spent",
+        "profile_view",
+        "login",
+        "logout",
+        "upload",
+        "download",
+        "bank_deposit",
+        "bank_withdraw",
+        "other"
+      ],
+      "default": "other"
+    },
+    "action_detail": {
+      "type": "string",
+      "description": "Human-readable description of what happened"
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "Entity involved (e.g., Mission, Listing, Message)"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID of the entity involved"
+    },
+    "page_name": {
+      "type": "string",
+      "description": "Page where action occurred"
+    },
+    "ggg_delta": {
+      "type": "number",
+      "default": 0,
+      "description": "GGG earned or spent (positive=earned, negative=spent)"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional context data"
+    },
+    "ip_address": {
+      "type": "string"
+    },
+    "user_agent": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "action_type",
+    "action_detail"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "name": "MentorshipSession",
+  "type": "object",
+  "properties": {
+    "mentor_id": {
+      "type": "string"
+    },
+    "mentee_id": {
+      "type": "string"
+    },
+    "mentor_name": {
+      "type": "string"
+    },
+    "mentee_name": {
+      "type": "string"
+    },
+    "mentor_avatar": {
+      "type": "string"
+    },
+    "mentee_avatar": {
+      "type": "string"
+    },
+    "requested_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scheduled_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 60
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "requested",
+        "scheduled",
+        "completed",
+        "cancelled"
+      ],
+      "default": "requested"
+    },
+    "objectives": {
+      "type": "string"
+    },
+    "progress_notes": {
+      "type": "string"
+    },
+    "meeting_id": {
+      "type": "string"
+    },
+    "feedback_mentor_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "feedback_mentor_comment": {
+      "type": "string"
+    },
+    "feedback_mentee_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "feedback_mentee_comment": {
+      "type": "string"
+    },
+    "outcome": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "mentor_id",
+    "mentee_id"
+  ]
+}

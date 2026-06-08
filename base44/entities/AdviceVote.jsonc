@@ -1,0 +1,35 @@
+{
+  "name": "AdviceVote",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "question",
+        "answer"
+      ]
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "vote_type": {
+      "type": "string",
+      "enum": [
+        "upvote",
+        "downvote",
+        "helpful",
+        "like",
+        "resonance"
+      ]
+    }
+  },
+  "required": [
+    "user_id",
+    "target_type",
+    "target_id",
+    "vote_type"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string",
+      "description": "Groups messages into conversations"
+    },
+    "from_user_id": {
+      "type": "string"
+    },
+    "to_user_id": {
+      "type": "string"
+    },
+    "from_name": {
+      "type": "string"
+    },
+    "from_avatar": {
+      "type": "string"
+    },
+    "to_name": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image",
+        "video",
+        "audio",
+        "file",
+        "icebreaker"
+      ],
+      "default": "text",
+      "description": "Type of message content"
+    },
+    "media_url": {
+      "type": "string",
+      "description": "URL of attached media file"
+    },
+    "media_thumbnail": {
+      "type": "string",
+      "description": "Thumbnail for video/image media"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original filename for file attachments"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "icebreaker_prompt": {
+      "type": "string",
+      "description": "The icebreaker question/prompt used"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "read_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the message was read"
+    },
+    "parent_message_id": {
+      "type": "string",
+      "description": "For threaded replies"
+    },
+    "deleted_for_user_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Per-user hide list for message visibility"
+    },
+    "delivered_for_user_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Users who have received this message on their device"
+    },
+    "reactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "emoji": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [],
+      "description": "Message reactions"
+    }
+  },
+  "required": [
+    "from_user_id",
+    "to_user_id",
+    "content"
+  ]
+}

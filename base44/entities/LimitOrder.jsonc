@@ -1,0 +1,50 @@
+{
+  "name": "LimitOrder",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "from_token": {
+      "type": "string"
+    },
+    "to_token": {
+      "type": "string"
+    },
+    "from_amount": {
+      "type": "number"
+    },
+    "to_amount": {
+      "type": "number"
+    },
+    "limit_price": {
+      "type": "number",
+      "description": "Target price at which order should execute"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "filled",
+        "cancelled",
+        "expired"
+      ],
+      "default": "open"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "filled_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "from_token",
+    "to_token",
+    "from_amount",
+    "limit_price"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "ArticleResonance",
+  "type": "object",
+  "properties": {
+    "article_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "article_id",
+    "user_id"
+  ]
+}

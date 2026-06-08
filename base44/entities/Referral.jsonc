@@ -1,0 +1,114 @@
+{
+  "name": "Referral",
+  "type": "object",
+  "properties": {
+    "affiliate_user_id": {
+      "type": "string",
+      "description": "User who referred"
+    },
+    "referred_user_id": {
+      "type": "string",
+      "description": "User who was referred"
+    },
+    "affiliate_code": {
+      "type": "string",
+      "description": "Code used for referral (SA# or custom)"
+    },
+    "affiliate_code_id": {
+      "type": "string",
+      "description": "Reference to the specific AffiliateCode record"
+    },
+    "affiliate_sa_number": {
+      "type": "string",
+      "description": "Saint Agent number of the affiliate"
+    },
+    "campaign_name": {
+      "type": "string",
+      "description": "Campaign name if from a campaign link"
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "listing",
+        "event",
+        "mission"
+      ],
+      "default": "general"
+    },
+    "target_id": {
+      "type": "string",
+      "description": "ID of the target listing/event/mission"
+    },
+    "target_name": {
+      "type": "string",
+      "description": "Name of the target for display"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "activated",
+        "earning",
+        "suspended"
+      ],
+      "default": "pending",
+      "description": "Referral lifecycle status"
+    },
+    "click_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the affiliate link was clicked"
+    },
+    "signup_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When referred user signed up"
+    },
+    "activated_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When referred user completed onboarding"
+    },
+    "attribution_expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When attribution window expires"
+    },
+    "commission_percent": {
+      "type": "number",
+      "default": 10,
+      "description": "Commission percent locked at time of referral"
+    },
+    "total_referred_earnings": {
+      "type": "number",
+      "default": 0,
+      "description": "Total GGG earned by the referred user"
+    },
+    "total_commission_earned": {
+      "type": "number",
+      "default": 0,
+      "description": "Total commission GGG paid to affiliate from this referral"
+    },
+    "last_commission_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time commission was calculated/paid"
+    },
+    "signup_bonus_ggg": {
+      "type": "number",
+      "default": 0.25,
+      "description": "One-time GGG bonus for activated signup"
+    },
+    "signup_bonus_paid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the signup bonus has been paid"
+    }
+  },
+  "required": [
+    "affiliate_user_id",
+    "referred_user_id",
+    "affiliate_code"
+  ]
+}

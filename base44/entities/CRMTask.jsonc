@@ -1,0 +1,86 @@
+{
+  "name": "CRMTask",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "contact_id": {
+      "type": "string"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "deal_id": {
+      "type": "string",
+      "description": "Reference to Deal if task is deal-related"
+    },
+    "deal_title": {
+      "type": "string"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "User ID of assignee"
+    },
+    "assigned_to_name": {
+      "type": "string"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "follow_up",
+        "review",
+        "send_email",
+        "schedule_meeting",
+        "prepare_proposal",
+        "custom"
+      ],
+      "default": "custom",
+      "description": "Type of task for auto-generated tasks"
+    },
+    "workflow_id": {
+      "type": "string",
+      "description": "If created by a workflow"
+    },
+    "auto_generated": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this task was auto-created by stage transition"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "title",
+    "contact_id"
+  ]
+}

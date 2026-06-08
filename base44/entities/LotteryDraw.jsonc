@@ -1,0 +1,49 @@
+{
+  "name": "LotteryDraw",
+  "type": "object",
+  "properties": {
+    "lottery_month": {
+      "type": "string",
+      "description": "Month of the lottery in YYYY-MM format"
+    },
+    "winning_number": {
+      "type": "string",
+      "description": "6-digit winning number"
+    },
+    "winner_id": {
+      "type": "string",
+      "description": "Email of the winner (if any)"
+    },
+    "winner_name": {
+      "type": "string"
+    },
+    "total_pot_ggg": {
+      "type": "number",
+      "default": 0
+    },
+    "total_pot_usd": {
+      "type": "number",
+      "default": 0
+    },
+    "total_tickets": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "drawn",
+        "claimed"
+      ],
+      "default": "active"
+    },
+    "draw_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "lottery_month"
+  ]
+}

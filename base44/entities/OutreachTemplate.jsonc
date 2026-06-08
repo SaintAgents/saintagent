@@ -1,0 +1,53 @@
+{
+  "name": "OutreachTemplate",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "owner_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "email",
+        "message"
+      ],
+      "default": "email"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Email subject line (supports {{name}}, {{company}} placeholders)"
+    },
+    "body": {
+      "type": "string",
+      "description": "Template body with placeholder support"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "introduction",
+        "follow_up",
+        "value_add",
+        "meeting_request",
+        "closing",
+        "custom"
+      ],
+      "default": "custom"
+    },
+    "is_shared": {
+      "type": "boolean",
+      "default": false
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "owner_id",
+    "body"
+  ]
+}

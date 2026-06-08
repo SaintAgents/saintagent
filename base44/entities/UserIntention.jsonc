@@ -1,0 +1,27 @@
+{
+  "name": "UserIntention",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "intention_code": {
+      "type": "string",
+      "enum": [
+        "build_project",
+        "learn_skills",
+        "teach_mentor",
+        "find_collaborators",
+        "earn_income",
+        "host_events",
+        "join_missions",
+        "grow_influence",
+        "spiritual_growth"
+      ]
+    }
+  },
+  "required": [
+    "user_id",
+    "intention_code"
+  ]
+}

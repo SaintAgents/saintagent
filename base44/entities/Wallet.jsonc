@@ -1,0 +1,75 @@
+{
+  "name": "Wallet",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Owner user email/id"
+    },
+    "available_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "locked_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "total_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "total_spent": {
+      "type": "number",
+      "default": 0
+    },
+    "total_received_transfers": {
+      "type": "number",
+      "default": 0
+    },
+    "total_sent_transfers": {
+      "type": "number",
+      "default": 0
+    },
+    "total_mission_earnings": {
+      "type": "number",
+      "default": 0
+    },
+    "total_marketplace_earnings": {
+      "type": "number",
+      "default": 0
+    },
+    "total_rewards": {
+      "type": "number",
+      "default": 0
+    },
+    "total_withdrawn": {
+      "type": "number",
+      "default": 0,
+      "description": "Total GGG withdrawn to USDT"
+    },
+    "usdt_address": {
+      "type": "string",
+      "description": "Saved USDT wallet address"
+    },
+    "usdt_network": {
+      "type": "string",
+      "enum": [
+        "TRC20",
+        "ERC20",
+        "BEP20"
+      ],
+      "default": "TRC20"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

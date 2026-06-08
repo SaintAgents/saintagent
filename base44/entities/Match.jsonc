@@ -1,0 +1,130 @@
+{
+  "name": "Match",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "person",
+        "offer",
+        "mission",
+        "event",
+        "teacher"
+      ],
+      "default": "person"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "target_name": {
+      "type": "string"
+    },
+    "target_avatar": {
+      "type": "string"
+    },
+    "target_subtitle": {
+      "type": "string"
+    },
+    "match_score": {
+      "type": "number",
+      "description": "0-100 score"
+    },
+    "intent_alignment": {
+      "type": "number"
+    },
+    "skill_complementarity": {
+      "type": "number"
+    },
+    "proximity_score": {
+      "type": "number"
+    },
+    "timing_readiness": {
+      "type": "number"
+    },
+    "trust_score": {
+      "type": "number"
+    },
+    "spiritual_alignment_score": {
+      "type": "number",
+      "description": "0-100 score for spiritual compatibility"
+    },
+    "explanation": {
+      "type": "string"
+    },
+    "timing_window": {
+      "type": "string",
+      "description": "e.g. 'Best window: next 48h'"
+    },
+    "conversation_starters": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI-generated conversation starters"
+    },
+    "ai_reasoning": {
+      "type": "string",
+      "description": "Detailed AI explanation of why this is a good match"
+    },
+    "shared_values": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Values both users share"
+    },
+    "complementary_skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Skills that complement each other"
+    },
+    "spiritual_synergies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Spiritual practices or beliefs that align"
+    },
+    "user_rating": {
+      "type": "number",
+      "description": "1-5 star rating from user on match quality",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "user_feedback": {
+      "type": "string",
+      "description": "Optional written feedback from user"
+    },
+    "is_blocked": {
+      "type": "boolean",
+      "default": false,
+      "description": "User has blocked this match"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "saved",
+        "declined",
+        "converted",
+        "blocked"
+      ],
+      "default": "active"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "target_type",
+    "target_id",
+    "match_score"
+  ]
+}

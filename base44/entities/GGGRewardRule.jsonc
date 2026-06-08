@@ -1,0 +1,98 @@
+{
+  "name": "GGGRewardRule",
+  "type": "object",
+  "properties": {
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "meeting_completed",
+        "booking_completed",
+        "event_attended",
+        "mission_completed",
+        "referral_activated",
+        "testimonial_given",
+        "post_created",
+        "profile_completed",
+        "profile_view",
+        "post_view",
+        "like_react",
+        "comment",
+        "share",
+        "follow",
+        "profile_update",
+        "daily_checkin",
+        "post_update",
+        "forum_post",
+        "comment_helpful",
+        "thread_summary",
+        "how_to",
+        "template",
+        "weekly_recap",
+        "quest_completion",
+        "team_collaboration",
+        "mission_participation",
+        "mission_onboarding",
+        "task_confirmed",
+        "milestone",
+        "impact_unlock",
+        "lead_sprint",
+        "security_review",
+        "cross_mission",
+        "mission_lead",
+        "agent_publish",
+        "agent_flagship",
+        "lesson_micro",
+        "module_complete",
+        "class_final",
+        "security_trained",
+        "mentor_ta",
+        "mbti_completion",
+        "feedback_submit",
+        "feedback_resolved"
+      ],
+      "description": "Type of action that earns GGG"
+    },
+    "ggg_amount": {
+      "type": "number",
+      "description": "Amount of GGG awarded (up to 7 decimal precision, e.g. 0.0004828)"
+    },
+    "usd_equivalent": {
+      "type": "number",
+      "description": "USD equivalent at time of rule creation (up to 3 decimal precision for sub-cent values)"
+    },
+    "tier_multiplier": {
+      "type": "number",
+      "default": 1.0,
+      "description": "Tier multiplier (1.0x, 2.0x, 4.0x, 8.0x, 16.0x)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_locked": {
+      "type": "boolean",
+      "default": false,
+      "description": "Locked rules are preserved during re-seed"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "engagement",
+        "content",
+        "mission",
+        "leadership",
+        "learning",
+        "agent",
+        "profile"
+      ],
+      "description": "Category of action for grouping"
+    }
+  },
+  "required": [
+    "action_type",
+    "ggg_amount"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "ProjectDiscussionReply",
+  "type": "object",
+  "properties": {
+    "discussion_id": {
+      "type": "string",
+      "description": "Reference to the parent discussion"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to the project for easier querying"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "parent_reply_id": {
+      "type": "string",
+      "description": "For nested replies"
+    }
+  },
+  "required": [
+    "discussion_id",
+    "project_id",
+    "author_id",
+    "content"
+  ]
+}

@@ -1,0 +1,521 @@
+{
+  "name": "Quest",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "quest_template_id": {
+      "type": "string",
+      "description": "Reference to quest template"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "quest_type": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "epic",
+        "hidden",
+        "pathway",
+        "cooperative",
+        "initiation",
+        "mystical",
+        "lore",
+        "discovery"
+      ],
+      "default": "daily"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "trust",
+        "social",
+        "ggg",
+        "mystical",
+        "stewardship",
+        "alignment",
+        "leadership",
+        "onboarding",
+        "meta_variance",
+        "activation",
+        "seal",
+        "lore",
+        "hidden",
+        "ai_generated"
+      ],
+      "default": "social"
+    },
+    "target_action": {
+      "type": "string"
+    },
+    "target_count": {
+      "type": "number",
+      "default": 1
+    },
+    "current_count": {
+      "type": "number",
+      "default": 0
+    },
+    "reward_rp": {
+      "type": "number",
+      "default": 0
+    },
+    "reward_ggg": {
+      "type": "number",
+      "default": 0
+    },
+    "reward_badge": {
+      "type": "string"
+    },
+    "reward_title": {
+      "type": "string"
+    },
+    "reward_nft": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "nft_type": {
+          "type": "string"
+        },
+        "rarity": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "description": "NFT reward configuration"
+    },
+    "reward_access": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Access rewards: early_tools, exclusive_events, leader_channel, premium_features, special_content"
+    },
+    "rarity": {
+      "type": "string",
+      "enum": [
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "legendary",
+        "mythic"
+      ],
+      "default": "common"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "claimed",
+        "expired",
+        "locked",
+        "cooldown"
+      ],
+      "default": "active"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "hidden",
+        "discovered",
+        "suggested"
+      ],
+      "default": "public",
+      "description": "Hidden quests only visible once discovered"
+    },
+    "discovery_trigger": {
+      "type": "object",
+      "properties": {
+        "trigger_type": {
+          "type": "string",
+          "enum": [
+            "daily_quest_count",
+            "rank_reached",
+            "badge_earned",
+            "user_interaction",
+            "initiation_completed",
+            "mission_completed",
+            "time_based",
+            "random_event"
+          ]
+        },
+        "trigger_value": {
+          "type": "string"
+        },
+        "trigger_count": {
+          "type": "number"
+        },
+        "hint_text": {
+          "type": "string",
+          "description": "Subtle hint shown in UI"
+        }
+      },
+      "description": "Conditions that reveal hidden quest"
+    },
+    "discovered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ai_generated": {
+      "type": "object",
+      "properties": {
+        "is_ai_generated": {
+          "type": "boolean",
+          "default": false
+        },
+        "generation_context": {
+          "type": "string"
+        },
+        "lore_elements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "narrative_hook": {
+          "type": "string"
+        },
+        "personalization_factors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "AI generation metadata"
+    },
+    "suggestion_data": {
+      "type": "object",
+      "properties": {
+        "suggestion_reason": {
+          "type": "string"
+        },
+        "relevance_score": {
+          "type": "number"
+        },
+        "based_on_badges": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "based_on_archetypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "based_on_progress": {
+          "type": "object"
+        }
+      },
+      "description": "Quest suggestion engine data"
+    },
+    "meta_variance": {
+      "type": "object",
+      "properties": {
+        "coherence_factor": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 5
+        },
+        "difficulty_multiplier": {
+          "type": "number",
+          "default": 1.0
+        },
+        "reward_multiplier": {
+          "type": "number",
+          "default": 1.0
+        },
+        "timeline_alignment": {
+          "type": "string",
+          "enum": [
+            "atlantis",
+            "egypt",
+            "qumran",
+            "france",
+            "tibet",
+            "future",
+            "source"
+          ]
+        },
+        "approach_method": {
+          "type": "string",
+          "enum": [
+            "reverence",
+            "recognition",
+            "surrender"
+          ]
+        },
+        "lore_timeline": {
+          "type": "string",
+          "description": "Current lore event connection"
+        }
+      },
+      "description": "Meta-Variance dimension data"
+    },
+    "initiation_data": {
+      "type": "object",
+      "properties": {
+        "initiation_type": {
+          "type": "string",
+          "enum": [
+            "144k_activation",
+            "7th_seal",
+            "high_priesthood",
+            "ultranet_architect"
+          ]
+        },
+        "transmission_id": {
+          "type": "string"
+        },
+        "steps_completed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "total_steps": {
+          "type": "number"
+        },
+        "choices_made": {
+          "type": "object"
+        },
+        "node_activated": {
+          "type": "boolean",
+          "default": false
+        },
+        "seal_opened": {
+          "type": "boolean",
+          "default": false
+        },
+        "branch_options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "choice": {
+                "type": "string"
+              },
+              "effect": {
+                "type": "string"
+              },
+              "reward_modifier": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "selected_branch": {
+          "type": "object"
+        }
+      },
+      "description": "Initiation-type quest data"
+    },
+    "branching_data": {
+      "type": "object",
+      "properties": {
+        "has_branches": {
+          "type": "boolean",
+          "default": false
+        },
+        "branch_points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "string"
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "selected": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "current_branch": {
+          "type": "string"
+        },
+        "branch_history": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Quest branching based on user decisions"
+    },
+    "cooperative_data": {
+      "type": "object",
+      "properties": {
+        "team_id": {
+          "type": "string"
+        },
+        "team_name": {
+          "type": "string"
+        },
+        "participant_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "participant_contributions": {
+          "type": "object"
+        },
+        "min_participants": {
+          "type": "number"
+        },
+        "max_participants": {
+          "type": "number"
+        }
+      }
+    },
+    "pathway_data": {
+      "type": "object",
+      "properties": {
+        "pathway_id": {
+          "type": "string"
+        },
+        "pathway_name": {
+          "type": "string"
+        },
+        "current_stage": {
+          "type": "number"
+        },
+        "total_stages": {
+          "type": "number"
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "stage_num": {
+                "type": "number"
+              },
+              "title": {
+                "type": "string"
+              },
+              "target_action": {
+                "type": "string"
+              },
+              "target_count": {
+                "type": "number"
+              },
+              "current_count": {
+                "type": "number"
+              },
+              "completed": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "requires_reflection": {
+          "type": "boolean"
+        },
+        "reflection_submitted": {
+          "type": "boolean"
+        },
+        "mentor_review_required": {
+          "type": "boolean"
+        },
+        "mentor_approved": {
+          "type": "boolean"
+        }
+      }
+    },
+    "cooldown_data": {
+      "type": "object",
+      "properties": {
+        "cooldown_hours": {
+          "type": "number",
+          "default": 0
+        },
+        "cooldown_ends_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "mastery_level": {
+          "type": "number",
+          "default": 0
+        },
+        "times_completed": {
+          "type": "number",
+          "default": 0
+        },
+        "mastery_challenge_unlocked": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "description": "Cooldown and mastery system"
+    },
+    "gamification_data": {
+      "type": "object",
+      "properties": {
+        "streak_bonus": {
+          "type": "number",
+          "default": 0
+        },
+        "milestone_reached": {
+          "type": "boolean",
+          "default": false
+        },
+        "milestone_type": {
+          "type": "string"
+        },
+        "progress_percentage": {
+          "type": "number"
+        }
+      },
+      "description": "Gamification tracking"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "claimed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "title",
+    "quest_type"
+  ]
+}

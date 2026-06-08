@@ -1,0 +1,170 @@
+{
+  "name": "Broadcast",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Episode or broadcast title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the broadcast content"
+    },
+    "host_id": {
+      "type": "string",
+      "description": "Email/ID of the host"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "host_avatar": {
+      "type": "string"
+    },
+    "co_hosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "scheduled_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 60
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "live",
+        "ended",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "broadcast_type": {
+      "type": "string",
+      "enum": [
+        "podcast",
+        "webinar",
+        "town_hall",
+        "interview",
+        "workshop",
+        "ama"
+      ],
+      "default": "podcast"
+    },
+    "cover_image_url": {
+      "type": "string"
+    },
+    "live_stream_url": {
+      "type": "string",
+      "description": "Zoom/YouTube/etc link for viewers to join"
+    },
+    "zoom_meeting_id": {
+      "type": "string"
+    },
+    "zoom_start_url": {
+      "type": "string",
+      "description": "Host-only URL to start the Zoom"
+    },
+    "recording_url": {
+      "type": "string",
+      "description": "Link to recording after broadcast ends"
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "guest_speakers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "interested_user_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Users who marked as interested"
+    },
+    "interested_count": {
+      "type": "number",
+      "default": 0
+    },
+    "going_user_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Users who are going/attending"
+    },
+    "going_count": {
+      "type": "number",
+      "default": 0
+    },
+    "rsvp_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Legacy field - use going_count instead"
+    },
+    "rsvp_user_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Legacy field - use going_user_ids instead"
+    },
+    "viewer_count": {
+      "type": "number",
+      "default": 0
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "notify_all": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send notification to all users when scheduled"
+    }
+  },
+  "required": [
+    "title",
+    "host_id",
+    "scheduled_time"
+  ]
+}

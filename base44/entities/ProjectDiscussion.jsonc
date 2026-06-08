@@ -1,0 +1,61 @@
+{
+  "name": "ProjectDiscussion",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to the project"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "discussion_type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "decision",
+        "blocker",
+        "idea",
+        "update",
+        "milestone"
+      ],
+      "default": "general"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_resolved": {
+      "type": "boolean",
+      "default": false
+    },
+    "reply_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_reply_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_reply_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "title",
+    "author_id"
+  ]
+}

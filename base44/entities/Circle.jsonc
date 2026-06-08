@@ -1,0 +1,111 @@
+{
+  "name": "Circle",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "owner_id": {
+      "type": "string"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "region_id": {
+      "type": "string"
+    },
+    "member_count": {
+      "type": "number",
+      "default": 0
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "private",
+        "invite_only"
+      ],
+      "default": "public"
+    },
+    "member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "spiritual",
+        "creative",
+        "business",
+        "wellness",
+        "learning",
+        "social",
+        "activism",
+        "other"
+      ],
+      "default": "social"
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Shared values that unite this circle"
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Common interests"
+    },
+    "meeting_frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "biweekly",
+        "monthly",
+        "as_needed"
+      ],
+      "default": "as_needed"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "chat_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Latitude for geo-location display"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Longitude for geo-location display"
+    }
+  },
+  "required": [
+    "name",
+    "owner_id"
+  ]
+}

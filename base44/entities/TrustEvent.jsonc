@@ -1,0 +1,48 @@
+{
+  "name": "TrustEvent",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "delta": {
+      "type": "number",
+      "description": "Positive increases trust score, negative decreases"
+    },
+    "reason_code": {
+      "type": "string",
+      "description": "Reason for trust score change"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "meeting",
+        "testimonial",
+        "moderation",
+        "system",
+        "mission",
+        "dispute",
+        "policy"
+      ],
+      "default": "system"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "score_after": {
+      "type": "number"
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Additional metrics contributing to score"
+    }
+  },
+  "required": [
+    "user_id",
+    "delta",
+    "reason_code"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "subscriber_id": {
+      "type": "string",
+      "description": "User who subscribes"
+    },
+    "subscriber_name": {
+      "type": "string"
+    },
+    "subscriber_avatar": {
+      "type": "string"
+    },
+    "creator_id": {
+      "type": "string",
+      "description": "Creator being subscribed to"
+    },
+    "creator_name": {
+      "type": "string"
+    },
+    "tier_id": {
+      "type": "string",
+      "description": "Reference to CreatorTier"
+    },
+    "tier_name": {
+      "type": "string"
+    },
+    "billing_cycle": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "annual"
+      ],
+      "default": "monthly"
+    },
+    "price_paid_ggg": {
+      "type": "number",
+      "description": "Amount paid per cycle"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "cancelled",
+        "expired",
+        "paused"
+      ],
+      "default": "active"
+    },
+    "started_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_billing_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cancelled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_paid_ggg": {
+      "type": "number",
+      "default": 0,
+      "description": "Lifetime amount paid"
+    },
+    "months_active": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "subscriber_id",
+    "creator_id",
+    "tier_id",
+    "price_paid_ggg"
+  ]
+}

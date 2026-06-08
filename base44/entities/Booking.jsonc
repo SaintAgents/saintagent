@@ -1,0 +1,71 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "listing_id": {
+      "type": "string"
+    },
+    "buyer_id": {
+      "type": "string"
+    },
+    "seller_id": {
+      "type": "string"
+    },
+    "buyer_name": {
+      "type": "string"
+    },
+    "seller_name": {
+      "type": "string"
+    },
+    "scheduled_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_minutes": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "completed",
+        "cancelled",
+        "disputed",
+        "no_show"
+      ],
+      "default": "pending"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "meeting_link": {
+      "type": "string"
+    },
+    "buyer_confirmed": {
+      "type": "boolean",
+      "default": false
+    },
+    "seller_confirmed": {
+      "type": "boolean",
+      "default": false
+    },
+    "conversation_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "listing_id",
+    "buyer_id",
+    "seller_id"
+  ]
+}

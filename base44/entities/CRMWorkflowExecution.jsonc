@@ -1,0 +1,71 @@
+{
+  "name": "CRMWorkflowExecution",
+  "type": "object",
+  "properties": {
+    "workflow_id": {
+      "type": "string"
+    },
+    "workflow_name": {
+      "type": "string"
+    },
+    "contact_id": {
+      "type": "string"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "completed",
+        "failed",
+        "paused"
+      ],
+      "default": "running"
+    },
+    "current_action_index": {
+      "type": "number",
+      "default": 0
+    },
+    "actions_completed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action_id": {
+            "type": "string"
+          },
+          "action_type": {
+            "type": "string"
+          },
+          "completed_at": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "triggered_by": {
+      "type": "string",
+      "description": "What triggered this execution"
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "workflow_id",
+    "contact_id"
+  ]
+}

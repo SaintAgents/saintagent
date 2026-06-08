@@ -1,0 +1,44 @@
+{
+  "name": "Note",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "color": {
+      "type": "string",
+      "enum": [
+        "default",
+        "yellow",
+        "green",
+        "blue",
+        "purple",
+        "pink",
+        "orange"
+      ],
+      "default": "default"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_archived": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}

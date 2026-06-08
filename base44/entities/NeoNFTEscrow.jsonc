@@ -1,0 +1,136 @@
+{
+  "name": "NeoNFTEscrow",
+  "type": "object",
+  "properties": {
+    "neo_nft_id": {
+      "type": "string"
+    },
+    "neo_nft_title": {
+      "type": "string"
+    },
+    "seller_id": {
+      "type": "string"
+    },
+    "buyer_id": {
+      "type": "string"
+    },
+    "escrow_amount_ggg": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "locked",
+        "proof_collecting",
+        "verified",
+        "released",
+        "reverted",
+        "disputed"
+      ],
+      "default": "pending"
+    },
+    "escrow_type": {
+      "type": "string",
+      "enum": [
+        "sale",
+        "barter",
+        "delivery"
+      ],
+      "default": "sale"
+    },
+    "physical_verification_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "verification_proofs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "proof_url": {
+            "type": "string"
+          },
+          "verified_by": {
+            "type": "string"
+          },
+          "verified_at": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dna_verification_status": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "pending",
+        "verified",
+        "failed"
+      ],
+      "default": "not_required"
+    },
+    "geo_verification_status": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "pending",
+        "verified",
+        "failed"
+      ],
+      "default": "not_required"
+    },
+    "sensor_data": {
+      "type": "object",
+      "properties": {
+        "weight_verified": {
+          "type": "boolean"
+        },
+        "tamper_seal_intact": {
+          "type": "boolean"
+        },
+        "temperature_ok": {
+          "type": "boolean"
+        },
+        "location_confirmed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "delivery_address": {
+      "type": "string"
+    },
+    "delivery_zone": {
+      "type": "string"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "release_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "starchain_escrow_id": {
+      "type": "string"
+    },
+    "silence_fee_paid": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "neo_nft_id",
+    "seller_id",
+    "buyer_id",
+    "escrow_amount_ggg"
+  ]
+}

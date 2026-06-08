@@ -1,0 +1,88 @@
+{
+  "name": "ProjectAlertConfig",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User who set the config"
+    },
+    "is_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "overdue_threshold_days": {
+      "type": "number",
+      "default": 1,
+      "description": "Days overdue before alerting"
+    },
+    "overdue_critical_days": {
+      "type": "number",
+      "default": 3,
+      "description": "Days overdue for critical alert"
+    },
+    "member_overload_threshold": {
+      "type": "number",
+      "default": 5,
+      "description": "Max tasks in progress per member"
+    },
+    "member_overload_critical": {
+      "type": "number",
+      "default": 8,
+      "description": "Critical overload threshold"
+    },
+    "blocked_task_threshold_hours": {
+      "type": "number",
+      "default": 24,
+      "description": "Hours blocked before alert"
+    },
+    "blocked_task_critical_hours": {
+      "type": "number",
+      "default": 72,
+      "description": "Hours blocked for critical"
+    },
+    "dependency_chain_threshold": {
+      "type": "number",
+      "default": 3,
+      "description": "Max chain length before alert"
+    },
+    "stale_task_days": {
+      "type": "number",
+      "default": 7,
+      "description": "Days without update before stale"
+    },
+    "low_velocity_threshold": {
+      "type": "number",
+      "default": 2,
+      "description": "Min tasks/week expected"
+    },
+    "slippage_threshold_days": {
+      "type": "number",
+      "default": 5,
+      "description": "Days of projected end-date slip before alerting"
+    },
+    "notify_project_owner": {
+      "type": "boolean",
+      "default": true
+    },
+    "notify_team_members": {
+      "type": "boolean",
+      "default": false
+    },
+    "notify_on_warning": {
+      "type": "boolean",
+      "default": true
+    },
+    "notify_on_critical": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "project_id",
+    "user_id"
+  ]
+}

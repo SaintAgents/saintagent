@@ -1,0 +1,44 @@
+{
+  "name": "TaskTimeEntry",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "description": "Reference to ProjectTask (empty for generic timer)"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project (empty for generic timer)"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User who logged the time"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 0
+    },
+    "description": {
+      "type": "string",
+      "description": "Label for generic timer or task note"
+    },
+    "is_running": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_id"
+  ]
+}

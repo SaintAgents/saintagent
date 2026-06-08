@@ -1,0 +1,114 @@
+{
+  "name": "OutreachSequence",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Sequence name"
+    },
+    "description": {
+      "type": "string"
+    },
+    "owner_id": {
+      "type": "string",
+      "description": "User who created this sequence"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "paused",
+        "completed",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "email",
+              "message"
+            ]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "template_id": {
+            "type": "string"
+          },
+          "delay_days": {
+            "type": "number",
+            "description": "Days to wait after previous step"
+          },
+          "delay_hours": {
+            "type": "number",
+            "default": 0
+          },
+          "send_time": {
+            "type": "string",
+            "description": "Preferred send time HH:MM"
+          }
+        }
+      },
+      "default": []
+    },
+    "contact_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Enrolled contact IDs"
+    },
+    "total_enrolled": {
+      "type": "number",
+      "default": 0
+    },
+    "total_sent": {
+      "type": "number",
+      "default": 0
+    },
+    "total_opened": {
+      "type": "number",
+      "default": 0
+    },
+    "total_replied": {
+      "type": "number",
+      "default": 0
+    },
+    "total_bounced": {
+      "type": "number",
+      "default": 0
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "title",
+    "owner_id"
+  ]
+}

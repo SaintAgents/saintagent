@@ -1,0 +1,19 @@
+{
+  "name": "CollabDoc",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string",
+      "description": "Rich text (Delta or HTML)"
+    },
+    "updated_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "conversation_id"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "name": "MissionJoinRequest",
+  "type": "object",
+  "properties": {
+    "mission_id": {
+      "type": "string",
+      "description": "ID of the mission"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User requesting to join"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "user_avatar": {
+      "type": "string"
+    },
+    "role_applied": {
+      "type": "string",
+      "description": "Which role the user is applying for"
+    },
+    "message": {
+      "type": "string",
+      "description": "Optional message from applicant"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Mission owner who reviewed"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rejection_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "mission_id",
+    "user_id"
+  ]
+}

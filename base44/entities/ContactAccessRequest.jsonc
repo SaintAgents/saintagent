@@ -1,0 +1,61 @@
+{
+  "name": "ContactAccessRequest",
+  "type": "object",
+  "properties": {
+    "contact_id": {
+      "type": "string"
+    },
+    "requester_id": {
+      "type": "string",
+      "description": "SA requesting access"
+    },
+    "owner_id": {
+      "type": "string",
+      "description": "SA who owns the contact"
+    },
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "view_metadata",
+        "request_intro",
+        "warm_intro",
+        "direct_access"
+      ],
+      "default": "view_metadata"
+    },
+    "context": {
+      "type": "string",
+      "description": "Why the requester needs access"
+    },
+    "mission_id": {
+      "type": "string",
+      "description": "Optional mission context"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "declined",
+        "expired"
+      ],
+      "default": "pending"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When access expires (if approved)"
+    },
+    "owner_notes": {
+      "type": "string",
+      "description": "Notes from owner on decision"
+    }
+  },
+  "required": [
+    "contact_id",
+    "requester_id",
+    "owner_id",
+    "request_type",
+    "context"
+  ]
+}

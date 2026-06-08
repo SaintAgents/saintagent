@@ -1,0 +1,134 @@
+{
+  "name": "Initiation",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "initiation_type": {
+      "type": "string",
+      "enum": [
+        "144k_activation",
+        "7th_seal",
+        "high_priesthood",
+        "ultranet_architect",
+        "twin_flame_priesthood",
+        "flamewheel"
+      ],
+      "description": "Type of sacred initiation"
+    },
+    "title": {
+      "type": "string"
+    },
+    "transmission_id": {
+      "type": "string",
+      "description": "Saint Germain transmission reference"
+    },
+    "coherence_factor": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10,
+      "default": 5,
+      "description": "Meta-Variance coherence level during initiation"
+    },
+    "steps_completed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "total_steps": {
+      "type": "number"
+    },
+    "current_step": {
+      "type": "number",
+      "default": 0
+    },
+    "choices_made": {
+      "type": "object",
+      "description": "Timeline and approach choices during meditation"
+    },
+    "timeline_alignment": {
+      "type": "string",
+      "enum": [
+        "atlantis",
+        "egypt",
+        "qumran",
+        "france",
+        "tibet",
+        "future",
+        "source"
+      ],
+      "description": "Timeline resonance chosen"
+    },
+    "approach_method": {
+      "type": "string",
+      "enum": [
+        "reverence",
+        "recognition",
+        "surrender"
+      ],
+      "description": "Approach method for seal opening"
+    },
+    "node_activated": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether planetary grid node was activated"
+    },
+    "seal_opened": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether 7th Seal was opened"
+    },
+    "affirmations_spoken": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "breathwork_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "visualization_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "in_progress",
+        "completed",
+        "integrated"
+      ],
+      "default": "in_progress"
+    },
+    "reward_rp": {
+      "type": "number",
+      "default": 0
+    },
+    "reward_ggg": {
+      "type": "number",
+      "default": 0
+    },
+    "badge_awarded": {
+      "type": "string",
+      "description": "Badge code awarded upon completion"
+    },
+    "integration_notes": {
+      "type": "string",
+      "description": "User's reflection on the initiation"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "initiation_type",
+    "title"
+  ]
+}

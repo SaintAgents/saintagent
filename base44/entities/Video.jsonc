@@ -1,0 +1,80 @@
+{
+  "name": "Video",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Video title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Video description"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "URL to the video file"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "URL to the video thumbnail"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "description": "Video duration in seconds (max 1200 = 20 min)"
+    },
+    "uploader_id": {
+      "type": "string",
+      "description": "User ID of the uploader"
+    },
+    "uploader_name": {
+      "type": "string"
+    },
+    "uploader_avatar": {
+      "type": "string"
+    },
+    "views": {
+      "type": "number",
+      "default": 0
+    },
+    "likes": {
+      "type": "number",
+      "default": 0
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "education",
+        "entertainment",
+        "music",
+        "gaming",
+        "news",
+        "sports",
+        "technology",
+        "lifestyle",
+        "other"
+      ],
+      "default": "other"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "processing",
+        "published",
+        "private",
+        "deleted"
+      ],
+      "default": "published"
+    }
+  },
+  "required": [
+    "title",
+    "video_url",
+    "uploader_id"
+  ]
+}

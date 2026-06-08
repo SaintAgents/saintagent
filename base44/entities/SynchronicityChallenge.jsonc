@@ -1,0 +1,96 @@
+{
+  "name": "SynchronicityChallenge",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Challenge title"
+    },
+    "description": {
+      "type": "string",
+      "description": "What the challenge involves"
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "numbers",
+        "dreams",
+        "encounters",
+        "signs",
+        "timing",
+        "patterns",
+        "messages",
+        "general"
+      ],
+      "default": "general"
+    },
+    "creator_id": {
+      "type": "string"
+    },
+    "creator_name": {
+      "type": "string"
+    },
+    "creator_avatar": {
+      "type": "string"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "goal_count": {
+      "type": "number",
+      "default": 7,
+      "description": "Number of synchronicities to share to complete"
+    },
+    "participant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "participant_count": {
+      "type": "number",
+      "default": 0
+    },
+    "completions_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of users who completed the challenge"
+    },
+    "badge_reward": {
+      "type": "string",
+      "description": "Badge code awarded on completion"
+    },
+    "ggg_reward": {
+      "type": "number",
+      "default": 0,
+      "description": "GGG reward for completion"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "completed",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "creator_id"
+  ]
+}

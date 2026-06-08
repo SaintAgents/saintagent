@@ -1,0 +1,76 @@
+{
+  "name": "UserStake",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "pool_id": {
+      "type": "string"
+    },
+    "pool_name": {
+      "type": "string"
+    },
+    "token": {
+      "type": "string"
+    },
+    "amount_staked": {
+      "type": "number"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lock_period_days": {
+      "type": "number"
+    },
+    "apy_rate": {
+      "type": "number"
+    },
+    "earned_rewards": {
+      "type": "number",
+      "default": 0
+    },
+    "claimed_rewards": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "withdrawn",
+        "pending_withdrawal"
+      ],
+      "default": "active"
+    },
+    "referrer_id": {
+      "type": "string",
+      "description": "User who referred this staker"
+    },
+    "referral_bonus_apy": {
+      "type": "number",
+      "default": 0
+    },
+    "impermanent_loss": {
+      "type": "number",
+      "default": 0,
+      "description": "For LP positions"
+    },
+    "auto_compound": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_id",
+    "pool_id",
+    "amount_staked",
+    "start_date"
+  ]
+}

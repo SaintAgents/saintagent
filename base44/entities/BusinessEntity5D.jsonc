@@ -1,0 +1,235 @@
+{
+  "name": "BusinessEntity5D",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Business/organization name"
+    },
+    "tagline": {
+      "type": "string",
+      "description": "Short tagline or slogan"
+    },
+    "description": {
+      "type": "string",
+      "description": "Full description of the business"
+    },
+    "mission_statement": {
+      "type": "string",
+      "description": "Core mission statement"
+    },
+    "vision": {
+      "type": "string",
+      "description": "Vision for the future"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Company logo URL"
+    },
+    "cover_image_url": {
+      "type": "string",
+      "description": "Cover/banner image URL"
+    },
+    "gallery_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "healing_wellness",
+        "conscious_technology",
+        "sustainable_living",
+        "spiritual_education",
+        "sacred_arts",
+        "regenerative_finance",
+        "fintech",
+        "financial_services",
+        "community_building",
+        "earth_stewardship",
+        "media_publishing",
+        "other"
+      ],
+      "default": "other"
+    },
+    "focus_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Tags for specialization areas"
+    },
+    "owner_id": {
+      "type": "string",
+      "description": "Email of the entity owner"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "owner_avatar": {
+      "type": "string"
+    },
+    "team_member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User IDs of team members"
+    },
+    "team_roles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "website_url": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "social_links": {
+      "type": "object",
+      "properties": {
+        "twitter": {
+          "type": "string"
+        },
+        "linkedin": {
+          "type": "string"
+        },
+        "instagram": {
+          "type": "string"
+        },
+        "youtube": {
+          "type": "string"
+        },
+        "telegram": {
+          "type": "string"
+        }
+      },
+      "default": {}
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "inactive",
+        "featured"
+      ],
+      "default": "pending"
+    },
+    "verification_level": {
+      "type": "string",
+      "enum": [
+        "unverified",
+        "basic",
+        "verified",
+        "premium"
+      ],
+      "default": "unverified"
+    },
+    "founding_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "impact_metrics": {
+      "type": "object",
+      "properties": {
+        "people_served": {
+          "type": "number",
+          "default": 0
+        },
+        "projects_completed": {
+          "type": "number",
+          "default": 0
+        },
+        "community_rating": {
+          "type": "number",
+          "default": 0
+        },
+        "ggg_earned": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "default": {}
+    },
+    "services_offered": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price_type": {
+            "type": "string",
+            "enum": [
+              "free",
+              "paid",
+              "donation",
+              "ggg"
+            ]
+          },
+          "price_amount": {
+            "type": "number"
+          }
+        }
+      },
+      "default": []
+    },
+    "testimonials_count": {
+      "type": "number",
+      "default": 0
+    },
+    "follower_count": {
+      "type": "number",
+      "default": 0
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "owner_id"
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "name": "Synchronicity",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User who submitted the synchronicity"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "user_avatar": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "Brief title of the synchronicity"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what happened"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "numbers",
+        "dreams",
+        "encounters",
+        "signs",
+        "timing",
+        "patterns",
+        "messages",
+        "other"
+      ],
+      "default": "other"
+    },
+    "symbols": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key symbols or patterns (e.g., 11:11, butterfly, etc.)"
+    },
+    "location": {
+      "type": "string"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "members_only",
+        "private"
+      ],
+      "default": "public"
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "resonance_count": {
+      "type": "number",
+      "default": 0,
+      "description": "How many others experienced similar"
+    },
+    "ai_pattern_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI-detected pattern categories"
+    },
+    "ai_interpretation": {
+      "type": "string",
+      "description": "AI-generated interpretation of the synchronicity's potential meaning"
+    },
+    "serendipity_score": {
+      "type": "number",
+      "default": 0,
+      "description": "AI-calculated meaningfulness index (0-100)"
+    },
+    "theme_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI-detected recurring themes"
+    },
+    "liked_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User IDs who liked this"
+    },
+    "resonated_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User IDs who resonated with this"
+    },
+    "challenge_id": {
+      "type": "string",
+      "description": "Associated challenge if submitted as part of one"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived",
+        "flagged"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "user_id",
+    "description"
+  ]
+}

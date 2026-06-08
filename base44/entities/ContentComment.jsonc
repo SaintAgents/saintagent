@@ -1,0 +1,91 @@
+{
+  "name": "ContentComment",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "comment_type": {
+      "type": "string",
+      "enum": [
+        "comment",
+        "suggestion",
+        "review",
+        "question"
+      ],
+      "default": "comment"
+    },
+    "is_inline": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is an inline comment attached to text"
+    },
+    "highlighted_text": {
+      "type": "string",
+      "description": "The highlighted text this comment refers to"
+    },
+    "text_position": {
+      "type": "string",
+      "description": "JSON string with position data for inline comments"
+    },
+    "selection_start": {
+      "type": "number",
+      "description": "Start position of highlighted text"
+    },
+    "selection_end": {
+      "type": "number",
+      "description": "End position of highlighted text"
+    },
+    "selected_text": {
+      "type": "string",
+      "description": "The highlighted text snippet"
+    },
+    "suggested_text": {
+      "type": "string",
+      "description": "Suggested replacement text"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "active",
+        "resolved",
+        "accepted",
+        "rejected"
+      ],
+      "default": "active"
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "For threaded replies (legacy)"
+    },
+    "parent_comment_id": {
+      "type": "string",
+      "description": "Parent comment ID for threaded replies"
+    },
+    "resolved_by": {
+      "type": "string"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "project_id",
+    "author_id",
+    "content"
+  ]
+}

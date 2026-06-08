@@ -1,0 +1,62 @@
+{
+  "name": "WithdrawalRequest",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "amount_ggg": {
+      "type": "number",
+      "description": "Amount in GGG to withdraw"
+    },
+    "amount_usd": {
+      "type": "number",
+      "description": "USD equivalent at time of request"
+    },
+    "usdt_address": {
+      "type": "string",
+      "description": "User's USDT wallet address (TRC20 or ERC20)"
+    },
+    "network": {
+      "type": "string",
+      "enum": [
+        "TRC20",
+        "ERC20",
+        "BEP20"
+      ],
+      "default": "TRC20",
+      "description": "USDT network for withdrawal"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "processing",
+        "completed",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "tx_hash": {
+      "type": "string",
+      "description": "Blockchain transaction hash once completed"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "processed_by": {
+      "type": "string",
+      "description": "Admin who processed the request"
+    }
+  },
+  "required": [
+    "user_id",
+    "amount_ggg",
+    "usdt_address"
+  ]
+}

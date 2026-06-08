@@ -1,0 +1,133 @@
+{
+  "name": "AffiliateCode",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Reference to user who owns this code"
+    },
+    "code": {
+      "type": "string",
+      "description": "Unique affiliate code - defaults to SA# (Saint Agent number)"
+    },
+    "sa_number": {
+      "type": "string",
+      "description": "Saint Agent number used as primary referral code"
+    },
+    "campaign_name": {
+      "type": "string",
+      "description": "Optional campaign name for custom links"
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "listing",
+        "event",
+        "mission"
+      ],
+      "default": "general",
+      "description": "What this link targets"
+    },
+    "target_id": {
+      "type": "string",
+      "description": "ID of the specific listing/event/mission if applicable"
+    },
+    "target_name": {
+      "type": "string",
+      "description": "Name of the target for display"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "suspended",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "attribution_window_days": {
+      "type": "number",
+      "default": 30,
+      "description": "Days after click that referral is valid"
+    },
+    "commission_percent": {
+      "type": "number",
+      "default": 10,
+      "minimum": 0,
+      "maximum": 50,
+      "description": "Percentage of referred user's GGG earnings paid to affiliate"
+    },
+    "tier_level": {
+      "type": "number",
+      "default": 1,
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Affiliate tier level - higher tiers earn higher commission"
+    },
+    "tier_thresholds": {
+      "type": "object",
+      "properties": {
+        "tier_2_referrals": {
+          "type": "number",
+          "default": 10
+        },
+        "tier_3_referrals": {
+          "type": "number",
+          "default": 25
+        },
+        "tier_4_referrals": {
+          "type": "number",
+          "default": 50
+        },
+        "tier_5_referrals": {
+          "type": "number",
+          "default": 100
+        }
+      },
+      "description": "Number of activated referrals needed to reach each tier"
+    },
+    "total_clicks": {
+      "type": "number",
+      "default": 0
+    },
+    "total_signups": {
+      "type": "number",
+      "default": 0
+    },
+    "total_activated": {
+      "type": "number",
+      "default": 0
+    },
+    "total_paid": {
+      "type": "number",
+      "default": 0
+    },
+    "total_ggg_earned": {
+      "type": "number",
+      "default": 0,
+      "description": "Total GGG earned from referral commissions"
+    },
+    "lifetime_referred_earnings": {
+      "type": "number",
+      "default": 0,
+      "description": "Total GGG earned by all referred users (for commission calculation)"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Affiliate's display name for referral card"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "Affiliate's avatar for referral card"
+    },
+    "tagline": {
+      "type": "string",
+      "description": "Short tagline shown on referral card"
+    }
+  },
+  "required": [
+    "user_id",
+    "code"
+  ]
+}

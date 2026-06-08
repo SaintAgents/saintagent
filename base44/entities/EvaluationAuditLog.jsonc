@@ -1,0 +1,58 @@
+{
+  "name": "EvaluationAuditLog",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "evaluation_id": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "ai_evaluated",
+        "human_reviewed",
+        "score_override",
+        "status_change",
+        "tier_override",
+        "rfi_sent",
+        "rfi_received",
+        "calibration_check",
+        "appeal_submitted",
+        "appeal_resolved"
+      ]
+    },
+    "actor_id": {
+      "type": "string"
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": [
+        "ai",
+        "human",
+        "system"
+      ]
+    },
+    "field_changed": {
+      "type": "string"
+    },
+    "old_value": {
+      "type": "string"
+    },
+    "new_value": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "project_id",
+    "action",
+    "actor_type"
+  ]
+}

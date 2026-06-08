@@ -1,0 +1,88 @@
+{
+  "name": "DRXAsset",
+  "type": "object",
+  "properties": {
+    "owner_id": {
+      "type": "string",
+      "description": "User who owns this asset"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "owner_avatar": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "audio",
+        "video",
+        "document",
+        "image",
+        "course",
+        "prompt_pack",
+        "research",
+        "advisory",
+        "knowledge_vault"
+      ],
+      "default": "document"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "base_license": {
+      "type": "string",
+      "enum": [
+        "all_rights_reserved",
+        "copy_left",
+        "creative_commons",
+        "custom"
+      ],
+      "default": "all_rights_reserved"
+    },
+    "default_access_type": {
+      "type": "string",
+      "enum": [
+        "view",
+        "stream",
+        "download",
+        "edit",
+        "remix"
+      ],
+      "default": "view"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "total_grants": {
+      "type": "number",
+      "default": 0
+    },
+    "total_revenue_ggg": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "owner_id",
+    "title",
+    "asset_type"
+  ]
+}

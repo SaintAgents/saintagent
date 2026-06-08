@@ -1,0 +1,101 @@
+{
+  "name": "RecurringBooking",
+  "type": "object",
+  "properties": {
+    "listing_id": {
+      "type": "string",
+      "description": "Reference to the listing"
+    },
+    "listing_title": {
+      "type": "string"
+    },
+    "buyer_id": {
+      "type": "string"
+    },
+    "buyer_name": {
+      "type": "string"
+    },
+    "seller_id": {
+      "type": "string"
+    },
+    "seller_name": {
+      "type": "string"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "biweekly",
+        "monthly"
+      ],
+      "default": "weekly"
+    },
+    "day_of_week": {
+      "type": "number",
+      "description": "0=Sunday, 6=Saturday"
+    },
+    "day_of_month": {
+      "type": "number",
+      "description": "1-28 for monthly bookings"
+    },
+    "time_slot": {
+      "type": "string",
+      "description": "HH:MM format"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 60
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the recurring schedule starts"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional end date"
+    },
+    "total_sessions": {
+      "type": "number",
+      "description": "Optional max sessions count"
+    },
+    "sessions_completed": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "paused",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "next_session_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "amount_per_session": {
+      "type": "number",
+      "default": 0
+    },
+    "ggg_per_session": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "listing_id",
+    "buyer_id",
+    "seller_id",
+    "frequency",
+    "time_slot"
+  ]
+}

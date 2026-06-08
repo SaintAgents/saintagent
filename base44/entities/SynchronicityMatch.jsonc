@@ -1,0 +1,98 @@
+{
+  "name": "SynchronicityMatch",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User receiving the match"
+    },
+    "matched_user_id": {
+      "type": "string"
+    },
+    "matched_user_name": {
+      "type": "string"
+    },
+    "matched_user_avatar": {
+      "type": "string"
+    },
+    "matched_user_title": {
+      "type": "string",
+      "description": "e.g., Soul Innovator, Trust Anchor"
+    },
+    "resonance_score": {
+      "type": "number",
+      "description": "0-100 synchronicity score"
+    },
+    "factors": {
+      "type": "object",
+      "properties": {
+        "coherence": {
+          "type": "number"
+        },
+        "pathways": {
+          "type": "number"
+        },
+        "badges": {
+          "type": "number"
+        },
+        "mission": {
+          "type": "number"
+        },
+        "timing": {
+          "type": "number"
+        }
+      }
+    },
+    "connection_type": {
+      "type": "string",
+      "enum": [
+        "collaboration",
+        "mentorship",
+        "sacred_union",
+        "stewardship",
+        "co_creation"
+      ],
+      "default": "collaboration"
+    },
+    "shared_quests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "shared_badges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "revealed",
+        "pending",
+        "accepted",
+        "declined",
+        "connected"
+      ],
+      "default": "revealed"
+    },
+    "user_accepted": {
+      "type": "boolean",
+      "default": false
+    },
+    "matched_user_accepted": {
+      "type": "boolean",
+      "default": false
+    },
+    "revealed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "matched_user_id",
+    "resonance_score"
+  ]
+}

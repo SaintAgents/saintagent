@@ -1,0 +1,51 @@
+{
+  "name": "LeaderApplication",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "applicant_name": {
+      "type": "string"
+    },
+    "applicant_avatar": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why they want to be a leader"
+    },
+    "experience": {
+      "type": "string",
+      "description": "Their relevant experience"
+    },
+    "contribution_plan": {
+      "type": "string",
+      "description": "How they plan to contribute"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "review_notes": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_id",
+    "reason",
+    "experience"
+  ]
+}

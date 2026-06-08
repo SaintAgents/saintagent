@@ -1,0 +1,178 @@
+{
+  "name": "AffiliateSetting",
+  "type": "object",
+  "properties": {
+    "setting_key": {
+      "type": "string",
+      "enum": [
+        "global"
+      ],
+      "default": "global",
+      "description": "Setting identifier - only one global record"
+    },
+    "program_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether affiliate program is active"
+    },
+    "base_commission_percent": {
+      "type": "number",
+      "default": 10,
+      "minimum": 0,
+      "maximum": 50,
+      "description": "Default commission percentage for new affiliates"
+    },
+    "tier_1_commission": {
+      "type": "number",
+      "default": 10,
+      "description": "Commission % for Tier 1 affiliates"
+    },
+    "tier_2_commission": {
+      "type": "number",
+      "default": 12,
+      "description": "Commission % for Tier 2 affiliates"
+    },
+    "tier_3_commission": {
+      "type": "number",
+      "default": 15,
+      "description": "Commission % for Tier 3 affiliates"
+    },
+    "tier_4_commission": {
+      "type": "number",
+      "default": 18,
+      "description": "Commission % for Tier 4 affiliates"
+    },
+    "tier_5_commission": {
+      "type": "number",
+      "default": 20,
+      "description": "Commission % for Tier 5 affiliates"
+    },
+    "tier_2_threshold": {
+      "type": "number",
+      "default": 10,
+      "description": "Activated referrals needed for Tier 2"
+    },
+    "tier_3_threshold": {
+      "type": "number",
+      "default": 25,
+      "description": "Activated referrals needed for Tier 3"
+    },
+    "tier_4_threshold": {
+      "type": "number",
+      "default": 50,
+      "description": "Activated referrals needed for Tier 4"
+    },
+    "tier_5_threshold": {
+      "type": "number",
+      "default": 100,
+      "description": "Activated referrals needed for Tier 5"
+    },
+    "signup_bonus_ggg": {
+      "type": "number",
+      "default": 0.25,
+      "description": "One-time GGG bonus for each activated referral"
+    },
+    "attribution_window_days": {
+      "type": "number",
+      "default": 30,
+      "description": "Days after click that referral is valid"
+    },
+    "commission_duration_days": {
+      "type": "number",
+      "default": 365,
+      "description": "How long affiliate earns commission from referred user (0 = forever)"
+    },
+    "promotion_active": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a special promotion is active"
+    },
+    "promotion_multiplier": {
+      "type": "number",
+      "default": 1.5,
+      "description": "Multiplier for commission during promotion"
+    },
+    "promotion_end_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the current promotion ends"
+    },
+    "promotion_name": {
+      "type": "string",
+      "description": "Name of the current promotion"
+    },
+    "ggg_multiplier_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable GGG earning multiplier for affiliates"
+    },
+    "ggg_multiplier_tier_1_threshold": {
+      "type": "number",
+      "default": 10,
+      "description": "Referrals needed for 2x GGG"
+    },
+    "ggg_multiplier_tier_1_value": {
+      "type": "number",
+      "default": 2,
+      "description": "GGG multiplier at tier 1"
+    },
+    "ggg_multiplier_tier_2_threshold": {
+      "type": "number",
+      "default": 50,
+      "description": "Referrals needed for 3x GGG"
+    },
+    "ggg_multiplier_tier_2_value": {
+      "type": "number",
+      "default": 3,
+      "description": "GGG multiplier at tier 2"
+    },
+    "ggg_multiplier_tier_3_threshold": {
+      "type": "number",
+      "default": 100,
+      "description": "Referrals needed for 4x GGG"
+    },
+    "ggg_multiplier_tier_3_value": {
+      "type": "number",
+      "default": 4,
+      "description": "GGG multiplier at tier 3"
+    },
+    "rp_multiplier_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable RP earning multiplier for affiliates"
+    },
+    "rp_multiplier_tier_1_threshold": {
+      "type": "number",
+      "default": 10,
+      "description": "Referrals needed for 2x RP"
+    },
+    "rp_multiplier_tier_1_value": {
+      "type": "number",
+      "default": 2,
+      "description": "RP multiplier at tier 1"
+    },
+    "rp_multiplier_tier_2_threshold": {
+      "type": "number",
+      "default": 50,
+      "description": "Referrals needed for 3x RP"
+    },
+    "rp_multiplier_tier_2_value": {
+      "type": "number",
+      "default": 3,
+      "description": "RP multiplier at tier 2"
+    },
+    "rp_multiplier_tier_3_threshold": {
+      "type": "number",
+      "default": 100,
+      "description": "Referrals needed for 4x RP"
+    },
+    "rp_multiplier_tier_3_value": {
+      "type": "number",
+      "default": 4,
+      "description": "RP multiplier at tier 3"
+    }
+  },
+  "required": [
+    "setting_key"
+  ]
+}

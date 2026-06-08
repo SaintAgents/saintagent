@@ -1,0 +1,122 @@
+{
+  "name": "ProjectTask",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "milestone_id": {
+      "type": "string",
+      "description": "Reference to ProjectMilestone"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "assignee_id": {
+      "type": "string",
+      "description": "User ID of assignee"
+    },
+    "assignee_name": {
+      "type": "string"
+    },
+    "assignee_avatar": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "todo",
+        "in_progress",
+        "review",
+        "completed",
+        "blocked"
+      ],
+      "default": "todo"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Planned start date"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Legacy: simple task ID array (deprecated)"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "ID of the predecessor task"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FS",
+              "SS",
+              "FF",
+              "SF"
+            ],
+            "default": "FS",
+            "description": "FS=Finish-to-Start, SS=Start-to-Start, FF=Finish-to-Finish, SF=Start-to-Finish"
+          },
+          "lag_days": {
+            "type": "number",
+            "default": 0,
+            "description": "Lag (positive) or Lead (negative) time in days"
+          }
+        }
+      },
+      "default": [],
+      "description": "Advanced dependencies with type and lag/lead time"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Estimated effort in hours"
+    },
+    "skill_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Required skill keywords for this task"
+    }
+  },
+  "required": [
+    "project_id",
+    "title"
+  ]
+}

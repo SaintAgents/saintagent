@@ -1,0 +1,125 @@
+{
+  "name": "SaintStewardNomination",
+  "type": "object",
+  "properties": {
+    "nominee_id": {
+      "type": "string",
+      "description": "User being nominated"
+    },
+    "nominee_name": {
+      "type": "string"
+    },
+    "nominee_avatar": {
+      "type": "string"
+    },
+    "nominator_id": {
+      "type": "string",
+      "description": "Leader/DAO member making nomination"
+    },
+    "nominator_name": {
+      "type": "string"
+    },
+    "nominator_avatar": {
+      "type": "string"
+    },
+    "testimonial": {
+      "type": "string",
+      "description": "Written testimonial about nominee's leadership"
+    },
+    "evidence_of_leadership": {
+      "type": "string",
+      "description": "Specific examples and achievements"
+    },
+    "missions_led": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Mission IDs or descriptions"
+    },
+    "community_impact": {
+      "type": "string",
+      "description": "Description of community contributions"
+    },
+    "endorsements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "endorser_id": {
+            "type": "string"
+          },
+          "endorser_name": {
+            "type": "string"
+          },
+          "endorser_avatar": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "endorsed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "default": []
+    },
+    "rejections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rejector_id": {
+            "type": "string"
+          },
+          "rejector_name": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "rejected_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "default": []
+    },
+    "endorsement_count": {
+      "type": "number",
+      "default": 0
+    },
+    "rejection_count": {
+      "type": "number",
+      "default": 0
+    },
+    "required_endorsements": {
+      "type": "number",
+      "default": 5,
+      "description": "Number of endorsements needed for approval"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "under_review",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "nominee_id",
+    "nominator_id",
+    "testimonial",
+    "evidence_of_leadership"
+  ]
+}

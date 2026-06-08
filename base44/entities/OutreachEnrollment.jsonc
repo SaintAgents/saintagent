@@ -1,0 +1,93 @@
+{
+  "name": "OutreachEnrollment",
+  "type": "object",
+  "properties": {
+    "sequence_id": {
+      "type": "string",
+      "description": "Reference to OutreachSequence"
+    },
+    "contact_id": {
+      "type": "string",
+      "description": "Reference to Contact"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "owner_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "paused",
+        "replied",
+        "bounced",
+        "unsubscribed"
+      ],
+      "default": "active"
+    },
+    "current_step": {
+      "type": "number",
+      "default": 0,
+      "description": "Index of the current step (0-based)"
+    },
+    "step_statuses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "sent",
+              "opened",
+              "replied",
+              "bounced",
+              "skipped"
+            ]
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "replied_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "default": []
+    },
+    "next_send_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the next step should be sent"
+    },
+    "enrolled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "sequence_id",
+    "contact_id",
+    "owner_id"
+  ]
+}

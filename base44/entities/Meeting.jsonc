@@ -1,0 +1,138 @@
+{
+  "name": "Meeting",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "host_id": {
+      "type": "string"
+    },
+    "guest_id": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    },
+    "host_avatar": {
+      "type": "string"
+    },
+    "guest_avatar": {
+      "type": "string"
+    },
+    "scheduled_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 30
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined",
+        "scheduled",
+        "completed",
+        "no_show",
+        "cancelled",
+        "polling"
+      ],
+      "default": "pending"
+    },
+    "meeting_type": {
+      "type": "string",
+      "enum": [
+        "collaboration",
+        "mentorship",
+        "consultation",
+        "casual",
+        "mission",
+        "group_call",
+        "in_person"
+      ],
+      "default": "casual"
+    },
+    "location": {
+      "type": "string"
+    },
+    "online_link": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "ggg_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "host_confirmed": {
+      "type": "boolean",
+      "default": false
+    },
+    "guest_confirmed": {
+      "type": "boolean",
+      "default": false
+    },
+    "circle_id": {
+      "type": "string",
+      "description": "Reference to Circle/Group for group meetings"
+    },
+    "circle_name": {
+      "type": "string"
+    },
+    "invited_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "List of invited member emails for group meetings"
+    },
+    "rsvp_yes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Members who RSVP'd yes"
+    },
+    "rsvp_no": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Members who RSVP'd no"
+    },
+    "rsvp_maybe": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Members who RSVP'd maybe"
+    },
+    "proposed_times": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Proposed time slots for polling"
+    },
+    "time_votes": {
+      "type": "object",
+      "description": "Map of time slot to array of voter emails"
+    }
+  },
+  "required": [
+    "title",
+    "host_id"
+  ]
+}

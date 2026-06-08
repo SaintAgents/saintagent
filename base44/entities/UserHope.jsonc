@@ -1,0 +1,47 @@
+{
+  "name": "UserHope",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "hope_code": {
+      "type": "string",
+      "enum": [
+        "financial_freedom",
+        "meaningful_wealth",
+        "recognized_teacher",
+        "community_leader",
+        "launch_movement",
+        "find_mission",
+        "heal_patterns",
+        "conscious_community",
+        "master_craft",
+        "serve_humanity",
+        "create_legacy"
+      ]
+    },
+    "time_horizon": {
+      "type": "string",
+      "enum": [
+        "30_days",
+        "90_days",
+        "1_year",
+        "3_years"
+      ]
+    },
+    "commitment_level": {
+      "type": "string",
+      "enum": [
+        "explorer",
+        "builder",
+        "operator",
+        "ascender"
+      ]
+    }
+  },
+  "required": [
+    "user_id",
+    "hope_code"
+  ]
+}

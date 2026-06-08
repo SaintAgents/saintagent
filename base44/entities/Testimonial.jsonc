@@ -1,0 +1,58 @@
+{
+  "name": "Testimonial",
+  "type": "object",
+  "properties": {
+    "from_user_id": {
+      "type": "string"
+    },
+    "to_user_id": {
+      "type": "string"
+    },
+    "from_name": {
+      "type": "string"
+    },
+    "from_avatar": {
+      "type": "string"
+    },
+    "context_type": {
+      "type": "string",
+      "enum": [
+        "booking",
+        "meeting",
+        "circle",
+        "mission"
+      ]
+    },
+    "context_id": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "text": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "e.g., reliable, communicative, skilled"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "private"
+      ],
+      "default": "public"
+    }
+  },
+  "required": [
+    "from_user_id",
+    "to_user_id",
+    "rating"
+  ]
+}

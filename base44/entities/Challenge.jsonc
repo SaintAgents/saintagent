@@ -1,0 +1,88 @@
+{
+  "name": "Challenge",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "challenge_type": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "milestone",
+        "special",
+        "ai_suggested"
+      ],
+      "default": "daily"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "profile",
+        "social",
+        "meetings",
+        "missions",
+        "marketplace",
+        "learning"
+      ],
+      "default": "social"
+    },
+    "target_action": {
+      "type": "string",
+      "description": "Action to complete (e.g., complete_meeting, send_message)"
+    },
+    "target_count": {
+      "type": "number",
+      "default": 1
+    },
+    "current_count": {
+      "type": "number",
+      "default": 0
+    },
+    "reward_points": {
+      "type": "number",
+      "default": 10
+    },
+    "reward_ggg": {
+      "type": "number",
+      "default": 0
+    },
+    "reward_badge": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "expired",
+        "claimed"
+      ],
+      "default": "active"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ai_reasoning": {
+      "type": "string",
+      "description": "Why AI suggested this challenge"
+    }
+  },
+  "required": [
+    "user_id",
+    "title",
+    "target_action"
+  ]
+}

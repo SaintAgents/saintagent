@@ -1,0 +1,237 @@
+{
+  "name": "DRXRightsGrant",
+  "type": "object",
+  "properties": {
+    "asset_id": {
+      "type": "string"
+    },
+    "asset_title": {
+      "type": "string"
+    },
+    "grantor_id": {
+      "type": "string"
+    },
+    "grantor_name": {
+      "type": "string"
+    },
+    "grantee_id": {
+      "type": "string"
+    },
+    "grantee_name": {
+      "type": "string"
+    },
+    "grantee_email": {
+      "type": "string"
+    },
+    "access_scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "view",
+          "stream",
+          "download",
+          "edit",
+          "copy",
+          "remix",
+          "distribute",
+          "resell"
+        ]
+      },
+      "default": [
+        "view"
+      ]
+    },
+    "duration_type": {
+      "type": "string",
+      "enum": [
+        "fixed_days",
+        "usage_count",
+        "date_range",
+        "unlimited"
+      ],
+      "default": "fixed_days"
+    },
+    "duration_days": {
+      "type": "number"
+    },
+    "usage_limit": {
+      "type": "number"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiration_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "conditions": {
+      "type": "object",
+      "properties": {
+        "nda_required": {
+          "type": "boolean",
+          "default": false
+        },
+        "reputation_threshold": {
+          "type": "number"
+        },
+        "verified_only": {
+          "type": "boolean",
+          "default": false
+        },
+        "tier_required": {
+          "type": "string"
+        }
+      }
+    },
+    "monetization": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "free",
+            "fixed_fee",
+            "subscription",
+            "revenue_share",
+            "per_use",
+            "tiered"
+          ],
+          "default": "free"
+        },
+        "price_ggg": {
+          "type": "number"
+        },
+        "revenue_share_percent": {
+          "type": "number"
+        },
+        "auto_renew": {
+          "type": "boolean",
+          "default": false
+        },
+        "subscription_interval": {
+          "type": "string",
+          "enum": [
+            "weekly",
+            "monthly",
+            "quarterly",
+            "yearly"
+          ]
+        },
+        "next_billing_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "basic",
+            "standard",
+            "premium",
+            "enterprise"
+          ]
+        },
+        "tier_prices": {
+          "type": "object",
+          "properties": {
+            "basic": {
+              "type": "number"
+            },
+            "standard": {
+              "type": "number"
+            },
+            "premium": {
+              "type": "number"
+            },
+            "enterprise": {
+              "type": "number"
+            }
+          }
+        },
+        "tier_access_scopes": {
+          "type": "object",
+          "properties": {
+            "basic": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "standard": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "premium": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "enterprise": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "total_earnings_ggg": {
+      "type": "number",
+      "default": 0
+    },
+    "payment_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "is_transferable": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_revocable": {
+      "type": "boolean",
+      "default": true
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "revoked",
+        "pending"
+      ],
+      "default": "active"
+    },
+    "rights_token": {
+      "type": "string",
+      "description": "Unique token ID like DRX-AX839-0921"
+    }
+  },
+  "required": [
+    "asset_id",
+    "grantor_id",
+    "grantee_id"
+  ]
+}

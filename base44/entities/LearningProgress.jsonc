@@ -1,0 +1,74 @@
+{
+  "name": "LearningProgress",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "course_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "enrolled",
+        "in_progress",
+        "completed"
+      ],
+      "default": "enrolled"
+    },
+    "completed_modules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Array of module IDs that have been completed"
+    },
+    "progress_percent": {
+      "type": "number",
+      "default": 0
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ggg_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "rp_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "last_module_id": {
+      "type": "string",
+      "description": "Last module the user was viewing"
+    },
+    "quiz_scores": {
+      "type": "object",
+      "default": {},
+      "description": "Module ID -> quiz score mapping"
+    },
+    "notes": {
+      "type": "string",
+      "description": "User's personal notes on the course"
+    },
+    "rating": {
+      "type": "number",
+      "description": "User's rating of the course (1-5)"
+    },
+    "review": {
+      "type": "string",
+      "description": "User's review of the course"
+    }
+  },
+  "required": [
+    "user_id",
+    "course_id"
+  ]
+}

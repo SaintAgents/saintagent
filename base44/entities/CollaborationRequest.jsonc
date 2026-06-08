@@ -1,0 +1,117 @@
+{
+  "name": "CollaborationRequest",
+  "type": "object",
+  "properties": {
+    "from_user_id": {
+      "type": "string",
+      "description": "User sending the request"
+    },
+    "to_user_id": {
+      "type": "string",
+      "description": "User receiving the request"
+    },
+    "from_name": {
+      "type": "string"
+    },
+    "from_avatar": {
+      "type": "string"
+    },
+    "to_name": {
+      "type": "string"
+    },
+    "project_title": {
+      "type": "string",
+      "description": "Title or name of the project/mission"
+    },
+    "project_type": {
+      "type": "string",
+      "enum": [
+        "mission",
+        "project",
+        "idea",
+        "learning",
+        "mentorship",
+        "other"
+      ],
+      "default": "project"
+    },
+    "project_stage": {
+      "type": "string",
+      "enum": [
+        "ideation",
+        "planning",
+        "early_development",
+        "active",
+        "scaling",
+        "maintenance"
+      ],
+      "default": "ideation"
+    },
+    "collaboration_type": {
+      "type": "string",
+      "enum": [
+        "co-founder",
+        "contributor",
+        "advisor",
+        "mentor",
+        "learner",
+        "partner"
+      ],
+      "default": "contributor"
+    },
+    "time_commitment": {
+      "type": "string",
+      "enum": [
+        "few_hours_week",
+        "part_time",
+        "full_time",
+        "flexible",
+        "one_time"
+      ],
+      "default": "flexible"
+    },
+    "skills_needed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "message": {
+      "type": "string",
+      "description": "Personal message with the request"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined",
+        "withdrawn"
+      ],
+      "default": "pending"
+    },
+    "mission_id": {
+      "type": "string",
+      "description": "Optional linked mission"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Optional linked project"
+    },
+    "response_message": {
+      "type": "string",
+      "description": "Response from recipient"
+    },
+    "responded_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "from_user_id",
+    "to_user_id",
+    "project_title",
+    "message"
+  ]
+}

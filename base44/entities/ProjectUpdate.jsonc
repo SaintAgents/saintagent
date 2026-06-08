@@ -1,0 +1,84 @@
+{
+  "name": "ProjectUpdate",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "project_title": {
+      "type": "string"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "update_type": {
+      "type": "string",
+      "enum": [
+        "progress",
+        "milestone",
+        "announcement",
+        "blocker_resolved",
+        "team_change",
+        "launch"
+      ],
+      "default": "progress"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "progress_percentage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "milestone_name": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "team_only",
+        "followers"
+      ],
+      "default": "public"
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comments_count": {
+      "type": "number",
+      "default": 0
+    },
+    "shared_to_feed": {
+      "type": "boolean",
+      "default": true
+    },
+    "notified_users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User IDs who were directly notified"
+    }
+  },
+  "required": [
+    "project_id",
+    "author_id",
+    "title"
+  ]
+}

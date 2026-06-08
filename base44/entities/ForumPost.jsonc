@@ -1,0 +1,74 @@
+{
+  "name": "ForumPost",
+  "type": "object",
+  "properties": {
+    "author_id": {
+      "type": "string",
+      "description": "User ID of post author"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "Post title"
+    },
+    "content": {
+      "type": "string",
+      "description": "Post content (supports markdown)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "announcements",
+        "questions",
+        "showcase",
+        "collaboration",
+        "feedback",
+        "affiliate_tips"
+      ],
+      "default": "general"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "replies_count": {
+      "type": "number",
+      "default": 0
+    },
+    "views_count": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "closed",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "author_id",
+    "title",
+    "content"
+  ]
+}

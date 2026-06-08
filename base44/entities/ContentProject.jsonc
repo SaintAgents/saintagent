@@ -1,0 +1,141 @@
+{
+  "name": "ContentProject",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Project title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Project description"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "article",
+        "video",
+        "audio",
+        "mixed"
+      ],
+      "default": "article"
+    },
+    "owner_id": {
+      "type": "string"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "owner_avatar": {
+      "type": "string"
+    },
+    "collaborator_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_progress",
+        "review",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "private",
+        "collaborators",
+        "public"
+      ],
+      "default": "private"
+    },
+    "content": {
+      "type": "string",
+      "description": "Main content (HTML/Markdown)"
+    },
+    "content_json": {
+      "type": "object",
+      "description": "Structured content data"
+    },
+    "media_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "tutorial",
+        "guide",
+        "story",
+        "news",
+        "review",
+        "creative",
+        "educational",
+        "other"
+      ],
+      "default": "other"
+    },
+    "word_count": {
+      "type": "number",
+      "default": 0
+    },
+    "read_time_minutes": {
+      "type": "number",
+      "default": 0
+    },
+    "current_version": {
+      "type": "number",
+      "default": 1
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "allow_comments": {
+          "type": "boolean",
+          "default": true
+        },
+        "allow_suggestions": {
+          "type": "boolean",
+          "default": true
+        },
+        "require_approval": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "default": {}
+    },
+    "ai_metadata": {
+      "type": "object",
+      "description": "AI-generated metadata like summaries, keywords, SEO"
+    }
+  },
+  "required": [
+    "title",
+    "owner_id"
+  ]
+}

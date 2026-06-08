@@ -1,0 +1,112 @@
+{
+  "name": "Season",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name of the season (e.g., 'Season 1: The Awakening')"
+    },
+    "season_number": {
+      "type": "number",
+      "default": 1,
+      "description": "Sequential season number"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Season start date/time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Season end date/time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "upcoming",
+        "active",
+        "processing",
+        "completed"
+      ],
+      "default": "upcoming",
+      "description": "Current status of the season"
+    },
+    "rewards_processed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether end-of-season rewards have been distributed"
+    },
+    "theme": {
+      "type": "string",
+      "description": "Optional theme or tagline for the season"
+    },
+    "reward_config": {
+      "type": "object",
+      "properties": {
+        "titans_aura": {
+          "type": "string",
+          "default": "titans",
+          "description": "Profile aura for top Titans"
+        },
+        "pathfinders_early_access": {
+          "type": "boolean",
+          "default": true,
+          "description": "Early quest access for top Pathfinders"
+        },
+        "connectors_referral_multiplier": {
+          "type": "number",
+          "default": 2,
+          "description": "GGG referral multiplier for top Connectors"
+        },
+        "mystics_ggg_bonus": {
+          "type": "number",
+          "default": 500,
+          "description": "GGG bonus for top Mystics"
+        }
+      },
+      "default": {},
+      "description": "Configuration for season-end rewards"
+    },
+    "top_performers": {
+      "type": "object",
+      "properties": {
+        "titans": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Top 10% user IDs for Titans category"
+        },
+        "pathfinders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Top 10% user IDs for Pathfinders category"
+        },
+        "connectors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Top 10% user IDs for Connectors category"
+        },
+        "mystics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Top 10% user IDs for Mystics category"
+        }
+      },
+      "default": {},
+      "description": "Stored top performers after season ends"
+    }
+  },
+  "required": [
+    "name",
+    "start_date",
+    "end_date"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "ProjectComment",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Reference to ProjectTask (optional)"
+    },
+    "content": {
+      "type": "string"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "content",
+    "author_id"
+  ]
+}

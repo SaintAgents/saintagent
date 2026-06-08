@@ -1,0 +1,70 @@
+{
+  "name": "Resource",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Author/submitter user id (email)"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "article",
+        "guide",
+        "best_practice",
+        "video",
+        "external_link"
+      ],
+      "default": "article"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "content_url": {
+      "type": "string",
+      "description": "URL to content (article, link, or video)"
+    },
+    "platform": {
+      "type": "string",
+      "description": "Optional platform/provider name"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_id",
+    "title",
+    "type"
+  ]
+}

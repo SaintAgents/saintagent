@@ -1,0 +1,107 @@
+{
+  "name": "Team",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Team or guild name"
+    },
+    "description": {
+      "type": "string"
+    },
+    "team_type": {
+      "type": "string",
+      "enum": [
+        "guild",
+        "squad",
+        "crew",
+        "alliance"
+      ],
+      "default": "squad",
+      "description": "Type of team"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "leader_id": {
+      "type": "string",
+      "description": "Team leader user ID"
+    },
+    "leader_name": {
+      "type": "string"
+    },
+    "member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "member_count": {
+      "type": "number",
+      "default": 1
+    },
+    "max_members": {
+      "type": "number",
+      "default": 20
+    },
+    "mission_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Missions the team is working on"
+    },
+    "focus_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Areas of expertise or focus"
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "private",
+        "invite_only"
+      ],
+      "default": "public"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "recruiting",
+        "full",
+        "inactive"
+      ],
+      "default": "recruiting"
+    },
+    "total_missions_completed": {
+      "type": "number",
+      "default": 0
+    },
+    "total_ggg_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "chat_enabled": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "leader_id"
+  ]
+}

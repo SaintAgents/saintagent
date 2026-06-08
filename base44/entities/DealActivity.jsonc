@@ -1,0 +1,44 @@
+{
+  "name": "DealActivity",
+  "type": "object",
+  "properties": {
+    "deal_id": {
+      "type": "string",
+      "description": "Reference to Deal"
+    },
+    "activity_type": {
+      "type": "string",
+      "enum": [
+        "created",
+        "stage_change",
+        "note_added",
+        "attachment_added",
+        "updated",
+        "owner_changed"
+      ],
+      "default": "updated"
+    },
+    "description": {
+      "type": "string"
+    },
+    "actor_id": {
+      "type": "string"
+    },
+    "actor_name": {
+      "type": "string"
+    },
+    "old_value": {
+      "type": "string",
+      "description": "Previous value for changes"
+    },
+    "new_value": {
+      "type": "string",
+      "description": "New value for changes"
+    }
+  },
+  "required": [
+    "deal_id",
+    "activity_type",
+    "actor_id"
+  ]
+}

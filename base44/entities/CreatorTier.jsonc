@@ -1,0 +1,91 @@
+{
+  "name": "CreatorTier",
+  "type": "object",
+  "properties": {
+    "creator_id": {
+      "type": "string",
+      "description": "Creator's user ID"
+    },
+    "creator_name": {
+      "type": "string"
+    },
+    "creator_avatar": {
+      "type": "string"
+    },
+    "tier_name": {
+      "type": "string",
+      "description": "e.g., Bronze, Silver, Gold, Founding Member"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this tier offers"
+    },
+    "monthly_price_ggg": {
+      "type": "number",
+      "description": "Monthly subscription price in GGG"
+    },
+    "annual_price_ggg": {
+      "type": "number",
+      "description": "Annual subscription price (optional discount)"
+    },
+    "perks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of benefits"
+    },
+    "max_subscribers": {
+      "type": "number",
+      "description": "Optional limit for scarcity (e.g., Founding Members)"
+    },
+    "current_subscribers": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "archived"
+      ],
+      "default": "active"
+    },
+    "tier_level": {
+      "type": "number",
+      "description": "1 = basic, 2 = mid, 3 = premium, etc.",
+      "default": 1
+    },
+    "access_rules": {
+      "type": "object",
+      "properties": {
+        "private_posts": {
+          "type": "boolean",
+          "default": true
+        },
+        "early_access": {
+          "type": "boolean",
+          "default": false
+        },
+        "private_community": {
+          "type": "boolean",
+          "default": false
+        },
+        "monthly_qa": {
+          "type": "boolean",
+          "default": false
+        },
+        "dm_credits": {
+          "type": "number",
+          "default": 0
+        }
+      }
+    }
+  },
+  "required": [
+    "creator_id",
+    "tier_name",
+    "monthly_price_ggg"
+  ]
+}

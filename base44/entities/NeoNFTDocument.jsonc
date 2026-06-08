@@ -1,0 +1,96 @@
+{
+  "name": "NeoNFTDocument",
+  "type": "object",
+  "properties": {
+    "neo_nft_id": {
+      "type": "string"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "certification",
+        "appraisal",
+        "insurance",
+        "title_deed",
+        "proof_of_reserve",
+        "custody_agreement",
+        "ucc_filing",
+        "tax_document",
+        "inspection_report",
+        "assay_certificate",
+        "chain_of_custody",
+        "legal_opinion",
+        "other"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_hash": {
+      "type": "string",
+      "description": "SHA-256 hash of the document"
+    },
+    "file_size_bytes": {
+      "type": "number"
+    },
+    "mime_type": {
+      "type": "string"
+    },
+    "uploaded_by": {
+      "type": "string"
+    },
+    "uploaded_by_name": {
+      "type": "string"
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "rejected",
+        "expired"
+      ],
+      "default": "pending"
+    },
+    "verified_by": {
+      "type": "string"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verification_notes": {
+      "type": "string"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "issuing_authority": {
+      "type": "string"
+    },
+    "document_number": {
+      "type": "string"
+    },
+    "starchain_proof_hash": {
+      "type": "string",
+      "description": "On-chain hash proving document existence"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "neo_nft_id",
+    "document_type",
+    "title",
+    "file_url"
+  ]
+}

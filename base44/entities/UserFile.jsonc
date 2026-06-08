@@ -1,0 +1,56 @@
+{
+  "name": "UserFile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "The ID of the user who owns this file"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "The URL to access the stored file"
+    },
+    "file_uri": {
+      "type": "string",
+      "description": "Private file URI (for generating signed URLs)"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original name of the uploaded file"
+    },
+    "mime_type": {
+      "type": "string",
+      "description": "MIME type of the file"
+    },
+    "size_bytes": {
+      "type": "number",
+      "description": "Size of the file in bytes"
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false,
+      "description": "Controls public visibility"
+    },
+    "is_private_storage": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if stored in private bucket"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "user_id",
+    "file_name",
+    "mime_type",
+    "size_bytes"
+  ]
+}

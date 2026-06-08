@@ -1,0 +1,189 @@
+{
+  "name": "CRMWorkflow",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Workflow name"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this workflow does"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": [
+        "score_change",
+        "days_since_contact",
+        "status_change",
+        "tag_added",
+        "tag_removed",
+        "federation_status",
+        "manual",
+        "scheduled"
+      ],
+      "description": "What triggers this workflow"
+    },
+    "trigger_config": {
+      "type": "object",
+      "properties": {
+        "score_threshold": {
+          "type": "number",
+          "description": "For score_change: trigger when score crosses this value"
+        },
+        "score_direction": {
+          "type": "string",
+          "enum": [
+            "above",
+            "below",
+            "equals"
+          ]
+        },
+        "days_threshold": {
+          "type": "number",
+          "description": "For days_since_contact: number of days"
+        },
+        "from_status": {
+          "type": "string",
+          "description": "For status_change: previous status"
+        },
+        "to_status": {
+          "type": "string",
+          "description": "For status_change: new status"
+        },
+        "tag_name": {
+          "type": "string",
+          "description": "For tag triggers: the tag to watch"
+        },
+        "federation_value": {
+          "type": "boolean",
+          "description": "For federation_status: true/false"
+        },
+        "schedule_cron": {
+          "type": "string",
+          "description": "For scheduled: cron expression"
+        },
+        "filter_criteria": {
+          "type": "object",
+          "description": "Additional filter criteria for contacts"
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "action_type": {
+            "type": "string",
+            "enum": [
+              "send_email",
+              "assign_task",
+              "update_status",
+              "add_tag",
+              "remove_tag",
+              "update_score",
+              "add_to_campaign",
+              "send_notification",
+              "wait_delay",
+              "condition_branch"
+            ]
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "email_template_id": {
+                "type": "string"
+              },
+              "email_subject": {
+                "type": "string"
+              },
+              "email_body": {
+                "type": "string"
+              },
+              "task_title": {
+                "type": "string"
+              },
+              "task_description": {
+                "type": "string"
+              },
+              "task_due_days": {
+                "type": "number"
+              },
+              "assign_to_user_id": {
+                "type": "string"
+              },
+              "new_status": {
+                "type": "string"
+              },
+              "tag_name": {
+                "type": "string"
+              },
+              "score_adjustment": {
+                "type": "number"
+              },
+              "campaign_id": {
+                "type": "string"
+              },
+              "notification_message": {
+                "type": "string"
+              },
+              "wait_hours": {
+                "type": "number"
+              },
+              "condition_field": {
+                "type": "string"
+              },
+              "condition_operator": {
+                "type": "string"
+              },
+              "condition_value": {
+                "type": "string"
+              },
+              "true_branch_actions": {
+                "type": "array"
+              },
+              "false_branch_actions": {
+                "type": "array"
+              }
+            }
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "default": []
+    },
+    "execution_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_executed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "trigger_type"
+  ]
+}

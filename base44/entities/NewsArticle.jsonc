@@ -1,0 +1,99 @@
+{
+  "name": "NewsArticle",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Article headline"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Short summary or excerpt"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full article content (markdown supported)"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "article",
+        "video",
+        "link"
+      ],
+      "default": "article",
+      "description": "Type of news item"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "announcements",
+        "updates",
+        "community",
+        "missions",
+        "events",
+        "tech",
+        "spiritual"
+      ],
+      "default": "announcements"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Featured image URL"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "Video embed URL (YouTube, Vimeo, etc.)"
+    },
+    "external_link": {
+      "type": "string",
+      "description": "External link URL"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_id": {
+      "type": "string"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Show as featured/pinned article"
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether article is visible to users"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "resonance_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comments_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

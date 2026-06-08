@@ -1,0 +1,40 @@
+{
+  "name": "LegacySaintAgent",
+  "type": "object",
+  "properties": {
+    "legacy_id": {
+      "type": "string",
+      "description": "Original SA ID from old system"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email to match for claiming"
+    },
+    "name": {
+      "type": "string"
+    },
+    "project_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Project IDs this SA submitted"
+    },
+    "claimed": {
+      "type": "boolean",
+      "default": false
+    },
+    "claimed_by": {
+      "type": "string",
+      "description": "User ID who claimed this legacy account"
+    },
+    "claimed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "email"
+  ]
+}

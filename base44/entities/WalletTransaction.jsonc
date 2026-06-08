@@ -1,0 +1,83 @@
+{
+  "name": "WalletTransaction",
+  "type": "object",
+  "properties": {
+    "tx_id": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tx_type": {
+      "type": "string",
+      "enum": [
+        "EARN_MISSION",
+        "EARN_MARKET_SALE",
+        "EARN_REWARD",
+        "SPEND_PURCHASE",
+        "SPEND_FEE",
+        "TRANSFER_OUT",
+        "TRANSFER_IN",
+        "LOCK_FUNDS",
+        "RELEASE_FUNDS",
+        "REFUND",
+        "ADJUSTMENT_CREDIT",
+        "ADJUSTMENT_DEBIT"
+      ]
+    },
+    "actor_user_id": {
+      "type": "string"
+    },
+    "counterparty_user_id": {
+      "type": "string"
+    },
+    "amount_ggg": {
+      "type": "number"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "CREDIT",
+        "DEBIT"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "COMPLETED",
+        "FAILED",
+        "REVERSED"
+      ],
+      "default": "COMPLETED"
+    },
+    "related_object_type": {
+      "type": "string"
+    },
+    "related_object_id": {
+      "type": "string"
+    },
+    "memo": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "linked_tx_id": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tx_id",
+    "timestamp",
+    "tx_type",
+    "actor_user_id",
+    "amount_ggg",
+    "direction",
+    "status"
+  ]
+}

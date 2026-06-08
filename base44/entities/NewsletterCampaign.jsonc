@@ -1,0 +1,158 @@
+{
+  "name": "NewsletterCampaign",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string",
+      "description": "Email subject line"
+    },
+    "body_content": {
+      "type": "string",
+      "description": "Full email body content"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scheduled_send_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the newsletter should be sent"
+    },
+    "recipient_count": {
+      "type": "number",
+      "default": 0
+    },
+    "total_sent": {
+      "type": "number",
+      "default": 0
+    },
+    "total_delivered": {
+      "type": "number",
+      "default": 0
+    },
+    "total_opened": {
+      "type": "number",
+      "default": 0
+    },
+    "total_clicked": {
+      "type": "number",
+      "default": 0
+    },
+    "total_unsubscribed": {
+      "type": "number",
+      "default": 0
+    },
+    "total_bounced": {
+      "type": "number",
+      "default": 0
+    },
+    "articles_included": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "scheduled",
+        "sending",
+        "sent",
+        "failed",
+        "ab_testing",
+        "ab_complete"
+      ],
+      "default": "sent"
+    },
+    "is_ab_test": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is an A/B test campaign"
+    },
+    "ab_test_config": {
+      "type": "object",
+      "properties": {
+        "test_percentage": {
+          "type": "number",
+          "description": "Percentage of audience for testing (e.g., 20 = 20%)"
+        },
+        "winning_metric": {
+          "type": "string",
+          "enum": [
+            "open_rate",
+            "click_rate"
+          ],
+          "default": "open_rate"
+        },
+        "test_duration_hours": {
+          "type": "number",
+          "default": 4,
+          "description": "Hours to wait before determining winner"
+        },
+        "auto_send_winner": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "description": "A/B test configuration"
+    },
+    "ab_variations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body_content": {
+            "type": "string"
+          },
+          "sent_count": {
+            "type": "number",
+            "default": 0
+          },
+          "opened_count": {
+            "type": "number",
+            "default": 0
+          },
+          "clicked_count": {
+            "type": "number",
+            "default": 0
+          },
+          "open_rate": {
+            "type": "number",
+            "default": 0
+          },
+          "click_rate": {
+            "type": "number",
+            "default": 0
+          }
+        }
+      },
+      "description": "A/B test variations"
+    },
+    "ab_winner_id": {
+      "type": "string",
+      "description": "ID of the winning variation"
+    },
+    "ab_test_started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ab_test_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "subject"
+  ]
+}
