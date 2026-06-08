@@ -404,6 +404,10 @@
       "default": [],
       "description": "User's personal goals for tracking"
     },
+    "mbti_type": {
+      "type": "string",
+      "description": "User's MBTI personality type (e.g., INTJ, ENFP)"
+    },
     "mbti_prompt_dismissed": {
       "type": "boolean",
       "default": false
