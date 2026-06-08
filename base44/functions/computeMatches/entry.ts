@@ -269,11 +269,39 @@ Deno.serve(async (req) => {
       blocked = prefs?.[0]?.blocked_users || [];
     } catch (_) {}
 
+    // Fetch dating profile for gender preference filtering
+    let myDatingProfile = null;
+    try {
+      const dps = await base44.entities.DatingProfile.filter({ user_id: user.email });
+      myDatingProfile = dps?.[0];
+    } catch (_) {}
+
+    // Fetch ALL dating profiles so we can look up candidate genders
+    let allDatingProfiles = [];
+    try {
+      allDatingProfiles = await base44.asServiceRole.entities.DatingProfile.filter({}, '-updated_date', 1000);
+    } catch (_) {}
+    const datingProfileMap = new Map(allDatingProfiles.map(dp => [dp.user_id, dp]));
+
     // Fetch candidate profiles (service role to read others)
     const candidates = (await base44.asServiceRole.entities.UserProfile.filter({}, '-rank_points', 1000))
       .filter(p => p.user_id !== user.email)
       .filter(p => (p.profile_visibility || 'public') !== 'private')
-      .filter(p => !blocked.includes(p.user_id));
+      .filter(p => !blocked.includes(p.user_id))
+      .filter(p => {
+        // Gender preference filtering using DatingProfile data
+        const myInterestedIn = myDatingProfile?.interested_in || [];
+        if (!myInterestedIn.length || myInterestedIn.includes('all')) return true;
+
+        const candidateDP = datingProfileMap.get(p.user_id);
+        const candidateGender = candidateDP?.gender;
+        if (!candidateGender) return true; // Don't exclude if gender unknown
+
+        const genderToInterest = { 'man': 'men', 'woman': 'women', 'non_binary': 'non_binary' };
+        const candidateInterestKey = genderToInterest[candidateGender];
+        if (!candidateInterestKey) return true;
+        return myInterestedIn.includes(candidateInterestKey);
+      });
 
     // Fetch user intentions and desires for enhanced matching
     let userIntentions = [];
