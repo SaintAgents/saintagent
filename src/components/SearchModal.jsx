@@ -79,61 +79,70 @@ export default function SearchModal({ open, onClose, onSelect }) {
   });
 
   const { data: listings = [] } = useQuery({
-    queryKey: ['searchListings', query],
+    queryKey: ['searchListings'],
     queryFn: () => base44.entities.Listing.list('-created_date', 50),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   const { data: missions = [] } = useQuery({
-    queryKey: ['searchMissions', query],
+    queryKey: ['searchMissions'],
     queryFn: () => base44.entities.Mission.list('-created_date', 50),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   const { data: circles = [] } = useQuery({
-    queryKey: ['searchCircles', query],
+    queryKey: ['searchCircles'],
     queryFn: () => base44.entities.Circle.list('-created_date', 50),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   const { data: posts = [] } = useQuery({
-    queryKey: ['searchPosts', query],
+    queryKey: ['searchPosts'],
     queryFn: () => base44.entities.Post.list('-created_date', 50),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   const { data: projects = [] } = useQuery({
-    queryKey: ['searchProjects', query],
+    queryKey: ['searchProjects'],
     queryFn: () => base44.entities.Project.list('-created_date', 50),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   // Daily Logs
   const { data: dailyLogs = [] } = useQuery({
-    queryKey: ['searchDailyLogs', query],
+    queryKey: ['searchDailyLogs'],
     queryFn: () => base44.entities.DailyLog.list('-date', 100),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   // Notes
   const { data: notes = [] } = useQuery({
-    queryKey: ['searchNotes', query],
+    queryKey: ['searchNotes'],
     queryFn: () => base44.entities.Note.list('-updated_date', 100),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   // Meetings
   const { data: meetings = [] } = useQuery({
-    queryKey: ['searchMeetings', query],
+    queryKey: ['searchMeetings'],
     queryFn: () => base44.entities.Meeting.list('-scheduled_time', 100),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   // Events
   const { data: events = [] } = useQuery({
-    queryKey: ['searchEvents', query],
+    queryKey: ['searchEvents'],
     queryFn: () => base44.entities.Event.list('-start_time', 100),
-    enabled: open
+    enabled: open,
+    staleTime: 300000,
   });
 
   const handleSearch = (e) => {
@@ -224,7 +233,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
             <Input
               placeholder="Search people, offers, missions, circles... (press Enter to browse all)"
               value={query}
-              onChange={(e) => { setQuery(e.target.value); setShowAll(false); setDrilldownProfile(null); }}
+              onChange={(e) => { setQuery(e.target.value); if (!e.target.value) setShowAll(true); setDrilldownProfile(null); }}
               onKeyDown={handleSearch}
               className="pl-10 pr-10 h-12 rounded-xl"
               autoFocus
