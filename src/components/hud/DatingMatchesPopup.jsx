@@ -245,15 +245,6 @@ export default function DatingMatchesPopup({ currentUser }) {
     return true;
   });
 
-  // Use dating profiles as fallback when no existing matches pass filtering
-  const otherProfiles = isDatingOptedIn 
-    ? (filteredExistingMatches.length > 0 ? [] : filteredDatingProfiles) 
-    : [];
-
-  // Enrich with user profile data and assign unique demo avatars
-  const usedMaleIdx = new Set();
-  const usedFemaleIdx = new Set();
-
   // Build enriched matches from existing Match records first, then fall back to dating profiles
   // Apply gender filtering only when dating profiles data is available
   const filteredExistingMatches = hasExistingMatches 
@@ -277,6 +268,15 @@ export default function DatingMatchesPopup({ currentUser }) {
         return true;
       })
     : [];
+
+  // Use dating profiles as fallback when no existing matches pass filtering
+  const otherProfiles = isDatingOptedIn 
+    ? (filteredExistingMatches.length > 0 ? [] : filteredDatingProfiles) 
+    : [];
+
+  // Enrich with user profile data and assign unique demo avatars
+  const usedMaleIdx = new Set();
+  const usedFemaleIdx = new Set();
     
   const matchesToEnrich = filteredExistingMatches.length > 0
     ? filteredExistingMatches.map(m => {
