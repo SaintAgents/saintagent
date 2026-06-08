@@ -78,7 +78,7 @@ export default function SearchModal({ open, onClose, onSelect }) {
     staleTime: 300000,
   });
 
-  const { data: listings = [] } = useQuery({
+  const { data: listings = [], isLoading: listingsLoading } = useQuery({
     queryKey: ['searchListings'],
     queryFn: () => base44.entities.Listing.list('-created_date', 50),
     enabled: open,
@@ -152,16 +152,15 @@ export default function SearchModal({ open, onClose, onSelect }) {
   };
 
   const filterResults = (items, fields = null) => {
-    if (!query) return showAll ? items : [];
+    const searchTerm = (query || '').toLowerCase().trim();
     
-    const searchTerm = query.toLowerCase().trim();
+    // No query: show all if showAll flag is set, otherwise empty
     if (!searchTerm) return showAll ? items : [];
     
-    // Remove @ prefix for handle searches but keep original for matching
+    // Remove @ prefix for handle searches
     const cleanedTerm = searchTerm.replace(/^@/, '');
     
     return items.filter(item => {
-      // If specific fields provided, search only those
       if (fields) {
         return fields.some(field => {
           const value = item[field];
@@ -169,7 +168,6 @@ export default function SearchModal({ open, onClose, onSelect }) {
           return String(value).toLowerCase().includes(cleanedTerm);
         });
       }
-      // Fallback to full JSON search
       return JSON.stringify(item).toLowerCase().includes(cleanedTerm);
     });
   };
@@ -527,13 +525,16 @@ export default function SearchModal({ open, onClose, onSelect }) {
                filteredMeetings.length === 0 && filteredEvents.length === 0 &&
                filteredHashtags.length === 0 && (
                 <div className="text-center py-12 text-slate-400">
-                  {profilesLoading ? (
+                  {(profilesLoading || listingsLoading) ? (
                     <div className="flex flex-col items-center gap-2">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-violet-500" />
-                      <p>Loading...</p>
+                      <p>Searching...</p>
                     </div>
                   ) : (
-                    <p>No results found{query ? ` for "${query}"` : ''}</p>
+                    <>
+                      <Search className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p>No results found{query ? ` for "${query}"` : ''}</p>
+                    </>
                   )}
                 </div>
               )}
