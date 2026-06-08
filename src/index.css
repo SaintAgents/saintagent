@@ -88,14 +88,14 @@
 }
 
 /* =====================================================
-   HERO SECTIONS - 100px spacer above all page heroes
+   HERO SECTIONS - 50px spacer above all page heroes
    ===================================================== */
 .page-hero,
 html .page-hero,
 html[data-theme='light'] .page-hero,
 html[data-theme='dark'] .page-hero,
 html[data-theme='hacker'] .page-hero {
-  margin-top: 100px !important;
+  margin-top: 50px !important;
 }
 
 /* =====================================================

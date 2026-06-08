@@ -1501,9 +1501,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
                     }
                   }
                   [data-theme='dark'] .page-hero {
-                    height: 240px !important;
-                    min-height: 240px !important;
-                    max-height: 240px !important;
                     padding-top: 0 !important;
                   }
                   [data-theme='hacker'] .page-hero {
