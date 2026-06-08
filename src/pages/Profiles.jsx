@@ -163,8 +163,13 @@ export default function Profiles() {
   // Build online user IDs set from LiveStatus entity
   // ONLY use heartbeat recency — status field is unreliable (never set to offline)
   // Demo users are NEVER online
+  // ALWAYS include current user as online (they are viewing this page right now)
   const onlineUserIds = useMemo(() => {
     const set = new Set();
+    // Current user is always online — they're literally here
+    if (currentUser?.email) {
+      set.add(currentUser.email);
+    }
     const cutoff = Date.now() - 10 * 60 * 1000; // 10 minutes
     liveStatuses.forEach(ls => {
       if (!ls.user_id) return;
@@ -176,7 +181,7 @@ export default function Profiles() {
       }
     });
     return set;
-  }, [liveStatuses]);
+  }, [liveStatuses, currentUser?.email]);
 
   // Filter and sort profiles
   const filteredProfiles = useMemo(() => {
