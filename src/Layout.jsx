@@ -17,6 +17,7 @@ import SidePanel from '@/components/hud/SidePanel';
 import GlobalPhotoViewer from '@/components/profile/GlobalPhotoViewer';
 import HeroGalleryViewer from '@/components/hud/HeroGalleryViewer';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import MobileTabBar from '@/components/hud/MobileTabBar';
 import MobileWalletSheet from '@/components/hud/MobileWalletSheet';
 import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
@@ -583,7 +584,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   if (!currentUser) {
     if (!isLoadingAuth && !isLoadingPublicSettings) {
       // Auth finished but no user — redirect to login
-      navigateToLogin();
+      try { navigateToLogin(); } catch {}
       return null;
     }
     return (
@@ -1982,6 +1983,10 @@ export default function Layout({ children, currentPageName }) {
     return <>{children}</>;
   }
   
-  // Non-public pages use the authenticated layout with hooks
-  return <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>;
+  // Non-public pages use the authenticated layout with hooks, wrapped in error boundary
+  return (
+    <ErrorBoundary>
+      <AuthenticatedLayout currentPageName={currentPageName}>{children}</AuthenticatedLayout>
+    </ErrorBoundary>
+  );
 }

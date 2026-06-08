@@ -171,27 +171,26 @@ export function useLiveStatus() {
             user_id: currentUser.email,
             status: 'online',
             last_heartbeat: now
-          });
+          }).catch(() => {});
         } else {
           await base44.entities.LiveStatus.update(existing[0].id, {
             status: 'online',
             last_heartbeat: now
-          });
+          }).catch(() => {});
         }
         if (isMounted) {
           queryClient.invalidateQueries({ queryKey: ['liveStatus', currentUser.email] });
         }
       } catch (err) {
         console.warn('LiveStatus init attempt', attempt + 1, 'skipped:', err?.message);
-        // Retry up to 3 times with increasing delay (10s, 20s, 40s)
-        if (isMounted && attempt < 3) {
-          const delay = (attempt + 1) * 10000;
+        if (isMounted && attempt < 2) {
+          const delay = (attempt + 1) * 15000;
           retryTimeout = setTimeout(() => initStatus(attempt + 1), delay);
         }
       }
     };
 
-    // CRITICAL: Delay init by 15 seconds to let the main page load first
+    // Delay init by 15 seconds to let the main page load first
     const initDelay = setTimeout(() => initStatus(0), 15000);
 
     // Recurring heartbeat every 4 minutes to stay within the 10-min online window
@@ -204,7 +203,7 @@ export function useLiveStatus() {
           if (existing?.[0] && isMounted) {
             await base44.entities.LiveStatus.update(existing[0].id, {
               last_heartbeat: new Date().toISOString()
-            });
+            }).catch(() => {});
           }
         } catch {}
       }, 240000); // 4 minutes
