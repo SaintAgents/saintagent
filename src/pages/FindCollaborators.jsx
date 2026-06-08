@@ -27,11 +27,11 @@ export default function FindCollaborators() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none">
       {/* Hero Section */}
-      <div className="relative h-40 md:h-48 overflow-hidden">
+      <div className="relative h-80 md:h-96 overflow-hidden">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/3ba1dc1c5_22.png"
           alt="Find Collaborators"
-          className="w-full h-full object-cover hero-image"
+          className="w-full h-full object-cover object-top hero-image"
           data-no-filter="true"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-transparent" />
