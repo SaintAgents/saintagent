@@ -72,8 +72,18 @@ export default function Profiles() {
 
   const { data: profiles = [], isLoading } = useQuery({
     queryKey: ['allProfiles'],
-    queryFn: () => base44.entities.UserProfile.list('-rank_points', 200),
+    queryFn: async () => {
+      const result = await base44.entities.UserProfile.list('-rank_points', 200);
+      // If we got an empty array due to a transient error, throw to trigger retry
+      // (there should always be at least 1 profile in a live app)
+      if (!result || result.length === 0) {
+        throw new Error('Empty profiles response — likely rate limited');
+      }
+      return result;
+    },
     staleTime: 2 * 60 * 1000,
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
   });
 
   const { data: regions = [] } = useQuery({
@@ -85,7 +95,8 @@ export default function Profiles() {
   // Current user for synergy calculation
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me(),
+    staleTime: 600000,
   });
 
   const { data: currentProfile } = useQuery({
@@ -94,29 +105,31 @@ export default function Profiles() {
       const profiles = await base44.entities.UserProfile.filter({ user_id: currentUser.email });
       return profiles[0];
     },
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 300000,
   });
 
   // Fetch dating profiles for dating view
   const { data: datingProfiles = [] } = useQuery({
     queryKey: ['datingProfiles'],
     queryFn: () => base44.entities.DatingProfile.filter({ opt_in: true, visible: true }),
-    enabled: viewMode === 'dating'
+    enabled: viewMode === 'dating',
+    staleTime: 120000,
   });
 
-  // Fetch LiveStatus for online detection (same source as SidePanel PRESENCE)
+  // Fetch LiveStatus for online detection
   const { data: liveStatuses = [] } = useQuery({
     queryKey: ['profilesLiveStatuses'],
     queryFn: () => base44.entities.LiveStatus.list('-updated_date', 500),
-    refetchInterval: 30000,
-    staleTime: 15000,
+    refetchInterval: 60000,
+    staleTime: 30000,
   });
 
   // Fetch recent missions for expanded cards
   const { data: missions = [] } = useQuery({
     queryKey: ['recentMissions'],
     queryFn: () => base44.entities.Mission.filter({ status: 'active' }, '-created_date', 50),
-    staleTime: 5 * 60 * 1000
+    staleTime: 5 * 60 * 1000,
   });
 
   // Map missions to participants
