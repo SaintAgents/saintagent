@@ -27,7 +27,7 @@ export default function FindCollaborators() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none">
       {/* Hero Section */}
-      <div className="relative h-80 md:h-96 overflow-hidden">
+      <div className="relative h-80 md:h-96 overflow-hidden page-hero">
         <img 
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/3ba1dc1c5_22.png"
           alt="Find Collaborators"
