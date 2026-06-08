@@ -245,13 +245,10 @@ export default function TopBar({
     { name: 'Mentorship', label: 'Mentorship', description: 'Mentorship sessions' },
   ];
 
-  // Search data - fetch when user focuses or types
-  const searchEnabled = searchFocused || searchQuery.length > 0;
-  
+  // Search data - always enabled, cached for 10 min so it's ready when user types
   const { data: searchProfiles = [], isLoading: searchProfilesLoading } = useQuery({
     queryKey: ['allProfiles'],
     queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
-    enabled: searchEnabled,
     staleTime: 600000,
     gcTime: 1200000,
     refetchOnWindowFocus: false,
@@ -261,9 +258,8 @@ export default function TopBar({
   const { data: searchListings = [] } = useQuery({
     queryKey: ['topbarSearchListings'],
     queryFn: () => base44.entities.Listing.list('-created_date', 30),
-    enabled: searchEnabled,
-    staleTime: 300000,
-    gcTime: 600000,
+    staleTime: 600000,
+    gcTime: 1200000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -271,9 +267,8 @@ export default function TopBar({
   const { data: searchMissions = [] } = useQuery({
     queryKey: ['topbarSearchMissions'],
     queryFn: () => base44.entities.Mission.list('-created_date', 30),
-    enabled: searchEnabled,
-    staleTime: 300000,
-    gcTime: 600000,
+    staleTime: 600000,
+    gcTime: 1200000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -281,9 +276,8 @@ export default function TopBar({
   const { data: searchCircles = [] } = useQuery({
     queryKey: ['topbarSearchCircles'],
     queryFn: () => base44.entities.Circle.list('-created_date', 30),
-    enabled: searchEnabled,
-    staleTime: 300000,
-    gcTime: 600000,
+    staleTime: 600000,
+    gcTime: 1200000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
