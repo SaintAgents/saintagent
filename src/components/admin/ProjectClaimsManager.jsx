@@ -17,7 +17,10 @@ import {
   Search,
   Filter,
   Eye,
-  Maximize2
+  Maximize2,
+  Mail,
+  Database,
+  UserCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
@@ -263,6 +266,39 @@ export default function ProjectClaimsManager() {
                         )}
                       </div>
 
+                      {/* Original Submitter Info */}
+                      {(project.contact_email || project.legacy_sa_email || project.created_by_id) && (
+                        <div className="mt-2 p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800">
+                          <div className="text-xs text-indigo-600 dark:text-indigo-400 font-medium flex items-center gap-1 mb-1">
+                            <Database className="w-3 h-3" />
+                            Original Submitter Info
+                          </div>
+                          <div className="space-y-1">
+                            {project.contact_email && (
+                              <div className="flex items-center gap-1.5 text-sm">
+                                <Mail className="w-3 h-3 text-indigo-400" />
+                                <span className="text-indigo-500 text-xs">Contact:</span>
+                                <a href={`mailto:${project.contact_email}`} className="text-indigo-700 dark:text-indigo-300 font-medium hover:underline">{project.contact_email}</a>
+                              </div>
+                            )}
+                            {project.legacy_sa_email && (
+                              <div className="flex items-center gap-1.5 text-sm">
+                                <UserCheck className="w-3 h-3 text-indigo-400" />
+                                <span className="text-indigo-500 text-xs">Legacy SA:</span>
+                                <a href={`mailto:${project.legacy_sa_email}`} className="text-indigo-700 dark:text-indigo-300 font-medium hover:underline">{project.legacy_sa_email}</a>
+                              </div>
+                            )}
+                            {project.contact_name && (
+                              <div className="flex items-center gap-1.5 text-sm">
+                                <User className="w-3 h-3 text-indigo-400" />
+                                <span className="text-indigo-500 text-xs">Name:</span>
+                                <span className="text-indigo-700 dark:text-indigo-300">{project.contact_name}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                       {/* Admin Review Note (if exists) */}
                       {project.admin_review_note && (
                         <div className="mt-2 p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -355,6 +391,72 @@ export default function ProjectClaimsManager() {
                 )}
               </div>
 
+              {/* Original Submitter Info - so admin can contact them */}
+              <div className="p-4 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800">
+                <div className="flex items-center gap-2 mb-2">
+                  <Database className="w-4 h-4 text-indigo-600" />
+                  <span className="font-medium text-indigo-700 dark:text-indigo-300">Original Submitter / DB Owner</span>
+                </div>
+                <div className="space-y-2 text-sm">
+                  {reviewingClaim.contact_email ? (
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-3.5 h-3.5 text-indigo-400" />
+                      <span className="text-indigo-500">Contact Email:</span>
+                      <a href={`mailto:${reviewingClaim.contact_email}`} className="text-indigo-700 dark:text-indigo-300 font-medium hover:underline">{reviewingClaim.contact_email}</a>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-indigo-400">
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>No contact email on file</span>
+                    </div>
+                  )}
+                  {reviewingClaim.legacy_sa_email && (
+                    <div className="flex items-center gap-2">
+                      <UserCheck className="w-3.5 h-3.5 text-indigo-400" />
+                      <span className="text-indigo-500">Legacy SA Email:</span>
+                      <a href={`mailto:${reviewingClaim.legacy_sa_email}`} className="text-indigo-700 dark:text-indigo-300 font-medium hover:underline">{reviewingClaim.legacy_sa_email}</a>
+                    </div>
+                  )}
+                  {reviewingClaim.contact_name && (
+                    <div className="flex items-center gap-2">
+                      <User className="w-3.5 h-3.5 text-indigo-400" />
+                      <span className="text-indigo-500">Contact Name:</span>
+                      <span className="text-indigo-700 dark:text-indigo-300 font-medium">{reviewingClaim.contact_name}</span>
+                    </div>
+                  )}
+                  {reviewingClaim.contact_phone && (
+                    <div className="flex items-center gap-2">
+                      <span className="w-3.5 h-3.5 text-indigo-400 text-xs text-center">📞</span>
+                      <span className="text-indigo-500">Phone:</span>
+                      <span className="text-indigo-700 dark:text-indigo-300 font-medium">{reviewingClaim.contact_phone}</span>
+                    </div>
+                  )}
+                  {/* Email match indicator */}
+                  {reviewingClaim.claimed_by && (reviewingClaim.contact_email || reviewingClaim.legacy_sa_email) && (
+                    <div className={cn(
+                      "mt-2 p-2 rounded-lg text-xs font-medium flex items-center gap-2",
+                      (reviewingClaim.contact_email?.toLowerCase() === reviewingClaim.claimed_by?.toLowerCase() ||
+                       reviewingClaim.legacy_sa_email?.toLowerCase() === reviewingClaim.claimed_by?.toLowerCase())
+                        ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+                        : "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300"
+                    )}>
+                      {(reviewingClaim.contact_email?.toLowerCase() === reviewingClaim.claimed_by?.toLowerCase() ||
+                        reviewingClaim.legacy_sa_email?.toLowerCase() === reviewingClaim.claimed_by?.toLowerCase()) ? (
+                        <>
+                          <CheckCircle className="w-4 h-4" />
+                          Claimer email MATCHES original submitter
+                        </>
+                      ) : (
+                        <>
+                          <AlertCircle className="w-4 h-4" />
+                          Claimer email does NOT match original submitter — verify before approving
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Admin Reason */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -428,11 +530,20 @@ export default function ProjectClaimsManager() {
               )}
             </div>
             {deepReviewProject?.claimed_by && (
-              <div className="flex items-center gap-2 text-sm text-slate-500 pb-3 pt-1">
-                <User className="w-4 h-4" />
-                Claimed by: <span className="font-medium text-slate-700 dark:text-slate-300">{deepReviewProject.claimed_by}</span>
-                {deepReviewProject.claim_note && (
-                  <span className="text-slate-400">— "{deepReviewProject.claim_note}"</span>
+              <div className="space-y-1 pb-3 pt-1">
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <User className="w-4 h-4" />
+                  Claimed by: <span className="font-medium text-slate-700 dark:text-slate-300">{deepReviewProject.claimed_by}</span>
+                  {deepReviewProject.claim_note && (
+                    <span className="text-slate-400">— "{deepReviewProject.claim_note}"</span>
+                  )}
+                </div>
+                {(deepReviewProject.contact_email || deepReviewProject.legacy_sa_email) && (
+                  <div className="flex items-center gap-2 text-sm text-indigo-500">
+                    <Database className="w-4 h-4" />
+                    Original: <span className="font-medium text-indigo-700 dark:text-indigo-300">{deepReviewProject.contact_email || deepReviewProject.legacy_sa_email}</span>
+                    {deepReviewProject.contact_name && <span className="text-indigo-400">({deepReviewProject.contact_name})</span>}
+                  </div>
                 )}
               </div>
             )}
