@@ -245,12 +245,13 @@ export default function TopBar({
     { name: 'Mentorship', label: 'Mentorship', description: 'Mentorship sessions' },
   ];
 
-  // Search data - LAZY: only fetch when user focuses search or types
-  // Share cache key with allProfiles to avoid duplicate fetches
+  // Search data - fetch when user focuses or types
+  const searchEnabled = searchFocused || searchQuery.length > 0;
+  
   const { data: searchProfiles = [], isLoading: searchProfilesLoading } = useQuery({
     queryKey: ['allProfiles'],
     queryFn: () => base44.entities.UserProfile.list('-created_date', 500),
-    enabled: searchFocused || searchQuery.length > 0,
+    enabled: searchEnabled,
     staleTime: 600000,
     gcTime: 1200000,
     refetchOnWindowFocus: false,
@@ -260,7 +261,7 @@ export default function TopBar({
   const { data: searchListings = [] } = useQuery({
     queryKey: ['topbarSearchListings'],
     queryFn: () => base44.entities.Listing.list('-created_date', 30),
-    enabled: searchFocused || searchQuery.length > 0,
+    enabled: searchEnabled,
     staleTime: 300000,
     gcTime: 600000,
     refetchOnWindowFocus: false,
@@ -270,7 +271,7 @@ export default function TopBar({
   const { data: searchMissions = [] } = useQuery({
     queryKey: ['topbarSearchMissions'],
     queryFn: () => base44.entities.Mission.list('-created_date', 30),
-    enabled: searchFocused || searchQuery.length > 0,
+    enabled: searchEnabled,
     staleTime: 300000,
     gcTime: 600000,
     refetchOnWindowFocus: false,
@@ -280,7 +281,7 @@ export default function TopBar({
   const { data: searchCircles = [] } = useQuery({
     queryKey: ['topbarSearchCircles'],
     queryFn: () => base44.entities.Circle.list('-created_date', 30),
-    enabled: searchFocused || searchQuery.length > 0,
+    enabled: searchEnabled,
     staleTime: 300000,
     gcTime: 600000,
     refetchOnWindowFocus: false,
@@ -305,10 +306,10 @@ export default function TopBar({
       }).slice(0, 5)
     : [];
 
-  const filteredProfiles = filterResults(searchProfiles, ['handle', 'display_name', 'user_id', 'sa_number', 'alias']);
-  const filteredListings = filterResults(searchListings, ['title']);
-  const filteredMissions = filterResults(searchMissions, ['title']);
-  const filteredCircles = filterResults(searchCircles, ['name']);
+  const filteredProfiles = filterResults(searchProfiles, ['handle', 'display_name', 'user_id', 'sa_number', 'alias', 'bio']);
+  const filteredListings = filterResults(searchListings, ['title', 'description', 'owner_name']);
+  const filteredMissions = filterResults(searchMissions, ['title', 'description', 'objective']);
+  const filteredCircles = filterResults(searchCircles, ['name', 'description']);
 
   const totalResults = filteredPages.length + filteredProfiles.length + filteredListings.length + filteredMissions.length + filteredCircles.length;
 
