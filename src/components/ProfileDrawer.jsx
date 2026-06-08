@@ -1,6 +1,6 @@
 import React from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +11,6 @@ import {
   MessageCircle,
   Calendar,
   UserPlus,
-  UserMinus,
   Coins,
   TrendingUp,
   Users,
@@ -47,52 +46,54 @@ const MARKETPLACE_HERO_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage
 export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
   const queryClient = useQueryClient();
 
-  // Always call hooks unconditionally with stable keys
-  const { data: profiles } = useQuery({
+  // Core profile - show cached data instantly
+  const { data: profiles, isLoading: profileLoading } = useQuery({
     queryKey: ['profile', userId || 'none'],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: userId }),
-    enabled: !!userId
+    enabled: !!userId,
+    staleTime: 120000,
   });
   const profile = profiles?.[0];
 
   // GGG balance is maintained on profile.ggg_balance — single source of truth
   const gggBalance = profile?.ggg_balance || 0;
 
-  const { data: listings = [] } = useQuery({
-    queryKey: ['userListings', userId || 'none'],
-    queryFn: () => base44.entities.Listing.filter({ owner_id: userId }),
-    enabled: !!userId
-  });
-
-  const { data: testimonials = [] } = useQuery({
-    queryKey: ['userTestimonials', userId || 'none'],
-    queryFn: () => base44.entities.Testimonial.filter({ to_user_id: userId, visibility: 'public' }),
-    enabled: !!userId
-  });
-
-  const { data: bookings = [] } = useQuery({
-    queryKey: ['userBookings', userId || 'none'],
-    queryFn: () => base44.entities.Booking.filter({ provider_id: userId }),
-    enabled: !!userId
-  });
-
-  const { data: creatorTiers = [] } = useQuery({
-    queryKey: ['creatorTiers', userId || 'none'],
-    queryFn: () => base44.entities.CreatorTier.filter({ creator_id: userId, status: 'active' }),
-    enabled: !!userId
-  });
-
+  // Current user - heavily cached, rarely changes
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me(),
+    staleTime: 600000,
   });
 
   const { data: currentUserProfiles } = useQuery({
     queryKey: ['currentUserProfile', currentUser?.email],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email
+    enabled: !!currentUser?.email,
+    staleTime: 300000,
   });
   const currentUserProfile = currentUserProfiles?.[0];
+
+  // Deferred queries - only load once profile is available
+  const { data: listings = [] } = useQuery({
+    queryKey: ['userListings', userId || 'none'],
+    queryFn: () => base44.entities.Listing.filter({ owner_id: userId }),
+    enabled: !!userId && !!profile,
+    staleTime: 120000,
+  });
+
+  const { data: testimonials = [] } = useQuery({
+    queryKey: ['userTestimonials', userId || 'none'],
+    queryFn: () => base44.entities.Testimonial.filter({ to_user_id: userId, visibility: 'public' }),
+    enabled: !!userId && !!profile,
+    staleTime: 120000,
+  });
+
+  const { data: creatorTiers = [] } = useQuery({
+    queryKey: ['creatorTiers', userId || 'none'],
+    queryFn: () => base44.entities.CreatorTier.filter({ creator_id: userId, status: 'active' }),
+    enabled: !!userId && !!profile,
+    staleTime: 120000,
+  });
 
   const { data: subscriptions = [] } = useQuery({
     queryKey: ['subscriptions', currentUser?.email || 'none', userId || 'none'],
@@ -101,7 +102,8 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
       creator_id: userId,
       status: 'active'
     }),
-    enabled: !!currentUser?.email && !!userId
+    enabled: !!currentUser?.email && !!userId && !!profile,
+    staleTime: 120000,
   });
 
   const isOwnProfile = currentUser?.email === userId;
@@ -229,8 +231,6 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     }
   };
 
-  if (!profile) return null;
-
   return (
     <div
       id="profile-drawer"
@@ -254,6 +254,12 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
         Drag to move
       </div>
 
+      {!profile ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-3 p-6">
+          <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+          <p className="text-sm text-slate-500">Loading profile…</p>
+        </div>
+      ) : (
       <ScrollArea className="flex-1">
         {/* Hero Background */}
         <div className="relative h-32 bg-gradient-to-r from-violet-500 to-purple-600">
@@ -696,6 +702,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
           }
         </div>
       </ScrollArea>
+      )}
       {/* Resize handles */}
       <div onMouseDown={startResize('right')} className="absolute top-0 right-0 h-full w-1.5 cursor-ew-resize z-10" />
       <div onMouseDown={startResize('bottom')} className="absolute bottom-0 left-0 w-full h-1.5 cursor-ns-resize z-10" />
