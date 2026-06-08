@@ -413,13 +413,6 @@ export default function Matches() {
           </TabsList>
         </Tabs>
 
-        {/* AI Recommended Matches Section */}
-        {tab !== 'dating' && tab !== 'recommendations' && (
-          <div className="mb-8">
-            <AIRecommendedMatches profile={profile} limit={6} />
-          </div>
-        )}
-
         {tab === 'recommendations' ? (
           <RecommendationsTab profile={profile} />
         ) : tab === 'dating' ? (
