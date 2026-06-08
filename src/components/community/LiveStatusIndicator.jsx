@@ -192,25 +192,27 @@ export function useLiveStatus() {
     };
 
     // CRITICAL: Delay init by 15 seconds to let the main page load first
-    // This avoids competing with all the other API calls that fire on mount
     const initDelay = setTimeout(() => initStatus(0), 15000);
 
-    // Set offline on page unload by updating the LiveStatus record directly
-    // The sendBeacon to /api/offline doesn't exist, so we mark offline via visibility change
+    // Recurring heartbeat every 4 minutes to stay within the 10-min online window
+    let heartbeatInterval = null;
+    const startHeartbeat = () => {
+      heartbeatInterval = setInterval(async () => {
+        if (!isMounted || document.visibilityState === 'hidden') return;
+        try {
+          const existing = await base44.entities.LiveStatus.filter({ user_id: currentUser.email }, '-updated_date', 1);
+          if (existing?.[0] && isMounted) {
+            await base44.entities.LiveStatus.update(existing[0].id, {
+              last_heartbeat: new Date().toISOString()
+            });
+          }
+        } catch {}
+      }, 240000); // 4 minutes
+    };
+    const heartbeatDelay = setTimeout(startHeartbeat, 20000);
+
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        // When tab becomes hidden, update heartbeat so we know when user left
-        // The user will appear "stale" after the window expires
-        base44.entities.LiveStatus.filter({ user_id: currentUser.email }, '-updated_date', 1)
-          .then(existing => {
-            if (existing?.[0]) {
-              base44.entities.LiveStatus.update(existing[0].id, {
-                last_heartbeat: new Date().toISOString()
-              }).catch(() => {});
-            }
-          }).catch(() => {});
-      } else if (document.visibilityState === 'visible') {
-        // When tab becomes visible again, refresh status
+      if (document.visibilityState === 'visible') {
         initStatus(0);
       }
     };
@@ -220,7 +222,9 @@ export function useLiveStatus() {
     return () => {
       isMounted = false;
       clearTimeout(initDelay);
+      clearTimeout(heartbeatDelay);
       if (retryTimeout) clearTimeout(retryTimeout);
+      if (heartbeatInterval) clearInterval(heartbeatInterval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [currentUser?.email]);
