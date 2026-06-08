@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
+import { cn } from '@/lib/utils';
 
 export default function LiveBroadcastBanner() {
   // Check if broadcasts are enabled via platform settings
@@ -33,19 +34,20 @@ export default function LiveBroadcastBanner() {
   });
 
   const now = Date.now();
+  const GRACE_MS = 2 * 60 * 60 * 1000; // 2 hour grace period after broadcast ends
 
-  // A broadcast is "active" if explicitly live, OR if scheduled and within its time window
+  // A broadcast is "active" if explicitly live, within its time window, or ended within the last 2 hours
   const activeBroadcasts = [...(broadcasts.live || []), ...(broadcasts.scheduled || [])].filter(b => {
     if (b.status === 'live') {
       if (!b.scheduled_time || !b.duration_minutes) return true;
       const endTime = new Date(b.scheduled_time).getTime() + b.duration_minutes * 60000;
-      return now < endTime;
+      return now < endTime + GRACE_MS;
     }
     if (b.status === 'scheduled' && b.scheduled_time) {
       const startTime = new Date(b.scheduled_time).getTime();
       const duration = (b.duration_minutes || 60) * 60000;
       const endTime = startTime + duration;
-      return now >= startTime && now < endTime;
+      return now >= startTime && now < endTime + GRACE_MS;
     }
     return false;
   });
@@ -55,6 +57,13 @@ export default function LiveBroadcastBanner() {
 
   const broadcast = activeBroadcasts[0];
   if (!broadcast) return null;
+
+  // Determine if broadcast is still actually running or recently ended
+  const isStillLive = (() => {
+    if (!broadcast.scheduled_time || !broadcast.duration_minutes) return broadcast.status === 'live';
+    const endTime = new Date(broadcast.scheduled_time).getTime() + broadcast.duration_minutes * 60000;
+    return now < endTime;
+  })();
 
   const handleClick = () => {
     if (broadcast.live_stream_url) {
@@ -67,14 +76,19 @@ export default function LiveBroadcastBanner() {
   return (
     <button
       onClick={handleClick}
-      className="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded-full cursor-pointer select-none transition-all shrink-0"
+      className={cn(
+        "flex items-center gap-1.5 text-white px-2.5 py-1 rounded-full cursor-pointer select-none transition-all shrink-0",
+        isStillLive ? "bg-red-600 hover:bg-red-700" : "bg-amber-600 hover:bg-amber-700"
+      )}
       title={broadcast.title}
     >
       <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+        {isStillLive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />}
         <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
       </span>
-      <span className="text-xs font-bold uppercase tracking-wider">Live</span>
+      <span className="text-xs font-bold uppercase tracking-wider">
+        {isStillLive ? 'Live' : 'Just Aired'}
+      </span>
     </button>
   );
 }

@@ -124,24 +124,38 @@ export default function Broadcast() {
   });
 
   const now = new Date();
+  const GRACE_MS = 2 * 60 * 60 * 1000; // 2 hour grace period after broadcast ends
   
-  // Check if a broadcast is currently live based on time (scheduled_time <= now < scheduled_time + duration)
-  const isCurrentlyLive = (b) => {
+  // Check if a broadcast is currently live or recently ended (within 2 hours)
+  const isCurrentlyLiveOrRecent = (b) => {
+    if (b.status === 'cancelled') return false;
     if (b.status === 'live') return true;
-    if (b.status === 'ended' || b.status === 'cancelled') return false;
+    if (!b.scheduled_time) return false;
+    const scheduledTime = parseISO(b.scheduled_time);
+    const endTime = new Date(scheduledTime.getTime() + (b.duration_minutes || 60) * 60 * 1000);
+    const graceEnd = new Date(endTime.getTime() + GRACE_MS);
+    return !isAfter(scheduledTime, now) && isAfter(graceEnd, now);
+  };
+
+  // Check if truly still running (no grace)
+  const isStillRunning = (b) => {
+    if (b.status === 'live') {
+      if (!b.scheduled_time || !b.duration_minutes) return true;
+    }
+    if (!b.scheduled_time) return false;
     const scheduledTime = parseISO(b.scheduled_time);
     const endTime = new Date(scheduledTime.getTime() + (b.duration_minutes || 60) * 60 * 1000);
     return !isAfter(scheduledTime, now) && isAfter(endTime, now);
   };
   
   const upcoming = broadcasts.filter(b => 
-    b.status === 'scheduled' && isAfter(parseISO(b.scheduled_time), now) && !isCurrentlyLive(b)
+    b.status === 'scheduled' && isAfter(parseISO(b.scheduled_time), now) && !isCurrentlyLiveOrRecent(b)
   ).sort((a, b) => new Date(a.scheduled_time) - new Date(b.scheduled_time));
   
-  const live = broadcasts.filter(b => isCurrentlyLive(b));
+  const live = broadcasts.filter(b => isCurrentlyLiveOrRecent(b) && b.status !== 'ended');
   
   const past = broadcasts.filter(b => 
-    b.status === 'ended' || (b.status === 'scheduled' && isBefore(parseISO(b.scheduled_time), now) && !isCurrentlyLive(b))
+    b.status === 'ended' || (b.status === 'scheduled' && isBefore(parseISO(b.scheduled_time), now) && !isCurrentlyLiveOrRecent(b))
   ).sort((a, b) => new Date(b.scheduled_time) - new Date(a.scheduled_time));
 
   const isAdmin = currentUser?.role === 'admin';
@@ -212,27 +226,34 @@ export default function Broadcast() {
           />
         </div>
 
-        {/* Live Now Banner */}
-        {live.length > 0 && (
-          <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
-                <span className="font-bold text-lg">LIVE NOW</span>
-                <span className="text-white/90">{live[0].title}</span>
+        {/* Live Now / Just Aired Banner */}
+        {live.length > 0 && (() => {
+          const b = live[0];
+          const stillRunning = isStillRunning(b);
+          return (
+            <div className={cn(
+              "mb-6 p-4 rounded-xl text-white",
+              stillRunning ? "bg-gradient-to-r from-red-500 to-pink-500" : "bg-gradient-to-r from-amber-500 to-orange-500"
+            )}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={cn("w-3 h-3 bg-white rounded-full", stillRunning && "animate-pulse")} />
+                  <span className="font-bold text-lg">{stillRunning ? 'LIVE NOW' : 'JUST AIRED'}</span>
+                  <span className="text-white/90">{b.title}</span>
+                </div>
+                <Button 
+                  variant="secondary" 
+                  size="sm" 
+                  className="gap-2"
+                  onClick={() => window.open(b.live_stream_url, '_blank')}
+                >
+                  <Play className="w-4 h-4" />
+                  {stillRunning ? 'Join Now' : 'Watch'}
+                </Button>
               </div>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                className="gap-2"
-                onClick={() => window.open(live[0].live_stream_url, '_blank')}
-              >
-                <Play className="w-4 h-4" />
-                Join Now
-              </Button>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">

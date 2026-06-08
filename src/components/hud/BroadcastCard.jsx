@@ -17,27 +17,62 @@ export default function BroadcastCard() {
   });
   
   const { data: rawLiveBroadcasts } = useQuery({
-    queryKey: ['liveBroadcasts'],
-    queryFn: () => base44.entities.Broadcast.filter({ status: 'live' }, '-created_date', 3),
-    refetchInterval: 10000
+    queryKey: ['liveBroadcastsCard'],
+    queryFn: async () => {
+      const [live, scheduled] = await Promise.all([
+        base44.entities.Broadcast.filter({ status: 'live' }, '-created_date', 5),
+        base44.entities.Broadcast.filter({ status: 'scheduled' }, '-scheduled_time', 10),
+      ]);
+      return [...live, ...scheduled];
+    },
+    refetchInterval: 30000,
+    staleTime: 15000,
   });
   
+  const now = Date.now();
+  const GRACE_MS = 2 * 60 * 60 * 1000; // 2 hour grace period
   const broadcasts = Array.isArray(rawBroadcasts) ? rawBroadcasts : [];
-  const liveBroadcasts = Array.isArray(rawLiveBroadcasts) ? rawLiveBroadcasts : [];
+  
+  // Filter live/recent broadcasts from combined results
+  const liveBroadcasts = (Array.isArray(rawLiveBroadcasts) ? rawLiveBroadcasts : []).filter(b => {
+    if (b.status === 'live') {
+      if (!b.scheduled_time || !b.duration_minutes) return true;
+      const endTime = new Date(b.scheduled_time).getTime() + b.duration_minutes * 60000;
+      return now < endTime + GRACE_MS;
+    }
+    if (b.status === 'scheduled' && b.scheduled_time) {
+      const startTime = new Date(b.scheduled_time).getTime();
+      const duration = (b.duration_minutes || 60) * 60000;
+      const endTime = startTime + duration;
+      return now >= startTime && now < endTime + GRACE_MS;
+    }
+    return false;
+  });
+  
   const allBroadcasts = [...liveBroadcasts, ...broadcasts].slice(0, 3);
   
   return (
     <div className="space-y-3">
-      {liveBroadcasts.length > 0 && (
-        <div className="p-3 rounded-lg bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 border border-red-200 dark:border-red-700">
+      {liveBroadcasts.length > 0 && liveBroadcasts.slice(0, 1).map((bc) => {
+        const isStillLive = (() => {
+          if (!bc.scheduled_time || !bc.duration_minutes) return bc.status === 'live';
+          const endTime = new Date(bc.scheduled_time).getTime() + bc.duration_minutes * 60000;
+          return now < endTime;
+        })();
+        return (
+        <div key={bc.id} className={cn(
+          "p-3 rounded-lg border",
+          isStillLive
+            ? "bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 border-red-200 dark:border-red-700"
+            : "bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/30 dark:to-yellow-900/30 border-amber-200 dark:border-amber-700"
+        )}>
           <div className="flex items-center gap-2 mb-2">
-            <span className="flex items-center gap-1.5 text-xs font-medium text-red-600 dark:text-red-400">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              LIVE NOW
+            <span className={cn("flex items-center gap-1.5 text-xs font-medium", isStillLive ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400")}>
+              <span className={cn("w-2 h-2 rounded-full", isStillLive ? "bg-red-500 animate-pulse" : "bg-amber-500")} />
+              {isStillLive ? 'LIVE NOW' : 'JUST AIRED'}
             </span>
           </div>
-          {liveBroadcasts.slice(0, 1).map((bc) => (
-            <div key={bc.id} className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <Avatar className="w-9 h-9">
                 <AvatarImage src={bc.host_avatar} />
                 <AvatarFallback>{bc.host_name?.charAt(0)}</AvatarFallback>
@@ -46,14 +81,17 @@ export default function BroadcastCard() {
                 <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{bc.title}</p>
                 <p className="text-xs text-slate-600 dark:text-slate-400 truncate">{bc.host_name}</p>
               </div>
-              <Button size="sm" className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 gap-1 shrink-0">
+              <Button size="sm" className={cn(
+                "gap-1 shrink-0",
+                isStillLive ? "bg-red-600 hover:bg-red-700" : "bg-amber-600 hover:bg-amber-700"
+              )}>
                 <Play className="w-3 h-3" />
-                Join
+                {isStillLive ? 'Join' : 'Watch'}
               </Button>
             </div>
-          ))}
         </div>
-      )}
+        );
+      })}
       
       {allBroadcasts.length === 0 ? (
         <div className="text-center py-6 px-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
