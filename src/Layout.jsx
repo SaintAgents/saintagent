@@ -312,10 +312,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
               return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
             },
     enabled: !!currentUser?.email,
-    staleTime: 1800000, // Cache for 30 minutes
-    gcTime: 3600000, // Keep in cache for 60 minutes
+    staleTime: 300000, // 5 minutes
+    gcTime: 600000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchInterval: false,
     retry: false,
   });

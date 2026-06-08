@@ -384,10 +384,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 1800000,
-    gcTime: 3600000,
+    staleTime: 300000, // 5 minutes — balanced between freshness and rate limits
+    gcTime: 600000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true, // Allow refresh on page load
     refetchInterval: false,
     retry: false,
   });
@@ -1182,9 +1182,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     {/* Refresh Button - refetch profile only, don't trigger cascade */}
                     <button
                       onClick={async () => {
-                        // Directly refetch just the profile query without invalidating cache
-                        // This prevents cascade of re-fetches that cause rate limits
-                        await queryClient.refetchQueries({ queryKey: ['myProfile', currentUser?.email], exact: true });
+                        // Force invalidate + refetch so stale data is always replaced
+                        await queryClient.invalidateQueries({ queryKey: ['myProfile', currentUser?.email], exact: true });
                       }}
                       disabled={profileLoading}
                       className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group disabled:opacity-50"
