@@ -366,7 +366,7 @@ export default function Profiles() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 relative">
       {/* Hero Section */}
-      <div className="page-hero relative overflow-hidden">
+      <div className="page-hero relative overflow-hidden mt-[100px]">
         <img
           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/1e9ff4ff2_universal_upscale_0_9f257f95-48b1-44e8-a0f9-60663ca8cf9d_0.jpg"
           alt="Community Profiles"
