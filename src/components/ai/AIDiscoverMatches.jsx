@@ -611,9 +611,16 @@ For each, explain the UNIQUE insight that makes them special - something the use
 
         <div className="text-center py-8">
             <Lightbulb className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500 mb-4">
-              Let AI analyze profiles to find surprising connections
-            </p>
+            {discoverMutation.isError ? (
+              <>
+                <p className="text-red-500 mb-2 text-sm font-medium">Discovery failed</p>
+                <p className="text-slate-500 mb-4 text-xs">{discoverMutation.error?.message || 'Please try again'}</p>
+              </>
+            ) : (
+              <p className="text-slate-500 mb-4">
+                Let AI analyze profiles to find surprising connections
+              </p>
+            )}
             <Button
             onClick={() => discoverMutation.mutate()}
             disabled={discoverMutation.isPending}
@@ -627,7 +634,7 @@ For each, explain the UNIQUE insight that makes them special - something the use
 
             <>
                   <Sparkles className="w-4 h-4" />
-                  Start Discovery
+                  {discoverMutation.isError ? 'Retry Discovery' : 'Start Discovery'}
                 </>
             }
             </Button>
