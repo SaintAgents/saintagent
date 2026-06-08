@@ -336,7 +336,7 @@ export default function DatingMatches() {
             <Heart className="w-16 h-16 text-slate-200 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-slate-900 mb-2">No matches found</h3>
             <p className="text-slate-500 mb-4">Try adjusting your filters or check back later for new profiles.</p>
-            <Button onClick={() => { setSearchQuery(''); setCompatibilityRange([0, 100]); setLocationFilter('all'); }}>
+            <Button variant="outline" onClick={() => { setSearchQuery(''); setCompatibilityRange([0, 100]); setLocationFilter('all'); }}>
               Clear Filters
             </Button>
           </div>
