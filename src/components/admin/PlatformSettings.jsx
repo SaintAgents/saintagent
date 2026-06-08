@@ -42,17 +42,18 @@ export default function PlatformSettings() {
 
   React.useEffect(() => {
     if (current) {
-      // Only override defaults with non-null DB values
-      const merged = { ...form };
-      for (const [key, val] of Object.entries(current)) {
-        if (val !== null && val !== undefined && key in merged) {
-          merged[key] = val;
+      // Sync form with latest DB values whenever the record changes
+      setForm(prev => {
+        const merged = { ...prev };
+        for (const [key, val] of Object.entries(current)) {
+          if (val !== null && val !== undefined && key in merged) {
+            merged[key] = val;
+          }
         }
-      }
-      setForm(merged);
+        return merged;
+      });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current?.id]);
+  }, [current?.id, current?.updated_date]);
 
   const saveMutation = useMutation({
     mutationFn: async (payload) => {
