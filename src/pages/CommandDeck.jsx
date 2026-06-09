@@ -384,12 +384,12 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return byEmail;
     },
     enabled: !!currentUser?.email,
-    staleTime: 300000, // 5 minutes — balanced between freshness and rate limits
+    staleTime: 0, // Always fetch fresh — users report stale/zero data
     gcTime: 600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true, // Allow refresh on page load
+    refetchOnWindowFocus: true,
+    refetchOnMount: 'always',
     refetchInterval: false,
-    retry: false,
+    retry: 1,
   });
   const profile = profiles?.[0];
 

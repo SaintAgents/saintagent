@@ -312,12 +312,12 @@ function AuthenticatedLayout({ children, currentPageName }) {
               return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
             },
     enabled: !!currentUser?.email,
-    staleTime: 300000, // 5 minutes
+    staleTime: 0, // Always fetch fresh on mount
     gcTime: 600000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnMount: 'always',
     refetchInterval: false,
-    retry: false,
+    retry: 1,
   });
   const profile = profiles?.[0];
   const cmdViewMode = profile?.command_deck_layout?.view_mode;
