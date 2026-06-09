@@ -160,8 +160,8 @@ export default function RightSideTabs() {
   // Help panel state
   const [helpOpen, setHelpOpen] = useState(false);
   const [helpHovered, setHelpHovered] = useState(false);
-  // Track if user explicitly dismissed/closed the panel this session
-  const [userDismissed, setUserDismissed] = useState(false);
+  // Track which pages user explicitly dismissed the panel on this session
+  const [dismissedPages, setDismissedPages] = useState(new Set());
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [helpMessages, setHelpMessages] = useState([]);
   const [helpInput, setHelpInput] = useState('');
@@ -253,7 +253,7 @@ export default function RightSideTabs() {
   // Auto-open help on first visit to each page (if enabled) — desktop only
   // Skip if user already dismissed the panel this session
   useEffect(() => {
-    if (!autoOpenHelp || helpSuppressed || userDismissed) return;
+    if (!autoOpenHelp || helpSuppressed || dismissedPages.has(getCurrentPage())) return;
     // Never auto-open on mobile — it blocks the entire page
     if (window.innerWidth < 768) return;
     const currentPage = getCurrentPage();
@@ -266,7 +266,7 @@ export default function RightSideTabs() {
         localStorage.setItem(visitedKey, '1');
       }
     } catch {}
-  }, [trackedPage, autoOpenHelp, userDismissed]);
+  }, [trackedPage, autoOpenHelp, dismissedPages]);
 
   // Focus input when help opens and set initial greeting with page context
   useEffect(() => {
@@ -422,7 +422,7 @@ export default function RightSideTabs() {
             "rounded-l-lg border-l border-t border-b border-violet-500",
             showHelpPanel ? "translate-x-0 opacity-0" : "translate-x-0"
           )}
-          onClick={() => { setHelpOpen(true); setUserDismissed(false); }}
+          onClick={() => { setHelpOpen(true); setDismissedPages(prev => { const next = new Set(prev); next.delete(getCurrentPage()); return next; }); }}
         >
           <HelpCircle className="w-5 h-5" />
         </div>
@@ -502,7 +502,7 @@ export default function RightSideTabs() {
                     variant="ghost" 
                     size="icon" 
                     className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
-                    onClick={() => { setHelpOpen(false); setHelpHovered(false); setUserDismissed(true); }}
+                    onClick={() => { setHelpOpen(false); setHelpHovered(false); setDismissedPages(prev => new Set(prev).add(getCurrentPage())); }}
                   >
                     <X className="w-4 h-4" />
                   </Button>
