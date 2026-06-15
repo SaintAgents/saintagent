@@ -1,3 +1,5 @@
+import React from 'react';
+import { base44 } from '@/api/base44Client';
 import { Toaster } from "@/components/ui/toaster"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -30,6 +32,18 @@ import Learn from './pages/Learn';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // ErrorBoundary used per-page in Layout, not at app level
+
+// Simple component that triggers the platform login redirect
+const LoginRedirect = () => {
+  React.useEffect(() => {
+    base44.auth.redirectToLogin(window.location.origin);
+  }, []);
+  return (
+    <div className="fixed inset-0 flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+    </div>
+  );
+};
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -109,6 +123,7 @@ const AuthenticatedApp = () => {
       <Route path="/MissionTimeline" element={<LayoutWrapper currentPageName="MissionTimeline"><MissionTimeline /></LayoutWrapper>} />
       <Route path="/MissionGrid" element={<LayoutWrapper currentPageName="MissionGrid"><MissionGrid /></LayoutWrapper>} />
       <Route path="/Learn" element={<LayoutWrapper currentPageName="Learn"><Learn /></LayoutWrapper>} />
+      <Route path="/login" element={<LoginRedirect />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
