@@ -6,7 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import BudgetForecast from './pages/BudgetForecast';
 import MissionGantt from './pages/MissionGantt';
@@ -55,6 +55,12 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 
 const AuthenticatedApp = () => {
   const { user, isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const location = useLocation();
+
+  // /login route must bypass ALL auth checks to avoid redirect loops
+  if (location.pathname === '/login') {
+    return <LoginRedirect />;
+  }
 
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
@@ -136,10 +142,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <NavigationTracker />
-          <Routes>
-            <Route path="/login" element={<LoginRedirect />} />
-            <Route path="*" element={<AuthenticatedApp />} />
-          </Routes>
+          <AuthenticatedApp />
         </Router>
         <Toaster />
         <SonnerToaster />
