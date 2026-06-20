@@ -54,34 +54,39 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   : <>{children}</>;
 
 const AuthenticatedApp = () => {
-  const { user, isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { user, isLoadingAuth, authError, navigateToLogin } = useAuth();
   const location = useLocation();
   const [redirecting, setRedirecting] = React.useState(false);
   const isLoginPage = location.pathname === '/login';
 
   // Handle auth redirect in an effect to prevent render-loop redirects
   React.useEffect(() => {
-    if (isLoginPage || isLoadingPublicSettings || isLoadingAuth || redirecting) return;
+    if (isLoginPage || isLoadingAuth || redirecting) return;
 
-    const needsRedirect = 
-      (authError?.type === 'auth_required') ||
-      (authError && authError.type !== 'user_not_registered' && !user);
-
-    if (needsRedirect) {
+    if (authError?.type === 'auth_required' && !user) {
       setRedirecting(true);
       navigateToLogin();
     }
-  }, [isLoginPage, isLoadingPublicSettings, isLoadingAuth, authError, user, redirecting, navigateToLogin]);
+  }, [isLoginPage, isLoadingAuth, authError, user, redirecting, navigateToLogin]);
 
-  // /login route must bypass ALL auth checks to avoid redirect loops
+  // /login route must bypass ALL auth checks
   if (isLoginPage) {
     return <LoginRedirect />;
   }
 
-  // Show loading spinner while checking app public settings or auth
-  if (isLoadingPublicSettings || isLoadingAuth || redirecting) {
+  // Show loading spinner while checking auth
+  if (isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // Redirecting to login
+  if (redirecting) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
       </div>
     );
@@ -92,13 +97,23 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     }
-    // auth_required and other errors handled by the effect above
-    // Show spinner while waiting for redirect
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
+    // For auth_required without user — the effect above handles redirect
+    // For any other error — try to render app if user exists, otherwise show error
+    if (!user) {
+      return (
+        <div className="fixed inset-0 flex items-center justify-center bg-white">
+          <div className="text-center">
+            <p className="text-slate-600 mb-4">Something went wrong loading the app.</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      );
+    }
   }
 
   // Render the main app
