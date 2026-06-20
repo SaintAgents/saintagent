@@ -303,7 +303,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   // Use AuthContext as the single source of truth for current user
   // This avoids duplicate auth.me() calls that can get rate-limited and cause blank pages
-  const { user: authUser, isLoadingAuth, isLoadingPublicSettings, navigateToLogin } = useAuth();
+  const { user: authUser, isLoadingAuth, navigateToLogin } = useAuth();
   const currentUser = authUser;
 
   const { data: profiles } = useQuery({
@@ -524,56 +524,53 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   // If authenticated and onboarding missing or not complete, force Onboarding
   // Otherwise, redirect to Command Deck if on a generic/home page
+  // IMPORTANT: Only redirect ONCE using a ref to prevent loops
+  const hasRedirected = React.useRef(false);
   useEffect(() => {
+    if (hasRedirected.current) return;
     const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
-    const onboardingCompleteFlag = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
+    const obCompleteLS = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
     const tourDismissed = typeof window !== 'undefined' && localStorage.getItem('tourDismissed') === '1';
     if (!currentUser || currentPageName === 'Onboarding') return;
+
+    // Still loading onboarding data — wait (unless localStorage says done)
     if ((onboardingRecords === undefined && !onboardingError) || (onboardingLoading && !onboardingError)) {
-      // Safety: if localStorage says onboarding is done, don't block on slow query
-      if (onboardingCompleteFlag) {
-        // Skip waiting — let the page render
+      if (obCompleteLS) {
+        // Trust localStorage — redirect generic pages only
         const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
         if (genericPages.includes(currentPageName)) {
+          hasRedirected.current = true;
           window.location.href = createPageUrl('CommandDeck');
         }
       } else if (onboardingTimeout) {
-        // Query took too long (likely rate-limited) — redirect new user to onboarding
+        hasRedirected.current = true;
         window.location.href = createPageUrl('Onboarding');
       }
       return;
     }
 
-    // Only show tour for brand new users who JUST completed onboarding
-    // If justCompleted flag is set AND tour not dismissed, show tour then clear flag
+    // Tour for brand new users who JUST completed onboarding
     if (justCompleted && !tourDismissed && !userTourOpen) {
       try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
       setUserTourOpen(true);
       return;
     }
 
-    // For returning users (no justCompleted flag), never show tour
-    // Skip tour entirely for existing users
-
-    // Redirect to onboarding if:
-    // 1. No record exists (brand new user)
-    // 2. Record exists but status is not complete
-    // BUT: if localStorage flag says complete, trust it (prevents redirect loops on mobile)
+    // Redirect to onboarding if not complete
     if (!onboarding || onboarding.status !== 'complete') {
-      if (onboardingCompleteFlag) {
-        // localStorage says done but DB query disagrees — trust localStorage to prevent loops
-        return;
-      }
+      if (obCompleteLS) return; // Trust localStorage to prevent loops
+      hasRedirected.current = true;
       window.location.href = createPageUrl('Onboarding');
       return;
     }
 
-    // Persist onboarding complete status to localStorage for faster future checks
+    // Persist onboarding complete status
     try { localStorage.setItem('onboardingComplete', '1'); } catch {}
 
-    // For returning users with complete onboarding, redirect to Command Deck if on generic pages
+    // Redirect generic pages to Command Deck
     const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
-    if (onboarding?.status === 'complete' && genericPages.includes(currentPageName)) {
+    if (genericPages.includes(currentPageName)) {
+      hasRedirected.current = true;
       window.location.href = createPageUrl('CommandDeck');
       return;
     }
@@ -589,15 +586,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
     );
   }
 
-  // If onboarding data is still loading, show loading spinner — but not if localStorage says complete, query errored, or timeout hit
+  // Onboarding check is NON-BLOCKING — render the page immediately.
+  // The onboarding redirect useEffect handles navigation if needed.
   const onboardingCompleteFlag = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
-  if (onboardingLoading && !onboardingCompleteFlag && !onboardingError && !onboardingTimeout) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
-      </div>
-    );
-  }
 
   const rankCode = profile?.rp_rank_code || 'seeker';
 

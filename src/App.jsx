@@ -57,25 +57,35 @@ const AuthenticatedApp = () => {
   const { user, isLoadingAuth, authError, navigateToLogin } = useAuth();
   const location = useLocation();
   const [redirecting, setRedirecting] = React.useState(false);
+  const [forceRender, setForceRender] = React.useState(false);
+  const hasAttemptedRedirect = React.useRef(false);
   const isLoginPage = location.pathname === '/login';
 
-  // Handle auth redirect in an effect to prevent render-loop redirects
+  // Handle auth redirect — only for explicit auth_required, only once
   React.useEffect(() => {
-    if (isLoginPage || isLoadingAuth || redirecting) return;
+    if (isLoginPage || isLoadingAuth || redirecting || hasAttemptedRedirect.current) return;
 
     if (authError?.type === 'auth_required' && !user) {
+      hasAttemptedRedirect.current = true;
       setRedirecting(true);
-      navigateToLogin();
+      setTimeout(() => navigateToLogin(), 100);
     }
   }, [isLoginPage, isLoadingAuth, authError, user, redirecting, navigateToLogin]);
+
+  // Force render after 3 seconds if auth is still loading
+  React.useEffect(() => {
+    if (isLoadingAuth) {
+      const t = setTimeout(() => setForceRender(true), 3000);
+      return () => clearTimeout(t);
+    }
+  }, [isLoadingAuth]);
 
   // /login route must bypass ALL auth checks
   if (isLoginPage) {
     return <LoginRedirect />;
   }
 
-  // Show loading spinner while checking auth
-  if (isLoadingAuth) {
+  if (isLoadingAuth && !forceRender) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
@@ -97,8 +107,15 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     }
-    // For auth_required without user — the effect above handles redirect
-    // For any other error — try to render app if user exists, otherwise show error
+    if (authError.type === 'auth_required' && !user) {
+      // Redirect is handled by the effect above — show spinner while waiting
+      return (
+        <div className="fixed inset-0 flex items-center justify-center bg-white">
+          <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+        </div>
+      );
+    }
+    // Transient or unknown error without user — show retry
     if (!user) {
       return (
         <div className="fixed inset-0 flex items-center justify-center bg-white">
@@ -114,6 +131,7 @@ const AuthenticatedApp = () => {
         </div>
       );
     }
+    // User exists but there was a non-fatal error — continue rendering
   }
 
   // Render the main app
