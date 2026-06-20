@@ -56,14 +56,30 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 const AuthenticatedApp = () => {
   const { user, isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
+  const [redirecting, setRedirecting] = React.useState(false);
+  const isLoginPage = location.pathname === '/login';
+
+  // Handle auth redirect in an effect to prevent render-loop redirects
+  React.useEffect(() => {
+    if (isLoginPage || isLoadingPublicSettings || isLoadingAuth || redirecting) return;
+
+    const needsRedirect = 
+      (authError?.type === 'auth_required') ||
+      (authError && authError.type !== 'user_not_registered' && !user);
+
+    if (needsRedirect) {
+      setRedirecting(true);
+      navigateToLogin();
+    }
+  }, [isLoginPage, isLoadingPublicSettings, isLoadingAuth, authError, user, redirecting, navigateToLogin]);
 
   // /login route must bypass ALL auth checks to avoid redirect loops
-  if (location.pathname === '/login') {
+  if (isLoginPage) {
     return <LoginRedirect />;
   }
 
   // Show loading spinner while checking app public settings or auth
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  if (isLoadingPublicSettings || isLoadingAuth || redirecting) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
@@ -75,18 +91,14 @@ const AuthenticatedApp = () => {
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
-    } else {
-      // Unknown error — still try to render the app if user is available,
-      // otherwise redirect to login
-      if (!user) {
-        navigateToLogin();
-        return null;
-      }
     }
+    // auth_required and other errors handled by the effect above
+    // Show spinner while waiting for redirect
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   // Render the main app

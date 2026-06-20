@@ -579,14 +579,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
     }
   }, [currentUser, onboardingRecords, onboardingLoading, onboarding, currentPageName, onboardingTimeout]);
 
-  // If no user yet — either still loading or not authenticated.
-  // If auth is done loading and there's no user, redirect to login instead of spinning forever.
+  // If no user yet — still loading. App.jsx gates auth before rendering Layout,
+  // so if we get here without a user, it's a brief loading state.
   if (!currentUser) {
-    if (!isLoadingAuth && !isLoadingPublicSettings) {
-      // Auth finished but no user — redirect to login
-      try { navigateToLogin(); } catch {}
-      return null;
-    }
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600" />
