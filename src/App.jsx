@@ -59,74 +59,56 @@ const LoadingSpinner = () => (
 );
 
 const AuthenticatedApp = () => {
-  const { user, isLoadingAuth, authError, navigateToLogin } = useAuth();
+  const { user, isLoadingAuth, authError } = useAuth();
   const location = useLocation();
-  const [redirecting, setRedirecting] = React.useState(false);
-  const [forceRender, setForceRender] = React.useState(false);
-  const hasAttemptedRedirect = React.useRef(false);
+  const [showFallback, setShowFallback] = React.useState(false);
 
   const isPublic = isPublicPath(location.pathname);
 
-  // Handle auth redirect for protected pages — only once
+  // For protected pages: safety timeout + redirect if no user
   React.useEffect(() => {
-    if (isPublic || isLoadingAuth || redirecting || hasAttemptedRedirect.current) return;
+    if (isPublic) return;
 
-    if (authError?.type === 'auth_required' && !user) {
-      hasAttemptedRedirect.current = true;
-      setRedirecting(true);
-      setTimeout(() => navigateToLogin(), 100);
-    }
-  }, [isPublic, isLoadingAuth, authError, user, redirecting, navigateToLogin]);
-
-  // Force render after 3 seconds if auth is still loading
-  React.useEffect(() => {
-    if (isLoadingAuth && !isPublic) {
-      const t = setTimeout(() => setForceRender(true), 3000);
+    if (isLoadingAuth) {
+      const t = setTimeout(() => setShowFallback(true), 5000);
       return () => clearTimeout(t);
     }
-  }, [isLoadingAuth, isPublic]);
 
-  // Public pages render immediately — no auth gate
+    if (!user) {
+      window.location.replace('/');
+    }
+  }, [isPublic, isLoadingAuth, user]);
+
+  // Public pages render immediately
   if (isPublic) {
     return <AppRoutes />;
   }
 
-  // /login redirect
-  if (location.pathname === '/login') {
-    return <AppRoutes />;
-  }
-
-  if (isLoadingAuth && !forceRender) {
+  // Auth still loading
+  if (isLoadingAuth && !showFallback) {
     return <LoadingSpinner />;
   }
 
-  if (redirecting) {
-    return <LoadingSpinner />;
-  }
-
-  // Handle authentication errors for protected pages
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    }
-    if (authError.type === 'auth_required' && !user) {
-      return <LoadingSpinner />;
-    }
-    if (!user) {
-      return (
-        <div className="fixed inset-0 flex items-center justify-center bg-white">
-          <div className="text-center">
-            <p className="text-slate-600 mb-4">Something went wrong loading the app.</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700"
-            >
-              Retry
-            </button>
+  if (isLoadingAuth && showFallback) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <div className="text-center">
+          <p className="text-slate-600 mb-4">Taking longer than expected...</p>
+          <div className="flex gap-3 justify-center">
+            <button onClick={() => window.location.replace('/')} className="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700">Go to Home</button>
+            <button onClick={() => window.location.reload()} className="px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700">Retry</button>
           </div>
         </div>
-      );
-    }
+      </div>
+    );
+  }
+
+  if (authError?.type === 'user_not_registered') {
+    return <UserNotRegisteredError />;
+  }
+
+  if (!user) {
+    return <LoadingSpinner />;
   }
 
   return <AppRoutes />;
