@@ -28,6 +28,10 @@ import MissionManage from './pages/MissionManage';
 import MissionTimeline from './pages/MissionTimeline';
 import MissionGrid from './pages/MissionGrid';
 import Learn from './pages/Learn';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // ErrorBoundary used per-page in Layout, not at app level
@@ -154,6 +158,10 @@ const AppRoutes = () => (
     <Route path="/MissionTimeline" element={<LayoutWrapper currentPageName="MissionTimeline"><MissionTimeline /></LayoutWrapper>} />
     <Route path="/MissionGrid" element={<LayoutWrapper currentPageName="MissionGrid"><MissionGrid /></LayoutWrapper>} />
     <Route path="/Learn" element={<LayoutWrapper currentPageName="Learn"><Learn /></LayoutWrapper>} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
+    <Route path="/forgot-password" element={<ForgotPassword />} />
+    <Route path="/reset-password" element={<ResetPassword />} />
     <Route path="*" element={<PageNotFound />} />
   </Routes>
 );
