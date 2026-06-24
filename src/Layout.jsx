@@ -374,6 +374,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
   });
   const onboarding = onboardingRecords?.[0];
 
+  // Proactively sync localStorage when onboarding data arrives as complete
+  useEffect(() => {
+    if (onboarding?.status === 'complete') {
+      try { localStorage.setItem('onboardingComplete', '1'); } catch {}
+    }
+  }, [onboarding?.status]);
+
   // Safety: if onboarding query hasn't resolved after 5 seconds for a new user,
   // redirect to onboarding rather than spinning forever
   const [onboardingTimeout, setOnboardingTimeout] = useState(false);
@@ -543,8 +550,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
           window.location.href = createPageUrl('CommandDeck');
         }
       } else if (onboardingTimeout) {
-        hasRedirected.current = true;
-        window.location.href = createPageUrl('Onboarding');
+        // Only redirect to onboarding from generic landing pages, not from deep pages
+        const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
+        if (genericPages.includes(currentPageName)) {
+          hasRedirected.current = true;
+          window.location.href = createPageUrl('Onboarding');
+        }
+        // For non-generic pages, just let it render — don't redirect completed users to onboarding
       }
       return;
     }
