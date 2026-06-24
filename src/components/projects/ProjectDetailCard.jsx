@@ -7,8 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   DollarSign, MapPin, Users, Calendar, Building2, Globe, 
   FileText, Tag, ExternalLink, CheckCircle, XCircle, HelpCircle,
-  Clock, AlertTriangle, Shield, Brain, TrendingUp, MessageSquare, Megaphone, UserPlus
+  Clock, AlertTriangle, Shield, Brain, TrendingUp, MessageSquare, Megaphone, UserPlus, Pencil
 } from 'lucide-react';
+import EditProjectModal from '@/components/projects/EditProjectModal';
 import { cn } from '@/lib/utils';
 import ProjectEvaluationPanel from '@/components/evaluation/ProjectEvaluationPanel';
 import ProjectTeamPanel from '@/components/projects/ProjectTeamPanel';
@@ -40,6 +41,7 @@ const STAGE_LABELS = {
 
 export default function ProjectDetailCard({ project: initialProject }) {
   const [activeTab, setActiveTab] = useState('overview');
+  const [editOpen, setEditOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -123,6 +125,13 @@ export default function ProjectDetailCard({ project: initialProject }) {
             )}
           </div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">{project.title}</h2>
+          {/* Edit button for owner/creator */}
+          {currentUser && (project.claimed_by === currentUser.email || project.created_by_id === currentUser.id) && (
+            <Button size="sm" variant="outline" className="mt-2 gap-1.5" onClick={() => setEditOpen(true)}>
+              <Pencil className="w-3.5 h-3.5" />
+              Edit Project
+            </Button>
+          )}
         </div>
         
         {/* Quick Scores */}
@@ -352,6 +361,15 @@ export default function ProjectDetailCard({ project: initialProject }) {
           <ProjectEvaluationPanel project={project} onUpdate={handleProjectUpdate} />
         </TabsContent>
       </Tabs>
+
+      <EditProjectModal 
+        open={editOpen} 
+        onClose={() => { 
+          setEditOpen(false); 
+          handleProjectUpdate(); 
+        }} 
+        project={project} 
+      />
     </div>
   );
 }
