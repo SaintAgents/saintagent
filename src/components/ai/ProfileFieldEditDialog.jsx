@@ -170,7 +170,7 @@ export default function ProfileFieldEditDialog({
         {activeField !== 'avatar_url' && (
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={onClose}>Cancel</Button>
-            <Button onClick={onSave} disabled={isSaving} className="gap-2">
+            <Button onClick={onSave} disabled={isSaving} className="gap-2 bg-violet-600 hover:bg-violet-700 text-white">
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
               Save
             </Button>

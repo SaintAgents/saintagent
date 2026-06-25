@@ -122,7 +122,7 @@ export default function FractalCanvas() {
           const angle = (i / segments) * Math.PI * 2 + rot;
           const px = cx + ringR * Math.cos(angle);
           const py = cy + ringR * Math.sin(angle);
-          const circleR = ringR * (0.3 + variance * 0.2) * (1 + Math.sin(time * 2 + i) * 0.2);
+          const circleR = Math.max(0.1, ringR * (0.3 + variance * 0.2) * (1 + Math.sin(time * 2 + i) * 0.2));
 
           ctx.beginPath();
           ctx.arc(px, py, circleR, 0, Math.PI * 2);
@@ -138,7 +138,7 @@ export default function FractalCanvas() {
               const ix = px + circleR * 0.5 * Math.cos(ia);
               const iy = py + circleR * 0.5 * Math.sin(ia);
               ctx.beginPath();
-              ctx.arc(ix, iy, circleR * 0.25, 0, Math.PI * 2);
+              ctx.arc(ix, iy, Math.max(0.1, circleR * 0.25), 0, Math.PI * 2);
               ctx.strokeStyle = `hsla(${hue + 120}, 70%, ${50 * brightness}%, ${alpha * 0.5})`;
               ctx.lineWidth = 0.5;
               ctx.stroke();
@@ -190,7 +190,7 @@ export default function FractalCanvas() {
       }
 
       // Layer 4: Central pulse glow
-      const pulseR = 20 + Math.sin(time * 3) * 10 * (1 + variance);
+      const pulseR = Math.max(1, 20 + Math.sin(time * 3) * 10 * (1 + variance));
       const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseR * 3);
       gradient.addColorStop(0, `hsla(${(time * 50) % 360}, 80%, ${50 * brightness}%, ${0.15 * brightness})`);
       gradient.addColorStop(0.5, `hsla(${(time * 50 + 60) % 360}, 60%, ${30 * brightness}%, ${0.05 * brightness})`);
