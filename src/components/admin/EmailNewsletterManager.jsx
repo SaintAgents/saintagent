@@ -342,7 +342,10 @@ Return ONLY the formatted content.`;
   const formatBodyContent = (text) => {
     if (!text) return '';
 
-    let formatted = text
+    // Strip markdown code fences (```html ... ``` or just ``` ... ```)
+    let cleaned = text.replace(/```[\w]*\n?/g, '').replace(/```/g, '');
+
+    let formatted = cleaned
       // Headers: # Header -> <h1>, ## Header -> <h2>, ### Header -> <h3>
       .replace(/^### (.+)$/gm, '<h3 style="color: #1e293b; font-size: 18px; font-weight: 700; margin: 24px 0 12px 0; line-height: 1.3;">$1</h3>')
       .replace(/^## (.+)$/gm, '<h2 style="color: #1e293b; font-size: 28px; font-weight: 700; margin: 28px 0 14px 0; line-height: 1.3; border-bottom: 2px solid #8b5cf6; padding-bottom: 8px;">$1</h2>')
@@ -461,9 +464,10 @@ Return ONLY the formatted content.`;
 
           // Truncated content
           if (article.content) {
-            const trimmedContent = article.content.length > 600 
-              ? article.content.substring(0, 600).trim() + '...'
-              : article.content;
+            const cleanContent = article.content.replace(/```[\w]*\n?/g, '').replace(/```/g, '');
+            const trimmedContent = cleanContent.length > 600 
+              ? cleanContent.substring(0, 600).trim() + '...'
+              : cleanContent;
             html += `
               <div style="color: #475569; font-size: 15px; line-height: 1.75;">
                 ${trimmedContent.replace(/\n\n/g, '</p><p style="margin: 14px 0;">').replace(/\n/g, '<br>')}
@@ -766,7 +770,7 @@ Return ONLY the formatted content.`;
                             <Button 
                               onClick={handleSaveAsTemplate}
                               disabled={!templateName.trim() || saveTemplateMutation.isPending}
-                              className="gap-2"
+                              className="gap-2 bg-violet-600 hover:bg-violet-700 text-white"
                             >
                               {saveTemplateMutation.isPending ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
