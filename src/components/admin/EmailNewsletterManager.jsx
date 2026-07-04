@@ -343,7 +343,7 @@ Return ONLY the formatted content.`;
     if (!text) return '';
 
     // Strip markdown code fences (```html ... ``` or just ``` ... ```)
-    let cleaned = text.replace(/```[\w]*\n?/g, '').replace(/```/g, '');
+    let cleaned = text.replace(/^\s*```[\w]*\s*$/gm, '').replace(/```[\w]*/g, '').trim();
 
     let formatted = cleaned
       // Headers: # Header -> <h1>, ## Header -> <h2>, ### Header -> <h3>
@@ -464,7 +464,7 @@ Return ONLY the formatted content.`;
 
           // Truncated content
           if (article.content) {
-            const cleanContent = article.content.replace(/```[\w]*\n?/g, '').replace(/```/g, '');
+            const cleanContent = article.content.replace(/^\s*```[\w]*\s*$/gm, '').replace(/```[\w]*/g, '').trim();
             const trimmedContent = cleanContent.length > 600 
               ? cleanContent.substring(0, 600).trim() + '...'
               : cleanContent;
