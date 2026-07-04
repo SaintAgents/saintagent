@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Coins, RefreshCw, Zap, History } from 'lucide-react';
+import GlobalAlertManager from './GlobalAlertManager';
 
 export default function PlatformSettings() {
   const qc = useQueryClient();
@@ -237,6 +238,11 @@ export default function PlatformSettings() {
             <ToggleRow label="Maintenance Mode" value={form.maintenance_mode} onChange={(v) => handleChange('maintenance_mode', v)} />
           </CardContent>
         </Card>
+
+        {/* Global Alert / Announcement Popup */}
+        <div className="lg:col-span-2">
+          <GlobalAlertManager />
+        </div>
 
         <Card className="lg:col-span-2 border-amber-200">
           <CardHeader>
