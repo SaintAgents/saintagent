@@ -28,9 +28,10 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   const queryClient = useQueryClient();
 
   // Draggable & Resizable state - start docked on left by default
-  const [position, setPosition] = useState({ x: 0, y: window.innerHeight - 420 });
-  const [size, setSize] = useState({ width: 320, height: 384 });
-  const [dockedSide, setDockedSide] = useState('left'); // 'left' | 'right' | null - default docked left
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [position, setPosition] = useState({ x: 0, y: isMobile ? 0 : window.innerHeight - 420 });
+  const [size, setSize] = useState(isMobile ? { width: window.innerWidth, height: window.innerHeight } : { width: 320, height: 384 });
+  const [dockedSide, setDockedSide] = useState(isMobile ? null : 'left'); // 'left' | 'right' | null - default docked left
   const dragRef = useRef({ isDragging: false, startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const resizeRef = useRef({ isResizing: false, startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
 
@@ -40,40 +41,66 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
   positionRef.current = position;
   sizeRef.current = size;
 
-  // Drag handlers
+  // Shared drag logic for mouse and touch
+  const startDrag = (startX, startY) => {
+    dragRef.current = { isDragging: true, startX, startY, startPosX: positionRef.current.x, startPosY: positionRef.current.y };
+    setDockedSide(null);
+  };
+
+  const moveDrag = (clientX, clientY) => {
+    if (!dragRef.current.isDragging) return;
+    const dx = clientX - dragRef.current.startX;
+    const dy = clientY - dragRef.current.startY;
+    const newX = Math.max(0, Math.min(window.innerWidth - sizeRef.current.width, dragRef.current.startPosX + dx));
+    const newY = Math.max(0, Math.min(window.innerHeight - 50, dragRef.current.startPosY + dy));
+    setPosition({ x: newX, y: newY });
+    positionRef.current = { x: newX, y: newY };
+  };
+
+  const endDrag = () => {
+    dragRef.current.isDragging = false;
+    const DOCK_THRESHOLD = 50;
+    const currentX = positionRef.current.x;
+    if (currentX < DOCK_THRESHOLD) {
+      setDockedSide('left');
+    } else if (currentX > window.innerWidth - sizeRef.current.width - DOCK_THRESHOLD) {
+      setDockedSide('right');
+    } else {
+      setDockedSide(null);
+    }
+  };
+
+  // Mouse drag handlers
   const onDragStart = (e) => {
     e.preventDefault();
-    dragRef.current = { isDragging: true, startX: e.clientX, startY: e.clientY, startPosX: positionRef.current.x, startPosY: positionRef.current.y };
-    setDockedSide(null); // Undock when starting to drag
+    startDrag(e.clientX, e.clientY);
     
-    const handleMove = (moveE) => {
-      if (!dragRef.current.isDragging) return;
-      const dx = moveE.clientX - dragRef.current.startX;
-      const dy = moveE.clientY - dragRef.current.startY;
-      const newX = Math.max(0, Math.min(window.innerWidth - sizeRef.current.width, dragRef.current.startPosX + dx));
-      const newY = Math.max(0, Math.min(window.innerHeight - 50, dragRef.current.startPosY + dy));
-      setPosition({ x: newX, y: newY });
-      positionRef.current = { x: newX, y: newY };
-    };
-    
+    const handleMove = (moveE) => moveDrag(moveE.clientX, moveE.clientY);
     const handleUp = () => {
-      dragRef.current.isDragging = false;
+      endDrag();
       document.removeEventListener('mousemove', handleMove);
       document.removeEventListener('mouseup', handleUp);
-      // Check if should dock to side
-      const DOCK_THRESHOLD = 50;
-      const currentX = positionRef.current.x;
-      if (currentX < DOCK_THRESHOLD) {
-        setDockedSide('left');
-      } else if (currentX > window.innerWidth - sizeRef.current.width - DOCK_THRESHOLD) {
-        setDockedSide('right');
-      } else {
-        setDockedSide(null);
-      }
     };
     
     document.addEventListener('mousemove', handleMove);
     document.addEventListener('mouseup', handleUp);
+  };
+
+  // Touch drag handlers
+  const onTouchDragStart = (e) => {
+    const touch = e.touches[0];
+    startDrag(touch.clientX, touch.clientY);
+  };
+
+  const onTouchDragMove = (e) => {
+    if (!dragRef.current.isDragging) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    moveDrag(touch.clientX, touch.clientY);
+  };
+
+  const onTouchDragEnd = () => {
+    endDrag();
   };
 
   // Resize handlers
@@ -303,8 +330,11 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
 
       {/* Header - Draggable */}
       <div 
-        className="flex items-center justify-between p-3 border-b bg-violet-600 rounded-t-lg cursor-move shrink-0"
+        className="flex items-center justify-between p-3 border-b bg-violet-600 rounded-t-lg cursor-move shrink-0 touch-none"
         onMouseDown={onDragStart}
+        onTouchStart={onTouchDragStart}
+        onTouchMove={onTouchDragMove}
+        onTouchEnd={onTouchDragEnd}
       >
         <div className="flex items-center gap-2">
           <div className="relative">
@@ -430,7 +460,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
       </ScrollArea>
 
       {/* Input */}
-      <div className="p-3 border-t">
+      <div className="p-3 pb-5 md:pb-3 border-t">
         <div className="flex gap-2 items-center">
           <div className="flex-1 relative flex items-center">
             <Input
