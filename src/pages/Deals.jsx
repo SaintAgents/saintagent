@@ -28,6 +28,7 @@ import { handleDealStageTransition, STAGE_LABELS } from '@/components/deals/Deal
 import StageTransitionToast from '@/components/deals/StageTransitionToast';
 import AIEmailTemplateEngine from '@/components/deals/AIEmailTemplateEngine';
 import DealMakerInfoModal from '@/components/deals/DealMakerInfoModal';
+import StatCardDrilldown from '@/components/deals/StatCardDrilldown';
 import { toast } from 'sonner';
 
 // Pipeline stages matching the image
@@ -69,6 +70,7 @@ export default function DealsPage() {
   const [noteModal, setNoteModal] = useState({ open: false, dealId: null });
   const [emailEngineModal, setEmailEngineModal] = useState({ open: false, deal: null });
   const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [drilldown, setDrilldown] = useState({ open: false, type: null, deals: [] });
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -275,6 +277,11 @@ export default function DealsPage() {
       console.error('Failed to update deal stage:', error);
       queryClient.invalidateQueries({ queryKey: ['deals'] });
     }
+  };
+
+  const openDrilldown = (type, dealsList) => {
+    setDrilldown({ open: true, type, deals: dealsList });
+    setActiveFilter({ type, label: type });
   };
 
   const StatCard = ({ icon: Icon, label, value, subLabel, color, onClick, isActive }) => (
@@ -515,7 +522,7 @@ export default function DealsPage() {
             value={metrics.activeDeals.length}
             subLabel="in pipeline"
             color="bg-blue-600"
-            onClick={() => setActiveFilter({ type: 'active', label: 'Active Deals' })}
+            onClick={() => openDrilldown('active', metrics.activeDeals)}
             isActive={activeFilter?.type === 'active'}
           />
           <StatCard 
@@ -524,7 +531,7 @@ export default function DealsPage() {
             value={formatCurrency(metrics.totalPipelineValue)}
             subLabel="total estimated"
             color="bg-cyan-600"
-            onClick={clearFilter}
+            onClick={() => openDrilldown('active', metrics.activeDeals)}
           />
           <StatCard 
             icon={AlertTriangle} 
@@ -532,7 +539,7 @@ export default function DealsPage() {
             value={metrics.highPriority.length}
             subLabel="urgency 4-5"
             color="bg-red-600"
-            onClick={() => setActiveFilter({ type: 'highPriority', label: 'High Priority' })}
+            onClick={() => openDrilldown('highPriority', metrics.highPriority)}
             isActive={activeFilter?.type === 'highPriority'}
           />
           <StatCard 
@@ -541,7 +548,7 @@ export default function DealsPage() {
             value={metrics.closingSoon.length}
             subLabel="drafting / exec"
             color="bg-slate-600"
-            onClick={() => setActiveFilter({ type: 'closingSoon', label: 'Closing Soon' })}
+            onClick={() => openDrilldown('closingSoon', metrics.closingSoon)}
             isActive={activeFilter?.type === 'closingSoon'}
           />
           <StatCard 
@@ -550,7 +557,7 @@ export default function DealsPage() {
             value={metrics.overdueTasks.length}
             subLabel={`${metrics.overdueTasks.length} OVERDUE`}
             color="bg-amber-600"
-            onClick={() => setActiveFilter({ type: 'overdue', label: 'Overdue' })}
+            onClick={() => openDrilldown('overdue', metrics.overdueTasks)}
             isActive={activeFilter?.type === 'overdue'}
           />
           <StatCard 
@@ -559,7 +566,7 @@ export default function DealsPage() {
             value={metrics.openTasks}
             subLabel="across all deals"
             color="bg-violet-600"
-            onClick={clearFilter}
+            onClick={() => openDrilldown('active', metrics.activeDeals)}
           />
           <StatCard 
             icon={CheckCircle2} 
@@ -567,7 +574,7 @@ export default function DealsPage() {
             value={metrics.closedWon.length}
             subLabel="closed & funded"
             color="bg-emerald-600"
-            onClick={() => setActiveFilter({ type: 'closedWon', label: 'Closed Won' })}
+            onClick={() => openDrilldown('closedWon', metrics.closedWon)}
             isActive={activeFilter?.type === 'closedWon'}
           />
         </div>
@@ -747,6 +754,15 @@ export default function DealsPage() {
       <DealMakerInfoModal
         open={infoModalOpen}
         onClose={() => setInfoModalOpen(false)}
+      />
+
+      {/* Stat Card Drilldown */}
+      <StatCardDrilldown
+        open={drilldown.open}
+        onClose={() => setDrilldown({ open: false, type: null, deals: [] })}
+        filterType={drilldown.type}
+        deals={drilldown.deals}
+        onSelectDeal={(deal) => setSelectedDeal(deal)}
       />
     </div>
   );
