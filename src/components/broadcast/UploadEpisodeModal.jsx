@@ -66,7 +66,17 @@ export default function UploadEpisodeModal({ open, onClose, currentUser }) {
       });
 
       queryClient.invalidateQueries({ queryKey: ['broadcasts'] });
-      toast.success('Episode uploaded successfully!');
+
+      // Notify all subscribers
+      try {
+        await base44.functions.invoke('notifyNewEpisode', {
+          episodeTitle: title.trim(),
+        });
+      } catch (e) {
+        console.warn('Notification dispatch failed:', e);
+      }
+
+      toast.success('Episode uploaded & subscribers notified!');
       handleClose();
     } catch (e) {
       toast.error('Upload failed: ' + (e.message || 'Unknown error'));

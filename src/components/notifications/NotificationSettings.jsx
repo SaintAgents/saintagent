@@ -13,7 +13,7 @@ import {
   Bell, Users, Calendar, Target, MessageCircle, Coins, TrendingUp, Sparkles,
   UserPlus, Mail, Smartphone, Monitor, Moon, Clock, ChevronDown, ChevronUp,
   CircleDot, FileText, Megaphone, Heart, Briefcase, Gift, Shield, Radio,
-  Newspaper, BookOpen, Video, Zap, AlertTriangle
+  Newspaper, BookOpen, Video, Zap, AlertTriangle, Mic
 } from "lucide-react";
 
 // Notification categories organized by section
@@ -61,6 +61,7 @@ const NOTIFICATION_SECTIONS = [
       { key: 'meeting_reminders', label: 'Meeting Reminders', description: 'Reminders for scheduled meetings', icon: Clock, color: 'text-cyan-500', priority: 'high' },
       { key: 'bookings', label: 'Booking Requests', description: 'New booking requests and confirmations', icon: Calendar, color: 'text-emerald-500', priority: 'high' },
       { key: 'broadcasts', label: 'Live Broadcasts', description: 'When broadcasts you\'re interested in go live', icon: Radio, color: 'text-red-500' },
+      { key: 'new_episodes', label: 'New Podcast Episodes', description: 'Instant alert when a new Deep Disclosure episode drops', icon: Mic, color: 'text-violet-500', priority: 'high' },
     ]
   },
   {
