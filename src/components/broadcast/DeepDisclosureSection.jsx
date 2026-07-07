@@ -11,13 +11,14 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { 
-  Mic, Play, Pause, Clock, Users, Eye, EyeOff, 
+  Mic, Play, Pause, Clock, Users, Eye, EyeOff, Upload,
   MessageCircle, ExternalLink, Radio, ChevronDown, ChevronUp, Headphones, Volume2
 } from "lucide-react";
 import { format, parseISO, isAfter } from "date-fns";
 import { toast } from 'sonner';
 import BroadcastCard from './BroadcastCard';
 import EmbeddedMediaPlayer from './EmbeddedMediaPlayer';
+import UploadEpisodeModal from './UploadEpisodeModal';
 
 const DD_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png";
 const DD_HERO = "https://media.base44.com/images/public/694f3e0401b05e6e8a042002/d659d2e42_generated_image.png";
@@ -30,6 +31,7 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
   const [contactForm, setContactForm] = useState({ name: '', email: '', topic: '', message: '' });
   const [sending, setSending] = useState(false);
   const [playingEpisode, setPlayingEpisode] = useState(null);
+  const [uploadOpen, setUploadOpen] = useState(false);
 
   const toggleHidden = () => {
     const next = !hidden;
@@ -148,6 +150,16 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
               <MessageCircle className="w-4 h-4" />
               Contact for Interview
             </Button>
+            {isAdmin && (
+              <Button
+                size="sm"
+                className="gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border border-white/20"
+                onClick={() => setUploadOpen(true)}
+              >
+                <Upload className="w-4 h-4" />
+                Upload Episode
+              </Button>
+            )}
             {ddEpisodes.length > 0 && (
               <span className="text-xs text-white/50 flex items-center gap-1.5">
                 <Volume2 className="w-3.5 h-3.5" />
@@ -333,6 +345,13 @@ export default function DeepDisclosureSection({ broadcasts = [], currentUser, on
           )}
         </div>
       )}
+
+      {/* Upload Episode Modal (admin only) */}
+      <UploadEpisodeModal
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        currentUser={currentUser}
+      />
 
       {/* Contact for Interview Dialog */}
       <Dialog open={contactOpen} onOpenChange={setContactOpen}>
