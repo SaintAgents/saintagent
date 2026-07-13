@@ -50,7 +50,26 @@ export default function UploadEpisodeModal({ open, onClose, currentUser }) {
     }
     setUploading(true);
     try {
+      // Detect duration from the media file
+      let durationMin = 0;
+      try {
+        const mediaEl = document.createElement(isAudio ? 'audio' : 'video');
+        const objectUrl = URL.createObjectURL(file);
+        durationMin = await new Promise((resolve) => {
+          mediaEl.preload = 'metadata';
+          mediaEl.onloadedmetadata = () => {
+            URL.revokeObjectURL(objectUrl);
+            resolve(Math.round(mediaEl.duration / 60));
+          };
+          mediaEl.onerror = () => { URL.revokeObjectURL(objectUrl); resolve(0); };
+          mediaEl.src = objectUrl;
+        });
+      } catch { /* fallback 0 */ }
+
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
+
+      const ext = file.name.split('.').pop().toLowerCase();
+      const isVideo = ['mp4', 'webm'].includes(ext);
 
       await base44.entities.Broadcast.create({
         title: title.trim(),
@@ -58,9 +77,9 @@ export default function UploadEpisodeModal({ open, onClose, currentUser }) {
         host_id: currentUser?.email || '',
         host_name: currentUser?.full_name || 'Admin',
         scheduled_time: new Date().toISOString(),
-        duration_minutes: 60,
+        duration_minutes: durationMin || 0,
         status: 'ended',
-        broadcast_type: 'podcast',
+        broadcast_type: isVideo ? 'webinar' : 'podcast',
         recording_url: file_url,
         topics: ['Deep Disclosure'],
       });
@@ -84,7 +103,8 @@ export default function UploadEpisodeModal({ open, onClose, currentUser }) {
     setUploading(false);
   };
 
-  const isAudio = file && ['mp3', 'm4a', 'wav', 'ogg'].includes(file.name.split('.').pop().toLowerCase());
+  const fileExt = file ? file.name.split('.').pop().toLowerCase() : '';
+  const isAudio = file && ['mp3', 'm4a', 'wav', 'ogg'].includes(fileExt);
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>

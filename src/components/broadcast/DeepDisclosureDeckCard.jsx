@@ -98,7 +98,7 @@ export default function DeepDisclosureDeckCard() {
               <p className="text-sm font-semibold text-slate-900 line-clamp-1">{featured.title}</p>
               <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
                 <span>{format(parseISO(featured.scheduled_time), 'MMM d, h:mm a')}</span>
-                <span>{featured.duration_minutes}m</span>
+                {featured.duration_minutes > 0 && <span>{featured.duration_minutes}m</span>}
                 <span className="flex items-center gap-0.5">
                   <Users className="w-3 h-3" />
                   {(featured.going_count || 0) + (featured.interested_count || 0)}
@@ -120,7 +120,7 @@ export default function DeepDisclosureDeckCard() {
                   className="mt-2 gap-1.5 w-full"
                   onClick={() => window.open(latestPast.recording_url, '_blank')}
                 >
-                  <Play className="w-3.5 h-3.5" /> Watch
+                  <Play className="w-3.5 h-3.5" /> {latestPast.broadcast_type === 'podcast' ? 'Play' : 'Watch'}
                 </Button>
               )}
             </div>
