@@ -106,8 +106,8 @@ export default function NewsViewerModal({
               {/* Image viewer trigger - icon only */}
               <button
                 onClick={() => {
-                  document.dispatchEvent(new CustomEvent('openGlobalPhotoViewer', { 
-                    detail: { imageUrl: currentArticle.image_url, title: currentArticle.title } 
+                  document.dispatchEvent(new CustomEvent('openPhotoViewer', { 
+                    detail: { images: [currentArticle.image_url] } 
                   }));
                 }}
                 className="absolute bottom-3 right-3 p-2 bg-black/60 hover:bg-black/80 rounded-lg text-white transition-colors"
