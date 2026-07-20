@@ -32,6 +32,7 @@ import TaskCanvas from './canvas/TaskCanvas';
 import SprintPlannerPanel from './sprint/SprintPlannerPanel';
 import SlippageConfigPanel from './SlippageConfigPanel';
 import { computeSkillMatch } from './SkillMatchUtils';
+import RFIResponseSection from '@/components/evaluation/RFIResponseSection';
 
 const STATUS_COLUMNS = [
   { id: 'todo', label: 'To Do', color: 'bg-slate-500' },
@@ -301,6 +302,11 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           tasks={tasks}
           onApplyPriorities={() => queryClient.invalidateQueries({ queryKey: ['projectTasks'] })}
         />
+      )}
+
+      {/* RFI Response Section — shown when project is RFI pending */}
+      {(project.status === 'rfi_pending' || project.status === 'flagged') && (project.phase1_rfi_items?.length > 0) && (
+        <RFIResponseSection project={project} currentUser={currentUser} />
       )}
 
       {/* Stats Row */}
