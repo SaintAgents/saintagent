@@ -8,10 +8,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import { 
   ArrowLeft, Plus, Calendar, DollarSign, Users, 
   CheckCircle2, Clock, Paperclip, MessageSquare,
-  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch, Pencil, Route, Zap, AlertTriangle
+  LayoutGrid, List, Upload, Search, Filter, Brain, Link2, GitBranch, Pencil, Route, Zap, AlertTriangle, Trash2
 } from 'lucide-react';
 import TaskCard from './TaskCard';
 import CreateTaskModal from './CreateTaskModal';
@@ -50,6 +55,24 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
   const [activeTab, setActiveTab] = useState('tasks');
   const [showSprintPlanner, setShowSprintPlanner] = useState(false);
   const [showSlippageConfig, setShowSlippageConfig] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+
+  // Delete project
+  const deleteProjectMutation = useMutation({
+    mutationFn: async () => {
+      // Delete all tasks first
+      const projectTasks = await base44.entities.ProjectTask.filter({ project_id: project.id });
+      await Promise.all(projectTasks.map(t => base44.entities.ProjectTask.delete(t.id)));
+      // Delete the project
+      await base44.entities.Project.delete(project.id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userProjects'] });
+      queryClient.invalidateQueries({ queryKey: ['fundedProjects'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      onBack();
+    }
+  });
 
   // Fetch tasks for this project
   const { data: tasks = [] } = useQuery({
@@ -186,11 +209,39 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {(project.owner_id === currentUser?.email || project.claimed_by === currentUser?.email) && (
-            <Button variant="outline" size="sm" onClick={() => setEditProjectOpen(true)}>
-              <Pencil className="w-4 h-4 mr-1" />
-              Edit Details
-            </Button>
+          {(project.owner_id === currentUser?.email || project.claimed_by === currentUser?.email || currentUser?.role === 'admin') && (
+            <>
+              <Button variant="outline" size="sm" onClick={() => setEditProjectOpen(true)}>
+                <Pencil className="w-4 h-4 mr-1" />
+                Edit Details
+              </Button>
+              <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700">
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Project</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete "{project.title}" and all its tasks. This cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => deleteProjectMutation.mutate()}
+                      className="bg-red-600 hover:bg-red-700"
+                      disabled={deleteProjectMutation.isPending}
+                    >
+                      {deleteProjectMutation.isPending ? 'Deleting...' : 'Delete Project'}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
           )}
           <Button 
             variant={showAIAssistant ? "default" : "outline"} 

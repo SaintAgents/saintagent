@@ -290,6 +290,29 @@
         "type": "string"
       }
     },
+    "rfi_responses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "response": {
+            "type": "string"
+          },
+          "responded_by": {
+            "type": "string"
+          },
+          "responded_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "default": [],
+      "description": "Owner responses to RFI items from evaluation"
+    },
     "phase2_scores": {
       "type": "object"
     },

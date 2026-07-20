@@ -358,7 +358,7 @@ export default function ProjectDetailCard({ project: initialProject }) {
         </TabsContent>
 
         <TabsContent value="evaluation" className="mt-4">
-          <ProjectEvaluationPanel project={project} onUpdate={handleProjectUpdate} />
+          <ProjectEvaluationPanel project={project} onUpdate={handleProjectUpdate} currentUser={currentUser} />
         </TabsContent>
       </Tabs>
 

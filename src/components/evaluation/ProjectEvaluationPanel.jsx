@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ScoringEnginePanel from '../projects/ScoringEnginePanel';
+import RFIResponseSection from './RFIResponseSection';
 
 const TIER_CONFIG = {
   approve_fund: { label: 'Approve & Fund', color: 'emerald', icon: CheckCircle },
@@ -36,7 +37,7 @@ const PHASE1_RESULT_CONFIG = {
   pending: { label: 'PENDING', color: 'slate', icon: Clock }
 };
 
-export default function ProjectEvaluationPanel({ project: initialProject, onUpdate }) {
+export default function ProjectEvaluationPanel({ project: initialProject, onUpdate, currentUser }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [overrideReason, setOverrideReason] = useState('');
   const queryClient = useQueryClient();
@@ -367,19 +368,7 @@ export default function ProjectEvaluationPanel({ project: initialProject, onUpda
             </div>
           )}
 
-          {project.phase1_rfi_items?.length > 0 && (
-            <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
-              <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                Request for Information
-              </h4>
-              <ul className="space-y-1">
-                {project.phase1_rfi_items.map((item, i) => (
-                  <li key={i} className="text-sm text-blue-700">• {item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <RFIResponseSection project={project} currentUser={currentUser} />
         </TabsContent>
 
         <TabsContent value="phase2" className="space-y-4 mt-4">
