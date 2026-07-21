@@ -4,6 +4,12 @@ module.exports = {
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
   	extend: {
+  		fontFamily: {
+  			heading: ['var(--font-heading)', 'sans-serif'],
+  			body: ['var(--font-body)', 'sans-serif'],
+  			display: ['var(--font-display)', 'sans-serif'],
+  			sans: ['var(--font-body)', 'sans-serif'],
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

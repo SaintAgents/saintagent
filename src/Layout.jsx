@@ -274,10 +274,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
       if (theme === 'custom') {
-        const p = localStorage.getItem('custom_primary') || '#7c3aed';
-        const a = localStorage.getItem('custom_accent') || '#f59e0b';
-        document.documentElement.style.setProperty('--primary', p);
-        document.documentElement.style.setProperty('--accent', a);
+        const p = localStorage.getItem('custom_primary') || '#6366F1';
+        const a = localStorage.getItem('custom_accent') || '#A5B4FC';
+        document.documentElement.style.setProperty('--custom-primary', p);
+        document.documentElement.style.setProperty('--custom-accent', a);
       }
     }
   }, [theme]);
@@ -613,13 +613,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       <style>{`
         :root {
-          --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          --font-sans: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         body {
-          font-family: var(--font-sans);
+          font-family: var(--font-body);
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+          font-family: var(--font-heading);
         }
         
         /* SLIDER THUMB - visible in all dark themes */
@@ -1553,9 +1557,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
         `}</style>
         <style>{`
-          :root { --primary: #7c3aed; --accent: #f59e0b; }
+          :root { --custom-primary: #6366F1; --custom-accent: #A5B4FC; }
           [data-theme='custom'] .min-h-screen {
-            background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, white), color-mix(in srgb, var(--accent) 12%, white));
+            background: linear-gradient(180deg, color-mix(in srgb, var(--custom-primary) 12%, white), color-mix(in srgb, var(--custom-accent) 12%, white));
           }
 
           /* Hacker theme - Complete green on black, no white anywhere */
