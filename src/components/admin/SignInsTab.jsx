@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, LogIn, Clock, Users, UserCheck, UserX, Bot, UserCircle } from 'lucide-react';
+import { Search, LogIn, Clock, Users, UserCheck, UserX, Bot, UserCircle, TrendingDown, Zap, ArrowRight } from 'lucide-react';
+import { Progress } from "@/components/ui/progress";
 import { format, formatDistanceToNow, differenceInDays, differenceInHours } from 'date-fns';
 
 function isDemoProfile(profile) {
@@ -39,6 +40,12 @@ export default function SignInsTab() {
   const { data: profiles = [] } = useQuery({
     queryKey: ['admin-signins-profiles'],
     queryFn: () => base44.entities.UserProfile.list('-updated_date', 500),
+    staleTime: 60000,
+  });
+
+  const { data: onboardingRecords = [] } = useQuery({
+    queryKey: ['admin-signins-onboarding'],
+    queryFn: () => base44.entities.OnboardingProgress.list('-created_date', 500),
     staleTime: 60000,
   });
 
@@ -103,6 +110,22 @@ export default function SignInsTab() {
   const demoProfileCount = demoProfileIds.size;
   const realProfileCount = profiles.length - demoProfileCount;
 
+  // Funnel stats
+  const realProfileEmails = useMemo(() => {
+    const set = new Set();
+    profiles.forEach(p => { if (!demoProfileIds.has(p.user_id)) set.add(p.user_id); });
+    return set;
+  }, [profiles, demoProfileIds]);
+
+  const usersWithProfile = useMemo(() => users.filter(u => realProfileEmails.has(u.email)).length, [users, realProfileEmails]);
+  const usersWithoutProfile = useMemo(() => users.length - usersWithProfile, [users, usersWithProfile]);
+  const onboardingComplete = useMemo(() => onboardingRecords.filter(o => o.status === 'complete').length, [onboardingRecords]);
+  const engagedUsers = useMemo(() => {
+    return profiles.filter(p => !demoProfileIds.has(p.user_id) && (
+      (p.ggg_balance > 0) || (p.rank_points > 0) || (p.follower_count > 0) || (p.bio && p.bio.length > 10)
+    )).length;
+  }, [profiles, demoProfileIds]);
+
   // Stats — User entity only has REAL sign-ins (no demo accounts)
   const totalUsers = users.length;
   const activeToday = users.filter(u => {
@@ -160,50 +183,54 @@ export default function SignInsTab() {
         </Card>
       </div>
 
-      {/* Real vs Demo Breakdown */}
-      <Card className="border-amber-200 bg-amber-50/50">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Bot className="w-5 h-5 text-amber-600" />
-            <h3 className="font-semibold text-slate-900 text-sm">Real vs Demo Breakdown</h3>
+      {/* Users vs Usage Funnel */}
+      <Card className="border-violet-200 bg-gradient-to-r from-violet-50/50 to-blue-50/50">
+        <CardContent className="p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingDown className="w-5 h-5 text-violet-600" />
+            <h3 className="font-semibold text-slate-900">Users vs Usage — Engagement Funnel</h3>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-violet-100"><Users className="w-5 h-5 text-violet-600" /></div>
+
+          <div className="flex items-center gap-2 flex-wrap mb-4">
+            {[
+              { label: 'Signed Up', count: totalUsers, color: 'bg-violet-600', pct: 100 },
+              { label: 'Onboarded', count: onboardingComplete, color: 'bg-blue-600', pct: totalUsers ? Math.round(onboardingComplete / totalUsers * 100) : 0 },
+              { label: 'Has Profile', count: usersWithProfile, color: 'bg-emerald-600', pct: totalUsers ? Math.round(usersWithProfile / totalUsers * 100) : 0 },
+              { label: 'Engaged', count: engagedUsers, color: 'bg-amber-600', pct: totalUsers ? Math.round(engagedUsers / totalUsers * 100) : 0 },
+            ].map((step, i, arr) => (
+              <React.Fragment key={step.label}>
+                <div className="flex-1 min-w-[100px]">
+                  <div className="text-center mb-1.5">
+                    <p className="text-2xl font-bold text-slate-900">{step.count}</p>
+                    <p className="text-[11px] font-medium text-slate-600">{step.label}</p>
+                    <p className="text-[10px] text-slate-400">{step.pct}%</p>
+                  </div>
+                  <Progress value={step.pct} className="h-2" />
+                </div>
+                {i < arr.length - 1 && <ArrowRight className="w-4 h-4 text-slate-300 shrink-0 mt-[-16px]" />}
+              </React.Fragment>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-violet-200/50">
+            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/60">
+              <UserX className="w-4 h-4 text-red-500" />
               <div>
-                <p className="text-2xl font-bold text-slate-900">{totalUsers}</p>
-                <p className="text-xs text-slate-500">Registered Sign-Ins</p>
-                <p className="text-[10px] text-slate-400">(User entity — real only)</p>
+                <p className="text-lg font-bold text-red-600">{usersWithoutProfile}</p>
+                <p className="text-[10px] text-slate-500">Signed up but never made a profile</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-emerald-100"><UserCircle className="w-5 h-5 text-emerald-600" /></div>
+            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/60">
+              <Bot className="w-4 h-4 text-amber-500" />
               <div>
-                <p className="text-2xl font-bold text-emerald-600">{realProfileCount}</p>
-                <p className="text-xs text-slate-500">Real Profiles</p>
-                <p className="text-[10px] text-slate-400">(UserProfile — no demos)</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-amber-100"><Bot className="w-5 h-5 text-amber-600" /></div>
-              <div>
-                <p className="text-2xl font-bold text-amber-600">{demoProfileCount}</p>
-                <p className="text-xs text-slate-500">Demo Profiles</p>
-                <p className="text-[10px] text-slate-400">(demo_, @demo.sa, demouser)</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-100"><Users className="w-5 h-5 text-blue-600" /></div>
-              <div>
-                <p className="text-2xl font-bold text-blue-600">{profiles.length}</p>
-                <p className="text-xs text-slate-500">Total Profiles</p>
-                <p className="text-[10px] text-slate-400">(All UserProfile records)</p>
+                <p className="text-lg font-bold text-amber-600">{demoProfileCount}</p>
+                <p className="text-[10px] text-slate-500">Demo profiles (not real users)</p>
               </div>
             </div>
           </div>
-          <p className="text-[11px] text-amber-700 mt-3 leading-relaxed">
-            <strong>Note:</strong> The {totalUsers} "Total Users" above counts User entity records — these are <strong>real sign-ins only</strong> (no demos).
-            Demo accounts exist as UserProfile records but never created a User entity login, so they don't inflate the sign-in count.
+
+          <p className="text-[10px] text-slate-400 mt-3">
+            "Engaged" = has GGG balance, rank points, followers, or a bio. Demo profiles ({demoProfileCount}) are excluded from all real counts.
           </p>
         </CardContent>
       </Card>
