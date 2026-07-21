@@ -5,8 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, LogIn, Clock, Users, UserCheck, UserX } from 'lucide-react';
+import { Search, LogIn, Clock, Users, UserCheck, UserX, Bot, UserCircle } from 'lucide-react';
 import { format, formatDistanceToNow, differenceInDays, differenceInHours } from 'date-fns';
+
+function isDemoProfile(profile) {
+  const uid = (profile.user_id || '').toLowerCase();
+  const handle = (profile.handle || '').toLowerCase();
+  return uid.includes('demo') || uid.endsWith('@demo.sa') || handle.startsWith('demouser');
+}
 
 function getRecencyBadge(dateStr) {
   if (!dateStr) return { label: 'Never', color: 'bg-slate-100 text-slate-500' };
@@ -87,8 +93,18 @@ export default function SignInsTab() {
       });
   }, [users, profileMap, search, filter]);
 
-  // Stats
-  const totalUsers = users.filter(u => !u.email?.includes('demo_')).length;
+  // Separate demo profiles from real ones
+  const demoProfileIds = useMemo(() => {
+    const set = new Set();
+    profiles.forEach(p => { if (isDemoProfile(p)) set.add(p.user_id); });
+    return set;
+  }, [profiles]);
+
+  const demoProfileCount = demoProfileIds.size;
+  const realProfileCount = profiles.length - demoProfileCount;
+
+  // Stats — User entity only has REAL sign-ins (no demo accounts)
+  const totalUsers = users.length;
   const activeToday = users.filter(u => {
     const p = profileMap[u.email];
     const last = p?.updated_date || u.updated_date;
@@ -143,6 +159,54 @@ export default function SignInsTab() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Real vs Demo Breakdown */}
+      <Card className="border-amber-200 bg-amber-50/50">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Bot className="w-5 h-5 text-amber-600" />
+            <h3 className="font-semibold text-slate-900 text-sm">Real vs Demo Breakdown</h3>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-violet-100"><Users className="w-5 h-5 text-violet-600" /></div>
+              <div>
+                <p className="text-2xl font-bold text-slate-900">{totalUsers}</p>
+                <p className="text-xs text-slate-500">Registered Sign-Ins</p>
+                <p className="text-[10px] text-slate-400">(User entity — real only)</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-emerald-100"><UserCircle className="w-5 h-5 text-emerald-600" /></div>
+              <div>
+                <p className="text-2xl font-bold text-emerald-600">{realProfileCount}</p>
+                <p className="text-xs text-slate-500">Real Profiles</p>
+                <p className="text-[10px] text-slate-400">(UserProfile — no demos)</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-amber-100"><Bot className="w-5 h-5 text-amber-600" /></div>
+              <div>
+                <p className="text-2xl font-bold text-amber-600">{demoProfileCount}</p>
+                <p className="text-xs text-slate-500">Demo Profiles</p>
+                <p className="text-[10px] text-slate-400">(demo_, @demo.sa, demouser)</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-blue-100"><Users className="w-5 h-5 text-blue-600" /></div>
+              <div>
+                <p className="text-2xl font-bold text-blue-600">{profiles.length}</p>
+                <p className="text-xs text-slate-500">Total Profiles</p>
+                <p className="text-[10px] text-slate-400">(All UserProfile records)</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-[11px] text-amber-700 mt-3 leading-relaxed">
+            <strong>Note:</strong> The {totalUsers} "Total Users" above counts User entity records — these are <strong>real sign-ins only</strong> (no demos).
+            Demo accounts exist as UserProfile records but never created a User entity login, so they don't inflate the sign-in count.
+          </p>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <Card>
