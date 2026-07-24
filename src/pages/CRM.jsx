@@ -36,6 +36,7 @@ import PipelineKanban from '@/components/crm/PipelineKanban';
 import CRMAnalyticsPage from '@/components/crm/CRMAnalyticsPage';
 import GoogleSyncPanel from '@/components/crm/GoogleSyncPanel';
 import PitchCampaignDesigner from '@/components/crm/PitchCampaignDesigner';
+import CRMExportCSV from '@/components/crm/CRMExportCSV';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
 
@@ -254,6 +255,7 @@ export default function CRM() {
                 {accessRequests.length} pending request{accessRequests.length > 1 ? 's' : ''}
               </Badge>
             )}
+            <CRMExportCSV contacts={filteredContacts} />
             <Button variant="outline" onClick={() => setImportOpen(true)} className="gap-2 crm-import-btn">
               <Upload className="w-4 h-4" />
               Import CSV
