@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Check, CheckCheck, Trash2, Play, Pause, FileText, Download, Sparkles, Image as ImageIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Check, CheckCheck, Trash2, Play, Pause, FileText, Download, Sparkles, Image as ImageIcon, Pencil, X } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
 export default function MessageBubble({ 
   msg, 
   isOwn, 
-  onDelete, 
+  onDelete,
+  onEdit,
   onImageClick,
   showAvatar = true 
 }) {
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editText, setEditText] = useState('');
   const audioRef = React.useRef(null);
 
   const toggleAudio = () => {
@@ -151,7 +155,56 @@ export default function MessageBubble({
         );
 
       default:
-        return <p className={cn("text-sm font-normal", isOwn ? "text-white" : "text-slate-900")}>{msg.content}</p>;
+        if (editing && isOwn) {
+          return (
+            <div className="flex items-center gap-2 min-w-[200px]">
+              <Input
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (editText.trim() && editText.trim() !== msg.content) {
+                      onEdit?.(editText.trim());
+                    }
+                    setEditing(false);
+                  }
+                  if (e.key === 'Escape') setEditing(false);
+                }}
+                autoFocus
+                className="h-7 text-sm bg-white/20 border-white/30 text-white placeholder:text-white/50 rounded-lg"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-white/70 hover:text-white shrink-0"
+                onClick={() => {
+                  if (editText.trim() && editText.trim() !== msg.content) {
+                    onEdit?.(editText.trim());
+                  }
+                  setEditing(false);
+                }}
+              >
+                <Check className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-white/70 hover:text-white shrink-0"
+                onClick={() => setEditing(false)}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          );
+        }
+        return (
+          <div>
+            <p className={cn("text-sm font-normal", isOwn ? "text-white" : "text-slate-900")}>{msg.content}</p>
+            {msg.edited_at && (
+              <p className={cn("text-[10px] mt-0.5", isOwn ? "text-white/50" : "text-slate-400")}>(edited)</p>
+            )}
+          </div>
+        );
     }
   };
 
@@ -194,6 +247,17 @@ export default function MessageBubble({
                 <Check className="w-4 h-4 text-slate-400" />
               )}
             </span>
+          )}
+          {isOwn && !editing && (!msg.message_type || msg.message_type === 'text') && onEdit && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 mt-0.5 text-slate-400 hover:text-violet-600"
+              onClick={() => { setEditText(msg.content || ''); setEditing(true); }}
+              title="Edit message"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </Button>
           )}
           {isOwn && onDelete && (
             <Button

@@ -66,6 +66,11 @@
       "format": "date-time",
       "description": "When the message was read"
     },
+    "edited_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the message was last edited"
+    },
     "parent_message_id": {
       "type": "string",
       "description": "For threaded replies"

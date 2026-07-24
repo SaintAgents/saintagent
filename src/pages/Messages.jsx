@@ -738,6 +738,12 @@ export default function Messages() {
                     key={msg.id}
                     msg={msg}
                     isOwn={isOwn}
+                    onEdit={(newContent) => {
+                      base44.entities.Message.update(msg.id, { content: newContent, edited_at: new Date().toISOString() }).then(() => {
+                        queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                        queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
+                      });
+                    }}
                     onDelete={() => {
                       const list = Array.isArray(msg.deleted_for_user_ids) ? msg.deleted_for_user_ids : [];
                       if (!list.includes(user.email)) {
