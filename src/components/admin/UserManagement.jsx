@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle } from
 "@/components/ui/dialog";
-import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw, ArrowDownAZ, Hash, Clock, Recycle, Package, Star, Trash2, MessageSquare, UserPlus } from "lucide-react";
+import { Search, Shield, Ban, CheckCircle, XCircle, Edit, Calendar, RefreshCw, ArrowDownAZ, Hash, Clock, Recycle, Package, Star, Trash2, MessageSquare, UserPlus, Download } from "lucide-react";
 import { toast } from 'sonner';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -290,8 +290,37 @@ export default function UserManagement() {
 
       {/* Users Table */}
       <Card>
-        <CardHeader className="p-6 flex flex-row items-center justify-between">
+        <CardHeader className="p-6 flex flex-row items-center justify-between gap-3">
           <CardTitle>User Directory</CardTitle>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 text-xs h-8"
+              onClick={() => {
+                const isDemoProfile = (p) => {
+                  const uid = (p.user_id || '').toLowerCase();
+                  const handle = (p.handle || '').toLowerCase();
+                  return uid.includes('demo') || uid.endsWith('@demo.sa') || handle.startsWith('demouser');
+                };
+                const realUsers = profiles.filter(p => !isDemoProfile(p));
+                const escape = (v) => { const s = String(v || ''); return s.includes(',') || s.includes('"') || s.includes('\n') ? '"' + s.replace(/"/g, '""') + '"' : s; };
+                const header = 'Name,SA Number,Email';
+                const rows = realUsers.map(p => [escape(p.display_name), escape(p.sa_number), escape(p.user_id)].join(','));
+                const csv = [header, ...rows].join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `users_export_${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+                toast.success(`Exported ${realUsers.length} users (demo excluded)`);
+              }}
+            >
+              <Download className="w-3.5 h-3.5" />
+              Export CSV
+            </Button>
           <Tabs value={sortOrder} onValueChange={setSortOrder} className="w-auto">
             <TabsList className="h-8">
               <TabsTrigger value="date" className="text-xs px-3 gap-1">
@@ -305,6 +334,7 @@ export default function UserManagement() {
               </TabsTrigger>
             </TabsList>
           </Tabs>
+          </div>
         </CardHeader>
         <CardContent className="pt-0 p-6">
           <ScrollArea className="h-[600px]">
