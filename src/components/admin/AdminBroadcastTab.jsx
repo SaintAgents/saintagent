@@ -4,11 +4,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import {
-  Radio, Plus, Play, Pause, Trash2, Calendar, Clock, Users, Video, Mic, ExternalLink, Eye
+  Radio, Plus, Play, Pause, Trash2, Calendar, Clock, Users, Video, Mic, ExternalLink, Eye, Zap
 } from "lucide-react";
 import { format, parseISO, isAfter } from "date-fns";
+import { Link } from 'react-router-dom';
 import CreateBroadcastModal from '@/components/broadcast/CreateBroadcastModal';
 
 const TYPE_COLORS = {
@@ -30,6 +32,14 @@ const STATUS_COLORS = {
 export default function AdminBroadcastTab() {
   const [createOpen, setCreateOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  const { data: settingsList = [] } = useQuery({
+    queryKey: ['platformSettings'],
+    queryFn: () => base44.entities.PlatformSetting.list(),
+    staleTime: 30000,
+  });
+  const platformSetting = settingsList[0];
+  const broadcastsEnabled = platformSetting?.broadcasts_enabled !== false;
 
   const { data: broadcasts = [], isLoading } = useQuery({
     queryKey: ['adminBroadcasts'],
@@ -58,11 +68,45 @@ export default function AdminBroadcastTab() {
           <h2 className="text-2xl font-bold text-slate-900">Broadcast Management</h2>
           <p className="text-slate-500 mt-1">Create, manage, and control live broadcasts</p>
         </div>
-        <Button className="bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
-          <Plus className="w-4 h-4" />
-          Schedule Broadcast
-        </Button>
+        <div className="flex items-center gap-3">
+          <Link to="/Broadcast">
+            <Button variant="outline" className="gap-2">
+              <Eye className="w-4 h-4" />
+              View Page
+            </Button>
+          </Link>
+          <Button className="bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
+            <Plus className="w-4 h-4" />
+            Schedule Broadcast
+          </Button>
+        </div>
       </div>
+
+      {/* Live Broadcast Banner Kill Switch */}
+      <Card className={`border-2 ${broadcastsEnabled ? 'border-emerald-400 bg-emerald-50/50' : 'border-red-400 bg-red-50/50'}`}>
+        <CardContent className="flex items-center justify-between py-5 px-6">
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-full ${broadcastsEnabled ? 'bg-emerald-100' : 'bg-red-100'}`}>
+              <Zap className={`w-5 h-5 ${broadcastsEnabled ? 'text-emerald-600' : 'text-red-600'}`} />
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">Live Broadcast Banner — Kill Switch</p>
+              <p className="text-xs text-slate-500">Toggle the red LIVE pill in the top bar on/off globally</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className={`text-sm font-bold ${broadcastsEnabled ? 'text-emerald-700' : 'text-red-700'}`}>
+              {broadcastsEnabled ? 'ON' : 'OFF'}
+            </span>
+            <Switch checked={broadcastsEnabled} onCheckedChange={(v) => {
+              if (platformSetting?.id) {
+                base44.entities.PlatformSetting.update(platformSetting.id, { broadcasts_enabled: v })
+                  .then(() => queryClient.invalidateQueries({ queryKey: ['platformSettings'] }));
+              }
+            }} />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
