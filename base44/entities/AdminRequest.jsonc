@@ -11,6 +11,7 @@
         "feature_request",
         "deal_approval",
         "withdrawal_request",
+        "project_claim",
         "other"
       ],
       "description": "Type of admin request"

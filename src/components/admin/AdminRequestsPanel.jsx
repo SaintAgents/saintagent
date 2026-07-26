@@ -58,6 +58,12 @@ const REQUEST_TYPE_CONFIG = {
     color: 'text-emerald-600',
     bgColor: 'bg-emerald-100'
   },
+  project_claim: {
+    label: 'Project Claim',
+    icon: Target,
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-100'
+  },
   other: {
     label: 'Other',
     icon: Inbox,
@@ -156,6 +162,16 @@ function RequestCard({ request, onAction, isSelected, onSelect, onAssign, adminU
                       ${request.requested_value.amount.toLocaleString()}
                     </Badge>
                   )}
+                  {request.requested_value.claimer_email && (
+                    <Badge variant="secondary" className="gap-1 bg-orange-100 text-orange-700">
+                      Claimer: {request.requested_value.claimer_email}
+                    </Badge>
+                  )}
+                  {request.requested_value.original_submitter && (
+                    <Badge variant="secondary" className="gap-1 bg-slate-100 text-slate-700">
+                      Original: {request.requested_value.original_submitter}
+                    </Badge>
+                  )}
                 </div>
               </div>
             )}
@@ -178,6 +194,16 @@ function RequestCard({ request, onAction, isSelected, onSelect, onAssign, adminU
               >
                 <Target className="w-3 h-3" />
                 View Deal Tracker
+                <ExternalLink className="w-3 h-3" />
+              </Link>
+            )}
+            {request.reference_type === 'project' && request.reference_id && (
+              <Link 
+                to={`/Projects?id=${request.reference_id}`}
+                className="inline-flex items-center gap-1 mt-2 text-sm text-orange-600 hover:text-orange-700"
+              >
+                <Target className="w-3 h-3" />
+                View Project
                 <ExternalLink className="w-3 h-3" />
               </Link>
             )}
@@ -382,6 +408,40 @@ export default function AdminRequestsPanel() {
           approval_status: status === 'approved' ? 'approved' : 'rejected'
         });
       }
+
+      // If this is a project claim, update the project
+      if (request?.request_type === 'project_claim' && request?.reference_id) {
+        const claimerEmail = request?.requested_value?.claimer_email || request?.requester_id;
+        if (status === 'approved') {
+          await base44.entities.Project.update(request.reference_id, {
+            claim_status: 'approved',
+            owner_id: claimerEmail,
+            auto_claimed: false
+          });
+          // Notify the claimer
+          await base44.entities.Notification.create({
+            user_id: claimerEmail,
+            type: 'system',
+            title: 'Project Claim Approved!',
+            message: `Your claim on "${request?.requested_value?.project_title || 'a project'}" has been approved. You can now manage this project.`,
+            action_url: `/Projects?id=${request.reference_id}`,
+            priority: 'high'
+          });
+        } else if (status === 'rejected') {
+          await base44.entities.Project.update(request.reference_id, {
+            claim_status: 'rejected'
+          });
+          // Notify the claimer
+          await base44.entities.Notification.create({
+            user_id: claimerEmail,
+            type: 'system',
+            title: 'Project Claim Rejected',
+            message: `Your claim on "${request?.requested_value?.project_title || 'a project'}" was not approved.${note ? ' Reason: ' + note : ''}`,
+            action_url: `/Projects?id=${request.reference_id}`,
+            priority: 'normal'
+          });
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminRequests'] });
@@ -389,6 +449,8 @@ export default function AdminRequestsPanel() {
       queryClient.invalidateQueries({ queryKey: ['pendingWithdrawals'] });
       queryClient.invalidateQueries({ queryKey: ['missions'] });
       queryClient.invalidateQueries({ queryKey: ['deals'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['projects_all'] });
       setActionDialog(null);
       setAdminNote('');
     }
@@ -680,6 +742,7 @@ export default function AdminRequestsPanel() {
                 <SelectItem value="badge_request">Badge</SelectItem>
                 <SelectItem value="role_request">Role</SelectItem>
                 <SelectItem value="withdrawal_request">Withdrawal</SelectItem>
+                <SelectItem value="project_claim">Project Claim</SelectItem>
                 <SelectItem value="feature_request">Feature</SelectItem>
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>

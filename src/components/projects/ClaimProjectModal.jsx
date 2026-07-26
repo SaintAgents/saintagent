@@ -19,15 +19,12 @@ import { cn } from '@/lib/utils';
 
 export default function ClaimProjectModal({ project, currentUser, onClose, onUpdate }) {
   const [claimNote, setClaimNote] = useState('');
-  const [claimFromSubmitter, setClaimFromSubmitter] = useState(false);
   const [adminOverride, setAdminOverride] = useState(false);
   const [assignToEmail, setAssignToEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const queryClient = useQueryClient();
 
-  // Check if someone else submitted this project
-  const submittedByOther = project.created_by && project.created_by !== currentUser?.email;
   const isAdmin = currentUser?.role === 'admin';
 
   const handleSubmitClaim = async () => {
@@ -39,7 +36,6 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
       const response = await base44.functions.invoke('claimProject', {
         project_id: project.id,
         claim_note: claimNote,
-        claim_from_submitter: claimFromSubmitter,
         admin_override: adminOverride,
         assign_to_email: adminOverride && assignToEmail ? assignToEmail : undefined
       });
@@ -167,8 +163,8 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
               <div className="text-sm text-violet-700 dark:text-violet-300">
                 <p className="font-medium mb-1">How Project Claims Work</p>
                 <ul className="space-y-1 text-violet-600 dark:text-violet-400">
-                  <li>• If your email matches our legacy Saint Agent records, your claim will be <strong>auto-approved</strong></li>
-                  <li>• Otherwise, your request will be <strong>submitted to Admin</strong> for verification</li>
+                  <li>• If your email matches the original submitter, your claim will be <strong>auto-approved</strong></li>
+                  <li>• Otherwise, your request will be <strong>submitted to Admin</strong> for review</li>
                   <li>• You'll receive a notification once your claim is processed</li>
                 </ul>
               </div>
@@ -210,27 +206,6 @@ export default function ClaimProjectModal({ project, currentUser, onClose, onUpd
                   />
                 </div>
               )}
-            </div>
-          )}
-
-          {/* "This is my submission" option - only show if submitted by someone else */}
-          {submittedByOther && !adminOverride && (
-            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={claimFromSubmitter}
-                  onChange={(e) => setClaimFromSubmitter(e.target.checked)}
-                  className="mt-1 w-4 h-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
-                />
-                <div>
-                  <p className="font-medium text-amber-700 dark:text-amber-300">This is my submission</p>
-                  <p className="text-sm text-amber-600 dark:text-amber-400 mt-1">
-                    Someone else ({project.created_by}) submitted this project on your behalf. 
-                    Checking this will send them a request to confirm your ownership.
-                  </p>
-                </div>
-              </label>
             </div>
           )}
 
