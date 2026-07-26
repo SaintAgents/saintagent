@@ -38,7 +38,7 @@ import LearnTutorialPopup from '@/components/hud/LearnTutorialPopup';
 import CanvasBackgrounds from '@/components/hud/CanvasBackgrounds';
 import LightThemeBackgroundRotator from '@/components/hud/LightThemeBackgroundRotator';
 
-const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home', 'DemoPreview'];
+const PUBLIC_PAGES = ['Join', 'join', 'SignUp', 'Welcome', 'Onboarding', 'Terms', 'FAQ', 'Home', 'home', 'DemoPreview', 'Landing', 'Login', 'Register', 'ForgotPassword', 'ResetPassword'];
 
 // Tiny component to set data-bg-active on <html> when light theme has canvas effects
 function LightBgActiveFlag({ theme, bgEffect }) {
