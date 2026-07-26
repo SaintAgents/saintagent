@@ -27,6 +27,7 @@ import AdvancedDependencyManager from './AdvancedDependencyManager';
 import TaskDependencyGraph from './TaskDependencyGraph';
 import EditProjectModal from './EditProjectModal';
 import PeerReviewsTab from './PeerReviewsTab';
+import CoordinatorReviewPanel from './CoordinatorReviewPanel';
 import GanttChart from './GanttChart';
 import TaskCanvas from './canvas/TaskCanvas';
 import SprintPlannerPanel from './sprint/SprintPlannerPanel';
@@ -389,9 +390,22 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           <MessageSquare className="w-4 h-4" />
           Peer Reviews
         </Button>
+        {(currentUser?.role === 'admin' || currentUser?.role === 'coordinator') && (
+          <Button
+            variant={activeTab === 'coordinator' ? 'secondary' : 'ghost'}
+            size="sm"
+            onClick={() => setActiveTab('coordinator')}
+            className="gap-1.5"
+          >
+            <CheckCircle2 className="w-4 h-4" />
+            Coordinator Review
+          </Button>
+        )}
       </div>
 
-      {activeTab === 'reviews' ? (
+      {activeTab === 'coordinator' ? (
+        <CoordinatorReviewPanel project={project} />
+      ) : activeTab === 'reviews' ? (
         <PeerReviewsTab project={project} currentUser={currentUser} profile={profile} />
       ) : (
       <>

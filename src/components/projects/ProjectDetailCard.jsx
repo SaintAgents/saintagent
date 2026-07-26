@@ -12,6 +12,7 @@ import {
 import EditProjectModal from '@/components/projects/EditProjectModal';
 import { cn } from '@/lib/utils';
 import ProjectEvaluationPanel from '@/components/evaluation/ProjectEvaluationPanel';
+import CoordinatorReviewPanel from '@/components/projects/CoordinatorReviewPanel';
 import ProjectTeamPanel from '@/components/projects/ProjectTeamPanel';
 import ProjectDiscussionPanel from '@/components/projects/ProjectDiscussionPanel';
 import ProjectUpdatePanel from '@/components/projects/ProjectUpdatePanel';
@@ -199,6 +200,10 @@ export default function ProjectDetailCard({ project: initialProject }) {
             <Brain className="w-4 h-4" />
             Evaluation
           </TabsTrigger>
+          <TabsTrigger value="coordinator" className="gap-1">
+            <Shield className="w-4 h-4" />
+            Coordinator Reviews
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 mt-4">
@@ -359,6 +364,10 @@ export default function ProjectDetailCard({ project: initialProject }) {
 
         <TabsContent value="evaluation" className="mt-4">
           <ProjectEvaluationPanel project={project} onUpdate={handleProjectUpdate} currentUser={currentUser} />
+        </TabsContent>
+
+        <TabsContent value="coordinator" className="mt-4">
+          <CoordinatorReviewPanel project={project} />
         </TabsContent>
       </Tabs>
 

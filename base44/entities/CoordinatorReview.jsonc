@@ -1,0 +1,62 @@
+{
+  "name": "CoordinatorReview",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to the Project being reviewed"
+    },
+    "reviewer_id": {
+      "type": "string",
+      "description": "Email/user_id of the coordinator reviewer"
+    },
+    "reviewer_name": {
+      "type": "string"
+    },
+    "reviewer_avatar": {
+      "type": "string"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Coordinator's personal score for the project (1-10)"
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": [
+        "fund",
+        "incubate",
+        "needs_more_info",
+        "decline"
+      ],
+      "description": "Coordinator's funding recommendation"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Detailed review comment and observations"
+    },
+    "areas_reviewed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Which areas the coordinator validated (e.g. team, financials, impact, feasibility)"
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Any concerns or red flags identified"
+    }
+  },
+  "required": [
+    "project_id",
+    "reviewer_id",
+    "score",
+    "comment"
+  ]
+}
