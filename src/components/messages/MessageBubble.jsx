@@ -6,14 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Check, CheckCheck, Trash2, Play, Pause, FileText, Download, Sparkles, Image as ImageIcon, Pencil, X } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
+const QUICK_REACTIONS = ['❤️', '👍', '😂', '😮', '😢', '🔥'];
+
 export default function MessageBubble({ 
   msg, 
   isOwn, 
   onDelete,
   onEdit,
+  onReact,
   onImageClick,
   showAvatar = true 
 }) {
+  const [showReactions, setShowReactions] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editText, setEditText] = useState('');
@@ -208,6 +212,17 @@ export default function MessageBubble({
     }
   };
 
+  // Group reactions by emoji with count
+  const reactionGroups = React.useMemo(() => {
+    const groups = {};
+    (msg.reactions || []).forEach(r => {
+      if (!groups[r.emoji]) groups[r.emoji] = { emoji: r.emoji, count: 0, user_ids: [] };
+      groups[r.emoji].count++;
+      groups[r.emoji].user_ids.push(r.user_id);
+    });
+    return Object.values(groups);
+  }, [msg.reactions]);
+
   return (
     <div className={cn("flex gap-3", isOwn && "flex-row-reverse")}>
       {showAvatar && (
@@ -221,13 +236,53 @@ export default function MessageBubble({
         <p className="text-xs text-slate-400 dark:text-slate-300 mb-1 px-1">
           {format(parseISO(msg.created_date), 'MMM d, h:mm a')}
         </p>
-        <div className={cn(
-          "px-4 py-2 rounded-2xl",
-          isOwn
-            ? "bg-violet-600 text-white rounded-br-sm"
-            : "bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] rounded-bl-sm"
-        )}>
-          {renderContent()}
+        <div
+          className="relative group/bubble"
+          onMouseEnter={() => setShowReactions(true)}
+          onMouseLeave={() => setShowReactions(false)}
+        >
+          <div className={cn(
+            "px-4 py-2 rounded-2xl",
+            isOwn
+              ? "bg-violet-600 text-white rounded-br-sm"
+              : "bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] rounded-bl-sm"
+          )}>
+            {renderContent()}
+          </div>
+
+          {/* Quick reaction picker on hover */}
+          {showReactions && onReact && (
+            <div className={cn(
+              "absolute -top-9 z-10 flex items-center gap-0.5 bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-slate-700 rounded-full px-1.5 py-1 shadow-lg",
+              isOwn ? "right-0" : "left-0"
+            )}>
+              {QUICK_REACTIONS.map(emoji => (
+                <button
+                  key={emoji}
+                  onClick={() => { onReact(emoji); setShowReactions(false); }}
+                  className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-base hover:scale-125 active:scale-95"
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Reaction badges below bubble */}
+          {reactionGroups.length > 0 && (
+            <div className={cn("flex flex-wrap gap-1 mt-1", isOwn && "justify-end")}>
+              {reactionGroups.map(g => (
+                <button
+                  key={g.emoji}
+                  onClick={() => onReact?.(g.emoji)}
+                  className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                >
+                  <span>{g.emoji}</span>
+                  <span className="text-slate-600 dark:text-slate-300 font-medium">{g.count}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-2">
           {isOwn && (

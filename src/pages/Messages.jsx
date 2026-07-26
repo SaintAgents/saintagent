@@ -738,6 +738,19 @@ export default function Messages() {
                     key={msg.id}
                     msg={msg}
                     isOwn={isOwn}
+                    onReact={(emoji) => {
+                      const reactions = Array.isArray(msg.reactions) ? [...msg.reactions] : [];
+                      const existing = reactions.findIndex(r => r.user_id === user.email && r.emoji === emoji);
+                      if (existing >= 0) {
+                        reactions.splice(existing, 1);
+                      } else {
+                        reactions.push({ user_id: user.email, emoji });
+                      }
+                      base44.entities.Message.update(msg.id, { reactions }).then(() => {
+                        queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
+                        queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
+                      });
+                    }}
                     onEdit={(newContent) => {
                       base44.entities.Message.update(msg.id, { content: newContent, edited_at: new Date().toISOString() }).then(() => {
                         queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
