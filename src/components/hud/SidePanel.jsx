@@ -49,7 +49,8 @@ import {
   Share2,
   Send,
   Video,
-  Mic } from
+  Mic,
+  Camera } from
   "lucide-react";
 
 // Card icon mapping - must be defined here to resolve icons from stored card data
@@ -147,6 +148,31 @@ export default function SidePanel({
   const [recentJoinsPopupOpen, setRecentJoinsPopupOpen] = useState(false);
   const [navPopupOpen, setNavPopupOpen] = useState(false);
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
+  const [capturing, setCapturing] = useState(false);
+
+  const handleScreenCapture = async () => {
+    setCapturing(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(document.body, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+      });
+      const link = document.createElement("a");
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+      link.download = `SaintAgent_Screenshot_${timestamp}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch {
+      // silent fail
+    } finally {
+      setCapturing(false);
+    }
+  };
+
   const [storedCardsCollapsed, setStoredCardsCollapsed] = useState(() => {
     try { return localStorage.getItem('storedCardsCollapsed') === 'true'; } catch { return false; }
   });
@@ -1103,6 +1129,16 @@ export default function SidePanel({
               <Button variant="outline" size="sm" className="rounded-lg btn-ctrl bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.3)] text-violet-600 dark:text-[#00ff88] hover:bg-violet-50 dark:hover:bg-[rgba(0,255,136,0.1)] text-xs" onClick={() => setGggAuditOpen(true)}>
                 <Activity className="w-3.5 h-3.5 mr-1" />
                 My Activity
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={capturing}
+                className="col-span-2 rounded-lg btn-ctrl bg-gradient-to-r from-sky-50 to-blue-50 dark:from-[#050a15] dark:to-[#051015] border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300 hover:from-sky-100 hover:to-blue-100 dark:hover:bg-sky-900/20 text-xs"
+                onClick={handleScreenCapture}
+              >
+                {capturing ? <span className="w-3.5 h-3.5 mr-1 border-2 border-sky-300 border-t-sky-700 rounded-full animate-spin" /> : <Camera className="w-3.5 h-3.5 mr-1" />}
+                {capturing ? 'Capturing...' : 'Screen Capture'}
               </Button>
             </div>
           </div>
