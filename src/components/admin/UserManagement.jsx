@@ -414,20 +414,34 @@ export default function UserManagement({ viewerRole = 'admin' }) {
                   )} />
                   </div>
 
-                  <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    console.log('Manage clicked for:', profile.display_name);
-                    setSelectedUser(profile);
-                  }} 
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 px-3 text-xs font-medium h-8">
-
-                    <Edit className="w-3 h-3 mr-1" />
-                    Manage
-                  </Button>
+                  <div className="flex items-center gap-1.5">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setInviteEmail(profile.user_id || '');
+                        setInviteDialogOpen(true);
+                      }}
+                      className="text-violet-600 hover:bg-violet-50 px-2 text-xs font-medium h-8"
+                      title="Invite / re-invite this user"
+                    >
+                      <UserPlus className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setSelectedUser(profile);
+                      }} 
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 px-3 text-xs font-medium h-8"
+                    >
+                      <Edit className="w-3 h-3 mr-1" />
+                      Manage
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
