@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
   Megaphone, Plus, TrendingUp, Flag, Users, Rocket, 
-  AlertCircle, Heart, MessageCircle, Share2, Image
+  AlertCircle, Heart, MessageCircle, Share2, Image, Edit2, Trash2
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
@@ -26,9 +26,10 @@ const UPDATE_TYPE_CONFIG = {
   launch: { label: 'Launch', icon: Rocket, color: 'bg-gradient-to-r from-violet-500 to-pink-500 text-white' },
 };
 
-function UpdateCard({ update }) {
+function UpdateCard({ update, currentUserEmail, onEdit, onDelete }) {
   const typeConfig = UPDATE_TYPE_CONFIG[update.update_type] || UPDATE_TYPE_CONFIG.progress;
   const TypeIcon = typeConfig.icon;
+  const isOwner = currentUserEmail && update.author_id === currentUserEmail;
 
   return (
     <div className="p-4 rounded-xl bg-white border border-slate-200 hover:border-violet-200 transition-colors">
@@ -51,6 +52,26 @@ function UpdateCard({ update }) {
             {update.project_title && <span> • {update.project_title}</span>}
           </p>
         </div>
+        {isOwner && (
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              onClick={() => onEdit?.(update)}
+              className="p-1.5 rounded-md text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition-colors"
+              title="Edit update"
+            >
+              <Edit2 className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => {
+                if (confirm('Delete this update?')) onDelete?.(update.id);
+              }}
+              className="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+              title="Delete update"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -112,6 +133,7 @@ function UpdateCard({ update }) {
 
 export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMember = false }) {
   const [createOpen, setCreateOpen] = useState(false);
+  const [editingUpdate, setEditingUpdate] = useState(null);
   const [updateType, setUpdateType] = useState('progress');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -198,6 +220,7 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projectUpdates', projectId] });
       setCreateOpen(false);
+      setEditingUpdate(null);
       setTitle('');
       setContent('');
       setProgress([50]);
@@ -205,6 +228,43 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
       setImageUrl('');
     }
   });
+
+  const editMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.ProjectUpdate.update(editingUpdate.id, {
+        title,
+        content,
+        update_type: updateType,
+        progress_percentage: updateType === 'progress' ? progress[0] : undefined,
+        milestone_name: updateType === 'milestone' ? milestoneName : undefined,
+        image_url: imageUrl || undefined,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projectUpdates', projectId] });
+      setEditingUpdate(null);
+      setTitle('');
+      setContent('');
+      setProgress([50]);
+      setMilestoneName('');
+      setImageUrl('');
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.ProjectUpdate.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['projectUpdates', projectId] })
+  });
+
+  const openEditDialog = (update) => {
+    setEditingUpdate(update);
+    setTitle(update.title || '');
+    setContent(update.content || '');
+    setUpdateType(update.update_type || 'progress');
+    setProgress([update.progress_percentage ?? 50]);
+    setMilestoneName(update.milestone_name || '');
+    setImageUrl(update.image_url || '');
+  };
 
   return (
     <div className="space-y-4">
@@ -329,6 +389,51 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
         )}
       </div>
 
+      {/* Edit Update Dialog */}
+      <Dialog open={!!editingUpdate} onOpenChange={(open) => { if (!open) setEditingUpdate(null); }}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Edit Update</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <Select value={updateType} onValueChange={setUpdateType}>
+              <SelectTrigger><SelectValue placeholder="Update type" /></SelectTrigger>
+              <SelectContent>
+                {Object.entries(UPDATE_TYPE_CONFIG).map(([key, config]) => (
+                  <SelectItem key={key} value={key}>
+                    <div className="flex items-center gap-2">
+                      <config.icon className="w-4 h-4" />
+                      {config.label}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input placeholder="Update title..." value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Textarea placeholder="Details..." value={content} onChange={(e) => setContent(e.target.value)} rows={3} />
+            {updateType === 'progress' && (
+              <div>
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className="text-slate-600">Progress</span>
+                  <span className="font-medium text-violet-600">{progress[0]}%</span>
+                </div>
+                <Slider value={progress} onValueChange={setProgress} max={100} step={5} className="w-full" />
+              </div>
+            )}
+            {updateType === 'milestone' && (
+              <Input placeholder="Milestone name..." value={milestoneName} onChange={(e) => setMilestoneName(e.target.value)} />
+            )}
+            <Button 
+              className="w-full bg-violet-600 hover:bg-violet-700"
+              onClick={() => editMutation.mutate()}
+              disabled={!title.trim() || editMutation.isPending}
+            >
+              {editMutation.isPending ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Updates List */}
       {isLoading ? (
         <div className="animate-pulse space-y-4">
@@ -343,7 +448,13 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
       ) : (
         <div className="space-y-4">
           {updates.map((update) => (
-            <UpdateCard key={update.id} update={update} />
+            <UpdateCard 
+              key={update.id} 
+              update={update} 
+              currentUserEmail={currentUser?.email}
+              onEdit={openEditDialog}
+              onDelete={(id) => deleteMutation.mutate(id)}
+            />
           ))}
         </div>
       )}

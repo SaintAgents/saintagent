@@ -499,6 +499,44 @@
       },
       "default": [],
       "description": "Self-perceived spiritual orientation"
+    },
+    "relationship_status": {
+      "type": "string",
+      "enum": [
+        "single",
+        "dating",
+        "committed",
+        "married",
+        "open",
+        "complicated",
+        "prefer_not_to_say"
+      ],
+      "default": "prefer_not_to_say",
+      "description": "Current relationship status"
+    },
+    "relationship_type_seeking": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Types of relationships the user is open to"
+    },
+    "qualities_seeking": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Qualities the user is seeking in others"
+    },
+    "qualities_providing": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Qualities the user offers in relationships"
     }
   },
   "required": [

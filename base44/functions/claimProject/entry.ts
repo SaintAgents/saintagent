@@ -137,6 +137,22 @@ Deno.serve(async (req) => {
         priority: 'high'
       });
 
+      // Send email confirmation
+      try {
+        await base44.integrations.Core.SendEmail({
+          to: user.email,
+          subject: `Project Ownership Confirmed: ${project.title}`,
+          body: `<h2>Project Ownership Confirmed!</h2>
+<p>Hi ${user.full_name || 'there'},</p>
+<p>Your claim on the project <strong>"${project.title}"</strong> has been <strong>auto-approved</strong> based on our legacy Saint Agent records.</p>
+<p>You can now edit and manage this project from your dashboard.</p>
+<p>— Saint Agents World</p>`
+        });
+      } catch (emailErr) {
+        // Email is best-effort, don't fail the claim
+        console.error('Failed to send claim confirmation email:', emailErr.message);
+      }
+
       return Response.json({ 
         success: true, 
         auto_approved: true,
@@ -163,6 +179,21 @@ Deno.serve(async (req) => {
         action_url: '/Admin?tab=projects',
         priority: 'normal'
       });
+    }
+
+    // Send email confirmation to user that claim was submitted
+    try {
+      await base44.integrations.Core.SendEmail({
+        to: user.email,
+        subject: `Project Claim Submitted: ${project.title}`,
+        body: `<h2>Claim Submitted for Review</h2>
+<p>Hi ${user.full_name || 'there'},</p>
+<p>Your claim on the project <strong>"${project.title}"</strong> has been submitted and is pending admin review.</p>
+<p>You'll receive a notification once an admin has reviewed your request.</p>
+<p>— Saint Agents World</p>`
+      });
+    } catch (emailErr) {
+      console.error('Failed to send claim submission email:', emailErr.message);
     }
 
     return Response.json({ 
