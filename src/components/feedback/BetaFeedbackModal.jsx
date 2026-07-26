@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import html2canvas from 'html2canvas';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Camera, Send, Loader2, Bug, Lightbulb, MessageCircle, HelpCircle, X, RefreshCw, Upload, ImagePlus } from "lucide-react";
+import { Send, Loader2, Bug, Lightbulb, MessageCircle, HelpCircle, X, Upload } from "lucide-react";
 import { toast } from "sonner";
 
 const FEEDBACK_TYPES = [
@@ -30,36 +29,12 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
   const [description, setDescription] = useState('');
   const [severity, setSeverity] = useState('medium');
   const [images, setImages] = useState([]); // array of data URLs or object URLs
-  const [isCapturing, setIsCapturing] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
-
-  const captureScreenshot = async () => {
-    if (images.length >= 5) { toast.error('Maximum 5 images allowed'); return; }
-    setIsCapturing(true);
-    try {
-      const modalElement = document.querySelector('[role="dialog"]');
-      if (modalElement) modalElement.style.visibility = 'hidden';
-      await new Promise(resolve => setTimeout(resolve, 100));
-      const canvas = await html2canvas(document.body, {
-        useCORS: true, allowTaint: true, scale: 0.8, logging: false
-      });
-      if (modalElement) modalElement.style.visibility = 'visible';
-      const dataUrl = canvas.toDataURL('image/png');
-      setImages(prev => [...prev, dataUrl]);
-      toast.success('Screenshot captured!');
-    } catch (error) {
-      console.error('Screenshot failed:', error);
-      toast.error('Failed to capture screenshot');
-    } finally {
-      setIsCapturing(false);
-    }
-  };
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files || []);
@@ -246,19 +221,6 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
               {/* Action buttons */}
               {images.length < 5 && (
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    className="flex-1 gap-2"
-                    onClick={captureScreenshot}
-                    disabled={isCapturing}
-                  >
-                    {isCapturing ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Camera className="w-4 h-4" />
-                    )}
-                    {isCapturing ? 'Capturing...' : 'Capture Screenshot'}
-                  </Button>
                   <Button
                     variant="outline"
                     className="flex-1 gap-2"
