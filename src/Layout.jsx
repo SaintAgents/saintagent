@@ -376,7 +376,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   // Proactively sync localStorage when onboarding data arrives as complete
   useEffect(() => {
-    if (onboarding?.status === 'complete') {
+    if (onboarding?.status === 'complete' || onboarding?.status === 'skipped') {
       try { localStorage.setItem('onboardingComplete', '1'); } catch {}
     }
   }, [onboarding?.status]);
@@ -569,7 +569,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
     }
 
     // Redirect to onboarding if not complete
-    if (!onboarding || onboarding.status !== 'complete') {
+    if (!onboarding || (onboarding.status !== 'complete' && onboarding.status !== 'skipped')) {
       if (obCompleteLS) return; // Trust localStorage to prevent loops
       hasRedirected.current = true;
       window.location.href = createPageUrl('Onboarding');

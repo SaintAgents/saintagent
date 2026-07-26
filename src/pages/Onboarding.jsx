@@ -91,9 +91,9 @@ export default function Onboarding() {
     }
   }, [progress]);
 
-  // If progress already complete (e.g., user skipped through fast), go to Command Deck
+  // If progress already complete or skipped, go to Command Deck
   useEffect(() => {
-    if (progress?.status === 'complete') {
+    if (progress?.status === 'complete' || progress?.status === 'skipped') {
       try { 
         localStorage.setItem('onboardingJustCompleted', '1'); 
         localStorage.setItem('onboardingComplete', '1'); 
@@ -394,12 +394,12 @@ export default function Onboarding() {
             <Button
               variant="ghost"
               onClick={async () => {
-                // Mark onboarding as complete immediately and go straight in
+                // Mark onboarding as skipped (not 'complete') so rewards aren't given
                 await saveProgressMutation.mutateAsync({
                   current_step: STEPS.length,
-                  completed_steps: [...new Set([...(progress?.completed_steps || []), ...STEPS.map(s => s.id)])],
+                  completed_steps: progress?.completed_steps || [],
                   step_data: stepData,
-                  status: 'complete'
+                  status: 'skipped'
                 });
 
                 // Ensure basic profile exists
