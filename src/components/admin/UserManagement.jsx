@@ -349,7 +349,11 @@ export default function UserManagement({ viewerRole = 'admin' }) {
               {filteredProfiles.map((profile) =>
               <div
                 key={profile.id}
-                className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors flex-wrap sm:flex-nowrap">
+                className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors flex-wrap sm:flex-nowrap cursor-pointer"
+                onClick={() => {
+                  setInviteEmail(profile.user_id || '');
+                  setInviteDialogOpen(true);
+                }}>
 
                   <div 
                     className="cursor-pointer"
