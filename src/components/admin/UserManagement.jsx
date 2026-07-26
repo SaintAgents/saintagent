@@ -26,7 +26,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 
-export default function UserManagement() {
+export default function UserManagement({ viewerRole = 'admin' }) {
+  const viewerIsAdmin = viewerRole === 'admin';
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [sortOrder, setSortOrder] = useState('date'); // 'date', 'alpha', 'sa'
@@ -462,7 +463,8 @@ export default function UserManagement() {
                 </SelectTrigger>
                 <SelectContent className="bg-slate-800 border-slate-600">
                   <SelectItem value="user" className="text-white">User</SelectItem>
-                  <SelectItem value="admin" className="text-white">Admin</SelectItem>
+                  <SelectItem value="coordinator" className="text-white">Coordinator</SelectItem>
+                  {viewerIsAdmin && <SelectItem value="admin" className="text-white">Admin</SelectItem>}
                 </SelectContent>
               </Select>
             </div>
@@ -504,26 +506,29 @@ export default function UserManagement() {
                 </div>
               </div>
 
-              {/* User Role - FIRST so admins see it immediately */}
-              <div className="p-4 rounded-lg border-2 border-violet-300 bg-violet-50">
-                <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-violet-600" />
-                  User Role (System)
-                </h3>
-                <Select
-                  value={userRecord?.role || 'user'}
-                  onValueChange={(v) => handleChangeUserRole(v)}>
-                  <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-slate-500 mt-2">Admin = full platform access. User = standard access.</p>
-              </div>
+              {/* User Role - admin only */}
+              {viewerIsAdmin && (
+                <div className="p-4 rounded-lg border-2 border-violet-300 bg-violet-50">
+                  <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-violet-600" />
+                    User Role (System)
+                  </h3>
+                  <Select
+                    value={userRecord?.role || 'user'}
+                    onValueChange={(v) => handleChangeUserRole(v)}>
+                    <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="coordinator">Coordinator</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-slate-500 mt-2">Admin = full access. Coordinator = admin dashboard without financial controls. User = standard access.</p>
+                </div>
+              )}
 
-              {/* GGG Balance Controls */}
-              <div>
+              {/* GGG Balance Controls - admin only */}
+              {viewerIsAdmin && <div>
                 <h3 className="font-semibold text-slate-900 mb-3">GGG Balance</h3>
                 <div className="flex items-center gap-3 flex-wrap">
                   <p className="text-2xl font-bold text-slate-900">
@@ -574,7 +579,7 @@ export default function UserManagement() {
                     Apply
                   </Button>
                 </div>
-              </div>
+              </div>}
 
               {/* Leader Status */}
               <div>
@@ -638,21 +643,23 @@ export default function UserManagement() {
                 </div>
               </div>
 
-              {/* Danger Zone */}
-              <div className="border border-rose-200 bg-rose-50 rounded-lg p-4">
-                <h3 className="font-semibold text-rose-700 mb-2">Danger Zone</h3>
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handlePurgeData}>
-                    Purge Messages & Notifications
-                  </Button>
-                  <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handleDeleteProfile}>
-                    Delete Profile
-                  </Button>
-                  <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handleDeleteUser} disabled={!userRecord}>
-                    Delete User Account
-                  </Button>
+              {/* Danger Zone - admin only */}
+              {viewerIsAdmin && (
+                <div className="border border-rose-200 bg-rose-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-rose-700 mb-2">Danger Zone</h3>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handlePurgeData}>
+                      Purge Messages & Notifications
+                    </Button>
+                    <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handleDeleteProfile}>
+                      Delete Profile
+                    </Button>
+                    <Button variant="outline" className="border-rose-300 text-rose-700 hover:bg-rose-100" onClick={handleDeleteUser} disabled={!userRecord}>
+                      Delete User Account
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Stats */}
               <div>

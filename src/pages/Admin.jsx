@@ -66,14 +66,28 @@ export default function Admin() {
     queryFn: () => base44.auth.me()
   });
 
-  // Check if user is admin
-  if (user?.role !== 'admin') {
+  const isAdmin = user?.role === 'admin';
+  const isCoordinator = user?.role === 'coordinator';
+
+  // Tabs that coordinators cannot access (financial/GGG control)
+  const COORDINATOR_RESTRICTED_TABS = new Set([
+    'ggg', 'ggg-totals', 'affiliate-payouts', 'affiliate', 'settings'
+  ]);
+
+  const canAccessTab = (tabValue) => {
+    if (isAdmin) return true;
+    if (isCoordinator) return !COORDINATOR_RESTRICTED_TABS.has(tabValue);
+    return false;
+  };
+
+  // Check if user is admin or coordinator
+  if (!isAdmin && !isCoordinator) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-6">
         <div className="text-center">
           <Shield className="w-16 h-16 text-slate-300 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-slate-900 mb-2">Access Denied</h1>
-          <p className="text-slate-500">You need admin privileges to access this page.</p>
+          <p className="text-slate-500">You need admin or coordinator privileges to access this page.</p>
         </div>
       </div>
     );
@@ -103,16 +117,22 @@ export default function Admin() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
-                <button
-                  onClick={() => setActiveTab('settings')}
-                  className="p-2 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors"
-                  title="Platform Settings"
-                >
-                  <Settings className="w-5 h-5 text-violet-600" />
-                </button>
+                <h1 className="text-3xl font-bold text-slate-900">
+                  {isCoordinator ? 'Coordinator Dashboard' : 'Admin Dashboard'}
+                </h1>
+                {isAdmin && (
+                  <button
+                    onClick={() => setActiveTab('settings')}
+                    className="p-2 rounded-lg bg-violet-100 hover:bg-violet-200 transition-colors"
+                    title="Platform Settings"
+                  >
+                    <Settings className="w-5 h-5 text-violet-600" />
+                  </button>
+                )}
               </div>
-              <p className="text-slate-500 mt-1">Platform management and controls</p>
+              <p className="text-slate-500 mt-1">
+                {isCoordinator ? 'Coordinate platform operations' : 'Platform management and controls'}
+              </p>
             </div>
           </div>
         </div>
@@ -120,206 +140,63 @@ export default function Admin() {
         {/* Admin Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid grid-cols-7 w-full bg-white/[0.88] dark:bg-black/[0.88] backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-lg p-2 h-auto">
-            <TabsTrigger value="overview" className="gap-2 px-3 py-2">
-              <LayoutDashboard className="w-4 h-4" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="users" className="gap-2 px-3 py-2">
-              <Users className="w-4 h-4" />
-              Users
-            </TabsTrigger>
-            <TabsTrigger value="ggg" className="gap-2 px-3 py-2">
-              <Coins className="w-4 h-4" />
-              GGG Rules
-            </TabsTrigger>
-            <TabsTrigger value="badges" className="gap-2 px-3 py-2">
-              <Award className="w-4 h-4" />
-              Badges
-            </TabsTrigger>
-            <TabsTrigger value="rp" className="gap-2 px-3 py-2">
-              <TrendingUp className="w-4 h-4" />
-              RP
-            </TabsTrigger>
-            <TabsTrigger value="leaders" className="gap-2 px-3 py-2">
-              <Crown className="w-4 h-4" />
-              Leaders
-            </TabsTrigger>
-            <TabsTrigger value="referrals" className="gap-2 px-3 py-2">
-              <Share2 className="w-4 h-4" />
-              Referrals
-            </TabsTrigger>
-            <TabsTrigger value="affiliate" className="gap-2 px-3 py-2">
-              <Percent className="w-4 h-4" />
-              Affiliate
-            </TabsTrigger>
-            <TabsTrigger value="affiliate-payouts" className="gap-2 px-3 py-2">
-              <Wallet className="w-4 h-4" />
-              Payouts
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2 px-3 py-2">
-              <Settings className="w-4 h-4" />
-              Settings
-            </TabsTrigger>
-            <TabsTrigger value="stats" className="gap-2 px-3 py-2">
-              <BarChart3 className="w-4 h-4" />
-              Stats
-            </TabsTrigger>
-            <TabsTrigger value="projects" className="gap-2 px-3 py-2">
-              <Folder className="w-4 h-4" />
-              Projects
-            </TabsTrigger>
-            <TabsTrigger value="crm" className="gap-2 px-3 py-2">
-              <Network className="w-4 h-4" />
-              CRM
-            </TabsTrigger>
-            <TabsTrigger value="feedback" className="gap-2 px-3 py-2">
-              <MessageSquare className="w-4 h-4" />
-              Feedback
-            </TabsTrigger>
-            <TabsTrigger value="challenges" className="gap-2 px-3 py-2">
-              <Target className="w-4 h-4" />
-              Challenges
-            </TabsTrigger>
-            <TabsTrigger value="news" className="gap-2 px-3 py-2">
-              <Newspaper className="w-4 h-4" />
-              News
-            </TabsTrigger>
-            <TabsTrigger value="alerts" className="gap-2 px-3 py-2">
-              <Bell className="w-4 h-4" />
-              Alerts
-            </TabsTrigger>
-            <TabsTrigger value="press" className="gap-2 px-3 py-2">
-              <Radio className="w-4 h-4" />
-              Press
-            </TabsTrigger>
-            <TabsTrigger value="insights" className="gap-2 px-3 py-2">
-              <BookOpen className="w-4 h-4" />
-              Insights
-            </TabsTrigger>
-            <TabsTrigger value="onboarding" className="gap-2 px-3 py-2">
-              <Gift className="w-4 h-4" />
-              Onboarding
-            </TabsTrigger>
-            <TabsTrigger value="hero-images" className="gap-2 px-3 py-2">
-              <Image className="w-4 h-4" />
-              Hero Images
-            </TabsTrigger>
-            <TabsTrigger value="newsletter" className="gap-2 px-3 py-2">
-              <Mail className="w-4 h-4" />
-              Newsletter
-            </TabsTrigger>
-            <TabsTrigger value="audit" className="gap-2 px-3 py-2">
-              <Activity className="w-4 h-4" />
-              Audit Log
-            </TabsTrigger>
-            <TabsTrigger value="master-log" className="gap-2 px-3 py-2">
-              <Eye className="w-4 h-4" />
-              Master Log
-            </TabsTrigger>
-            <TabsTrigger value="ggg-totals" className="gap-2 px-3 py-2">
-              <Coins className="w-4 h-4" />
-              GGG Totals
-            </TabsTrigger>
-            <TabsTrigger value="testimonials" className="gap-2 px-3 py-2">
-              <Star className="w-4 h-4" />
-              Testimonials
-            </TabsTrigger>
-            <TabsTrigger value="moderation" className="gap-2 px-3 py-2">
-              <AlertTriangle className="w-4 h-4" />
-              Moderation
-            </TabsTrigger>
-            <TabsTrigger value="wisdom-mod" className="gap-2 px-3 py-2">
-              <Shield className="w-4 h-4" />
-              Wisdom Mod
-            </TabsTrigger>
-            <TabsTrigger value="demo-users" className="gap-2 px-3 py-2">
-              <UserPlus className="w-4 h-4" />
-              Demo Users
-            </TabsTrigger>
-            <TabsTrigger value="requests" className="gap-2 px-3 py-2">
-              <Inbox className="w-4 h-4" />
-              Requests
-            </TabsTrigger>
-            <TabsTrigger value="pages" className="gap-2 px-3 py-2">
-              <FileText className="w-4 h-4" />
-              Pages
-            </TabsTrigger>
-            <TabsTrigger value="ticker" className="gap-2 px-3 py-2">
-              <Bell className="w-4 h-4" />
-              Ticker
-            </TabsTrigger>
-            <TabsTrigger value="role-groups" className="gap-2 px-3 py-2">
-              <Layers className="w-4 h-4" />
-              Role Groups
-            </TabsTrigger>
-            <TabsTrigger value="workload" className="gap-2 px-3 py-2">
-              <BarChart3 className="w-4 h-4" />
-              Workload
-            </TabsTrigger>
-            <TabsTrigger value="health" className="gap-2 px-3 py-2">
-              <Activity className="w-4 h-4" />
-              Health Map
-            </TabsTrigger>
-            <TabsTrigger value="roadmap" className="gap-2 px-3 py-2">
-              <Map className="w-4 h-4" />
-              Roadmap
-            </TabsTrigger>
-            <TabsTrigger value="risk" className="gap-2 px-3 py-2">
-              <AlertTriangle className="w-4 h-4" />
-              Risk Score
-            </TabsTrigger>
-            <TabsTrigger value="reassign" className="gap-2 px-3 py-2">
-              <Shuffle className="w-4 h-4" />
-              Reassign
-            </TabsTrigger>
-            <TabsTrigger value="capacity" className="gap-2 px-3 py-2">
-              <Gauge className="w-4 h-4" />
-              Capacity
-            </TabsTrigger>
-            <TabsTrigger value="user-log" className="gap-2 px-3 py-2">
-              <Activity className="w-4 h-4" />
-              User Log
-            </TabsTrigger>
-            <TabsTrigger value="learn-popup" className="gap-2 px-3 py-2">
-              <BookOpen className="w-4 h-4" />
-              Learn Popup
-            </TabsTrigger>
-            <TabsTrigger value="progress" className="gap-2 px-3 py-2">
-              <Target className="w-4 h-4" />
-              Progress
-            </TabsTrigger>
-            <TabsTrigger value="cache" className="gap-2 px-3 py-2">
-              <Database className="w-4 h-4" />
-              Cache
-            </TabsTrigger>
-            <TabsTrigger value="activity-banner" className="gap-2 px-3 py-2">
-              <Image className="w-4 h-4" />
-              Feed Banner
-            </TabsTrigger>
-            <TabsTrigger value="deep-disclosure" className="gap-2 px-3 py-2">
-              <Mic className="w-4 h-4" />
-              Podcast
-            </TabsTrigger>
-            <TabsTrigger value="proposals" className="gap-2 px-3 py-2">
-              <Vote className="w-4 h-4" />
-              Proposals
-            </TabsTrigger>
-            <TabsTrigger value="live-toasts" className="gap-2 px-3 py-2">
-              <Zap className="w-4 h-4" />
-              Live Toasts
-            </TabsTrigger>
-            <TabsTrigger value="usage" className="gap-2 px-3 py-2">
-              <Activity className="w-4 h-4" />
-              Usage
-            </TabsTrigger>
-            <TabsTrigger value="signins" className="gap-2 px-3 py-2">
-              <LogIn className="w-4 h-4" />
-              Sign-Ins
-            </TabsTrigger>
-            <TabsTrigger value="broadcast" className="gap-2 px-3 py-2">
-              <Radio className="w-4 h-4" />
-              Broadcast
-            </TabsTrigger>
+            {[
+              { value: 'overview', icon: LayoutDashboard, label: 'Overview' },
+              { value: 'users', icon: Users, label: 'Users' },
+              { value: 'ggg', icon: Coins, label: 'GGG Rules' },
+              { value: 'badges', icon: Award, label: 'Badges' },
+              { value: 'rp', icon: TrendingUp, label: 'RP' },
+              { value: 'leaders', icon: Crown, label: 'Leaders' },
+              { value: 'referrals', icon: Share2, label: 'Referrals' },
+              { value: 'affiliate', icon: Percent, label: 'Affiliate' },
+              { value: 'affiliate-payouts', icon: Wallet, label: 'Payouts' },
+              { value: 'settings', icon: Settings, label: 'Settings' },
+              { value: 'stats', icon: BarChart3, label: 'Stats' },
+              { value: 'projects', icon: Folder, label: 'Projects' },
+              { value: 'crm', icon: Network, label: 'CRM' },
+              { value: 'feedback', icon: MessageSquare, label: 'Feedback' },
+              { value: 'challenges', icon: Target, label: 'Challenges' },
+              { value: 'news', icon: Newspaper, label: 'News' },
+              { value: 'alerts', icon: Bell, label: 'Alerts' },
+              { value: 'press', icon: Radio, label: 'Press' },
+              { value: 'insights', icon: BookOpen, label: 'Insights' },
+              { value: 'onboarding', icon: Gift, label: 'Onboarding' },
+              { value: 'hero-images', icon: Image, label: 'Hero Images' },
+              { value: 'newsletter', icon: Mail, label: 'Newsletter' },
+              { value: 'audit', icon: Activity, label: 'Audit Log' },
+              { value: 'master-log', icon: Eye, label: 'Master Log' },
+              { value: 'ggg-totals', icon: Coins, label: 'GGG Totals' },
+              { value: 'testimonials', icon: Star, label: 'Testimonials' },
+              { value: 'moderation', icon: AlertTriangle, label: 'Moderation' },
+              { value: 'wisdom-mod', icon: Shield, label: 'Wisdom Mod' },
+              { value: 'demo-users', icon: UserPlus, label: 'Demo Users' },
+              { value: 'requests', icon: Inbox, label: 'Requests' },
+              { value: 'pages', icon: FileText, label: 'Pages' },
+              { value: 'ticker', icon: Bell, label: 'Ticker' },
+              { value: 'role-groups', icon: Layers, label: 'Role Groups' },
+              { value: 'workload', icon: BarChart3, label: 'Workload' },
+              { value: 'health', icon: Activity, label: 'Health Map' },
+              { value: 'roadmap', icon: Map, label: 'Roadmap' },
+              { value: 'risk', icon: AlertTriangle, label: 'Risk Score' },
+              { value: 'reassign', icon: Shuffle, label: 'Reassign' },
+              { value: 'capacity', icon: Gauge, label: 'Capacity' },
+              { value: 'user-log', icon: Activity, label: 'User Log' },
+              { value: 'learn-popup', icon: BookOpen, label: 'Learn Popup' },
+              { value: 'progress', icon: Target, label: 'Progress' },
+              { value: 'cache', icon: Database, label: 'Cache' },
+              { value: 'activity-banner', icon: Image, label: 'Feed Banner' },
+              { value: 'deep-disclosure', icon: Mic, label: 'Podcast' },
+              { value: 'proposals', icon: Vote, label: 'Proposals' },
+              { value: 'live-toasts', icon: Zap, label: 'Live Toasts' },
+              { value: 'usage', icon: Activity, label: 'Usage' },
+              { value: 'signins', icon: LogIn, label: 'Sign-Ins' },
+              { value: 'broadcast', icon: Radio, label: 'Broadcast' },
+            ].filter(tab => canAccessTab(tab.value)).map(tab => (
+              <TabsTrigger key={tab.value} value={tab.value} className="gap-2 px-3 py-2">
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value="overview">
@@ -327,7 +204,7 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="users">
-            <UserManagement />
+            <UserManagement viewerRole={user?.role} />
           </TabsContent>
 
           <TabsContent value="ggg">
