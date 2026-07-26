@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff, CreditCard } from 'lucide-react';
+import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff, CreditCard, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -165,6 +165,31 @@ export default function RightSideTabs() {
   const [dismissedPages, setDismissedPages] = useState(new Set());
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [businessCardOpen, setBusinessCardOpen] = useState(false);
+  const [capturing, setCapturing] = useState(false);
+
+  const handleScreenCapture = async () => {
+    setCapturing(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(document.body, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        ignoreElements: (el) => el.closest('[data-help-panel]') || el.closest('[role="dialog"]'),
+      });
+      const link = document.createElement("a");
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+      link.download = `SaintAgent_Screenshot_${timestamp}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch {
+      // silent fail
+    } finally {
+      setCapturing(false);
+    }
+  };
   const [helpMessages, setHelpMessages] = useState([]);
   const [helpInput, setHelpInput] = useState('');
   const [helpLoading, setHelpLoading] = useState(false);
@@ -601,7 +626,17 @@ export default function RightSideTabs() {
 
               {/* Input */}
               <div className="p-3 border-t border-slate-200 bg-white">
-                {/* Business Card Button - Top Item */}
+                {/* Screen Capture Button - Top Item */}
+                <button
+                  type="button"
+                  onClick={handleScreenCapture}
+                  disabled={capturing}
+                  className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 text-sky-700 dark:text-sky-300 hover:from-sky-100 hover:to-blue-100 border border-sky-200 dark:border-sky-800 transition-all hover:shadow-sm disabled:opacity-50"
+                >
+                  {capturing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
+                  {capturing ? 'Capturing...' : 'Screen Capture'}
+                </button>
+                {/* Business Card Button */}
                 <button
                   type="button"
                   onClick={() => setBusinessCardOpen(true)}
