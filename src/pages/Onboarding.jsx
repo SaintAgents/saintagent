@@ -394,14 +394,51 @@ export default function Onboarding() {
             <Button
               variant="ghost"
               onClick={async () => {
-                // Skip all remaining steps — jump to final step and immediately complete it
-                setCurrentStep(STEPS.length - 1);
-                // Small delay to let state settle, then auto-complete the final step
-                setTimeout(() => handleStepComplete({}), 300);
+                // Mark onboarding as complete immediately and go straight in
+                await saveProgressMutation.mutateAsync({
+                  current_step: STEPS.length,
+                  completed_steps: [...new Set([...(progress?.completed_steps || []), ...STEPS.map(s => s.id)])],
+                  step_data: stepData,
+                  status: 'complete'
+                });
+
+                // Ensure basic profile exists
+                try {
+                  const existingProfiles = await base44.entities.UserProfile.filter({ user_id: user.email });
+                  if (!existingProfiles?.length) {
+                    const baseHandle = (user.full_name?.split(' ')?.[0] || user.email.split('@')[0] || 'agent').toLowerCase().replace(/[^a-z0-9_]/g, '');
+                    let handle = baseHandle || 'agent';
+                    let collision = await base44.entities.UserProfile.filter({ handle });
+                    while (collision?.length) {
+                      handle = `${baseHandle}${Math.floor(Math.random() * 10000)}`;
+                      collision = await base44.entities.UserProfile.filter({ handle });
+                    }
+                    await base44.entities.UserProfile.create({
+                      user_id: user.email,
+                      display_name: user.full_name || handle,
+                      handle
+                    });
+                  }
+                } catch (e) {
+                  console.error('Profile creation on skip-all failed:', e);
+                }
+
+                // Assign SA number
+                try {
+                  await base44.functions.invoke('assignSaNumber', {});
+                } catch (e) {
+                  console.error('SA# assignment on skip-all failed:', e);
+                }
+
+                try { 
+                  localStorage.setItem('onboardingJustCompleted', '1'); 
+                  localStorage.setItem('onboardingComplete', '1'); 
+                } catch {}
+                window.location.href = createPageUrl('CommandDeck');
               }}
               className="text-amber-600 hover:text-amber-700"
             >
-              Skip All
+              Skip All — Finish Later
             </Button>
           </div>
         </div>
