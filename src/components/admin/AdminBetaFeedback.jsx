@@ -80,6 +80,8 @@ export default function AdminBetaFeedback() {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterType, setFilterType] = useState('all');
+  const [filterSeverity, setFilterSeverity] = useState('all');
+  const [sortBy, setSortBy] = useState('date');
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [adminNotes, setAdminNotes] = useState('');
 
@@ -151,13 +153,23 @@ export default function AdminBetaFeedback() {
     }
   };
 
+  const SEVERITY_ORDER = { critical: 0, high: 1, medium: 2, low: 3 };
+
   const filtered = feedbackList.filter(f => {
     const matchesSearch = !search || 
       f.description?.toLowerCase().includes(search.toLowerCase()) ||
       f.reporter_name?.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = filterStatus === 'all' || f.status === filterStatus;
     const matchesType = filterType === 'all' || f.feedback_type === filterType;
-    return matchesSearch && matchesStatus && matchesType;
+    const matchesSeverity = filterSeverity === 'all' || f.severity === filterSeverity;
+    return matchesSearch && matchesStatus && matchesType && matchesSeverity;
+  }).sort((a, b) => {
+    if (sortBy === 'severity') {
+      const sa = SEVERITY_ORDER[a.severity] ?? 4;
+      const sb = SEVERITY_ORDER[b.severity] ?? 4;
+      if (sa !== sb) return sa - sb;
+    }
+    return new Date(b.created_date) - new Date(a.created_date);
   });
 
   const handleStatusChange = async (id, newStatus, oldStatus) => {
@@ -308,6 +320,27 @@ export default function AdminBetaFeedback() {
             ))}
           </SelectContent>
         </Select>
+        <Select value={filterSeverity} onValueChange={setFilterSeverity}>
+          <SelectTrigger className="w-36">
+            <SelectValue placeholder="Severity" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Severity</SelectItem>
+            <SelectItem value="critical">Critical</SelectItem>
+            <SelectItem value="high">High</SelectItem>
+            <SelectItem value="medium">Medium</SelectItem>
+            <SelectItem value="low">Low</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-40">
+            <SelectValue placeholder="Sort" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="date">Sort: Newest</SelectItem>
+            <SelectItem value="severity">Sort: Severity ↑</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Feedback List */}
@@ -352,7 +385,7 @@ export default function AdminBetaFeedback() {
                           <StatusIcon className="w-3 h-3 mr-1" />
                           {statusConfig.label}
                         </Badge>
-                        {feedback.feedback_type === 'bug' && (
+                        {feedback.severity && (
                           <Badge className={SEVERITY_CONFIG[feedback.severity]}>
                             {feedback.severity}
                           </Badge>
@@ -442,7 +475,7 @@ export default function AdminBetaFeedback() {
                   <Badge className={STATUS_CONFIG[selectedFeedback.status]?.color}>
                     {STATUS_CONFIG[selectedFeedback.status]?.label}
                   </Badge>
-                  {selectedFeedback.feedback_type === 'bug' && (
+                  {selectedFeedback.severity && (
                     <Badge className={SEVERITY_CONFIG[selectedFeedback.severity]}>
                       {selectedFeedback.severity}
                     </Badge>

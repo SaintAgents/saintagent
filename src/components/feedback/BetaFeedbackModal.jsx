@@ -167,8 +167,8 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
             </Select>
           </div>
 
-          {/* Severity (for bugs) */}
-          {feedbackType === 'bug' && (
+          {/* Severity */}
+          {(feedbackType === 'bug' || feedbackType === 'suggestion') && (
             <div>
               <Label>Severity</Label>
               <Select value={severity} onValueChange={setSeverity}>
