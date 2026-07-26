@@ -57,6 +57,7 @@ import AdminProposalsPanel from '@/components/admin/AdminProposalsPanel';
 import LiveToastsAdmin from '@/components/admin/LiveToastsAdmin';
 import UsageAnalyticsTab from '@/components/admin/UsageAnalyticsTab';
 import SignInsTab from '@/components/admin/SignInsTab';
+import AdminBroadcastTab from '@/components/admin/AdminBroadcastTab';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -315,6 +316,10 @@ export default function Admin() {
               <LogIn className="w-4 h-4" />
               Sign-Ins
             </TabsTrigger>
+            <TabsTrigger value="broadcast" className="gap-2 px-3 py-2">
+              <Radio className="w-4 h-4" />
+              Broadcast
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
@@ -533,6 +538,10 @@ export default function Admin() {
 
           <TabsContent value="signins">
             <SignInsTab />
+          </TabsContent>
+
+          <TabsContent value="broadcast">
+            <AdminBroadcastTab />
           </TabsContent>
         </Tabs>
       </div>
