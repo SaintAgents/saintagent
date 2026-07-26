@@ -61,7 +61,8 @@ import {
   BarChart3,
   Contact,
   Activity,
-  Network
+  Network,
+  CreditCard
 } from
 "lucide-react";
 
@@ -111,6 +112,7 @@ import MyContactsTab from '@/components/profile/MyContactsTab';
 import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
 import MilestoneProgressTracker from '@/components/profile/MilestoneProgressTracker';
 import ProfileActionButtons from '@/components/profile/ProfileActionButtons';
+import BusinessCardDialog from '@/components/profile/BusinessCardDialog';
 import {
   Tooltip,
   TooltipContent,
@@ -131,6 +133,7 @@ export default function Profile() {
   const [intentionsData, setIntentionsData] = useState([]);
   const [newIntention, setNewIntention] = useState('');
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
+  const [businessCardOpen, setBusinessCardOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Reactively track ?id= so profile updates on soft navigation
@@ -636,6 +639,14 @@ export default function Profile() {
               <div className="flex items-center gap-2">
                                           <BoostStatusBadge userId={profile?.user_id} />
                                           <QuickBoostButton size="sm" variant="outline" />
+                                          <Button
+                  variant="outline"
+                  className="rounded-xl gap-1"
+                  onClick={() => setBusinessCardOpen(true)}
+                  title="Digital Business Card">
+                  <CreditCard className="w-4 h-4" />
+                  <span className="hidden sm:inline">Card</span>
+                </Button>
                                           <Button
                   variant="outline"
                   className="rounded-xl gap-2"
@@ -1982,6 +1993,7 @@ export default function Profile() {
 
       </div>
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
+      <BusinessCardDialog open={businessCardOpen} onOpenChange={setBusinessCardOpen} profile={profile} />
       <PhotoViewer
         open={viewerOpen}
         images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0, 5)}

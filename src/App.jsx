@@ -28,6 +28,7 @@ import MissionManage from './pages/MissionManage';
 import MissionTimeline from './pages/MissionTimeline';
 import MissionGrid from './pages/MissionGrid';
 import Learn from './pages/Learn';
+import VCardLanding from './pages/VCardLanding';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -158,6 +159,7 @@ const AppRoutes = () => (
     <Route path="/MissionTimeline" element={<LayoutWrapper currentPageName="MissionTimeline"><MissionTimeline /></LayoutWrapper>} />
     <Route path="/MissionGrid" element={<LayoutWrapper currentPageName="MissionGrid"><MissionGrid /></LayoutWrapper>} />
     <Route path="/Learn" element={<LayoutWrapper currentPageName="Learn"><Learn /></LayoutWrapper>} />
+    <Route path="/vcard/:saNumber" element={<VCardLanding />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
