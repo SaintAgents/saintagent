@@ -21,7 +21,8 @@ import {
   TrendingUp,
   Wand2,
   ArrowRight,
-  RotateCw
+  RotateCw,
+  RotateCcw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createPageUrl } from '@/utils';
@@ -298,6 +299,28 @@ Only include fields that are in the missing list: ${missing.join(', ')}`,
     setFormData(prev => ({ ...prev, [field]: updated }));
   };
 
+  // Restart onboarding handler
+  const handleRestartOnboarding = async () => {
+    if (!profile?.user_id) return;
+    try {
+      const progressRecords = await base44.entities.OnboardingProgress.filter({ user_id: profile.user_id });
+      if (progressRecords?.[0]) {
+        await base44.entities.OnboardingProgress.update(progressRecords[0].id, {
+          current_step: 0,
+          status: 'in_progress',
+          completed_steps: []
+        });
+      }
+      try {
+        localStorage.removeItem('onboardingComplete');
+        localStorage.removeItem('onboardingJustCompleted');
+      } catch {}
+      window.location.href = createPageUrl('Onboarding');
+    } catch (err) {
+      console.error('Failed to restart onboarding:', err);
+    }
+  };
+
   if (dismissed || completionPercent >= 95) {
     return null;
   }
@@ -363,6 +386,17 @@ Only include fields that are in the missing list: ${missing.join(', ')}`,
               </span>
             </div>
             <Progress value={completionPercent} className="h-2" />
+            {completionPercent < 80 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-2 gap-1.5 text-xs text-violet-600 hover:text-violet-700 px-2 h-7"
+                onClick={handleRestartOnboarding}
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Redo Onboarding
+              </Button>
+            )}
           </div>
         </CardHeader>
 

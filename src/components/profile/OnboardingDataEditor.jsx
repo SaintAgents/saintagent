@@ -15,7 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Save, Edit, Target, Heart, Compass, MapPin, X } from "lucide-react";
+import { Save, Edit, Target, Heart, Compass, MapPin, X, RotateCcw } from "lucide-react";
+import { createPageUrl } from '@/utils';
 
 const DESIRE_OPTIONS = [
   { code: 'find_mentor', label: 'Find a Mentor' },
@@ -195,23 +196,51 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
           <h2 className="text-2xl font-bold text-slate-900">Profile Details</h2>
           <p className="text-slate-500 mt-1">Your onboarding information</p>
         </div>
-        {!isEditing ? (
-          <Button onClick={handleEdit} className="bg-violet-600 hover:bg-violet-700 gap-2">
-            <Edit className="w-4 h-4" />
-            Edit Details
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="gap-2 text-violet-600 border-violet-200 hover:bg-violet-50"
+            onClick={async () => {
+              try {
+                const progressRecords = await base44.entities.OnboardingProgress.filter({ user_id: profile.user_id });
+                if (progressRecords?.[0]) {
+                  await base44.entities.OnboardingProgress.update(progressRecords[0].id, {
+                    current_step: 0,
+                    status: 'in_progress',
+                    completed_steps: []
+                  });
+                }
+                try {
+                  localStorage.removeItem('onboardingComplete');
+                  localStorage.removeItem('onboardingJustCompleted');
+                } catch {}
+                window.location.href = createPageUrl('Onboarding');
+              } catch (err) {
+                console.error('Failed to restart onboarding:', err);
+              }
+            }}
+          >
+            <RotateCcw className="w-4 h-4" />
+            Redo Onboarding
           </Button>
-        ) : (
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setIsEditing(false)}>
-              <X className="w-4 h-4 mr-1" />
-              Cancel
+          {!isEditing ? (
+            <Button onClick={handleEdit} className="bg-violet-600 hover:bg-violet-700 gap-2">
+              <Edit className="w-4 h-4" />
+              Edit Details
             </Button>
-            <Button onClick={handleSave} className="bg-violet-600 hover:bg-violet-700 gap-2">
-              <Save className="w-4 h-4" />
-              Save Changes
-            </Button>
-          </div>
-        )}
+          ) : (
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setIsEditing(false)}>
+                <X className="w-4 h-4 mr-1" />
+                Cancel
+              </Button>
+              <Button onClick={handleSave} className="bg-violet-600 hover:bg-violet-700 gap-2">
+                <Save className="w-4 h-4" />
+                Save Changes
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Identity Info */}
