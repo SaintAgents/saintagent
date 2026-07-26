@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Download, X, Mail, ShieldCheck, Globe, MapPin } from "lucide-react";
+import { Loader2, Download, X, Mail, ShieldCheck, Globe, MapPin, Link2, Copy } from "lucide-react";
 import ProfileQRCode from "./ProfileQRCode";
 
 export default function BusinessCardDialog({ open, onOpenChange, profile }) {
@@ -18,6 +20,18 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
   const trustScore = profile?.trust_score || 0;
   const avatarUrl = profile?.avatar_url;
   const website = profile?.social_links?.website || "";
+
+  // Fetch affiliate code for this user
+  const { data: affiliateCodes = [] } = useQuery({
+    queryKey: ['affiliateCode', profile?.user_id],
+    queryFn: () => base44.entities.AffiliateCode.filter({ user_id: profile.user_id }),
+    enabled: !!profile?.user_id && open,
+    staleTime: 300000,
+  });
+  const affiliateCode = affiliateCodes[0]?.code || "";
+  const joinLink = affiliateCode
+    ? `${window.location.origin}/Join?ref=${affiliateCode}`
+    : `${window.location.origin}/Join`;
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
@@ -62,7 +76,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
           </button>
         </DialogClose>
 
-        <div className="flex flex-col items-center gap-5 pt-2">
+        <div className="flex flex-col items-center gap-4 pt-2">
           <div
             ref={cardRef}
             className="relative overflow-hidden shadow-2xl"
@@ -127,9 +141,16 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
                 </div>
               )}
 
-              {/* Brand center-bottom */}
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[8px] text-violet-700/60 tracking-wide whitespace-nowrap">
-                Saint Agents World
+              {/* Affiliate / Join link bottom-center */}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-center whitespace-nowrap">
+                {affiliateCode ? (
+                  <div className="text-[8px] text-violet-700/60 tracking-wide">
+                    <span className="text-violet-500/80 font-semibold">JOIN:</span>{" "}
+                    <span className="text-violet-700/70">saintagent.world/Join?ref={affiliateCode}</span>
+                  </div>
+                ) : (
+                  <div className="text-[8px] text-violet-700/60 tracking-wide">Saint Agents World</div>
+                )}
               </div>
 
               {/* Trust score top-right */}
@@ -140,6 +161,26 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Join Link & Affiliate Code */}
+          <div className="w-full max-w-[420px] space-y-2 pb-2">
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-50 border border-violet-200 cursor-pointer hover:bg-violet-100 transition-colors"
+              onClick={() => {
+                navigator.clipboard.writeText(joinLink);
+                toast({ title: "Join link copied!" });
+              }}
+            >
+              <Link2 className="w-3.5 h-3.5 text-violet-500 shrink-0" />
+              <span className="text-xs text-violet-700 truncate flex-1 font-mono">{joinLink}</span>
+              <Copy className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+            </div>
+            {affiliateCode && (
+              <p className="text-center text-[10px] text-violet-500">
+                Referral Code: <span className="font-semibold font-mono">{affiliateCode}</span>
+              </p>
+            )}
           </div>
         </div>
       </DialogContent>
