@@ -25,7 +25,15 @@
     },
     "screenshot_url": {
       "type": "string",
-      "description": "URL of uploaded screenshot"
+      "description": "URL of primary screenshot"
+    },
+    "image_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "All attached image URLs (includes screenshot)"
     },
     "page_url": {
       "type": "string",
@@ -85,29 +93,25 @@
     },
     "likes_count": {
       "type": "number",
-      "default": 0,
-      "description": "Number of likes on this feedback"
+      "default": 0
     },
     "loves_count": {
       "type": "number",
-      "default": 0,
-      "description": "Number of loves on this feedback"
+      "default": 0
     },
     "liked_by": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "default": [],
-      "description": "User IDs who liked"
+      "default": []
     },
     "loved_by": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "default": [],
-      "description": "User IDs who loved"
+      "default": []
     },
     "comments": {
       "type": "array",
@@ -134,13 +138,11 @@
           }
         }
       },
-      "default": [],
-      "description": "User comments on this feedback"
+      "default": []
     },
     "view_count": {
       "type": "number",
-      "default": 0,
-      "description": "Number of views/clicks"
+      "default": 0
     }
   },
   "required": [

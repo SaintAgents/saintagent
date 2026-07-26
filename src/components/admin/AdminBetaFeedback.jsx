@@ -470,17 +470,26 @@ export default function AdminBetaFeedback() {
                   </p>
                 </div>
 
-                {/* Screenshot */}
-                {selectedFeedback.screenshot_url && (
+                {/* Images */}
+                {(selectedFeedback.image_urls?.length > 0 || selectedFeedback.screenshot_url) && (
                   <div>
-                    <h4 className="font-medium text-slate-900 mb-1">Screenshot</h4>
-                    <a href={selectedFeedback.screenshot_url} target="_blank" rel="noopener noreferrer">
-                      <img 
-                        src={selectedFeedback.screenshot_url} 
-                        alt="Screenshot" 
-                        className="w-full rounded-lg border hover:opacity-90 transition-opacity"
-                      />
-                    </a>
+                    <h4 className="font-medium text-slate-900 mb-1">
+                      Images ({(selectedFeedback.image_urls?.length || 1)})
+                    </h4>
+                    <div className="flex gap-2 flex-wrap">
+                      {(selectedFeedback.image_urls?.length > 0 
+                        ? selectedFeedback.image_urls 
+                        : [selectedFeedback.screenshot_url]
+                      ).map((url, i) => (
+                        <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                          <img 
+                            src={url} 
+                            alt={`Image ${i + 1}`} 
+                            className="h-48 rounded-lg border object-cover hover:opacity-90 transition-opacity"
+                          />
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 )}
 

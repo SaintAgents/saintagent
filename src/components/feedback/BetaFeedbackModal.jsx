@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Camera, Send, Loader2, Bug, Lightbulb, MessageCircle, HelpCircle, X, RefreshCw } from "lucide-react";
+import { Camera, Send, Loader2, Bug, Lightbulb, MessageCircle, HelpCircle, X, RefreshCw, Upload, ImagePlus } from "lucide-react";
 import { toast } from "sonner";
 
 const FEEDBACK_TYPES = [
@@ -19,6 +19,7 @@ const FEEDBACK_TYPES = [
 
 export default function BetaFeedbackModal({ open, onClose, initialType }) {
   const [feedbackType, setFeedbackType] = useState(initialType || 'comment');
+  const fileInputRef = useRef(null);
 
   // Update feedbackType when initialType changes
   React.useEffect(() => {
@@ -28,8 +29,9 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
   }, [initialType]);
   const [description, setDescription] = useState('');
   const [severity, setSeverity] = useState('medium');
-  const [screenshot, setScreenshot] = useState(null);
+  const [images, setImages] = useState([]); // array of data URLs or object URLs
   const [isCapturing, setIsCapturing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: currentUser } = useQuery({
@@ -38,25 +40,18 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
   });
 
   const captureScreenshot = async () => {
+    if (images.length >= 5) { toast.error('Maximum 5 images allowed'); return; }
     setIsCapturing(true);
     try {
-      // Temporarily hide the modal for screenshot
       const modalElement = document.querySelector('[role="dialog"]');
       if (modalElement) modalElement.style.visibility = 'hidden';
-
       await new Promise(resolve => setTimeout(resolve, 100));
-
       const canvas = await html2canvas(document.body, {
-        useCORS: true,
-        allowTaint: true,
-        scale: 0.8,
-        logging: false
+        useCORS: true, allowTaint: true, scale: 0.8, logging: false
       });
-
       if (modalElement) modalElement.style.visibility = 'visible';
-
       const dataUrl = canvas.toDataURL('image/png');
-      setScreenshot(dataUrl);
+      setImages(prev => [...prev, dataUrl]);
       toast.success('Screenshot captured!');
     } catch (error) {
       console.error('Screenshot failed:', error);
@@ -64,6 +59,25 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
     } finally {
       setIsCapturing(false);
     }
+  };
+
+  const handleFileUpload = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    const remaining = 5 - images.length;
+    if (remaining <= 0) { toast.error('Maximum 5 images allowed'); return; }
+    const toAdd = files.slice(0, remaining);
+    toAdd.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => setImages(prev => [...prev, reader.result]);
+      reader.readAsDataURL(file);
+    });
+    if (files.length > remaining) toast.info(`Only ${remaining} more image(s) allowed`);
+    e.target.value = '';
+  };
+
+  const removeImage = (index) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
@@ -76,12 +90,16 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
     try {
       let screenshotUrl = null;
 
-      // Upload screenshot if captured
-      if (screenshot) {
-        const blob = await fetch(screenshot).then(r => r.blob());
-        const file = new File([blob], `feedback-${Date.now()}.png`, { type: 'image/png' });
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        screenshotUrl = file_url;
+      // Upload all images
+      const uploadedUrls = [];
+      if (images.length > 0) {
+        for (let i = 0; i < images.length; i++) {
+          const blob = await fetch(images[i]).then(r => r.blob());
+          const file = new File([blob], `feedback-${Date.now()}-${i}.png`, { type: 'image/png' });
+          const { file_url } = await base44.integrations.Core.UploadFile({ file });
+          uploadedUrls.push(file_url);
+        }
+        screenshotUrl = uploadedUrls[0];
       }
 
       // Create feedback entry
@@ -91,6 +109,7 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
         feedback_type: feedbackType,
         description: description.trim(),
         screenshot_url: screenshotUrl,
+        image_urls: uploadedUrls,
         page_url: window.location.href,
         severity,
         status: 'pending'
@@ -136,7 +155,7 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
     setFeedbackType('comment');
     setDescription('');
     setSeverity('medium');
-    setScreenshot(null);
+    setImages([]);
     onClose();
   };
 
@@ -202,47 +221,61 @@ export default function BetaFeedbackModal({ open, onClose, initialType }) {
             />
           </div>
 
-          {/* Screenshot Section */}
+          {/* Images Section */}
           <div>
-            <Label>Screenshot (optional)</Label>
-            <div className="mt-1">
-              {screenshot ? (
-                <div className="relative rounded-lg border overflow-hidden">
-                  <img src={screenshot} alt="Screenshot" className="w-full h-40 object-cover object-top" />
-                  <div className="absolute top-2 right-2 flex gap-1">
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="h-7 w-7"
-                      onClick={captureScreenshot}
-                      disabled={isCapturing}
-                    >
-                      <RefreshCw className="w-3 h-3" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="h-7 w-7"
-                      onClick={() => setScreenshot(null)}
-                    >
-                      <X className="w-3 h-3" />
-                    </Button>
-                  </div>
+            <Label>Images (optional, up to 5)</Label>
+            <div className="mt-1 space-y-2">
+              {/* Image thumbnails */}
+              {images.length > 0 && (
+                <div className="flex gap-2 flex-wrap">
+                  {images.map((img, idx) => (
+                    <div key={idx} className="relative w-24 h-24 rounded-lg border overflow-hidden group">
+                      <img src={img} alt={`Image ${idx + 1}`} className="w-full h-full object-cover" />
+                      <button
+                        onClick={() => removeImage(idx)}
+                        className="absolute top-1 right-1 p-0.5 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                      <span className="absolute bottom-1 left-1 text-[10px] bg-black/50 text-white px-1 rounded">{idx + 1}</span>
+                    </div>
+                  ))}
                 </div>
-              ) : (
-                <Button
-                  variant="outline"
-                  className="w-full gap-2"
-                  onClick={captureScreenshot}
-                  disabled={isCapturing}
-                >
-                  {isCapturing ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Camera className="w-4 h-4" />
-                  )}
-                  {isCapturing ? 'Capturing...' : 'Capture Screenshot'}
-                </Button>
+              )}
+
+              {/* Action buttons */}
+              {images.length < 5 && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1 gap-2"
+                    onClick={captureScreenshot}
+                    disabled={isCapturing}
+                  >
+                    {isCapturing ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Camera className="w-4 h-4" />
+                    )}
+                    {isCapturing ? 'Capturing...' : 'Capture Screenshot'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1 gap-2"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="w-4 h-4" />
+                    Upload Image
+                  </Button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={handleFileUpload}
+                  />
+                </div>
               )}
             </div>
           </div>

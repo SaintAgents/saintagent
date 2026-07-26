@@ -280,10 +280,14 @@ export default function BetaFeedback() {
                             <Badge variant="outline" className="text-xs">Mine</Badge>
                           </div>
                           <p className="text-slate-700 text-sm">{feedback.description}</p>
-                          {feedback.screenshot_url && (
-                            <a href={feedback.screenshot_url} target="_blank" rel="noopener noreferrer" className="block mt-2">
-                              <img src={feedback.screenshot_url} alt="Screenshot" className="w-full max-h-40 object-cover object-top rounded-lg border hover:opacity-90 transition-opacity" />
-                            </a>
+                          {(feedback.image_urls?.length > 0 || feedback.screenshot_url) && (
+                            <div className="flex gap-2 mt-2 flex-wrap">
+                              {(feedback.image_urls?.length > 0 ? feedback.image_urls : [feedback.screenshot_url]).map((url, i) => (
+                                <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                                  <img src={url} alt={`Image ${i + 1}`} className="h-32 rounded-lg border object-cover hover:opacity-90 transition-opacity" />
+                                </a>
+                              ))}
+                            </div>
                           )}
                           <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
                             <span>{format(new Date(feedback.created_date), 'MMM d, yyyy')}</span>
@@ -340,11 +344,15 @@ export default function BetaFeedback() {
                         </div>
                         <p className="text-slate-700 text-sm">{feedback.description}</p>
                         
-                        {/* Screenshot */}
-                        {feedback.screenshot_url && (
-                          <a href={feedback.screenshot_url} target="_blank" rel="noopener noreferrer" className="block mt-2">
-                            <img src={feedback.screenshot_url} alt="Screenshot" className="w-full max-h-48 object-cover object-top rounded-lg border hover:opacity-90 transition-opacity" />
-                          </a>
+                        {/* Images */}
+                        {(feedback.image_urls?.length > 0 || feedback.screenshot_url) && (
+                          <div className="flex gap-2 mt-2 flex-wrap">
+                            {(feedback.image_urls?.length > 0 ? feedback.image_urls : [feedback.screenshot_url]).map((url, i) => (
+                              <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                                <img src={url} alt={`Image ${i + 1}`} className="h-40 rounded-lg border object-cover hover:opacity-90 transition-opacity" />
+                              </a>
+                            ))}
+                          </div>
                         )}
 
                         {/* Stats Row */}
