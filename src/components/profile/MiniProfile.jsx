@@ -374,7 +374,7 @@ export default function MiniProfile({
                       <TooltipTrigger asChild>
                         <Badge className="h-5 text-[10px] bg-amber-100 text-amber-700 flex items-center gap-1 cursor-help">
                           <Coins className="w-3 h-3" />
-                          {Math.round(profile.ggg_balance)} GGG
+                          {profile.ggg_balance >= 1 ? Math.round(profile.ggg_balance) : profile.ggg_balance.toFixed(2)} GGG
                         </Badge>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" className="max-w-[220px]">
