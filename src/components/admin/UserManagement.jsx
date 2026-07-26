@@ -349,7 +349,7 @@ export default function UserManagement({ viewerRole = 'admin' }) {
               {filteredProfiles.map((profile) =>
               <div
                 key={profile.id}
-                className="flex items-center gap-4 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors flex-wrap sm:flex-nowrap">
 
                   <div 
                     className="cursor-pointer"
@@ -384,8 +384,8 @@ export default function UserManagement({ viewerRole = 'admin' }) {
                     <p className="text-sm text-muted-foreground">@{profile.handle} • {profile.user_id}</p>
                   </div>
 
-                  <div className="flex items-center gap-4 text-sm">
-                    <div className="text-center min-w-[80px]">
+                  <div className="flex items-center gap-2 sm:gap-4 text-sm flex-shrink-0">
+                    <div className="text-center min-w-[60px] sm:min-w-[80px] hidden sm:block">
                       <p className="font-semibold flex items-center justify-center gap-1">
                         <Calendar className="w-3 h-3 text-muted-foreground" />
                         {profile.created_date ? new Date(profile.created_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' }) : '-'}
@@ -414,7 +414,7 @@ export default function UserManagement({ viewerRole = 'admin' }) {
                   )} />
                   </div>
 
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1 flex-shrink-0">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -423,7 +423,7 @@ export default function UserManagement({ viewerRole = 'admin' }) {
                         setInviteEmail(profile.user_id || '');
                         setInviteDialogOpen(true);
                       }}
-                      className="text-violet-600 hover:bg-violet-50 px-2 text-xs font-medium h-8"
+                      className="text-violet-600 hover:bg-violet-50 px-1.5 text-xs font-medium h-7 sm:h-8"
                       title="Invite / re-invite this user"
                     >
                       <UserPlus className="w-3 h-3" />
@@ -436,10 +436,10 @@ export default function UserManagement({ viewerRole = 'admin' }) {
                         e.preventDefault();
                         setSelectedUser(profile);
                       }} 
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 px-3 text-xs font-medium h-8"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 px-2 sm:px-3 text-xs font-medium h-7 sm:h-8"
                     >
-                      <Edit className="w-3 h-3 mr-1" />
-                      Manage
+                      <Edit className="w-3 h-3 sm:mr-1" />
+                      <span className="hidden sm:inline">Manage</span>
                     </Button>
                   </div>
                 </div>
