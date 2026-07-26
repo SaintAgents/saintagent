@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff } from 'lucide-react';
+import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,6 +11,7 @@ import ReactMarkdown from 'react-markdown';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 import ConciergeAgentChat from '@/components/support/ConciergeAgentChat';
 import LearnPanel from '@/components/learn/LearnPanel';
+import BusinessCardDialog from '@/components/profile/BusinessCardDialog';
 import HelpPanelThemeOverrides from '@/components/hud/HelpPanelThemeOverrides';
 import { format, parseISO } from 'date-fns';
 
@@ -163,6 +164,7 @@ export default function RightSideTabs() {
   // Track which pages user explicitly dismissed the panel on this session
   const [dismissedPages, setDismissedPages] = useState(new Set());
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [businessCardOpen, setBusinessCardOpen] = useState(false);
   const [helpMessages, setHelpMessages] = useState([]);
   const [helpInput, setHelpInput] = useState('');
   const [helpLoading, setHelpLoading] = useState(false);
@@ -172,6 +174,21 @@ export default function RightSideTabs() {
   const helpInputRef = useRef(null);
 
   const queryClient = useQueryClient();
+
+  // Fetch current user's profile for the business card
+  const { data: currentUser } = useQuery({
+    queryKey: ['authMe'],
+    queryFn: () => base44.auth.me(),
+    staleTime: 600000,
+    retry: 1,
+  });
+  const { data: myProfiles } = useQuery({
+    queryKey: ['myProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1),
+    enabled: !!currentUser?.email,
+    staleTime: 300000,
+  });
+  const myProfile = myProfiles?.[0];
 
   // Hover timeout refs for smooth interactions
   const helpTimeoutRef = useRef(null);
@@ -386,6 +403,7 @@ export default function RightSideTabs() {
       <>
         <HelpPanelThemeOverrides />
         <BetaFeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
+        <BusinessCardDialog open={businessCardOpen} onOpenChange={setBusinessCardOpen} profile={myProfile} />
         {/* Tiny restore button */}
         <button
           onClick={toggleSuppressed}
@@ -402,6 +420,7 @@ export default function RightSideTabs() {
     <>
       <HelpPanelThemeOverrides />
       <BetaFeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
+      <BusinessCardDialog open={businessCardOpen} onOpenChange={setBusinessCardOpen} profile={myProfile} />
       
       {/* Help Tab */}
       <div 
@@ -582,6 +601,15 @@ export default function RightSideTabs() {
 
               {/* Input */}
               <div className="p-3 border-t border-slate-200 bg-white">
+                {/* Business Card Button - Top Item */}
+                <button
+                  type="button"
+                  onClick={() => setBusinessCardOpen(true)}
+                  className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 text-violet-700 dark:text-violet-300 hover:from-violet-100 hover:to-purple-100 border border-violet-200 dark:border-violet-800 transition-all hover:shadow-sm"
+                >
+                  <CreditCard className="w-3.5 h-3.5" />
+                  My Digital Business Card
+                </button>
                 {/* Action Buttons Row */}
                 <div className="flex gap-2 mb-2">
                   <button
