@@ -8,10 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   MessageSquare, Bug, Lightbulb, HelpCircle, Search,
   Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink,
-  Wand2, Bot, Copy
+  Wand2, Bot, Copy, Wrench, ShieldCheck
 } from "lucide-react";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
@@ -238,6 +239,42 @@ export default function AdminBetaFeedback() {
         </Button>
       </div>
 
+      {/* Summary Cards — click to filter */}
+      {(() => {
+        const total = feedbackList.length;
+        const pending = feedbackList.filter(f => f.status === 'pending').length;
+        const inProgress = feedbackList.filter(f => f.status === 'in_progress').length;
+        const resolved = feedbackList.filter(f => f.status === 'resolved').length;
+        const fixed = feedbackList.filter(f => f.is_fixed).length;
+        const tested = feedbackList.filter(f => f.coordinator_tested).length;
+        const bugs = feedbackList.filter(f => f.feedback_type === 'bug').length;
+
+        const cards = [
+          { label: 'Total', count: total, filter: () => { setFilterStatus('all'); setFilterType('all'); }, color: 'bg-slate-50 border-slate-200 text-slate-700', active: filterStatus === 'all' && filterType === 'all' },
+          { label: 'Pending', count: pending, filter: () => { setFilterStatus('pending'); setFilterType('all'); }, color: 'bg-yellow-50 border-yellow-200 text-yellow-700', active: filterStatus === 'pending' },
+          { label: 'In Progress', count: inProgress, filter: () => { setFilterStatus('in_progress'); setFilterType('all'); }, color: 'bg-purple-50 border-purple-200 text-purple-700', active: filterStatus === 'in_progress' },
+          { label: 'Resolved', count: resolved, filter: () => { setFilterStatus('resolved'); setFilterType('all'); }, color: 'bg-green-50 border-green-200 text-green-700', active: filterStatus === 'resolved' },
+          { label: 'Bugs', count: bugs, filter: () => { setFilterType('bug'); setFilterStatus('all'); }, color: 'bg-red-50 border-red-200 text-red-700', active: filterType === 'bug' },
+          { label: 'Fixed', count: fixed, filter: () => { setFilterStatus('all'); setFilterType('all'); }, color: 'bg-emerald-50 border-emerald-200 text-emerald-700', icon: Wrench },
+          { label: 'Tested', count: tested, filter: () => { setFilterStatus('all'); setFilterType('all'); }, color: 'bg-blue-50 border-blue-200 text-blue-700', icon: ShieldCheck },
+        ];
+
+        return (
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+            {cards.map(card => (
+              <button
+                key={card.label}
+                onClick={card.filter}
+                className={`p-3 rounded-xl border text-center transition-all hover:shadow-md ${card.color} ${card.active ? 'ring-2 ring-violet-400 shadow-md' : ''}`}
+              >
+                <div className="text-2xl font-bold">{card.count}</div>
+                <div className="text-xs font-medium mt-0.5">{card.label}</div>
+              </button>
+            ))}
+          </div>
+        );
+      })()}
+
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="flex-1 min-w-[200px] relative">
@@ -330,7 +367,49 @@ export default function AdminBetaFeedback() {
                         )}
                       </div>
                     </div>
-                    <CopyButton feedback={feedback} typeConfig={typeConfig} statusConfig={statusConfig} />
+                    <div className="flex flex-col gap-2 shrink-0 items-end">
+                      <CopyButton feedback={feedback} typeConfig={typeConfig} statusConfig={statusConfig} />
+                      <div className="flex items-center gap-3">
+                        <label
+                          className="flex items-center gap-1.5 cursor-pointer"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Checkbox
+                            checked={!!feedback.is_fixed}
+                            onCheckedChange={(checked) => {
+                              updateMutation.mutate({
+                                id: feedback.id,
+                                data: { is_fixed: !!checked },
+                                logMessage: checked ? 'Marked feedback as fixed' : 'Unmarked feedback as fixed',
+                                logMeta: { is_fixed: !!checked }
+                              });
+                            }}
+                          />
+                          <span className="text-xs text-slate-600">Fixed</span>
+                        </label>
+                        <label
+                          className="flex items-center gap-1.5 cursor-pointer"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Checkbox
+                            checked={!!feedback.coordinator_tested}
+                            onCheckedChange={(checked) => {
+                              updateMutation.mutate({
+                                id: feedback.id,
+                                data: {
+                                  coordinator_tested: !!checked,
+                                  coordinator_tested_by: checked ? currentUser?.email : null,
+                                  coordinator_tested_at: checked ? new Date().toISOString() : null
+                                },
+                                logMessage: checked ? 'Coordinator confirmed tested' : 'Coordinator removed tested confirmation',
+                                logMeta: { coordinator_tested: !!checked, tester: currentUser?.email }
+                              });
+                            }}
+                          />
+                          <span className="text-xs text-slate-600">Tested</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -421,6 +500,56 @@ export default function AdminBetaFeedback() {
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+
+                {/* Fixed & Tested Checkboxes */}
+                <div className="flex items-center gap-6 p-3 rounded-lg bg-slate-50 border">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      checked={!!selectedFeedback.is_fixed}
+                      onCheckedChange={(checked) => {
+                        updateMutation.mutate({
+                          id: selectedFeedback.id,
+                          data: { is_fixed: !!checked },
+                          logMessage: checked ? 'Marked feedback as fixed' : 'Unmarked feedback as fixed',
+                          logMeta: { is_fixed: !!checked }
+                        });
+                        setSelectedFeedback(prev => ({ ...prev, is_fixed: !!checked }));
+                      }}
+                    />
+                    <Wrench className="w-4 h-4 text-emerald-600" />
+                    <span className="text-sm font-medium text-slate-700">Fixed</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      checked={!!selectedFeedback.coordinator_tested}
+                      onCheckedChange={(checked) => {
+                        updateMutation.mutate({
+                          id: selectedFeedback.id,
+                          data: {
+                            coordinator_tested: !!checked,
+                            coordinator_tested_by: checked ? currentUser?.email : null,
+                            coordinator_tested_at: checked ? new Date().toISOString() : null
+                          },
+                          logMessage: checked ? 'Coordinator confirmed tested' : 'Coordinator removed tested confirmation',
+                          logMeta: { coordinator_tested: !!checked, tester: currentUser?.email }
+                        });
+                        setSelectedFeedback(prev => ({
+                          ...prev,
+                          coordinator_tested: !!checked,
+                          coordinator_tested_by: checked ? currentUser?.email : null,
+                          coordinator_tested_at: checked ? new Date().toISOString() : null
+                        }));
+                      }}
+                    />
+                    <ShieldCheck className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium text-slate-700">Tested by Coordinator</span>
+                  </label>
+                  {selectedFeedback.coordinator_tested_by && (
+                    <span className="text-xs text-slate-500 ml-auto">
+                      by {selectedFeedback.coordinator_tested_by}
+                    </span>
+                  )}
                 </div>
 
                 {/* Bug Repair Checklist - only for bugs */}

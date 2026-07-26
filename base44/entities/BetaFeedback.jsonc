@@ -64,6 +64,25 @@
       "type": "string",
       "description": "JSON string tracking fix/test/confirm workflow"
     },
+    "is_fixed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this issue has been fixed"
+    },
+    "coordinator_tested": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a coordinator has tested and confirmed the fix"
+    },
+    "coordinator_tested_by": {
+      "type": "string",
+      "description": "Email of the coordinator who tested"
+    },
+    "coordinator_tested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the coordinator tested"
+    },
     "likes_count": {
       "type": "number",
       "default": 0,
