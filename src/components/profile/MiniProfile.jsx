@@ -424,23 +424,25 @@ export default function MiniProfile({
                     className="h-7 text-xs px-2"
                   />
                   {userId && userId.includes('@') && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(`mailto:${userId}`, '_blank');
-                          }}
-                          className="h-7 w-7 flex items-center justify-center rounded-md border border-slate-200 hover:bg-blue-50 hover:border-blue-300 transition-colors"
-                          title={`Email ${displayName}`}
-                        >
-                          <Mail className="w-3.5 h-3.5 text-blue-600" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom">
-                        <p className="text-xs">Email {displayName}</p>
-                      </TooltipContent>
-                    </Tooltip>
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(`mailto:${userId}`, '_blank');
+                            }}
+                            className="h-7 w-7 flex items-center justify-center rounded-md border border-slate-200 hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                            title={`Email ${displayName}`}
+                          >
+                            <Mail className="w-3.5 h-3.5 text-blue-600" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">
+                          <p className="text-xs">Email {displayName}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   )}
                 </div>
               )}
