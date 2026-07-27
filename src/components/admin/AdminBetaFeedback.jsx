@@ -629,7 +629,7 @@ export default function AdminBetaFeedback() {
 
                 {/* Admin Notes */}
                 <div>
-                  <h4 className="font-medium text-slate-900 mb-1">Admin Notes</h4>
+                  <h4 className="font-medium text-slate-900 mb-1">Admin Coordinator Notes</h4>
                   <Textarea
                     placeholder="Add internal notes..."
                     value={adminNotes}
