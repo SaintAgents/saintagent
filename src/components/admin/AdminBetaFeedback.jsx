@@ -401,7 +401,23 @@ export default function AdminBetaFeedback() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2 shrink-0 items-end">
-                      <CopyButton feedback={feedback} typeConfig={typeConfig} statusConfig={statusConfig} />
+                      <div className="flex items-center gap-1">
+                        <CopyButton feedback={feedback} typeConfig={typeConfig} statusConfig={statusConfig} />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm('Delete this feedback?')) {
+                              deleteMutation.mutate(feedback.id);
+                            }
+                          }}
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                       <div className="flex items-center gap-3">
                         <label
                           className="flex items-center gap-1.5 cursor-pointer"
