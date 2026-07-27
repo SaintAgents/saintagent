@@ -481,8 +481,17 @@ export default function UserManagement({ viewerRole = 'admin' }) {
                 </SelectTrigger>
                 <SelectContent className="bg-slate-800 border-slate-600">
                   <SelectItem value="user" className="text-white">User</SelectItem>
+                  <SelectItem value="member" className="text-white">Member</SelectItem>
+                  <SelectItem value="contributor" className="text-white">Contributor</SelectItem>
+                  <SelectItem value="reviewer" className="text-white">Reviewer</SelectItem>
+                  <SelectItem value="moderator" className="text-white">Moderator</SelectItem>
                   <SelectItem value="coordinator" className="text-white">Coordinator</SelectItem>
+                  <SelectItem value="guardian_role" className="text-white">Guardian</SelectItem>
+                  <SelectItem value="council_member" className="text-white">Council Member</SelectItem>
                   {viewerIsAdmin && <SelectItem value="admin" className="text-white">Admin</SelectItem>}
+                  {viewerIsAdmin && <SelectItem value="administrator" className="text-white">Administrator</SelectItem>}
+                  {viewerIsAdmin && <SelectItem value="architect" className="text-white">Architect</SelectItem>}
+                  {viewerIsAdmin && <SelectItem value="founder_custodian" className="text-white">Founder / Custodian</SelectItem>}
                 </SelectContent>
               </Select>
             </div>
