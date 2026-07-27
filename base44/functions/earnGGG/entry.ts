@@ -95,10 +95,13 @@ Deno.serve(async (req) => {
     };
     const saved = await base44.entities.Wallet.update(wallet.id, updates);
 
-    // Update profile balance
+    // Update profile balance — read current profile balance and ADD the delta
+    // (profile balance may differ from wallet balance due to other earning paths)
     const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
     if (profiles?.[0]) {
-      await base44.entities.UserProfile.update(profiles[0].id, { ggg_balance: toNum(newAvail) });
+      const currentProfileBalance = toNum(profiles[0].ggg_balance || 0);
+      const newProfileBalance = toNum(currentProfileBalance + amount);
+      await base44.entities.UserProfile.update(profiles[0].id, { ggg_balance: newProfileBalance });
     }
 
     // Write transaction
@@ -118,12 +121,15 @@ Deno.serve(async (req) => {
     });
 
     // Also write legacy GGGTransaction for backward compat
+    const profileBalanceAfter = profiles?.[0] 
+      ? toNum((profiles[0].ggg_balance || 0) + amount) 
+      : newAvail;
     await base44.entities.GGGTransaction.create({
       user_id: userId,
       delta: amount,
       reason_code: action_type,
       description: memo || `Earned: ${rule.description || action_type}`,
-      balance_after: newAvail,
+      balance_after: profileBalanceAfter,
       source_type: 'reward',
       source_id: source_id || undefined,
     });
