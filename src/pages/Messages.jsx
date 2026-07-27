@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SharedDoc from '@/components/collab/SharedDoc';
 import Whiteboard from '@/components/collab/Whiteboard';
 import CoWatch from '@/components/collab/CoWatch';
-import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2, Video, Phone, PhoneIncoming, Image as ImageIcon, LogOut } from "lucide-react";
+import { MessageCircle, Send, Search, ExternalLink, MoreVertical, Plus, Users, Trash2, Smile, Check, CheckCheck, Link2, Video, Phone, PhoneIncoming, Image as ImageIcon, LogOut, X, Reply } from "lucide-react";
 import DirectVideoCall from "@/components/video/DirectVideoCall";
 import { format, parseISO } from "date-fns";
 import { createPageUrl } from "@/utils";
@@ -39,6 +39,7 @@ export default function Messages() {
   const [zoomModalOpen, setZoomModalOpen] = useState(false);
   const [incomingCall, setIncomingCall] = useState(null);
   const [imageViewerUrl, setImageViewerUrl] = useState(null);
+  const [replyingTo, setReplyingTo] = useState(null);
   const typingRef = React.useRef({ lastSentAt: 0 });
   const messagesEndRef = React.useRef(null);
   const scrollAreaRef = React.useRef(null);
@@ -344,7 +345,8 @@ export default function Messages() {
         to_user_id: r,
         from_name: user.full_name,
         to_name: selectedConversation.otherUser.name,
-        content: messageText
+        content: messageText,
+        ...(replyingTo?.id ? { parent_message_id: replyingTo.id } : {})
       })),
       base44.entities.Message.create({
         conversation_id: convEntity.id,
@@ -352,7 +354,8 @@ export default function Messages() {
         to_user_id: user.email,
         from_name: user.full_name,
         to_name: user.full_name,
-        content: messageText
+        content: messageText,
+        ...(replyingTo?.id ? { parent_message_id: replyingTo.id } : {})
       })]
       );
       // Track challenge progress for sending messages (group)
@@ -374,7 +377,8 @@ export default function Messages() {
         to_user_id: selectedConversation.otherUser.id,
         from_name: user.full_name,
         to_name: selectedConversation.otherUser.name,
-        content: messageText
+        content: messageText,
+        ...(replyingTo?.id ? { parent_message_id: replyingTo.id } : {})
       };
       sendMutation.mutate(payload);
       await base44.entities.Notification.create({
@@ -393,10 +397,12 @@ export default function Messages() {
       } catch (_) {}
     }
     setMessageText('');
+    setReplyingTo(null);
   };
 
   React.useEffect(() => {
     if (selectedConversation) {
+      setReplyingTo(null);
       currentMessages.forEach((msg) => {
         if (!msg.is_read && msg.to_user_id === user?.email) {
           markReadMutation.mutate(msg.id);
@@ -733,11 +739,14 @@ export default function Messages() {
             <div className="space-y-4">
               {currentMessages.map((msg) => {
                 const isOwn = msg.from_user_id === user?.email;
+                const parent = msg.parent_message_id ? currentMessages.find(m => m.id === msg.parent_message_id) : null;
                 return (
                   <MessageBubble
                     key={msg.id}
                     msg={msg}
                     isOwn={isOwn}
+                    parentMessage={parent}
+                    onReply={(m) => setReplyingTo(m)}
                     onReact={(emoji) => {
                       const reactions = Array.isArray(msg.reactions) ? [...msg.reactions] : [];
                       const existing = reactions.findIndex(r => r.user_id === user.email && r.emoji === emoji);
@@ -781,6 +790,19 @@ export default function Messages() {
 
           {/* Input */}
           <div className="p-2 pb-20 md:p-4 md:pb-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
+            {/* Reply preview bar */}
+            {replyingTo && (
+              <div className="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg bg-violet-50 dark:bg-violet-900/20 border-l-3 border-violet-500">
+                <Reply className="w-4 h-4 text-violet-500 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-violet-700 dark:text-violet-300">{replyingTo.from_name || 'User'}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 truncate">{replyingTo.content || '📎 Attachment'}</p>
+                </div>
+                <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0 text-slate-400 hover:text-slate-600" onClick={() => setReplyingTo(null)}>
+                  <X className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            )}
             <div className="flex gap-1 md:gap-2 items-center">
               {/* Media Attachment - hidden on mobile to save space */}
               <div className="hidden md:flex gap-1">

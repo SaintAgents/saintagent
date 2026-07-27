@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, CheckCheck, Trash2, Play, Pause, FileText, Download, Sparkles, Image as ImageIcon, Pencil, X } from "lucide-react";
+import { Check, CheckCheck, Trash2, Play, Pause, FileText, Download, Sparkles, Image as ImageIcon, Pencil, X, Reply } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
 const QUICK_REACTIONS = ['❤️', '👍', '😂', '😮', '😢', '🔥'];
@@ -14,6 +14,8 @@ export default function MessageBubble({
   onDelete,
   onEdit,
   onReact,
+  onReply,
+  parentMessage,
   onImageClick,
   showAvatar = true 
 }) {
@@ -247,6 +249,18 @@ export default function MessageBubble({
               ? "bg-violet-600 text-white rounded-br-sm"
               : "bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] rounded-bl-sm"
           )}>
+            {/* Reply preview */}
+            {parentMessage && (
+              <div className={cn(
+                "mb-2 px-2.5 py-1.5 rounded-lg border-l-2 text-xs",
+                isOwn
+                  ? "bg-white/10 border-white/40 text-white/80"
+                  : "bg-slate-50 dark:bg-slate-800 border-violet-400 text-slate-600 dark:text-slate-300"
+              )}>
+                <p className="font-medium text-[11px] mb-0.5">{parentMessage.from_name || 'User'}</p>
+                <p className="line-clamp-2">{parentMessage.content || '📎 Attachment'}</p>
+              </div>
+            )}
             {renderContent()}
           </div>
 
@@ -285,6 +299,17 @@ export default function MessageBubble({
           )}
         </div>
         <div className="flex items-center gap-2">
+          {onReply && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 mt-0.5 text-slate-400 hover:text-violet-600"
+              onClick={() => onReply(msg)}
+              title="Reply"
+            >
+              <Reply className="w-3.5 h-3.5" />
+            </Button>
+          )}
           {isOwn && (
             <span className="mt-0.5 text-xs">
               {msg.is_read ? (
