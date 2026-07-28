@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ClipboardList, ArrowLeft, ArrowRight, Send, Loader2, ChevronLeft } from "lucide-react";
+import { ClipboardList, ArrowLeft, ArrowRight, Send, Loader2, ChevronLeft, AlertCircle } from "lucide-react";
 import { createPageUrl } from "@/utils";
 
 import IntakeStepIndicator from "@/components/projects/intake/IntakeStepIndicator";
@@ -62,6 +62,16 @@ export default function ProjectCreate() {
     enabled: !!currentUser?.email
   });
   const profile = profiles?.[0];
+
+  // Check active project count (max 2 at a time)
+  const COMPLETED_STATUSES = ['completed', 'cancelled', 'on_hold', 'declined'];
+  const { data: userProjects = [] } = useQuery({
+    queryKey: ['userActiveProjects', currentUser?.email],
+    queryFn: () => base44.entities.Project.filter({ owner_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const activeProjectCount = userProjects.filter(p => !COMPLETED_STATUSES.includes(p.project_status) && !COMPLETED_STATUSES.includes(p.status)).length;
+  const atProjectLimit = activeProjectCount >= 2 && currentUser?.role !== 'admin';
 
   const createMutation = useMutation({
     mutationFn: async (data) => {
@@ -147,6 +157,17 @@ export default function ProjectCreate() {
           <ChevronLeft className="w-4 h-4" /> Back to Projects
         </Button>
 
+        {/* Project Limit Warning */}
+        {atProjectLimit && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+            <div>
+              <p className="font-semibold text-amber-800">Project Limit Reached</p>
+              <p className="text-sm text-amber-700">You can only have 2 active projects at a time. Complete or close an existing project to create a new one.</p>
+            </div>
+          </div>
+        )}
+
         {/* Card */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           {/* Header */}
@@ -202,7 +223,7 @@ export default function ProjectCreate() {
                   size="sm"
                   className="bg-emerald-600 hover:bg-emerald-700"
                   onClick={handleSubmit}
-                  disabled={!canProceed() || createMutation.isPending}
+                  disabled={!canProceed() || createMutation.isPending || atProjectLimit}
                 >
                   {createMutation.isPending ? (
                     <><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Submitting...</>

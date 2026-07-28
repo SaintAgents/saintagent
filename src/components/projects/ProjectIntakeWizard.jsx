@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ClipboardList, ArrowLeft, ArrowRight, Send, Loader2, HelpCircle } from 'lucide-react';
+import { ClipboardList, ArrowLeft, ArrowRight, Send, Loader2, HelpCircle, AlertCircle } from 'lucide-react';
 import ProjectSubmissionTutorial from '@/components/learn/ProjectSubmissionTutorial';
 
 import IntakeStepIndicator from './intake/IntakeStepIndicator';
@@ -30,6 +30,8 @@ const INITIAL_FORM = {
   success_definition: '',
 };
 
+const COMPLETED_STATUSES = ['completed', 'cancelled', 'on_hold', 'declined'];
+
 export default function ProjectIntakeWizard({ open, onClose, currentUser, profile }) {
   const queryClient = useQueryClient();
   const [step, setStep] = useState(() => {
@@ -47,6 +49,15 @@ export default function ProjectIntakeWizard({ open, onClose, currentUser, profil
     } catch { return INITIAL_FORM; }
   });
   const [tutorialOpen, setTutorialOpen] = useState(false);
+
+  // Check active project count (max 2 at a time)
+  const { data: userProjects = [] } = useQuery({
+    queryKey: ['userActiveProjects', currentUser?.email],
+    queryFn: () => base44.entities.Project.filter({ owner_id: currentUser.email }),
+    enabled: !!currentUser?.email && open
+  });
+  const activeProjectCount = userProjects.filter(p => !COMPLETED_STATUSES.includes(p.project_status) && !COMPLETED_STATUSES.includes(p.status)).length;
+  const atProjectLimit = activeProjectCount >= 2 && currentUser?.role !== 'admin';
 
   // Persist form data and step to sessionStorage
   React.useEffect(() => {
@@ -175,6 +186,14 @@ export default function ProjectIntakeWizard({ open, onClose, currentUser, profil
           </p>
         </div>
 
+        {/* Project Limit Warning */}
+        {atProjectLimit && (
+          <div className="mx-6 mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+            <p className="text-sm text-amber-700">You can only have 2 active projects at a time. Complete or close an existing project to create a new one.</p>
+          </div>
+        )}
+
         {/* Scrollable Content */}
         <ScrollArea className="flex-1 px-6 pb-2">
           <div className="py-2">
@@ -209,7 +228,7 @@ export default function ProjectIntakeWizard({ open, onClose, currentUser, profil
                 size="sm"
                 className="bg-emerald-600 hover:bg-emerald-700"
                 onClick={handleSubmit}
-                disabled={!canProceed() || createMutation.isPending}
+                disabled={!canProceed() || createMutation.isPending || atProjectLimit}
               >
                 {createMutation.isPending ? (
                   <><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Submitting...</>

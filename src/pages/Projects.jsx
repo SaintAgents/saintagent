@@ -46,6 +46,16 @@ export default function Projects() {
   });
   const onboardingComplete = onboardingRecords?.[0]?.status === 'complete';
 
+  // Check active project count (max 2 at a time)
+  const COMPLETED_STATUSES = ['completed', 'cancelled', 'on_hold', 'declined'];
+  const { data: userOwnProjects = [] } = useQuery({
+    queryKey: ['userActiveProjects', currentUser?.email],
+    queryFn: () => base44.entities.Project.filter({ owner_id: currentUser.email }),
+    enabled: !!currentUser?.email
+  });
+  const activeProjectCount = userOwnProjects.filter(p => !COMPLETED_STATUSES.includes(p.project_status) && !COMPLETED_STATUSES.includes(p.status)).length;
+  const atProjectLimit = activeProjectCount >= 2 && currentUser?.role !== 'admin';
+
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects_all'],
     queryFn: () => base44.entities.Project.list('-created_date', 500),
@@ -189,18 +199,18 @@ export default function Projects() {
                     <Button 
                       className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2 disabled:opacity-50 disabled:cursor-not-allowed" 
                       onClick={() => (window.location.href = createPageUrl('ProjectCreate'))}
-                      disabled={!onboardingComplete}
+                      disabled={!onboardingComplete || atProjectLimit}
                     >
                       <Plus className="w-4 h-4" />
                       Add Project
                     </Button>
                   </span>
                 </TooltipTrigger>
-                {!onboardingComplete && (
-                  <TooltipContent side="bottom" className="max-w-[200px]">
+                {(!onboardingComplete || atProjectLimit) && (
+                  <TooltipContent side="bottom" className="max-w-[220px]">
                     <div className="flex items-center gap-2">
                       <AlertCircle className="w-4 h-4 text-amber-500" />
-                      <span>Complete onboarding first to create projects</span>
+                      <span>{atProjectLimit ? `You already have ${activeProjectCount} active projects (max 2). Complete one to add another.` : 'Complete onboarding first to create projects'}</span>
                     </div>
                   </TooltipContent>
                 )}
