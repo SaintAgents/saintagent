@@ -238,8 +238,22 @@ export default function UserManagement({ viewerRole = 'admin' }) {
     if (!inviteEmail.trim()) return;
     setIsInviting(true);
     try {
-      await base44.users.inviteUser(inviteEmail.trim(), inviteRole);
-      toast.success(`Invitation sent to ${inviteEmail}`);
+      // Map custom roles to API-compatible roles (API only supports 'user' or 'admin')
+      const apiRole = inviteRole === 'admin' || inviteRole === 'administrator' ? 'admin' : 'user';
+      await base44.users.inviteUser(inviteEmail.trim(), apiRole);
+      
+      // Send role-specific welcome email with responsibilities
+      try {
+        await base44.functions.invoke('sendInviteEmail', {
+          emails: [inviteEmail.trim()],
+          role: inviteRole,
+          senderName: 'SaintAgent Admin'
+        });
+      } catch (emailErr) {
+        console.warn('Role email send failed:', emailErr);
+      }
+
+      toast.success(`Invitation sent to ${inviteEmail} as ${inviteRole}`);
       setInviteEmail('');
       setInviteDialogOpen(false);
     } catch (err) {
