@@ -25,6 +25,7 @@ import {
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
+import VoiceCommandButton from '@/components/support/VoiceCommandButton';
 
 // Glitch animation keyframes for hacker theme
 const glitchStyles = `
@@ -571,6 +572,10 @@ Respond helpfully and concisely. Use markdown formatting when helpful (bullet po
                   "flex-1 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700",
                   "[data-theme='hacker']_&:bg-[#0f0f0f] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00] [data-theme='hacker']_&:placeholder:text-[#006600]"
                 )}
+                disabled={isLoading}
+              />
+              <VoiceCommandButton
+                onTranscript={(text) => sendMessage(text)}
                 disabled={isLoading}
               />
               <Button 

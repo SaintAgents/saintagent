@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Loader2, Bot, X, Sparkles, Zap, CheckCircle2, AlertCircle, Clock, ChevronRight } from 'lucide-react';
+import { Send, Loader2, Bot, X, Sparkles, Zap, CheckCircle2, AlertCircle, Clock, ChevronRight, Mic } from 'lucide-react';
+import VoiceCommandButton from '@/components/support/VoiceCommandButton';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 
@@ -416,6 +417,22 @@ export default function ConciergeAgentChat({ onClose, currentPage }) {
             onChange={(e) => setInput(e.target.value)}
             placeholder={PAGE_PLACEHOLDERS[currentPage] || "Tell me what to do..."}
             className="flex-1 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm"
+            disabled={isStreaming}
+          />
+          <VoiceCommandButton
+            onTranscript={(text) => {
+              setInput(text);
+              setTimeout(() => {
+                if (conversationId) {
+                  setInput('');
+                  setIsSending(true);
+                  base44.agents.getConversation(conversationId).then(convo => {
+                    const contextPrefix = currentPage ? `[User is on the ${currentPage} page] ` : '';
+                    base44.agents.addMessage(convo, { role: 'user', content: contextPrefix + text });
+                  }).catch(() => setIsSending(false));
+                }
+              }, 300);
+            }}
             disabled={isStreaming}
           />
           <Button
