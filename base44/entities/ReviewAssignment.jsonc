@@ -1,0 +1,216 @@
+{
+  "name": "ReviewAssignment",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to the Project being reviewed"
+    },
+    "reviewer_id": {
+      "type": "string",
+      "description": "Email of assigned reviewer"
+    },
+    "reviewer_name": {
+      "type": "string"
+    },
+    "assigned_by": {
+      "type": "string",
+      "description": "Email of manager who assigned"
+    },
+    "assigned_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_type": {
+      "type": "string",
+      "enum": [
+        "initial",
+        "resubmission",
+        "second_review",
+        "appeal",
+        "calibration"
+      ],
+      "default": "initial"
+    },
+    "is_resubmission": {
+      "type": "boolean",
+      "default": false
+    },
+    "resubmission_number": {
+      "type": "number",
+      "default": 0
+    },
+    "previous_assignment_id": {
+      "type": "string",
+      "description": "ID of the prior ReviewAssignment for resubmissions"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "checklist_complete",
+        "scoring_complete",
+        "submitted",
+        "returned",
+        "escalated"
+      ],
+      "default": "pending"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "review_stage": {
+      "type": "string",
+      "enum": [
+        "ethics_check",
+        "scoring",
+        "risk_assessment",
+        "final_recommendation",
+        "complete"
+      ],
+      "default": "ethics_check"
+    },
+    "checklist": {
+      "type": "object",
+      "description": "Standardized checklist completion status per section",
+      "properties": {
+        "project_overview": {
+          "type": "boolean",
+          "default": false
+        },
+        "ethics_screening": {
+          "type": "boolean",
+          "default": false
+        },
+        "impact_assessment": {
+          "type": "boolean",
+          "default": false
+        },
+        "financial_review": {
+          "type": "boolean",
+          "default": false
+        },
+        "team_evaluation": {
+          "type": "boolean",
+          "default": false
+        },
+        "risk_assessment": {
+          "type": "boolean",
+          "default": false
+        },
+        "governance_review": {
+          "type": "boolean",
+          "default": false
+        },
+        "evidence_verification": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "default": {}
+    },
+    "section_scores": {
+      "type": "object",
+      "description": "Reviewer scores per subcriterion matching AI scoring rubric"
+    },
+    "section_comments": {
+      "type": "object",
+      "description": "Per-section reviewer comments keyed by subcriterion"
+    },
+    "overall_comment": {
+      "type": "string"
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": [
+        "approve_fund",
+        "incubate_derisk",
+        "review_reevaluate",
+        "decline"
+      ]
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "concerns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "required_revisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "critical_issues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "reviewer_weighted_score": {
+      "type": "number",
+      "description": "Calculated weighted score using same methodology as AI"
+    },
+    "ai_score_at_review": {
+      "type": "number",
+      "description": "AI final score at time of review for comparison"
+    },
+    "score_deviation": {
+      "type": "number",
+      "description": "Absolute difference between reviewer and AI scores"
+    },
+    "deviation_justification": {
+      "type": "string",
+      "description": "Required when score deviation > 10 points"
+    },
+    "outlier_justification": {
+      "type": "string",
+      "description": "Required for scores below 3 or above 9 on any criterion"
+    },
+    "time_spent_minutes": {
+      "type": "number",
+      "default": 0
+    },
+    "manager_notes": {
+      "type": "string"
+    },
+    "return_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "reviewer_id",
+    "review_type"
+  ]
+}

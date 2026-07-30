@@ -28,6 +28,8 @@ import MissionManage from './pages/MissionManage';
 import MissionTimeline from './pages/MissionTimeline';
 import MissionGrid from './pages/MissionGrid';
 import Learn from './pages/Learn';
+import ReviewerWorkflow from './pages/ReviewerWorkflow';
+import ReviewManagerDashboard from './pages/ReviewManagerDashboard';
 import VCardLanding from './pages/VCardLanding';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -159,6 +161,8 @@ const AppRoutes = () => (
     <Route path="/MissionTimeline" element={<LayoutWrapper currentPageName="MissionTimeline"><MissionTimeline /></LayoutWrapper>} />
     <Route path="/MissionGrid" element={<LayoutWrapper currentPageName="MissionGrid"><MissionGrid /></LayoutWrapper>} />
     <Route path="/Learn" element={<LayoutWrapper currentPageName="Learn"><Learn /></LayoutWrapper>} />
+    <Route path="/ReviewerWorkflow" element={<LayoutWrapper currentPageName="ReviewerWorkflow"><ReviewerWorkflow /></LayoutWrapper>} />
+    <Route path="/ReviewManagerDashboard" element={<LayoutWrapper currentPageName="ReviewManagerDashboard"><ReviewManagerDashboard /></LayoutWrapper>} />
     <Route path="/vcard/:saNumber" element={<VCardLanding />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />

@@ -82,7 +82,8 @@ import {
   Palette,
   Quote,
   CircleAlert,
-  Building2
+  Building2,
+  ClipboardCheck
 } from "lucide-react";
 import {
   Tooltip,
@@ -140,6 +141,8 @@ const NAV_ITEMS = [
   { id: 'videos', label: 'SaintTube', Icon: Play, page: 'Videos', hint: 'Upload and watch videos (max 20 min)' },
   { id: 'testimonials', label: 'Testimonials', Icon: Quote, page: 'Testimonials', hint: 'View and share community testimonials' },
   { id: 'glossary', label: 'Glossary', Icon: BookOpen, page: 'Glossary', hint: 'Reference guide to SaintAgent terms, Ultranet, and ecosystem concepts' },
+  { id: 'reviewworkflow', label: 'Review Queue', Icon: ClipboardCheck, page: 'ReviewerWorkflow', hint: 'Your assigned project reviews and guided review workflow' },
+  { id: 'reviewmanager', label: 'Review Manager', Icon: Shield, page: 'ReviewManagerDashboard', hint: 'Assign reviews, monitor progress, and audit reviewer performance', adminOnly: true },
   // Web Pages Group - grouped together with special styling
   { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation', isWebPage: true },
   { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission', isWebPage: true },
