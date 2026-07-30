@@ -7,6 +7,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Bell, 
@@ -27,7 +33,8 @@ import {
   CheckCircle,
   Clock,
   Trophy,
-  Folder
+  Folder,
+  ExternalLink
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
@@ -38,6 +45,7 @@ import { base44 } from "@/api/base44Client";
 export default function NotificationBell({ notifications = [], onAction }) {
   const [open, setOpen] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+  const [selectedNotif, setSelectedNotif] = useState(null);
   const queryClient = useQueryClient();
   
   // Track cleared notification IDs to prevent them from reappearing
@@ -202,43 +210,13 @@ export default function NotificationBell({ notifications = [], onAction }) {
                       "flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors",
                       !notif.is_read && "bg-violet-50/30 dark:bg-violet-900/20"
                     )}
-                    onClick={() => {
-                      // Navigate to action_url if available, otherwise use smart routing based on type
-                      if (notif.action_url) {
-                        window.location.href = notif.action_url;
-                      } else {
-                        // Smart routing based on notification type
-                        const routes = {
-                         match: createPageUrl('Matches'),
-                         meeting: createPageUrl('Meetings'),
-                         mission: createPageUrl('Missions'),
-                         booking: createPageUrl('Meetings'),
-                         message: createPageUrl('Messages'),
-                         follow: notif.source_user_id ? createPageUrl('Profile') + `?id=${notif.source_user_id}` : createPageUrl('Profiles'),
-                         ggg: createPageUrl('CommandDeck'),
-                         rank: createPageUrl('Gamification'),
-                         collaboration: createPageUrl('FindCollaborators'),
-                         post: createPageUrl('CommunityFeed'),
-                         event: createPageUrl('Events'),
-                         system: createPageUrl('CommandDeck'),
-                         peer_review: createPageUrl('Projects'),
-                         task_update: createPageUrl('Projects'),
-                         task_assigned: createPageUrl('Projects'),
-                         task_due: createPageUrl('Projects'),
-                         task_dependency: createPageUrl('Projects'),
-                         milestone: createPageUrl('Projects'),
-                         project: createPageUrl('Projects'),
-                         business_listing: createPageUrl('BusinessEntities'),
-                         digital_product: createPageUrl('Marketplace'),
-                         project_update: createPageUrl('Projects'),
-                        };
-                        const targetUrl = routes[notif.type];
-                        if (targetUrl) {
-                          window.location.href = targetUrl;
-                        }
+                    onClick={async () => {
+                      // Mark as read
+                      if (!notif.is_read) {
+                        base44.entities.Notification.update(notif.id, { is_read: true }).catch(() => {});
+                        queryClient.invalidateQueries({ queryKey: ['notifications'] });
                       }
-                      onAction?.('click', notif);
-                      setOpen(false);
+                      setSelectedNotif(notif);
                     }}
                   >
                     {notif.source_user_avatar ? (
@@ -302,6 +280,115 @@ export default function NotificationBell({ notifications = [], onAction }) {
           )}
         </ScrollArea>
       </PopoverContent>
+
+      {/* Notification Detail Dialog */}
+      <NotificationDetailDialog
+        notif={selectedNotif}
+        onClose={() => setSelectedNotif(null)}
+        typeIcons={typeIcons}
+        typeColors={typeColors}
+      />
     </Popover>
+  );
+}
+
+function getNotifRoute(notif) {
+  if (notif.action_url) return notif.action_url;
+  const routes = {
+    match: createPageUrl('Matches'),
+    meeting: createPageUrl('Meetings'),
+    mission: createPageUrl('Missions'),
+    booking: createPageUrl('Meetings'),
+    message: createPageUrl('Messages'),
+    follow: notif.source_user_id ? createPageUrl('Profile') + `?id=${notif.source_user_id}` : createPageUrl('Profiles'),
+    ggg: createPageUrl('CommandDeck'),
+    rank: createPageUrl('Gamification'),
+    collaboration: createPageUrl('FindCollaborators'),
+    post: createPageUrl('CommunityFeed'),
+    event: createPageUrl('Events'),
+    system: null,
+    peer_review: createPageUrl('Projects'),
+    task_update: createPageUrl('Projects'),
+    task_assigned: createPageUrl('Projects'),
+    task_due: createPageUrl('Projects'),
+    task_dependency: createPageUrl('Projects'),
+    milestone: createPageUrl('Projects'),
+    project: createPageUrl('Projects'),
+    business_listing: createPageUrl('BusinessEntities'),
+    digital_product: createPageUrl('Marketplace'),
+    project_update: createPageUrl('Projects'),
+  };
+  return routes[notif.type] || null;
+}
+
+function NotificationDetailDialog({ notif, onClose, typeIcons, typeColors }) {
+  if (!notif) return null;
+  const Icon = typeIcons[notif.type] || Settings;
+  const route = getNotifRoute(notif);
+
+  return (
+    <Dialog open={!!notif} onOpenChange={(v) => { if (!v) onClose(); }}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <div className={cn("p-2 rounded-lg", typeColors[notif.type])}>
+              <Icon className="w-4 h-4" />
+            </div>
+            <span className="line-clamp-2">{notif.title}</span>
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          {/* Source user */}
+          {notif.source_user_name && (
+            <div className="flex items-center gap-3">
+              <Avatar className="w-8 h-8">
+                <AvatarImage src={notif.source_user_avatar} />
+                <AvatarFallback className="text-xs bg-violet-100 text-violet-600">
+                  {notif.source_user_name?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium text-slate-700">{notif.source_user_name}</span>
+            </div>
+          )}
+
+          {/* Full message */}
+          <div className="p-4 bg-slate-50 rounded-lg">
+            <p className="text-sm text-slate-700 whitespace-pre-wrap">
+              {notif.message || 'No additional details.'}
+            </p>
+          </div>
+
+          {/* Meta */}
+          <div className="flex items-center gap-3 text-xs text-slate-400">
+            {notif.created_date && (
+              <span>{formatDistanceToNow(new Date(notif.created_date), { addSuffix: true })}</span>
+            )}
+            {notif.priority && notif.priority !== 'normal' && notif.priority !== 'low' && (
+              <Badge variant="outline" className={cn(
+                "text-[10px]",
+                notif.priority === 'urgent' ? "border-rose-300 text-rose-600" : "border-amber-300 text-amber-600"
+              )}>
+                {notif.priority}
+              </Badge>
+            )}
+            <Badge variant="outline" className="text-[10px] capitalize">{notif.type}</Badge>
+          </div>
+
+          {/* Action button */}
+          {route && (
+            <Button
+              className="w-full"
+              onClick={() => {
+                onClose();
+                window.location.href = route;
+              }}
+            >
+              <ExternalLink className="w-4 h-4 mr-2" />
+              {notif.action_label || 'Go to related page'}
+            </Button>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
