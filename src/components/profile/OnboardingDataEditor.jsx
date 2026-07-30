@@ -168,36 +168,43 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
     );
   };
 
-  const addValue = (value) => {
-    if (value && !editData.values_tags?.includes(value)) {
-      setEditData({ 
-        ...editData, 
-        values_tags: [...(editData.values_tags || []), value] 
-      });
+  const [newValueInput, setNewValueInput] = useState('');
+  const [newIntentionInput, setNewIntentionInput] = useState('');
+
+  const addValue = () => {
+    const value = newValueInput.trim();
+    if (value) {
+      setEditData(prev => ({
+        ...prev,
+        values_tags: prev.values_tags?.includes(value) ? prev.values_tags : [...(prev.values_tags || []), value]
+      }));
+      setNewValueInput('');
     }
   };
 
   const removeValue = (value) => {
-    setEditData({ 
-      ...editData, 
-      values_tags: editData.values_tags?.filter(v => v !== value) 
-    });
+    setEditData(prev => ({
+      ...prev,
+      values_tags: prev.values_tags?.filter(v => v !== value)
+    }));
   };
 
-  const addIntention = (intention) => {
-    if (intention && !editData.intentions?.includes(intention)) {
-      setEditData({ 
-        ...editData, 
-        intentions: [...(editData.intentions || []), intention] 
-      });
+  const addIntention = () => {
+    const intention = newIntentionInput.trim();
+    if (intention) {
+      setEditData(prev => ({
+        ...prev,
+        intentions: prev.intentions?.includes(intention) ? prev.intentions : [...(prev.intentions || []), intention]
+      }));
+      setNewIntentionInput('');
     }
   };
 
   const removeIntention = (intention) => {
-    setEditData({ 
-      ...editData, 
-      intentions: editData.intentions?.filter(i => i !== intention) 
-    });
+    setEditData(prev => ({
+      ...prev,
+      intentions: prev.intentions?.filter(i => i !== intention)
+    }));
   };
 
   return (
@@ -362,13 +369,16 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
               <div className="flex gap-2">
                 <Input 
                   placeholder="Add a value..."
+                  value={newValueInput}
+                  onChange={(e) => setNewValueInput(e.target.value)}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
-                      addValue(e.target.value);
-                      e.target.value = '';
+                      e.preventDefault();
+                      addValue();
                     }
                   }}
                 />
+                <Button type="button" variant="outline" onClick={addValue}>Add</Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {editData.values_tags?.map((value, i) => (
@@ -410,13 +420,16 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
               <div className="flex gap-2">
                 <Input 
                   placeholder="Add intention (e.g., service, healing, build, teach)..."
+                  value={newIntentionInput}
+                  onChange={(e) => setNewIntentionInput(e.target.value)}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
-                      addIntention(e.target.value);
-                      e.target.value = '';
+                      e.preventDefault();
+                      addIntention();
                     }
                   }}
                 />
+                <Button type="button" variant="outline" onClick={addIntention}>Add</Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {editData.intentions?.map((intention, i) => (
