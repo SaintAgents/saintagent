@@ -75,44 +75,57 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
     mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
     }
   });
 
   const syncDesiresMutation = useMutation({
-    mutationFn: async (desireCodes) => {
+    mutationFn: async ({ desireCodes, currentDesires }) => {
       // Delete all existing desires
-      await Promise.all(desires.map(d => base44.entities.UserDesire.delete(d.id)));
+      await Promise.all(currentDesires.map(d => base44.entities.UserDesire.delete(d.id)));
       // Create new ones
-      await Promise.all(desireCodes.map(code =>
-        base44.entities.UserDesire.create({ user_id: profile.user_id, desire_code: code, priority: 'medium' })
-      ));
+      if (desireCodes.length > 0) {
+        await Promise.all(desireCodes.map(code =>
+          base44.entities.UserDesire.create({ user_id: profile.user_id, desire_code: code, priority: 'medium' })
+        ));
+      }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['desires'] })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['desires'] });
+    }
   });
 
   const syncHopesMutation = useMutation({
-    mutationFn: async (hopeCodes) => {
-      await Promise.all(hopes.map(h => base44.entities.UserHope.delete(h.id)));
-      await Promise.all(hopeCodes.map(code =>
-        base44.entities.UserHope.create({ 
-          user_id: profile.user_id, 
-          hope_code: code, 
-          time_horizon: '90_days',
-          commitment_level: 'builder'
-        })
-      ));
+    mutationFn: async ({ hopeCodes, currentHopes }) => {
+      await Promise.all(currentHopes.map(h => base44.entities.UserHope.delete(h.id)));
+      if (hopeCodes.length > 0) {
+        await Promise.all(hopeCodes.map(code =>
+          base44.entities.UserHope.create({ 
+            user_id: profile.user_id, 
+            hope_code: code, 
+            time_horizon: '90_days',
+            commitment_level: 'builder'
+          })
+        ));
+      }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['hopes'] })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hopes'] });
+    }
   });
 
   const syncIntentionsMutation = useMutation({
-    mutationFn: async (intentionCodes) => {
-      await Promise.all(intentions.map(i => base44.entities.UserIntention.delete(i.id)));
-      await Promise.all(intentionCodes.map(code =>
-        base44.entities.UserIntention.create({ user_id: profile.user_id, intention_code: code })
-      ));
+    mutationFn: async ({ intentionCodes, currentIntentions }) => {
+      await Promise.all(currentIntentions.map(i => base44.entities.UserIntention.delete(i.id)));
+      if (intentionCodes.length > 0) {
+        await Promise.all(intentionCodes.map(code =>
+          base44.entities.UserIntention.create({ user_id: profile.user_id, intention_code: code })
+        ));
+      }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['intentions'] })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['intentions'] });
+    }
   });
 
   const handleEdit = () => {
@@ -132,10 +145,15 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
   };
 
   const handleSave = async () => {
+    // Save profile fields (values_tags, intentions, handle, alias, location, region, timezone)
     await updateProfileMutation.mutateAsync(editData);
-    await syncDesiresMutation.mutateAsync(selectedDesires);
-    await syncHopesMutation.mutateAsync(selectedHopes);
-    await syncIntentionsMutation.mutateAsync(selectedIntentions);
+    // Sync related entities - pass current data to avoid stale closure issues
+    await syncDesiresMutation.mutateAsync({ desireCodes: selectedDesires, currentDesires: desires || [] });
+    await syncHopesMutation.mutateAsync({ hopeCodes: selectedHopes, currentHopes: hopes || [] });
+    await syncIntentionsMutation.mutateAsync({ intentionCodes: selectedIntentions, currentIntentions: intentions || [] });
+    // Force refetch all related queries
+    queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    queryClient.invalidateQueries({ queryKey: ['myProfile'] });
     setIsEditing(false);
   };
 
