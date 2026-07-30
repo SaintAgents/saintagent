@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -65,68 +65,72 @@ const REGIONS = ['North America', 'Europe', 'Asia', 'South America', 'Africa', '
 
 export default function OnboardingDataEditor({ profile, desires, hopes, intentions }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [editData, setEditData] = useState({});
-  const [selectedDesires, setSelectedDesires] = useState(desires?.map(d => d.desire_code) || []);
-  const [selectedHopes, setSelectedHopes] = useState(hopes?.map(h => h.hope_code) || []);
-  const [selectedIntentions, setSelectedIntentions] = useState(intentions?.map(i => i.intention_code) || []);
+  const [selectedDesires, setSelectedDesires] = useState([]);
+  const [selectedHopes, setSelectedHopes] = useState([]);
+  const [selectedIntentions, setSelectedIntentions] = useState([]);
   const queryClient = useQueryClient();
 
-  const updateProfileMutation = useMutation({
-    mutationFn: (data) => base44.entities.UserProfile.update(profile.id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      queryClient.invalidateQueries({ queryKey: ['myProfile'] });
-    }
-  });
+  // The identifier used for querying these entities in Profile.jsx
+  const userIdentifier = profile?.sa_number || profile?.user_id;
 
-  const syncDesiresMutation = useMutation({
-    mutationFn: async ({ desireCodes, currentDesires }) => {
-      // Delete all existing desires
-      await Promise.all(currentDesires.map(d => base44.entities.UserDesire.delete(d.id)));
-      // Create new ones
-      if (desireCodes.length > 0) {
-        await Promise.all(desireCodes.map(code =>
-          base44.entities.UserDesire.create({ user_id: profile.user_id, desire_code: code, priority: 'medium' })
+  const handleSaveAll = async () => {
+    setIsSaving(true);
+    try {
+      // 1. Save profile fields (values_tags, intentions, handle, alias, location, region, timezone)
+      await base44.entities.UserProfile.update(profile.id, editData);
+
+      // 2. Sync desires - delete old, create new using the same user_id the queries use
+      const currentDesires = desires || [];
+      if (currentDesires.length > 0) {
+        await Promise.all(currentDesires.map(d => base44.entities.UserDesire.delete(d.id)));
+      }
+      if (selectedDesires.length > 0) {
+        await Promise.all(selectedDesires.map(code =>
+          base44.entities.UserDesire.create({ user_id: userIdentifier, desire_code: code, priority: 'medium' })
         ));
       }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['desires'] });
-    }
-  });
 
-  const syncHopesMutation = useMutation({
-    mutationFn: async ({ hopeCodes, currentHopes }) => {
-      await Promise.all(currentHopes.map(h => base44.entities.UserHope.delete(h.id)));
-      if (hopeCodes.length > 0) {
-        await Promise.all(hopeCodes.map(code =>
-          base44.entities.UserHope.create({ 
-            user_id: profile.user_id, 
-            hope_code: code, 
-            time_horizon: '90_days',
-            commitment_level: 'builder'
-          })
+      // 3. Sync hopes
+      const currentHopes = hopes || [];
+      if (currentHopes.length > 0) {
+        await Promise.all(currentHopes.map(h => base44.entities.UserHope.delete(h.id)));
+      }
+      if (selectedHopes.length > 0) {
+        await Promise.all(selectedHopes.map(code =>
+          base44.entities.UserHope.create({ user_id: userIdentifier, hope_code: code, time_horizon: '90_days', commitment_level: 'builder' })
         ));
       }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['hopes'] });
-    }
-  });
 
-  const syncIntentionsMutation = useMutation({
-    mutationFn: async ({ intentionCodes, currentIntentions }) => {
-      await Promise.all(currentIntentions.map(i => base44.entities.UserIntention.delete(i.id)));
-      if (intentionCodes.length > 0) {
-        await Promise.all(intentionCodes.map(code =>
-          base44.entities.UserIntention.create({ user_id: profile.user_id, intention_code: code })
+      // 4. Sync platform intentions
+      const currentIntentions = intentions || [];
+      if (currentIntentions.length > 0) {
+        await Promise.all(currentIntentions.map(i => base44.entities.UserIntention.delete(i.id)));
+      }
+      if (selectedIntentions.length > 0) {
+        await Promise.all(selectedIntentions.map(code =>
+          base44.entities.UserIntention.create({ user_id: userIdentifier, intention_code: code })
         ));
       }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['intentions'] });
+
+      // 5. Invalidate all related queries to refresh UI
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['userProfile'] }),
+        queryClient.invalidateQueries({ queryKey: ['myProfile'] }),
+        queryClient.invalidateQueries({ queryKey: ['desires'] }),
+        queryClient.invalidateQueries({ queryKey: ['hopes'] }),
+        queryClient.invalidateQueries({ queryKey: ['intentions'] }),
+      ]);
+
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Failed to save profile details:', err);
+      alert('Failed to save some changes. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
-  });
+  };
 
   const handleEdit = () => {
     setEditData({
@@ -144,18 +148,7 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
     setIsEditing(true);
   };
 
-  const handleSave = async () => {
-    // Save profile fields (values_tags, intentions, handle, alias, location, region, timezone)
-    await updateProfileMutation.mutateAsync(editData);
-    // Sync related entities - pass current data to avoid stale closure issues
-    await syncDesiresMutation.mutateAsync({ desireCodes: selectedDesires, currentDesires: desires || [] });
-    await syncHopesMutation.mutateAsync({ hopeCodes: selectedHopes, currentHopes: hopes || [] });
-    await syncIntentionsMutation.mutateAsync({ intentionCodes: selectedIntentions, currentIntentions: intentions || [] });
-    // Force refetch all related queries
-    queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-    queryClient.invalidateQueries({ queryKey: ['myProfile'] });
-    setIsEditing(false);
-  };
+
 
   const toggleDesire = (code) => {
     setSelectedDesires(prev => 
@@ -252,9 +245,9 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
                 <X className="w-4 h-4 mr-1" />
                 Cancel
               </Button>
-              <Button onClick={handleSave} className="bg-violet-600 hover:bg-violet-700 gap-2">
+              <Button onClick={handleSaveAll} disabled={isSaving} className="bg-violet-600 hover:bg-violet-700 gap-2">
                 <Save className="w-4 h-4" />
-                Save Changes
+                {isSaving ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
           )}
