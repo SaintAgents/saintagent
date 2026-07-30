@@ -362,6 +362,14 @@
       "default": "none",
       "description": "Leadership tier status for 144K Sacred Council"
     },
+    "values_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "User's core values"
+    },
     "intentions": {
       "type": "array",
       "items": {
