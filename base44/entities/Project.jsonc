@@ -97,6 +97,14 @@
         "type": "string"
       }
     },
+    "video_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Up to 5 video URLs (max 5 min each) to help define the project"
+    },
     "status": {
       "type": "string",
       "enum": [

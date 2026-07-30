@@ -26,7 +26,7 @@ const INITIAL_FORM = {
   other_funding_sources: '', revenue_model: '', current_revenue: '', projected_revenue: '',
   exit_repayment_plan: '', open_to_structures: [], impact_beneficiaries: '', impact_scale: '',
   geographic_focus: '', readiness_items: [], pitch_deck_url: '', business_plan_url: '',
-  financial_projections_url: '', other_documents_urls: [], alignment_statement: '',
+  financial_projections_url: '', other_documents_urls: [], video_urls: [], alignment_statement: '',
   success_definition: '',
 };
 

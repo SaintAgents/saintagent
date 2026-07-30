@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Upload, FileText, Trash2, Loader2 } from 'lucide-react';
+import ProjectVideoUploader from '@/components/projects/ProjectVideoUploader';
 
 function FileUploadField({ label, description, value, onUpload, onClear }) {
   const [uploading, setUploading] = useState(false);
@@ -88,6 +89,12 @@ export default function IntakeStepDocuments({ formData, onChange }) {
         value={formData.financial_projections_url}
         onUpload={(url) => update('financial_projections_url', url)}
         onClear={() => update('financial_projections_url', '')}
+      />
+
+      {/* Project Videos */}
+      <ProjectVideoUploader
+        videos={formData.video_urls || []}
+        onChange={(urls) => update('video_urls', urls)}
       />
 
       <div>
