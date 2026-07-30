@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { 
   MessageSquare, Bug, Lightbulb, HelpCircle, Search,
   Clock, CheckCircle2, XCircle, Loader2, Eye, Trash2, ExternalLink,
-  Wand2, Bot, Copy, Wrench, ShieldCheck
+  Wand2, Bot, Copy, Wrench, ShieldCheck, PlusCircle
 } from "lucide-react";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
@@ -259,6 +259,7 @@ export default function AdminBetaFeedback() {
         const resolved = feedbackList.filter(f => f.status === 'resolved').length;
         const fixed = feedbackList.filter(f => f.is_fixed).length;
         const tested = feedbackList.filter(f => f.coordinator_tested).length;
+        const added = feedbackList.filter(f => f.is_added).length;
         const bugs = feedbackList.filter(f => f.feedback_type === 'bug').length;
 
         const cards = [
@@ -268,11 +269,12 @@ export default function AdminBetaFeedback() {
           { label: 'Resolved', count: resolved, filter: () => { setFilterStatus('resolved'); setFilterType('all'); }, color: 'bg-green-50 border-green-200 text-green-700', active: filterStatus === 'resolved' },
           { label: 'Bugs', count: bugs, filter: () => { setFilterType('bug'); setFilterStatus('all'); }, color: 'bg-red-50 border-red-200 text-red-700', active: filterType === 'bug' },
           { label: 'Fixed', count: fixed, filter: () => { setFilterStatus('all'); setFilterType('all'); }, color: 'bg-emerald-50 border-emerald-200 text-emerald-700', icon: Wrench },
+          { label: 'Added', count: added, filter: () => { setFilterStatus('all'); setFilterType('all'); }, color: 'bg-teal-50 border-teal-200 text-teal-700', icon: PlusCircle },
           { label: 'Tested', count: tested, filter: () => { setFilterStatus('all'); setFilterType('all'); }, color: 'bg-blue-50 border-blue-200 text-blue-700', icon: ShieldCheck },
         ];
 
         return (
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             {cards.map(card => (
               <button
                 key={card.label}
@@ -441,6 +443,23 @@ export default function AdminBetaFeedback() {
                           onClick={(e) => e.stopPropagation()}
                         >
                           <Checkbox
+                            checked={!!feedback.is_added}
+                            onCheckedChange={(checked) => {
+                              updateMutation.mutate({
+                                id: feedback.id,
+                                data: { is_added: !!checked },
+                                logMessage: checked ? 'Marked feedback as added' : 'Unmarked feedback as added',
+                                logMeta: { is_added: !!checked }
+                              });
+                            }}
+                          />
+                          <span className="text-xs text-teal-600">Added</span>
+                        </label>
+                        <label
+                          className="flex items-center gap-1.5 cursor-pointer"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Checkbox
                             checked={!!feedback.coordinator_tested}
                             onCheckedChange={(checked) => {
                               updateMutation.mutate({
@@ -577,6 +596,22 @@ export default function AdminBetaFeedback() {
                     />
                     <Wrench className="w-4 h-4 text-emerald-600" />
                     <span className="text-sm font-medium text-slate-700">Fixed</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      checked={!!selectedFeedback.is_added}
+                      onCheckedChange={(checked) => {
+                        updateMutation.mutate({
+                          id: selectedFeedback.id,
+                          data: { is_added: !!checked },
+                          logMessage: checked ? 'Marked feedback as added' : 'Unmarked feedback as added',
+                          logMeta: { is_added: !!checked }
+                        });
+                        setSelectedFeedback(prev => ({ ...prev, is_added: !!checked }));
+                      }}
+                    />
+                    <PlusCircle className="w-4 h-4 text-teal-600" />
+                    <span className="text-sm font-medium text-slate-700">Added</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <Checkbox

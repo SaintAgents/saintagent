@@ -77,6 +77,11 @@
       "default": false,
       "description": "Whether this issue has been fixed"
     },
+    "is_added": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this feature/suggestion has been added to the platform"
+    },
     "coordinator_tested": {
       "type": "boolean",
       "default": false,
