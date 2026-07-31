@@ -522,11 +522,11 @@ export default function Messages() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input placeholder="Search messages..." className="pl-9 h-9 rounded-lg" />
           </div>
-          <div className="flex items-center justify-end pt-2 gap-2 flex-wrap">
+          <div className="flex items-center justify-start pt-2 gap-2 flex-wrap">
               <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700"
+                  className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700 gap-1"
                   onClick={async () => {
                     const mine = (allMessages || []).filter(m => {
                       const list = Array.isArray(m.deleted_for_user_ids) ? m.deleted_for_user_ids : [];
@@ -548,6 +548,7 @@ export default function Messages() {
                     queryClient.invalidateQueries({ queryKey: ['messagesInbox'] });
                       queryClient.invalidateQueries({ queryKey: ['messagesSent'] });
                      }}>
+                    <Trash2 className="w-3 h-3" />
                     Clear all
                     </Button>
           </div>
