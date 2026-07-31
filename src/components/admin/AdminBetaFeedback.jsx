@@ -553,7 +553,7 @@ export default function AdminBetaFeedback() {
                           <img 
                             src={url} 
                             alt={`Image ${i + 1}`} 
-                            className="h-48 rounded-lg border object-cover hover:opacity-90 transition-opacity"
+                            className="max-h-[400px] max-w-full rounded-lg border object-contain hover:opacity-90 transition-opacity"
                           />
                         </a>
                       ))}
