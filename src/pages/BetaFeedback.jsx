@@ -59,7 +59,7 @@ export default function BetaFeedback() {
   // Fetch ALL feedback (public feed)
   const { data: allFeedback = [], isLoading } = useQuery({
     queryKey: ['allBetaFeedback'],
-    queryFn: () => base44.entities.BetaFeedback.list('-created_date', 100),
+    queryFn: () => base44.entities.BetaFeedback.list('-created_date', 200),
     staleTime: 120000,
     refetchOnWindowFocus: false,
     retry: false
@@ -80,7 +80,7 @@ export default function BetaFeedback() {
   // Fetch current user's feedback
   const { data: myFeedback = [] } = useQuery({
     queryKey: ['myBetaFeedback', currentUser?.email],
-    queryFn: () => base44.entities.BetaFeedback.filter({ reporter_id: currentUser.email }, '-created_date', 50),
+    queryFn: () => base44.entities.BetaFeedback.filter({ reporter_id: currentUser.email }, '-created_date', 200),
     enabled: !!currentUser?.email,
     staleTime: 120000,
     refetchOnWindowFocus: false,
