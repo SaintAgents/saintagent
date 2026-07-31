@@ -118,9 +118,9 @@ export default function OnboardingDataEditor({ profile, desires, hopes, intentio
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['userProfile'] }),
         queryClient.invalidateQueries({ queryKey: ['myProfile'] }),
-        queryClient.invalidateQueries({ queryKey: ['desires'] }),
-        queryClient.invalidateQueries({ queryKey: ['hopes'] }),
-        queryClient.invalidateQueries({ queryKey: ['intentions'] }),
+        queryClient.invalidateQueries({ queryKey: ['desires', userIdentifier] }),
+        queryClient.invalidateQueries({ queryKey: ['hopes', userIdentifier] }),
+        queryClient.invalidateQueries({ queryKey: ['intentions', userIdentifier] }),
       ]);
 
       setIsEditing(false);
