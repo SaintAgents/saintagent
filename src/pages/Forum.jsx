@@ -362,7 +362,7 @@ export default function Forum() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 pb-6">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 pb-6">
         {/* Search and Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="relative flex-1">
@@ -394,47 +394,47 @@ export default function Forum() {
 
         {/* Category Tabs */}
         <Tabs value={tab} onValueChange={setTab} className="mb-6">
-          <TabsList className="w-full flex-wrap h-auto gap-2 p-2 bg-white dark:bg-[#0a0a0a] rounded-xl border">
-            <TabsTrigger value="all" className="rounded-lg">All</TabsTrigger>
+          <TabsList className="w-full flex-wrap h-auto gap-1.5 p-2 bg-white dark:bg-[#0a0a0a] rounded-xl border">
+            <TabsTrigger value="all" className="rounded-lg text-xs sm:text-sm px-2 sm:px-3">All</TabsTrigger>
             {CATEGORIES.map(cat => (
-              <TabsTrigger key={cat.id} value={cat.id} className="rounded-lg gap-1">
-                <cat.icon className="w-3 h-3" />
-                {cat.label}
+              <TabsTrigger key={cat.id} value={cat.id} className="rounded-lg gap-1 text-xs sm:text-sm px-2 sm:px-3">
+                <cat.icon className="w-3 h-3 shrink-0" />
+                <span className="truncate">{cat.label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
         </Tabs>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-white dark:bg-[#0a0a0a]">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-violet-600">{posts.length}</div>
-              <div className="text-xs text-slate-500">Total Posts</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 mb-6">
+          <Card className="bg-white dark:bg-[#0a0a0a] overflow-hidden">
+            <CardContent className="p-3 sm:p-4 text-center">
+              <div className="text-lg sm:text-2xl font-bold text-violet-600 truncate">{posts.length}</div>
+              <div className="text-[10px] sm:text-xs text-slate-500 truncate">Total Posts</div>
             </CardContent>
           </Card>
-          <Card className="bg-white dark:bg-[#0a0a0a]">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-emerald-600">
+          <Card className="bg-white dark:bg-[#0a0a0a] overflow-hidden">
+            <CardContent className="p-3 sm:p-4 text-center">
+              <div className="text-lg sm:text-2xl font-bold text-emerald-600 truncate">
                 {posts.filter(p => Date.now() - new Date(p.created_date) < 24*60*60*1000).length}
               </div>
-              <div className="text-xs text-slate-500">New Today</div>
+              <div className="text-[10px] sm:text-xs text-slate-500 truncate">New Today</div>
             </CardContent>
           </Card>
-          <Card className="bg-white dark:bg-[#0a0a0a]">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-blue-600">
+          <Card className="bg-white dark:bg-[#0a0a0a] overflow-hidden">
+            <CardContent className="p-3 sm:p-4 text-center">
+              <div className="text-lg sm:text-2xl font-bold text-blue-600 truncate">
                 {posts.reduce((sum, p) => sum + (p.replies_count || 0), 0)}
               </div>
-              <div className="text-xs text-slate-500">Total Replies</div>
+              <div className="text-[10px] sm:text-xs text-slate-500 truncate">Total Replies</div>
             </CardContent>
           </Card>
-          <Card className="bg-white dark:bg-[#0a0a0a]">
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-amber-600">
+          <Card className="bg-white dark:bg-[#0a0a0a] overflow-hidden">
+            <CardContent className="p-3 sm:p-4 text-center">
+              <div className="text-lg sm:text-2xl font-bold text-amber-600 truncate">
                 {new Set(posts.map(p => p.author_id)).size}
               </div>
-              <div className="text-xs text-slate-500">Contributors</div>
+              <div className="text-[10px] sm:text-xs text-slate-500 truncate">Contributors</div>
             </CardContent>
           </Card>
         </div>
