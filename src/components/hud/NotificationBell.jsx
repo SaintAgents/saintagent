@@ -141,57 +141,6 @@ export default function NotificationBell({ notifications = [], onAction }) {
       <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-[32rem] max-w-[32rem] p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
           <h3 className="font-semibold text-slate-900 dark:text-slate-100">Notifications</h3>
-          {displayNotifications.length > 0 && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-xs h-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50 gap-1"
-              disabled={isClearing}
-              onClick={async () => {
-                setIsClearing(true);
-                try {
-                  // Store IDs to clear in session storage to persist across navigation
-                  const idsToClear = displayNotifications.map(n => n.id);
-                  const newClearedIds = [...clearedIds, ...idsToClear];
-                  setClearedIds(newClearedIds);
-                  
-                  // Also store a timestamp so any notifications that existed before this moment are hidden
-                  const clearTimestamp = Date.now();
-                  setClearedAllTimestamp(clearTimestamp);
-                  
-                  try {
-                    localStorage.setItem('clearedNotificationIds', JSON.stringify(newClearedIds));
-                    localStorage.setItem('clearedNotificationsTimestamp', String(clearTimestamp));
-                  } catch {}
-                  
-                  // Delete notifications in background (don't wait)
-                  Promise.all(displayNotifications.map(n => 
-                    base44.entities.Notification.delete(n.id).catch(() => {})
-                  )).then(() => {
-                    queryClient.invalidateQueries({ queryKey: ['notifications'] });
-                  });
-                  
-                  setIsClearing(false);
-                  setOpen(false);
-                } catch (err) {
-                  console.error('Failed to clear notifications:', err);
-                  setIsClearing(false);
-                }
-              }}
-            >
-              {isClearing ? (
-                <>
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                  Clearing...
-                </>
-              ) : (
-                <>
-                  <Trash2 className="w-3 h-3" />
-                  Clear all
-                </>
-              )}
-            </Button>
-          )}
         </div>
         <ScrollArea className="h-96">
           {displayNotifications.length === 0 ? (
@@ -256,9 +205,25 @@ export default function NotificationBell({ notifications = [], onAction }) {
                         )}
                       </div>
                     </div>
-                    {!notif.is_read && (
-                      <div className="w-2 h-2 rounded-full bg-violet-500 shrink-0 mt-2" />
-                    )}
+                    <div className="flex items-center gap-1 shrink-0">
+                      {!notif.is_read && (
+                        <div className="w-2 h-2 rounded-full bg-violet-500 mt-0.5" />
+                      )}
+                      <button
+                        className="p-1 rounded hover:bg-rose-50 dark:hover:bg-rose-900/30 text-slate-300 hover:text-rose-500 transition-colors"
+                        title="Delete notification"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const newClearedIds = [...clearedIds, notif.id];
+                          setClearedIds(newClearedIds);
+                          try { localStorage.setItem('clearedNotificationIds', JSON.stringify(newClearedIds)); } catch {}
+                          base44.entities.Notification.delete(notif.id).catch(() => {});
+                          queryClient.invalidateQueries({ queryKey: ['notifications'] });
+                        }}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                     {notif.type === 'collaboration' && notif.metadata?.request_id && (
                       <Button
                         size="sm"
@@ -279,6 +244,41 @@ export default function NotificationBell({ notifications = [], onAction }) {
             </div>
           )}
         </ScrollArea>
+        {displayNotifications.length > 0 && (
+          <div className="border-t border-slate-100 dark:border-slate-700 px-4 py-2.5 flex justify-center">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-xs h-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50 gap-1 w-full"
+              disabled={isClearing}
+              onClick={async () => {
+                setIsClearing(true);
+                try {
+                  const idsToClear = displayNotifications.map(n => n.id);
+                  const newClearedIds = [...clearedIds, ...idsToClear];
+                  setClearedIds(newClearedIds);
+                  const clearTimestamp = Date.now();
+                  setClearedAllTimestamp(clearTimestamp);
+                  try {
+                    localStorage.setItem('clearedNotificationIds', JSON.stringify(newClearedIds));
+                    localStorage.setItem('clearedNotificationsTimestamp', String(clearTimestamp));
+                  } catch {}
+                  Promise.all(displayNotifications.map(n => 
+                    base44.entities.Notification.delete(n.id).catch(() => {})
+                  )).then(() => {
+                    queryClient.invalidateQueries({ queryKey: ['notifications'] });
+                  });
+                  setIsClearing(false);
+                  setOpen(false);
+                } catch (err) {
+                  setIsClearing(false);
+                }
+              }}
+            >
+              {isClearing ? <><Loader2 className="w-3 h-3 animate-spin" /> Clearing...</> : <><Trash2 className="w-3 h-3" /> Clear all</>}
+            </Button>
+          </div>
+        )}
       </PopoverContent>
 
       {/* Notification Detail Dialog */}
