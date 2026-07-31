@@ -545,6 +545,11 @@
       },
       "default": [],
       "description": "Qualities the user offers in relationships"
+    },
+    "message_email_notifications": {
+      "type": "boolean",
+      "default": false,
+      "description": "Send email notification when someone sends a direct message"
     }
   },
   "required": [

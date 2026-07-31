@@ -427,6 +427,33 @@ export default function Settings() {
 
           {/* Notification Settings */}
           <TabsContent value="notifications" className="space-y-6">
+            <Card className="bg-violet-50/50 border-violet-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-pink-500" />
+                  Message Email Alerts
+                </CardTitle>
+                <CardDescription>Get notified by email when someone sends you a direct message</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Email me when I receive a message</p>
+                    <p className="text-sm text-slate-500">You'll get an email each time someone sends you a DM</p>
+                  </div>
+                  <Switch
+                    checked={!!profile?.message_email_notifications}
+                    onCheckedChange={(checked) => {
+                      if (profile) {
+                        updateMutation.mutate({ message_email_notifications: checked });
+                      }
+                    }}
+                    className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
             <NotificationSettings
               settings={settings.notification_prefs}
               onChange={(newPrefs) => setSettings({ ...settings, notification_prefs: newPrefs })} />

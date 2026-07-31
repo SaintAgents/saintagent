@@ -388,6 +388,25 @@ export default function Messages() {
         message: messageText.slice(0, 120),
         action_url: createPageUrl('Messages')
       });
+      // Send email notification if recipient opted in
+      try {
+        const recipientProfiles = await base44.entities.UserProfile.filter({ user_id: selectedConversation.otherUser.id });
+        if (recipientProfiles?.[0]?.message_email_notifications) {
+          base44.integrations.Core.SendEmail({
+            to: selectedConversation.otherUser.id,
+            subject: `New message from ${user.full_name}`,
+            body: `<div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:20px;">
+              <h2 style="color:#7c3aed;">💬 New Message</h2>
+              <p><strong>${user.full_name}</strong> sent you a message:</p>
+              <div style="background:#f8f4ff;border-left:4px solid #7c3aed;padding:12px 16px;border-radius:8px;margin:16px 0;">
+                <p style="margin:0;color:#334155;">${messageText.slice(0, 300)}</p>
+              </div>
+              <a href="${window.location.origin}/Messages" style="display:inline-block;background:#7c3aed;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;margin-top:12px;">View Message</a>
+              <p style="color:#94a3b8;font-size:12px;margin-top:20px;">You're receiving this because you opted in to message email alerts. Manage in Settings → Notifications.</p>
+            </div>`
+          }).catch(() => {});
+        }
+      } catch (_) {}
       // Update conversation last message
       try {
         await base44.entities.Conversation.update(selectedConversation.id, {
