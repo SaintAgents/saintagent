@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, CheckCheck, Trash2, Play, Pause, FileText, Download, Sparkles, Image as ImageIcon, Pencil, X, Reply } from "lucide-react";
+import { Check, CheckCheck, Trash2, Play, Pause, FileText, Download, Sparkles, Image as ImageIcon, Pencil, X, Reply, Copy } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
 const QUICK_REACTIONS = ['❤️', '👍', '😂', '😮', '😢', '🔥'];
@@ -21,6 +21,7 @@ export default function MessageBubble({
 }) {
   const [showReactions, setShowReactions] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editText, setEditText] = useState('');
   const audioRef = React.useRef(null);
@@ -299,6 +300,21 @@ export default function MessageBubble({
           )}
         </div>
         <div className="flex items-center gap-2">
+          {msg.content && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("h-6 w-6 mt-0.5", copied ? "text-emerald-500" : "text-slate-400 hover:text-violet-600")}
+              onClick={() => {
+                navigator.clipboard.writeText(msg.content);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1500);
+              }}
+              title="Copy message"
+            >
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+            </Button>
+          )}
           {onReply && (
             <Button
               variant="ghost"
