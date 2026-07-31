@@ -25,6 +25,7 @@ import { toast } from 'sonner';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
+import GGGEarningsHistory from '@/components/admin/GGGEarningsHistory';
 
 export default function UserManagement({ viewerRole = 'admin' }) {
   const viewerIsAdmin = viewerRole === 'admin';
@@ -765,6 +766,11 @@ export default function UserManagement({ viewerRole = 'admin' }) {
                   </div>
                 )}
               </div>}
+
+              {/* GGG Earnings History */}
+              {viewerIsAdmin && selectedUser?.user_id && (
+                <GGGEarningsHistory userId={selectedUser.user_id} />
+              )}
 
               {/* Leader Status */}
               <div>
