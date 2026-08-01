@@ -472,6 +472,21 @@
       "type": "string",
       "description": "Playing card Secondary Card from Cards of Destiny"
     },
+    "human_design_type": {
+      "type": "string",
+      "enum": [
+        "manifestor",
+        "generator",
+        "manifesting_generator",
+        "projector",
+        "reflector"
+      ],
+      "description": "Human Design energy type"
+    },
+    "human_design_image_url": {
+      "type": "string",
+      "description": "Uploaded image of user's Human Design chart"
+    },
     "spiritual_practices": {
       "type": "array",
       "items": {

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { base44 } from '@/api/base44Client';
-import { RefreshCw, Loader2, Sparkles } from 'lucide-react';
+import { RefreshCw, Loader2, Sparkles, Upload, X, Image } from 'lucide-react';
 import {
   calcBirthCards, calcPlayingCards, calcSunSign, calcLifePath,
   calcDestinyNumber, calcSoulUrge, calcPersonalityNumber
@@ -49,8 +49,11 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
     birth_card: profile?.birth_card || '',
     birth_card_2: profile?.birth_card_2 || '',
     planetary_ruling_card: profile?.planetary_ruling_card || '',
-    sun_card: profile?.sun_card || ''
+    sun_card: profile?.sun_card || '',
+    human_design_type: profile?.human_design_type || '',
+    human_design_image_url: profile?.human_design_image_url || ''
   });
+  const [uploadingHDImage, setUploadingHDImage] = useState(false);
   const [isRecalculating, setIsRecalculating] = useState(false);
 
   // Auto-calculate all deterministic fields from birthday + name
@@ -358,6 +361,73 @@ export default function MysticalProfileEditor({ profile, onSave, onCancel }) {
               </SelectContent>
             </Select>
             <p className="text-xs text-violet-500 mt-1">Cards of Destiny — planetary ruler</p>
+          </div>
+
+          {/* Human Design Section */}
+          <div>
+            <Label>Human Design Type</Label>
+            <Select
+              value={formData.human_design_type || 'none'}
+              onValueChange={(v) => setFormData({ ...formData, human_design_type: v === 'none' ? '' : v })}
+            >
+              <SelectTrigger className="mt-2">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="manifestor">Manifestor</SelectItem>
+                <SelectItem value="generator">Generator</SelectItem>
+                <SelectItem value="manifesting_generator">Manifesting Generator</SelectItem>
+                <SelectItem value="projector">Projector</SelectItem>
+                <SelectItem value="reflector">Reflector</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label>Human Design Chart Image</Label>
+            <div className="mt-2">
+              {formData.human_design_image_url ? (
+                <div className="relative group">
+                  <img
+                    src={formData.human_design_image_url}
+                    alt="Human Design Chart"
+                    className="w-full max-w-xs rounded-lg border border-slate-200 object-contain"
+                  />
+                  <button
+                    onClick={() => setFormData({ ...formData, human_design_image_url: '' })}
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full max-w-xs h-32 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-violet-400 hover:bg-violet-50/50 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setUploadingHDImage(true);
+                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                      setFormData(prev => ({ ...prev, human_design_image_url: file_url }));
+                      setUploadingHDImage(false);
+                    }}
+                  />
+                  {uploadingHDImage ? (
+                    <Loader2 className="w-6 h-6 text-violet-500 animate-spin" />
+                  ) : (
+                    <>
+                      <Upload className="w-6 h-6 text-slate-400 mb-1" />
+                      <span className="text-xs text-slate-500">Upload chart image</span>
+                    </>
+                  )}
+                </label>
+              )}
+            </div>
+            <p className="text-xs text-violet-500 mt-1">Upload a screenshot of your Human Design bodygraph</p>
           </div>
         </div>
       </CardContent>

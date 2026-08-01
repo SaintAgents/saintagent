@@ -1543,6 +1543,15 @@ export default function Profile() {
                         <div>
                           <span className="text-slate-500">Human Design</span>
                           <div className="font-medium text-slate-900 capitalize">{profile?.human_design_type?.replace(/_/g, ' ') || 'Not set'}</div>
+                          {profile?.human_design_image_url && (
+                            <img
+                              src={profile.human_design_image_url}
+                              alt="Human Design Chart"
+                              className="mt-2 w-full max-w-xs rounded-lg border border-slate-200 object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                              onClick={() => window.dispatchEvent(new CustomEvent('openGlobalPhotoViewer', { detail: { images: [profile.human_design_image_url], startIndex: 0 } }))}
+                              data-no-filter="true"
+                            />
+                          )}
                         </div>
                         <div>
                           <span className="text-slate-500">Enneagram</span>
