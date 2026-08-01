@@ -839,7 +839,7 @@ export default function Profile() {
                         profile?.status === 'focus' && "bg-amber-500",
                         profile?.status === 'dnd' && "bg-rose-500",
                         profile?.status === 'offline' && "bg-slate-400",
-                        !profile?.status && "bg-emerald-500"
+                        !profile?.status && "bg-slate-400"
                       )} />
                     <span className="text-sm font-medium">Status Message</span>
                   </div>
@@ -944,7 +944,7 @@ export default function Profile() {
                         profile?.status === 'focus' && "bg-amber-500",
                         profile?.status === 'dnd' && "bg-rose-500",
                         profile?.status === 'offline' && "bg-slate-400",
-                        !profile?.status && "bg-emerald-500"
+                        !profile?.status && "bg-slate-400"
                       )} />
                     <p className="text-slate-700 dark:text-slate-300 italic">"{profile.status_message}"</p>
                   </div>
