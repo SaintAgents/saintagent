@@ -111,22 +111,25 @@ export default function MBTIAssessment({ profile, onComplete, onSkip }) {
     
     setSaving(true);
     try {
-      // Update user profile with MBTI type
-      await base44.entities.UserProfile.update(profile.id, {
-        mbti_type: result
-      });
-
-      // Award GGG for completing MBTI assessment
+      // Check if GGG reward already awarded (idempotency)
       const existingTransactions = await base44.entities.GGGTransaction.filter({
         user_id: profile.user_id,
         reason_code: 'mbti_completion'
       });
 
-      // Only award if not already awarded
-      if (existingTransactions.length === 0) {
-        const currentBalance = profile.ggg_balance || 0;
-        const gggReward = 0.0500000; // $7.25 USD worth of GGG
-        
+      const gggReward = 0.0500000; // $7.25 USD worth of GGG
+      const shouldAwardGGG = existingTransactions.length === 0;
+      const currentBalance = profile.ggg_balance || 0;
+
+      // Single atomic update — set mbti_type AND ggg_balance together to avoid race conditions
+      const profileUpdate = { mbti_type: result };
+      if (shouldAwardGGG) {
+        profileUpdate.ggg_balance = currentBalance + gggReward;
+      }
+      await base44.entities.UserProfile.update(profile.id, profileUpdate);
+
+      // Write GGG transaction record
+      if (shouldAwardGGG) {
         await base44.entities.GGGTransaction.create({
           user_id: profile.user_id,
           source_type: 'reward',
@@ -134,11 +137,6 @@ export default function MBTIAssessment({ profile, onComplete, onSkip }) {
           reason_code: 'mbti_completion',
           description: 'Completed MBTI personality assessment',
           balance_after: currentBalance + gggReward
-        });
-
-        // Update profile balance
-        await base44.entities.UserProfile.update(profile.id, {
-          ggg_balance: currentBalance + gggReward
         });
       }
 
