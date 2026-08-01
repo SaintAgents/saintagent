@@ -94,9 +94,11 @@ import FriendRequestButton from '@/components/friends/FriendRequestButton';
 import FriendRequestsPanel from '@/components/friends/FriendRequestsPanel';
 import FriendsList from '@/components/friends/FriendsList';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
+import MBTIAssessment from '@/components/profile/MBTIAssessment';
 import { getDestinyCardMeaning } from '@/components/destiny/destinyCardsData';
 import FileStorageSection from '@/components/profile/FileStorageSection';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import CollapsibleProfileCard from '@/components/profile/CollapsibleProfileCard';
 import JournalTab from '@/components/profile/JournalTab';
 import GaiaBankTab from '@/components/bank/GaiaBankTab';
@@ -134,6 +136,7 @@ export default function Profile() {
   const [newIntention, setNewIntention] = useState('');
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const [businessCardOpen, setBusinessCardOpen] = useState(false);
+  const [mbtiRetakeOpen, setMbtiRetakeOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Reactively track ?id= so profile updates on soft navigation
@@ -1547,7 +1550,14 @@ export default function Profile() {
                         </div>
                         <div>
                           <span className="text-slate-500">MBTI Type</span>
-                          <div className="font-medium text-slate-900">{profile?.mbti_type || 'Not set'}</div>
+                          <div className="font-medium text-slate-900 flex items-center gap-2">
+                            {profile?.mbti_type || 'Not set'}
+                            {isOwnProfile && (
+                              <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-violet-600 hover:text-violet-700" onClick={() => setMbtiRetakeOpen(true)}>
+                                {profile?.mbti_type ? 'Retake' : 'Take Test'}
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -1994,6 +2004,20 @@ export default function Profile() {
       </div>
       <BadgesGlossaryModal open={badgeGlossaryOpen} onOpenChange={setBadgeGlossaryOpen} />
       <BusinessCardDialog open={businessCardOpen} onOpenChange={setBusinessCardOpen} profile={profile} />
+      {/* MBTI Retake Dialog */}
+      <Dialog open={mbtiRetakeOpen} onOpenChange={setMbtiRetakeOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+          <MBTIAssessment
+            profile={profile}
+            onComplete={(result) => {
+              setMbtiRetakeOpen(false);
+              queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+              queryClient.invalidateQueries({ queryKey: ['myProfile'] });
+            }}
+            onSkip={() => setMbtiRetakeOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
       <PhotoViewer
         open={viewerOpen}
         images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0, 5)}
