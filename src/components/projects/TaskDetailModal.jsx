@@ -348,19 +348,25 @@ export default function TaskDetailModal({ task, open, onClose, currentUser, prof
                           <p className="text-xs text-slate-500">{formatFileSize(att.file_size || 0)}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <a href={att.file_url} target="_blank" rel="noopener noreferrer">
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Download className="w-4 h-4" />
+                          <Button variant="outline" size="sm" className="h-8 gap-1">
+                            <Download className="w-3.5 h-3.5" />
+                            <span className="text-xs">Download</span>
                           </Button>
                         </a>
                         <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8 text-red-500"
-                          onClick={() => deleteAttachmentMutation.mutate(att.id)}
+                          variant="outline" 
+                          size="sm" 
+                          className="h-8 gap-1 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+                          onClick={() => {
+                            if (confirm('Delete this attachment?')) {
+                              deleteAttachmentMutation.mutate(att.id);
+                            }
+                          }}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span className="text-xs">Delete</span>
                         </Button>
                       </div>
                     </div>
