@@ -875,12 +875,13 @@ export default function Messages() {
                 />
               </div>
 
-              <Input
+              <Textarea
                 placeholder="Type a message..."
                 value={messageText}
+                rows={3}
                 onChange={(e) => {setMessageText(e.target.value);sendTypingPing().catch(() => {});}}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                className="flex-1 rounded-xl min-w-0" />
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+                className="flex-1 rounded-xl min-w-0 resize-none" />
 
               <Button
                 onClick={handleSend}
