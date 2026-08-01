@@ -929,7 +929,7 @@ export default function TopBar({
                 className="h-8 md:h-10 px-1 md:px-2 gap-1 md:gap-2 rounded-xl"
                 style={{ zIndex: 10001, pointerEvents: 'auto' }}
                 onDoubleClick={() => {
-                  if (currentUser?.role === 'admin') {
+                  if (currentUser?.role === 'admin' || currentUser?.role === 'coordinator') {
                     window.location.href = createPageUrl('Admin');
                   }
                 }}
@@ -974,15 +974,15 @@ export default function TopBar({
               style={{ zIndex: 99999 }}
               className="w-72 bg-white dark:bg-[#050505] border border-slate-200 dark:border-[#00ff88] shadow-xl dark:shadow-[0_0_20px_rgba(0,255,136,0.3)] animate-in slide-in-from-right-2 duration-200 p-0 max-h-[calc(100vh-80px)] overflow-y-auto"
             >
-              {/* Admin Dashboard Banner - TOP OF MENU for admin users */}
-              {currentUser?.role === 'admin' && (
+              {/* Admin/Coordinator Dashboard Banner - TOP OF MENU */}
+              {(currentUser?.role === 'admin' || currentUser?.role === 'coordinator') && (
                 <div 
                   className="block bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-3 cursor-pointer"
                   onClick={() => { window.location.href = createPageUrl('Admin'); }}
                 >
                   <div className="flex items-center gap-3 text-white font-bold hover:opacity-90 transition-opacity">
                     <Shield className="w-5 h-5" />
-                    <span>🔐 ADMIN DASHBOARD</span>
+                    <span>{currentUser?.role === 'admin' ? '🔐 ADMIN DASHBOARD' : '🔐 COORDINATOR DASHBOARD'}</span>
                   </div>
                 </div>
               )}
@@ -1084,14 +1084,14 @@ export default function TopBar({
                   </DropdownMenuItem>
                 </div>
 
-                {/* Admin Dashboard - show for admin users */}
-                {currentUser?.role === 'admin' && (
+                {/* Admin/Coordinator Dashboard - show for admin and coordinator users */}
+                {(currentUser?.role === 'admin' || currentUser?.role === 'coordinator') && (
                   <>
                     <DropdownMenuSeparator className="my-0" />
                     <div className="py-2 bg-violet-50 dark:bg-violet-900/20">
                       <DropdownMenuItem onClick={() => { window.location.href = createPageUrl('Admin'); }} className="flex items-center gap-3 px-4 py-2.5 text-violet-600 font-semibold cursor-pointer">
                         <Shield className="w-4 h-4" />
-                        <span>⚡ Admin Dashboard</span>
+                        <span>{currentUser?.role === 'admin' ? '⚡ Admin Dashboard' : '⚡ Coordinator Dashboard'}</span>
                       </DropdownMenuItem>
                     </div>
                   </>
