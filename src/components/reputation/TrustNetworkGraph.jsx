@@ -230,14 +230,15 @@ export default function TrustNetworkGraph({ userId, profile }) {
       {/* Network Visualization */}
       <Card>
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Network className="w-5 h-5 text-violet-600" />
               <CardTitle className="text-lg">Trust Network</CardTitle>
             </div>
             <Button
               onClick={() => setShowEndorseModal(true)}
-              className="bg-violet-600 hover:bg-violet-700"
+              className="bg-violet-600 hover:bg-violet-700 shrink-0"
+              size="sm"
             >
               <Plus className="w-4 h-4 mr-2" />
               Endorse Someone
@@ -439,9 +440,9 @@ function EndorsementCard({ endorsement, profiles, showFrom }) {
         <AvatarFallback>{profile?.display_name?.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="font-medium text-slate-900">{profile?.display_name || 'Unknown'}</span>
-          <Badge variant="outline" className="text-xs">
+        <div className="flex flex-wrap items-center gap-2 mb-1">
+          <span className="font-medium text-slate-900 truncate max-w-[120px] sm:max-w-none">{profile?.display_name || 'Unknown'}</span>
+          <Badge variant="outline" className="text-xs shrink-0">
             <Icon className="w-3 h-3 mr-1" />
             {category.label}
           </Badge>

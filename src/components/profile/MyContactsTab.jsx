@@ -111,7 +111,7 @@ export default function MyContactsTab({ currentUser, profile }) {
       {/* Contact Network Section */}
       {showContactNetwork && (
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
               <CardTitle className="text-base flex items-center gap-2">
                 <Users className="w-4 h-4 text-blue-600" />
@@ -123,7 +123,7 @@ export default function MyContactsTab({ currentUser, profile }) {
               variant="outline"
               size="sm"
               onClick={() => window.location.href = createPageUrl('CRM')}
-              className="gap-2"
+              className="gap-2 shrink-0"
             >
               <ExternalLink className="w-4 h-4" />
               Open CRM
@@ -195,7 +195,7 @@ export default function MyContactsTab({ currentUser, profile }) {
       {/* Deal Tracking Section */}
       {showDealTracking && (
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
               <CardTitle className="text-base flex items-center gap-2">
                 <DollarSign className="w-4 h-4 text-emerald-600" />
@@ -209,7 +209,7 @@ export default function MyContactsTab({ currentUser, profile }) {
               variant="outline"
               size="sm"
               onClick={() => window.location.href = createPageUrl('Deals')}
-              className="gap-2"
+              className="gap-2 shrink-0"
             >
               <ExternalLink className="w-4 h-4" />
               Full View
@@ -225,12 +225,12 @@ export default function MyContactsTab({ currentUser, profile }) {
                 <p className="text-2xl font-bold text-blue-700">{dealMetrics.active}</p>
                 <p className="text-xs text-blue-600">Active</p>
               </div>
-              <div className="p-4 bg-emerald-50 rounded-lg text-center">
-                <p className="text-2xl font-bold text-emerald-700">{formatCurrency(dealMetrics.pipelineValue)}</p>
+              <div className="p-4 bg-emerald-50 rounded-lg text-center overflow-hidden">
+                <p className="text-lg sm:text-2xl font-bold text-emerald-700 truncate">{formatCurrency(dealMetrics.pipelineValue)}</p>
                 <p className="text-xs text-emerald-600">Pipeline</p>
               </div>
-              <div className="p-4 bg-amber-50 rounded-lg text-center">
-                <p className="text-2xl font-bold text-amber-700">{formatCurrency(dealMetrics.wonValue)}</p>
+              <div className="p-4 bg-amber-50 rounded-lg text-center overflow-hidden">
+                <p className="text-lg sm:text-2xl font-bold text-amber-700 truncate">{formatCurrency(dealMetrics.wonValue)}</p>
                 <p className="text-xs text-amber-600">Won</p>
               </div>
             </div>
@@ -240,12 +240,12 @@ export default function MyContactsTab({ currentUser, profile }) {
               <h4 className="text-sm font-medium text-slate-700 mb-3">Recent Deals</h4>
               <div className="space-y-2">
                 {deals.slice(0, 5).map(deal => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                    <div>
-                      <p className="text-sm font-medium text-slate-900">{deal.title}</p>
-                      <p className="text-xs text-slate-500">{deal.company_name || 'No company'}</p>
+                  <div key={deal.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-slate-50 rounded-lg gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-slate-900 truncate">{deal.title}</p>
+                      <p className="text-xs text-slate-500 truncate">{deal.company_name || 'No company'}</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <span className="text-sm font-semibold text-slate-700">{formatCurrency(deal.amount)}</span>
                       <Badge 
                         className={
