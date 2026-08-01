@@ -36,6 +36,10 @@
       "type": "string",
       "description": "Short bio (max 500 characters)"
     },
+    "phone_number": {
+      "type": "string",
+      "description": "Phone number for business card and contact"
+    },
     "location": {
       "type": "string",
       "description": "City, region, or country"

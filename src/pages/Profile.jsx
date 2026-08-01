@@ -353,7 +353,8 @@ export default function Profile() {
       display_name: profile?.display_name || '',
       bio: profile?.bio || '',
       region: profile?.region || '',
-      timezone: profile?.timezone || ''
+      timezone: profile?.timezone || '',
+      phone_number: profile?.phone_number || ''
     });
     setIsEditing(true);
   };
@@ -979,7 +980,6 @@ export default function Profile() {
                             value={editData.region}
                             onChange={(e) => setEditData({ ...editData, region: e.target.value })}
                             className="mt-2 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
-
                       </div>
                       <div>
                         <Label className="dark:text-slate-300">Timezone</Label>
@@ -987,8 +987,15 @@ export default function Profile() {
                             value={editData.timezone}
                             onChange={(e) => setEditData({ ...editData, timezone: e.target.value })}
                             className="mt-2 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
-
                       </div>
+                    </div>
+                    <div>
+                      <Label className="dark:text-slate-300">Phone Number</Label>
+                      <Input
+                          value={editData.phone_number}
+                          onChange={(e) => setEditData({ ...editData, phone_number: e.target.value })}
+                          placeholder="+1 (555) 123-4567"
+                          className="mt-2 dark:bg-[#0a0a0a] dark:text-white dark:border-[rgba(0,255,136,0.3)]" />
                     </div>
                     <Button
                         onClick={handleSave}

@@ -1,21 +1,27 @@
 import { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Download, X, Mail, ShieldCheck, Globe, MapPin, Link2, Copy } from "lucide-react";
+import { Loader2, Download, X, Mail, ShieldCheck, Globe, MapPin, Link2, Copy, Phone, Pencil, Check } from "lucide-react";
 import ProfileQRCode from "./ProfileQRCode";
 
 export default function BusinessCardDialog({ open, onOpenChange, profile }) {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [downloading, setDownloading] = useState(false);
+  const [editingCode, setEditingCode] = useState(false);
+  const [newCode, setNewCode] = useState("");
+  const [savingCode, setSavingCode] = useState(false);
   const cardRef = useRef(null);
 
   const name = profile?.display_name || "Unknown";
   const handle = profile?.handle ? `@${profile.handle}` : "";
   const saNumber = profile?.sa_number ? `SA#${profile.sa_number}` : "";
   const email = profile?.user_id || "";
+  const phoneNumber = profile?.phone_number || "";
   const region = profile?.region || "";
   const trustScore = profile?.trust_score || 0;
   const avatarUrl = profile?.avatar_url;
@@ -32,6 +38,22 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
   const joinLink = affiliateCode
     ? `${window.location.origin}/Join?ref=${affiliateCode}`
     : `${window.location.origin}/Join`;
+
+  const handleSaveCode = async () => {
+    const code = newCode.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    if (!code || !affiliateCodes[0]?.id) return;
+    setSavingCode(true);
+    try {
+      await base44.entities.AffiliateCode.update(affiliateCodes[0].id, { code });
+      queryClient.invalidateQueries({ queryKey: ['affiliateCode', profile?.user_id] });
+      toast({ title: "Referral code updated!" });
+      setEditingCode(false);
+    } catch {
+      toast({ variant: "destructive", title: "Failed to update code" });
+    } finally {
+      setSavingCode(false);
+    }
+  };
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
@@ -120,6 +142,12 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
                       <span className="truncate">{email}</span>
                     </div>
                   )}
+                  {phoneNumber && (
+                    <div className="flex items-center gap-1.5 text-[10px] text-slate-700 min-w-0">
+                      <Phone className="w-2.5 h-2.5 text-violet-700 shrink-0" />
+                      <span className="truncate">{phoneNumber}</span>
+                    </div>
+                  )}
                   {website && (
                     <div className="flex items-center gap-1.5 text-[10px] text-slate-700 min-w-0">
                       <Globe className="w-2.5 h-2.5 text-violet-600/60 shrink-0" />
@@ -177,9 +205,39 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
               <Copy className="w-3.5 h-3.5 text-violet-400 shrink-0" />
             </div>
             {affiliateCode && (
-              <p className="text-center text-[10px] text-violet-500">
-                Referral Code: <span className="font-semibold font-mono">{affiliateCode}</span>
-              </p>
+              <div className="flex items-center justify-center gap-2">
+                {editingCode ? (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] text-violet-500">Code:</span>
+                    <Input
+                      className="h-6 w-32 text-xs font-mono"
+                      value={newCode}
+                      onChange={(e) => setNewCode(e.target.value)}
+                      placeholder="your-code"
+                      onKeyDown={(e) => e.key === 'Enter' && handleSaveCode()}
+                    />
+                    <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleSaveCode} disabled={savingCode}>
+                      {savingCode ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3 text-emerald-600" />}
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setEditingCode(false)}>
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-[10px] text-violet-500">
+                      Referral Code: <span className="font-semibold font-mono">{affiliateCode}</span>
+                    </p>
+                    <button
+                      className="text-violet-400 hover:text-violet-600"
+                      onClick={() => { setNewCode(affiliateCode); setEditingCode(true); }}
+                      title="Edit referral code"
+                    >
+                      <Pencil className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
