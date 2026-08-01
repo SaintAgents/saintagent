@@ -1542,7 +1542,14 @@ export default function Profile() {
                         </div>
                         <div>
                           <span className="text-slate-500">Human Design</span>
-                          <div className="font-medium text-slate-900 capitalize">{profile?.human_design_type?.replace(/_/g, ' ') || 'Not set'}</div>
+                          <div className="font-medium text-slate-900 capitalize flex items-center gap-2">
+                            {profile?.human_design_type?.replace(/_/g, ' ') || 'Not set'}
+                            {isOwnProfile && (
+                              <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-violet-600 hover:text-violet-700" onClick={() => setEditingMysticalProfile(true)}>
+                                Edit
+                              </Button>
+                            )}
+                          </div>
                           {profile?.human_design_image_url && (
                             <img
                               src={profile.human_design_image_url}
@@ -1555,7 +1562,14 @@ export default function Profile() {
                         </div>
                         <div>
                           <span className="text-slate-500">Enneagram</span>
-                          <div className="font-medium text-slate-900">{profile?.enneagram_type ? `Type ${profile.enneagram_type}` : 'Not set'}</div>
+                          <div className="font-medium text-slate-900 flex items-center gap-2">
+                            {profile?.enneagram_type ? `Type ${profile.enneagram_type}` : 'Not set'}
+                            {isOwnProfile && (
+                              <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-violet-600 hover:text-violet-700" onClick={() => setEditingMysticalProfile(true)}>
+                                Edit
+                              </Button>
+                            )}
+                          </div>
                         </div>
                         <div>
                           <span className="text-slate-500">MBTI Type</span>
