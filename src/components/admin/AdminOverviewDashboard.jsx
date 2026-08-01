@@ -168,7 +168,7 @@ export default function AdminOverviewDashboard({ onNavigateTab }) {
         <StatTile icon={Inbox} label="Admin Requests" value={adminRequests.length} color="bg-violet-500" />
         <StatTile icon={Folder} label="Project Claims" value={projects.length} color="bg-blue-500" />
         <StatTile icon={Wallet} label="Withdrawals" value={withdrawals.length} color="bg-emerald-500" />
-        <StatTile icon={AlertTriangle} label="Reports & Bugs" value={forumReports.length + bugFeedback.length} color="bg-red-500" />
+        <StatTile icon={AlertTriangle} label="Reports & Bugs" value={forumReports.length + feedback.length} color="bg-red-500" />
       </div>
 
       {/* Attention Cards Grid */}
