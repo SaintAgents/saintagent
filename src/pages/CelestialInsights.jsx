@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, Loader2, History, Wand2, Stars, Moon, Sun } from 'lucide-react';
+import { Sparkles, Loader2, History, Wand2, Stars, Moon, Sun, ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import OracleSelector from '@/components/oracle/OracleSelector';
 import OracleReadingCard from '@/components/oracle/OracleReadingCard';
@@ -104,6 +104,7 @@ export default function CelestialInsights() {
   const [currentReading, setCurrentReading] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState('consult');
+  const [selectorOpen, setSelectorOpen] = useState(false);
 
   const { data: profiles } = useQuery({
     queryKey: ['myProfile', user?.email],
@@ -215,13 +216,38 @@ export default function CelestialInsights() {
           {/* Left: Selector */}
           <div className="lg:col-span-4">
             <Card>
-              <CardHeader className="pb-3">
+              {/* Collapsible header on non-lg screens */}
+              <CardHeader
+                className="pb-3 cursor-pointer lg:cursor-default flex flex-row items-center justify-between"
+                onClick={() => setSelectorOpen(prev => !prev)}
+              >
                 <CardTitle className="text-base flex items-center gap-2">
                   <Wand2 className="w-4 h-4 text-violet-600" />
                   Configure Your Reading
                 </CardTitle>
+                <button className="lg:hidden p-1 rounded-md hover:bg-slate-100 transition-colors">
+                  {selectorOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                </button>
               </CardHeader>
-              <CardContent className="space-y-4">
+              {/* Summary bar when collapsed on non-lg */}
+              {!selectorOpen && (
+                <div className="lg:hidden px-6 pb-3 flex items-center gap-2 flex-wrap">
+                  <Badge variant="secondary" className="text-xs">{READING_TYPE_LABELS[readingType]}</Badge>
+                  <Badge variant="secondary" className="text-xs capitalize">{focus}</Badge>
+                  <Badge variant="secondary" className="text-xs capitalize">{timeframe}</Badge>
+                  <Button
+                    size="sm"
+                    className="ml-auto bg-gradient-to-r from-indigo-600 to-violet-600 text-white h-8 text-xs"
+                    onClick={(e) => { e.stopPropagation(); handleGenerate(); }}
+                    disabled={isGenerating}
+                  >
+                    {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                    <span className="ml-1">{isGenerating ? 'Channeling...' : 'Reveal'}</span>
+                  </Button>
+                </div>
+              )}
+              {/* Full content: always on lg, toggled on smaller */}
+              <CardContent className={`space-y-4 ${selectorOpen ? '' : 'hidden lg:block'}`}>
                 <OracleSelector
                   readingType={readingType}
                   focus={focus}
