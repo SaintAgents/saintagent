@@ -91,7 +91,7 @@ export default function AdminOverviewDashboard({ onNavigateTab }) {
 
   const { data: feedback = [] } = useQuery({
     queryKey: ['admin-overview-feedback'],
-    queryFn: () => base44.entities.BetaFeedback.filter({ status: 'pending' }, '-created_date', 50),
+    queryFn: () => base44.entities.BetaFeedback.filter({ status: 'pending' }, '-created_date', 500),
     staleTime: 5000,
     refetchOnMount: 'always',
   });

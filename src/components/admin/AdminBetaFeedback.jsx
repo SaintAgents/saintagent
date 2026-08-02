@@ -346,6 +346,17 @@ export default function AdminBetaFeedback() {
       </div>
 
       {/* Feedback List */}
+      {/* Results count */}
+      {!isLoading && (filterStatus !== 'all' || filterType !== 'all' || filterSeverity !== 'all' || search) && (
+        <div className="text-sm text-slate-600 font-medium">
+          Showing {filtered.length} of {feedbackList.length} total
+          {filterType !== 'all' && ` · Type: ${TYPE_CONFIG[filterType]?.label || filterType}`}
+          {filterStatus !== 'all' && ` · Status: ${STATUS_CONFIG[filterStatus]?.label || filterStatus}`}
+          {filterSeverity !== 'all' && ` · Severity: ${filterSeverity}`}
+          {search && ` · Search: "${search}"`}
+        </div>
+      )}
+
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-8 h-8 animate-spin text-violet-600" />
