@@ -32,7 +32,7 @@ function SelectionGrid({ title, items, selected, onSelect, compact }) {
   return (
     <div>
       <h3 className="text-sm font-semibold text-slate-600 mb-2">{title}</h3>
-      <div className={cn("grid gap-2", compact ? "grid-cols-4 sm:grid-cols-4" : "grid-cols-2 sm:grid-cols-3")}>
+      <div className={cn("grid gap-2", compact ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2 sm:grid-cols-3")}>
         {items.map(item => (
           <button
             key={item.id}
@@ -49,7 +49,7 @@ function SelectionGrid({ title, items, selected, onSelect, compact }) {
             <div className={compact ? "text-center" : ""}>
               <p className={cn("font-medium text-slate-900", compact ? "text-xs" : "text-sm")}>{item.label}</p>
               {!compact && item.desc && (
-                <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
+                <p className="text-xs text-slate-500 mt-0.5 hidden sm:block">{item.desc}</p>
               )}
             </div>
           </button>

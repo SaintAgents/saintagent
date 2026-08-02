@@ -211,9 +211,9 @@ export default function CelestialInsights() {
 
       {/* Main Content */}
       <div className="max-w-5xl mx-auto px-4 -mt-6 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Left: Selector */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-2">
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
@@ -257,7 +257,7 @@ export default function CelestialInsights() {
           </div>
 
           {/* Right: Reading / History */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="mb-4">
                 <TabsTrigger value="consult" className="gap-1.5">
