@@ -32,7 +32,7 @@ function SelectionGrid({ title, items, selected, onSelect, compact }) {
   return (
     <div>
       <h3 className="text-sm font-semibold text-slate-600 mb-2">{title}</h3>
-      <div className={cn("grid gap-2", compact ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2 sm:grid-cols-3")}>
+      <div className={cn("grid gap-2", compact ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2 lg:grid-cols-2")}>
         {items.map(item => (
           <button
             key={item.id}

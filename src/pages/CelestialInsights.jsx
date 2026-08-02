@@ -175,7 +175,7 @@ export default function CelestialInsights() {
   return (
     <div className="min-h-screen pb-24">
       {/* Hero */}
-      <div className="page-hero relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-violet-900">
+      <div className="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-950 to-violet-900">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-10 left-10 w-2 h-2 bg-white rounded-full animate-pulse" />
           <div className="absolute top-20 right-20 w-1 h-1 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
@@ -185,7 +185,7 @@ export default function CelestialInsights() {
           <div className="absolute bottom-32 left-1/4 w-1 h-1 bg-white rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
           <div className="absolute top-16 left-2/3 w-1.5 h-1.5 bg-violet-200 rounded-full animate-pulse" style={{ animationDelay: '1.3s' }} />
         </div>
-        <div className="hero-content relative z-10 max-w-4xl mx-auto px-4 pt-12 pb-8 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 pt-8 pb-6 md:pt-10 md:pb-8 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Moon className="w-6 h-6 text-violet-300" />
             <Stars className="w-8 h-8 text-amber-300" />
@@ -210,10 +210,10 @@ export default function CelestialInsights() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-5xl mx-auto px-4 -mt-6 relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="max-w-7xl mx-auto px-4 -mt-6 relative z-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left: Selector */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-4">
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
@@ -257,7 +257,7 @@ export default function CelestialInsights() {
           </div>
 
           {/* Right: Reading / History */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-8">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="mb-4">
                 <TabsTrigger value="consult" className="gap-1.5">
