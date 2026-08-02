@@ -107,6 +107,7 @@ const NAV_ITEMS = [
   { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
   { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
   { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Orbit, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
+  { id: 'celestial', label: 'Celestial Insights', Icon: Star, page: 'CelestialInsights', hint: 'Personalized oracle readings — horoscope, tarot, I Ching, runes & more' },
   { id: 'gamification', label: 'Gamification', Icon: Sparkles, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
   { id: 'leaderboards', label: 'Leaderboards', Icon: Medal, page: 'Leaderboards', hint: 'View rankings, top players, and your position' },
   { id: 'mentorship', label: 'Mentorship', Icon: Users, page: 'Mentorship', hint: 'Find mentors or become one' },

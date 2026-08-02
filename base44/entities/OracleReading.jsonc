@@ -1,0 +1,61 @@
+{
+  "name": "OracleReading",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User email"
+    },
+    "reading_type": {
+      "type": "string",
+      "enum": [
+        "horoscope",
+        "tarot",
+        "iching",
+        "runes",
+        "numerology",
+        "oracle_cards"
+      ],
+      "default": "horoscope"
+    },
+    "focus": {
+      "type": "string",
+      "enum": [
+        "general",
+        "wealth",
+        "love",
+        "career",
+        "health",
+        "spiritual",
+        "creativity",
+        "shadow"
+      ],
+      "default": "general"
+    },
+    "timeframe": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "yearly"
+      ],
+      "default": "daily"
+    },
+    "reading": {
+      "type": "string",
+      "description": "The generated reading text (markdown)"
+    },
+    "profile_context": {
+      "type": "object",
+      "description": "Snapshot of user's mystical profile data used for generation"
+    }
+  },
+  "required": [
+    "user_id",
+    "reading_type",
+    "focus",
+    "timeframe",
+    "reading"
+  ]
+}
