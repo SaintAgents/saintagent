@@ -66,7 +66,7 @@ import AdvancedSearchModal from '../search/AdvancedSearchModal';
 import GlobalTimerWidget from './GlobalTimerWidget';
 import LiveBroadcastBanner from './LiveBroadcastBanner';
 import FloatingNotesWidget from '../notes/FloatingNotesWidget';
-import { formatDistanceToNow, parseISO } from "date-fns";
+import { format, parseISO } from "date-fns";
 import CollapsedViewModeToggle from './CollapsedViewModeToggle';
 import MatchScanPulse from './MatchScanPulse';
 
@@ -899,7 +899,7 @@ export default function TopBar({
                           {msg.content}
                         </p>
                         <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                          {msg.created_date && formatDistanceToNow(parseISO(msg.created_date), { addSuffix: true })}
+                          {msg.created_date && format(parseISO(msg.created_date), 'MMM d, h:mm a')}
                         </p>
                       </div>
                       <div className="w-2 h-2 rounded-full bg-rose-500 shrink-0 mt-2" />
