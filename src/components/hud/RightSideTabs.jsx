@@ -487,14 +487,14 @@ export default function RightSideTabs() {
           data-help-panel="true"
         >
           {conciergeMode ? (
-            <div className="flex flex-col h-full min-h-0">
+            <div className="flex flex-col h-full min-h-0 overflow-hidden">
               <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 shrink-0">
                 <button onClick={() => { setConciergeMode(false); setHelpMessages([]); }} className="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                   <ArrowLeft className="w-4 h-4 text-slate-500" />
                 </button>
                 <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Back to Help</span>
               </div>
-              <div className="flex-1 min-h-0 overflow-hidden">
+              <div className="flex-1 min-h-0 flex flex-col">
                 <ConciergeAgentChat onClose={() => { setConciergeMode(false); setHelpMessages([]); }} currentPage={trackedPage} />
               </div>
             </div>

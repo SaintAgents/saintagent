@@ -408,15 +408,15 @@ export default function ConciergeAgentChat({ onClose, currentPage }) {
         </div>
       </ScrollArea>
 
-      {/* Input */}
-      <div className="p-3 border-t border-slate-200 dark:border-slate-700">
-        <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex gap-2">
+      {/* Input - shrink-0 ensures it never gets clipped by overflow-hidden parent */}
+      <div className="p-3 border-t border-slate-200 dark:border-slate-700 shrink-0 bg-white dark:bg-slate-900">
+        <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex items-center gap-2">
           <Input
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={PAGE_PLACEHOLDERS[currentPage] || "Tell me what to do..."}
-            className="flex-1 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm"
+            className="flex-1 min-w-0 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-sm h-10"
             disabled={isStreaming}
           />
           <VoiceCommandButton
@@ -434,11 +434,12 @@ export default function ConciergeAgentChat({ onClose, currentPage }) {
               }, 300);
             }}
             disabled={isStreaming}
+            className="h-10 w-10 min-w-[40px]"
           />
           <Button
             type="submit"
             size="icon"
-            className="rounded-xl bg-emerald-600 hover:bg-emerald-700 shrink-0"
+            className="rounded-xl bg-emerald-600 hover:bg-emerald-700 shrink-0 h-10 w-10 min-w-[40px]"
             disabled={!input.trim() || isStreaming}
           >
             <Send className="w-4 h-4" />
