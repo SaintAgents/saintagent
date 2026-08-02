@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff, CreditCard, Camera } from 'lucide-react';
+import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff, CreditCard, Camera, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -13,6 +13,7 @@ import ConciergeAgentChat from '@/components/support/ConciergeAgentChat';
 import LearnPanel from '@/components/learn/LearnPanel';
 import BusinessCardDialog from '@/components/profile/BusinessCardDialog';
 import HelpPanelThemeOverrides from '@/components/hud/HelpPanelThemeOverrides';
+import VoiceCommandButton from '@/components/support/VoiceCommandButton';
 import { format, parseISO } from 'date-fns';
 
 const QUICK_QUESTIONS = [
@@ -679,6 +680,10 @@ export default function RightSideTabs() {
                     onChange={(e) => setHelpInput(e.target.value)}
                     placeholder="Ask anything..."
                     className="flex-1 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                    disabled={helpLoading}
+                  />
+                  <VoiceCommandButton
+                    onTranscript={(text) => sendHelpMessage(text)}
                     disabled={helpLoading}
                   />
                   <Button type="submit" size="icon" className="rounded-xl bg-violet-600 hover:bg-violet-700 shrink-0" disabled={!helpInput.trim() || helpLoading}>
