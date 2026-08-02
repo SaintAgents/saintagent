@@ -351,7 +351,7 @@ export default function TopBar({
       "left-0",
       sidebarCollapsed ? "md:left-16" : "md:left-64",
       isCollapsed ? "h-10" : "h-14"
-    )} style={{ zIndex: 9999, overflow: 'visible' }}>
+    )} style={{ zIndex: 9999, overflowX: 'auto', overflowY: 'visible' }}>
       {/* Collapse/Expand Toggle */}
       <button
         onClick={() => onToggleCollapse?.()}
