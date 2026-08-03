@@ -567,8 +567,18 @@
     },
     "message_email_notifications": {
       "type": "boolean",
-      "default": false,
+      "default": true,
       "description": "Send email notification when someone sends a direct message"
+    },
+    "message_batch_threshold": {
+      "type": "number",
+      "default": 5,
+      "description": "Number of unread messages to accumulate before sending a batch email notification (0 = notify on every message)"
+    },
+    "message_batch_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Counter tracking unread messages since last batch email was sent"
     }
   },
   "required": [

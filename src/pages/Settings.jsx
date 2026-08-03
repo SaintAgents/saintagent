@@ -433,16 +433,16 @@ export default function Settings() {
                   <MessageCircle className="w-5 h-5 text-pink-500" />
                   Message Email Alerts
                 </CardTitle>
-                <CardDescription>Get notified by email when someone sends you a direct message</CardDescription>
+                <CardDescription>Get notified by email when you receive direct messages</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">Email me when I receive a message</p>
-                    <p className="text-sm text-slate-500">You'll get an email each time someone sends you a DM</p>
+                    <p className="font-medium">Email me when I receive messages</p>
+                    <p className="text-sm text-slate-500">Send an email digest when messages pile up</p>
                   </div>
                   <Switch
-                    checked={!!profile?.message_email_notifications}
+                    checked={profile?.message_email_notifications !== false}
                     onCheckedChange={(checked) => {
                       if (profile) {
                         updateMutation.mutate({ message_email_notifications: checked });
@@ -451,6 +451,36 @@ export default function Settings() {
                     className="data-[state=checked]:bg-violet-600 data-[state=unchecked]:bg-slate-300"
                   />
                 </div>
+
+                {profile?.message_email_notifications !== false && (
+                  <div className="pt-3 border-t border-slate-200 dark:border-slate-700">
+                    <Label className="mb-2 block">Notify me after this many unread messages</Label>
+                    <Select
+                      value={String(profile?.message_batch_threshold ?? 5)}
+                      onValueChange={(v) => {
+                        if (profile) {
+                          updateMutation.mutate({ message_batch_threshold: Number(v) });
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="w-48">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0">Every message</SelectItem>
+                        <SelectItem value="3">After 3 messages</SelectItem>
+                        <SelectItem value="5">After 5 messages</SelectItem>
+                        <SelectItem value="10">After 10 messages</SelectItem>
+                        <SelectItem value="20">After 20 messages</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-slate-500 mt-2">
+                      {(profile?.message_batch_threshold ?? 5) === 0
+                        ? "You'll get an email for every single message."
+                        : `You'll get one email after ${profile?.message_batch_threshold ?? 5} unread messages accumulate.`}
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
