@@ -116,27 +116,38 @@ export default function AffiliateCenter() {
   });
   const profile = profiles?.[0];
 
+  // Build SA-based affiliate code from sa_number (e.g. "000001" → "SA000001")
+  const saAffiliateCode = profile?.sa_number ? `SA${profile.sa_number}` : null;
+
   // Fetch or create affiliate code
   const { data: affiliateCodes = [], isLoading: codeLoading } = useQuery({
-    queryKey: ['affiliateCodes', currentUser?.email, profile?.handle],
+    queryKey: ['affiliateCodes', currentUser?.email, saAffiliateCode],
     queryFn: async () => {
       let codes = await base44.entities.AffiliateCode.filter({ user_id: currentUser.email });
       
-      // Ensure primary code exists
+      // Ensure primary code exists using SA number
       const primaryCode = codes.find(c => !c.campaign_name);
-      if (!primaryCode && profile?.handle) {
+      if (!primaryCode && saAffiliateCode) {
         const newCode = await base44.entities.AffiliateCode.create({
           user_id: currentUser.email,
-          code: profile.handle,
+          code: saAffiliateCode,
+          sa_number: profile.sa_number,
           target_type: 'general',
           status: 'active'
         });
         codes = [newCode, ...codes];
+      } else if (primaryCode && saAffiliateCode && primaryCode.code !== saAffiliateCode) {
+        // Migrate existing code to SA number format
+        await base44.entities.AffiliateCode.update(primaryCode.id, { 
+          code: saAffiliateCode, 
+          sa_number: profile.sa_number 
+        });
+        primaryCode.code = saAffiliateCode;
       }
       
       return codes;
     },
-    enabled: !!currentUser?.email && !!profile?.handle
+    enabled: !!currentUser?.email && !!saAffiliateCode
   });
   const affiliateCode = affiliateCodes.find(c => !c.campaign_name) || affiliateCodes[0];
 
@@ -241,8 +252,8 @@ export default function AffiliateCenter() {
     );
   }
 
-  // If no profile/handle yet - show message to complete profile
-  if (!profile?.handle) {
+  // If no SA number yet - show message to complete profile
+  if (!profile?.sa_number) {
     return (
       <div className="p-6">
         <Card className="max-w-md mx-auto">
@@ -250,7 +261,7 @@ export default function AffiliateCenter() {
             <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-4" />
             <h2 className="text-lg font-semibold mb-2">Profile Required</h2>
             <p className="text-sm mb-4">
-              Complete your profile and set a handle to access your affiliate link.
+              Complete your profile to get your SA number and affiliate link.
             </p>
             <Button onClick={() => window.location.href = '/Profile'}>
               Go to Profile
@@ -873,7 +884,7 @@ export default function AffiliateCenter() {
         open={createCampaignOpen}
         onOpenChange={setCreateCampaignOpen}
         userId={currentUser?.email}
-        userHandle={profile?.handle}
+        userHandle={saAffiliateCode || profile?.handle}
         listings={listings}
         events={events}
         missions={missions}
