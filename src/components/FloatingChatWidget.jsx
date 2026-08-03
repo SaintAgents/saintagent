@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { X, Send, Minimize2, Maximize2, Circle, Video, Sparkles, Check, CheckCheck, Paperclip, Move, Loader2 } from "lucide-react";
@@ -461,14 +462,15 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
 
       {/* Input */}
       <div className="p-3 pb-5 md:pb-3 border-t">
-        <div className="flex gap-2 items-center">
-          <div className="flex-1 relative flex items-center">
-            <Input
+        <div className="flex gap-2 items-end">
+          <div className="flex-1 relative">
+            <Textarea
               value={message}
               onChange={(e) => { setMessage(e.target.value); sendTypingPing(); }}
-              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
               placeholder="Type a message..."
-              className="flex-1 h-9 pr-16"
+              rows={3}
+              className="flex-1 resize-none pr-16 text-sm min-h-[72px]"
             />
             <div className="absolute right-1 flex items-center gap-0.5">
               <IcebreakerPrompts
