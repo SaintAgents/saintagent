@@ -462,11 +462,12 @@ export default function RightSideTabs() {
         {/* Tab Handle - hidden on mobile */}
         <div 
           className={cn(
-            "absolute right-0 top-0 items-center justify-center w-8 h-8 cursor-pointer transition-all duration-300 hidden md:flex",
-            "bg-gradient-to-l from-violet-600 to-purple-600 text-white shadow-lg",
-            "rounded-l-lg border-l border-t border-b border-violet-500",
+            "absolute right-0 top-0 items-center justify-center w-8 cursor-pointer transition-all duration-300 hidden md:flex",
+            "bg-gradient-to-br from-violet-400 to-purple-500 text-white shadow-md",
+            "rounded-l-md border border-violet-300",
             showHelpPanel ? "translate-x-0 opacity-0" : "translate-x-0"
           )}
+          style={{ height: '32px', minHeight: '32px', maxHeight: '32px' }}
           onClick={() => { setHelpOpen(true); setDismissedPages(prev => { const next = new Set(prev); next.delete(getCurrentPage()); return next; }); }}
         >
           <HelpCircle className="w-4 h-4" />
