@@ -218,7 +218,7 @@ export default function CRM() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-6 px-6 pb-6">
+      <div className="max-w-7xl mx-auto space-y-4 md:space-y-6 px-3 md:px-6 pb-6">
         {/* Follow-Up Reminders Panel */}
         {tab === 'my-contacts' && (
           <FollowUpReminderPanel 
@@ -228,45 +228,45 @@ export default function CRM() {
         )}
 
         {/* Header Actions */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto">
             <Link to="/Deals">
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs whitespace-nowrap">
                 <TrendingUp className="w-3.5 h-3.5" />
                 Deals
               </Button>
             </Link>
             <Link to="/OutreachSequences">
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs whitespace-nowrap">
                 <Send className="w-3.5 h-3.5" />
                 Outreach
               </Button>
             </Link>
             <Link to="/ImpactDashboard">
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs whitespace-nowrap">
                 <FileBarChart className="w-3.5 h-3.5" />
                 Impact
               </Button>
             </Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             {accessRequests.length > 0 && (
               <Badge className="bg-amber-100 text-amber-700">
-                {accessRequests.length} pending request{accessRequests.length > 1 ? 's' : ''}
+                {accessRequests.length} pending
               </Badge>
             )}
             <CRMExportCSV contacts={filteredContacts} />
-            <Button variant="outline" onClick={() => setImportOpen(true)} className="gap-2 crm-import-btn">
-              <Upload className="w-4 h-4" />
-              Import CSV
+            <Button variant="outline" size="sm" onClick={() => setImportOpen(true)} className="gap-1.5 crm-import-btn whitespace-nowrap">
+              <Upload className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Import</span>
             </Button>
-            <Button variant="outline" onClick={() => setBatchFederateOpen(true)} className="gap-2 crm-import-btn">
-              <Globe className="w-4 h-4" />
-              Batch Federate
+            <Button variant="outline" size="sm" onClick={() => setBatchFederateOpen(true)} className="gap-1.5 crm-import-btn whitespace-nowrap">
+              <Globe className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Federate</span>
             </Button>
-            <Button onClick={() => setFormOpen(true)} className="gap-2 bg-violet-600 hover:bg-violet-700">
-              <Plus className="w-4 h-4 text-white" />
-              <span className="text-white">Add Contact</span>
+            <Button size="sm" onClick={() => setFormOpen(true)} className="gap-1.5 bg-violet-600 hover:bg-violet-700">
+              <Plus className="w-3.5 h-3.5 text-white" />
+              <span className="text-white hidden sm:inline">Add</span>
             </Button>
           </div>
         </div>
@@ -291,77 +291,79 @@ export default function CRM() {
 
         {/* Main Content */}
         <Tabs value={tab} onValueChange={setTab}>
-          <div className="space-y-4 mb-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <TabsList>
-                  <TabsTrigger value="my-contacts" className="gap-2">
-                    <Lock className="w-4 h-4" />
-                    My Contacts
+          <div className="space-y-3 mb-4">
+            <div className="space-y-2">
+              <div className="overflow-x-auto -mx-3 px-3 md:mx-0 md:px-0">
+                <TabsList className="inline-flex w-auto min-w-max">
+                  <TabsTrigger value="my-contacts" className="gap-1.5 text-xs md:text-sm">
+                    <Lock className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">My</span> Contacts
                   </TabsTrigger>
-                  <TabsTrigger value="network" className="gap-2">
-                    <Globe className="w-4 h-4" />
-                    Federated Network
+                  <TabsTrigger value="network" className="gap-1.5 text-xs md:text-sm">
+                    <Globe className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Federated</span> Network
                   </TabsTrigger>
-                  <TabsTrigger value="requests" className="gap-2">
-                    <Share2 className="w-4 h-4" />
-                    Access Requests
+                  <TabsTrigger value="requests" className="gap-1.5 text-xs md:text-sm">
+                    <Share2 className="w-3.5 h-3.5" />
+                    Requests
                     {accessRequests.length > 0 && (
-                      <Badge className="ml-1 bg-rose-500 text-white text-xs">{accessRequests.length}</Badge>
+                      <Badge className="ml-1 bg-rose-500 text-white text-[10px] px-1.5">{accessRequests.length}</Badge>
                     )}
                   </TabsTrigger>
-                  <TabsTrigger value="pipeline" className="gap-2">
-                    <Columns3 className="w-4 h-4" />
+                  <TabsTrigger value="pipeline" className="gap-1.5 text-xs md:text-sm">
+                    <Columns3 className="w-3.5 h-3.5" />
                     Pipeline
                   </TabsTrigger>
-                  <TabsTrigger value="analytics" className="gap-2">
-                    <BarChart3 className="w-4 h-4" />
+                  <TabsTrigger value="analytics" className="gap-1.5 text-xs md:text-sm">
+                    <BarChart3 className="w-3.5 h-3.5" />
                     Analytics
                   </TabsTrigger>
                 </TabsList>
-                <TabsList>
-                  <TabsTrigger value="ai-assistant" className="gap-2">
-                    <Sparkles className="w-4 h-4 text-violet-500" />
-                    AI Assistant
+              </div>
+              <div className="overflow-x-auto -mx-3 px-3 md:mx-0 md:px-0">
+                <TabsList className="inline-flex w-auto min-w-max">
+                  <TabsTrigger value="ai-assistant" className="gap-1.5 text-xs md:text-sm">
+                    <Sparkles className="w-3.5 h-3.5 text-violet-500" />
+                    AI
                   </TabsTrigger>
-                  <TabsTrigger value="synchronicity" className="gap-2">
-                    <Brain className="w-4 h-4 text-amber-500" />
-                    Synchronicity
+                  <TabsTrigger value="synchronicity" className="gap-1.5 text-xs md:text-sm">
+                    <Brain className="w-3.5 h-3.5 text-amber-500" />
+                    Sync
                   </TabsTrigger>
-                  <TabsTrigger value="automations" className="gap-2">
-                    <Zap className="w-4 h-4" />
-                    Automations
+                  <TabsTrigger value="automations" className="gap-1.5 text-xs md:text-sm">
+                    <Zap className="w-3.5 h-3.5" />
+                    Auto
                   </TabsTrigger>
-                  <TabsTrigger value="agent" className="gap-2">
-                    <Bot className="w-4 h-4 text-violet-500" />
-                    Response Agent
+                  <TabsTrigger value="agent" className="gap-1.5 text-xs md:text-sm">
+                    <Bot className="w-3.5 h-3.5 text-violet-500" />
+                    Agent
                   </TabsTrigger>
-                  <TabsTrigger value="pitches" className="gap-2">
-                    <FileBarChart className="w-4 h-4 text-emerald-500" />
+                  <TabsTrigger value="pitches" className="gap-1.5 text-xs md:text-sm">
+                    <FileBarChart className="w-3.5 h-3.5 text-emerald-500" />
                     Pitches
                   </TabsTrigger>
-                  <TabsTrigger value="google-sync" className="gap-2">
-                    <Mail className="w-4 h-4 text-blue-500" />
-                    Google Sync
+                  <TabsTrigger value="google-sync" className="gap-1.5 text-xs md:text-sm">
+                    <Mail className="w-3.5 h-3.5 text-blue-500" />
+                    <span className="hidden sm:inline">Google</span> Sync
                   </TabsTrigger>
                 </TabsList>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 justify-end">
                 <Button
                   variant="outline"
                   size="sm"
-                  className={cn("gap-1.5 h-9 text-xs", compactCards && "bg-violet-50 border-violet-200")}
+                  className={cn("gap-1.5 h-8 text-xs", compactCards && "bg-violet-50 border-violet-200")}
                   onClick={() => setCompactCards(!compactCards)}
                 >
                   {compactCards ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                  {compactCards ? 'Show Details' : 'Simple'}
+                  {compactCards ? 'Details' : 'Simple'}
                 </Button>
                 <div className="flex items-center border rounded-md">
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className={cn("h-9 w-9 rounded-r-none", viewMode === 'grid' && "bg-slate-100")}
+                    className={cn("h-8 w-8 rounded-r-none", viewMode === 'grid' && "bg-slate-100")}
                     onClick={() => setViewMode('grid')}
                   >
                     <LayoutGrid className="w-4 h-4" />
@@ -369,7 +371,7 @@ export default function CRM() {
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className={cn("h-9 w-9 rounded-l-none", viewMode === 'list' && "bg-slate-100")}
+                    className={cn("h-8 w-8 rounded-l-none", viewMode === 'list' && "bg-slate-100")}
                     onClick={() => setViewMode('list')}
                   >
                     <List className="w-4 h-4" />
