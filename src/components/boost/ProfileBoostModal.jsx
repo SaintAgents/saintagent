@@ -168,6 +168,15 @@ export default function ProfileBoostModal({ open, onClose, boostType = 'profile'
       const now = new Date();
       const endTime = new Date(now.getTime() + (duration.hours * 60 * 60 * 1000));
 
+      // Re-fetch fresh balance to prevent overdraw
+      const freshProfiles = await base44.entities.UserProfile.filter({ user_id: user.email });
+      const freshBalance = freshProfiles[0]?.ggg_balance || 0;
+      if (freshBalance < cost) {
+        throw new Error(`Insufficient GGG balance (${freshBalance.toFixed(2)} available, ${cost} needed)`);
+      }
+
+      const newBalance = freshBalance - cost;
+
       // Deduct GGG
       await base44.entities.GGGTransaction.create({
         user_id: user.email,
@@ -175,12 +184,12 @@ export default function ProfileBoostModal({ open, onClose, boostType = 'profile'
         delta: -cost,
         reason_code: 'boost_purchase',
         description: `${tier.name} - ${duration.label}`,
-        balance_after: balance - cost
+        balance_after: newBalance
       });
 
       // Update user profile balance
       await base44.entities.UserProfile.update(profile.id, {
-        ggg_balance: balance - cost
+        ggg_balance: newBalance
       });
 
       // Create boost record

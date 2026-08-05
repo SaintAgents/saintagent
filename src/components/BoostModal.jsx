@@ -37,6 +37,15 @@ export default function BoostModal({ open, onClose, targetType, targetId }) {
 
   const boostMutation = useMutation({
     mutationFn: async (data) => {
+      // Re-fetch fresh balance to prevent overdraw
+      const freshProfiles = await base44.entities.UserProfile.filter({ user_id: profile.user_id });
+      const freshBalance = freshProfiles[0]?.ggg_balance || 0;
+      if (freshBalance < budget) {
+        throw new Error(`Insufficient GGG balance (${freshBalance.toFixed(2)} available, ${budget} needed)`);
+      }
+
+      const newBalance = freshBalance - budget;
+
       // Deduct GGG
       await base44.entities.GGGTransaction.create({
         user_id: profile.user_id,
@@ -44,7 +53,12 @@ export default function BoostModal({ open, onClose, targetType, targetId }) {
         delta: -budget,
         reason_code: 'boost_spent',
         description: `Boost ${targetType}`,
-        balance_after: (profile.ggg_balance || 0) - budget
+        balance_after: newBalance
+      });
+
+      // Update profile balance
+      await base44.entities.UserProfile.update(freshProfiles[0].id, {
+        ggg_balance: newBalance
       });
       
       // Create boost
