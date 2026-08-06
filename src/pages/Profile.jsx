@@ -471,7 +471,7 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto">
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
-          <div className="relative h-64 bg-gradient-to-r from-violet-500 to-purple-600 group">
+          <div className="relative h-40 md:h-64 bg-gradient-to-r from-violet-500 to-purple-600 group">
             {profile?.hero_image_url ? (
               <img
                 src={profile.hero_image_url}
@@ -484,8 +484,8 @@ export default function Profile() {
             )}
             
             {/* Rank Badge - Top Left - 3x Bigger */}
-            <div className="absolute top-3 left-3 z-10">
-              <RankBadge code={profile?.rp_rank_code || profile?.rank_code || 'seeker'} size={144} className="drop-shadow-lg" />
+            <div className="absolute top-2 left-2 md:top-3 md:left-3 z-10">
+              <RankBadge code={profile?.rp_rank_code || profile?.rank_code || 'seeker'} size={typeof window !== 'undefined' && window.innerWidth < 640 ? 72 : 144} className="drop-shadow-lg" />
             </div>
             
             {/* SA# Badge - Top Right */}
@@ -499,21 +499,21 @@ export default function Profile() {
             )}
             
             {/* Recent & Current Badges - Large Display at Bottom of Hero */}
-            <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 z-10">
-              <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm rounded-xl px-5 py-3">
-                <span className="text-white/90 text-sm font-semibold shrink-0">Recent Badges:</span>
-                <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
+            <div className="absolute bottom-0 left-0 right-0 px-2 pb-2 md:px-4 md:pb-4 z-10">
+              <div className="flex items-center gap-2 md:gap-4 bg-black/50 backdrop-blur-sm rounded-xl px-3 py-2 md:px-5 md:py-3">
+                <span className="text-white/90 text-xs md:text-sm font-semibold shrink-0 hidden sm:inline">Recent Badges:</span>
+                <div className="flex items-center gap-2 md:gap-3 overflow-x-auto scrollbar-hide flex-1">
                   {profileBadges.slice(0, 6).map((badge) => (
                     <div key={badge.id} className="shrink-0 group relative">
                       {badge.image_url ? (
                         <img 
                           src={badge.image_url} 
                           alt={badge.badge_type || 'Badge'} 
-                          className="w-20 h-20 object-contain drop-shadow-lg hover:scale-110 transition-transform cursor-pointer"
+                          className="w-10 h-10 md:w-20 md:h-20 object-contain drop-shadow-lg hover:scale-110 transition-transform cursor-pointer"
                           title={badge.badge_type?.replace(/_/g, ' ')}
                         />
                       ) : (
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                        <div className="w-10 h-10 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-lg md:text-2xl font-bold shadow-lg">
                           {badge.badge_type?.[0]?.toUpperCase() || '★'}
                         </div>
                       )}
@@ -550,12 +550,12 @@ export default function Profile() {
             }
           </div>
           <CardContent className="bg-purple-100 text-zinc-500 pt-4 p-3 md:p-6 relative">
-            <div className="flex items-start gap-6">
-              <div className="cursor-pointer" onClick={() => setViewerOpen(true)} title="View photos">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-6">
+              <div className="cursor-pointer shrink-0" onClick={() => setViewerOpen(true)} title="View photos">
                 <RankedAvatar
                   src={profile?.avatar_url}
                   name={profile?.display_name}
-                  size={96}
+                  size={80}
                   leaderTier={profile?.leader_tier}
                   rpRankCode={profile?.rp_rank_code || profile?.rank_code}
                   rpPoints={profile?.rp_points || profile?.rank_points}
@@ -566,8 +566,8 @@ export default function Profile() {
                   galleryImages={profile?.gallery_images} />
 
               </div>
-              <div className="flex-1 pt-2">
-                <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex-1 min-w-0 pt-0 sm:pt-2">
+                <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 flex-wrap">
                   {/* Photo icon next to name */}
                   {(profile?.gallery_images?.length > 0 || profile?.avatar_url) && (
                     <button 
@@ -578,7 +578,7 @@ export default function Profile() {
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                     </button>
                   )}
-                  <h1 className="text-slate-900 dark:text-white text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
+                  <h1 className="text-slate-900 dark:text-white text-xl sm:text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
                   {profile?.tagline &&
                   <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
                   }
@@ -625,7 +625,7 @@ export default function Profile() {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <p className="text-blue-950">@{profile?.handle || currentUser?.email?.split('@')[0]} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
+                <p className="text-blue-950 text-center sm:text-left text-sm">@{profile?.handle || currentUser?.email?.split('@')[0]} {profile?.sa_number ? `• SA#${profile.sa_number}` : ''}</p>
                 {/* Joined Date */}
                 {profile?.created_date &&
                 <p className="text-sm text-slate-500 mt-1 flex items-center gap-1">
@@ -640,7 +640,7 @@ export default function Profile() {
                 <SocialLinksDisplay socialLinks={profile?.social_links} className="mt-2" />
                 </div>
               {isOwnProfile ?
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-center sm:justify-end">
                                           <BoostStatusBadge userId={profile?.user_id} />
                                           <QuickBoostButton size="sm" variant="outline" />
                                           <Button
@@ -677,9 +677,9 @@ export default function Profile() {
         </Card>
 
         <Tabs defaultValue="basic" className="space-y-6">
-          <div className="flex flex-col gap-1 w-full max-w-4xl">
+          <div className="flex flex-col gap-1 w-full max-w-4xl overflow-x-hidden">
             {/* Row 1 */}
-            <TabsList className="flex flex-wrap justify-start w-full gap-1 h-auto p-1">
+            <TabsList className="flex overflow-x-auto scrollbar-hide justify-start w-full gap-1 h-auto p-1 flex-nowrap md:flex-wrap">
               <TabsTrigger value="basic" className="text-xs sm:text-sm px-2 sm:px-3" title="Basic Info">
                 <span className="hidden sm:inline">Basic Info</span>
                 <User className="sm:hidden w-4 h-4" />
@@ -710,7 +710,7 @@ export default function Profile() {
               </TabsTrigger>
             </TabsList>
             {/* Row 2 */}
-            <TabsList className="flex flex-wrap justify-start w-full gap-1 h-auto p-1">
+            <TabsList className="flex overflow-x-auto scrollbar-hide justify-start w-full gap-1 h-auto p-1 flex-nowrap md:flex-wrap">
               {isOwnProfile && (
                 <TabsTrigger value="trust-network" className="text-xs sm:text-sm px-2 sm:px-3" title="Trust Network">
                   <span className="hidden sm:inline">Trust Network</span>

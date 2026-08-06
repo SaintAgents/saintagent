@@ -127,3 +127,12 @@ html[data-theme='light'] button[role="switch"] span,
 [data-theme='light'] button[role="switch"] span {
   background-color: #ffffff !important;
 }
+
+/* Utility: hide scrollbar but keep scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

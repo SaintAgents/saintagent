@@ -913,7 +913,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-3">
               <div>
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-white dark:drop-shadow-[0_0_10px_rgba(0,255,136,0.5)]">Command Deck</h1>
+                <h1 className="text-lg md:text-2xl font-bold text-slate-900 dark:text-white dark:drop-shadow-[0_0_10px_rgba(0,255,136,0.5)]">Command Deck</h1>
                 <p className="text-teal-500 dark:text-[#00ff88] mt-1">Your mission control center</p>
               </div>
               <button onClick={() => setShowOnboardingTour(true)} className="p-2 rounded-full bg-violet-100 hover:bg-violet-200 dark:bg-violet-900/40 dark:hover:bg-violet-800/60 transition-colors shrink-0" title="Replay Platform Tour">
@@ -1178,7 +1178,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                       <div className="h-full bg-violet-500 dark:bg-violet-400 animate-pulse" style={{ width: '100%' }} />
                     </div>
                   )}
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
                     {/* Refresh Button - refetch profile only, don't trigger cascade */}
                     <button
                       onClick={async () => {
@@ -1245,10 +1245,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   </div>
                   
                   {/* Featured Badges - 3x Size */}
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-2 md:gap-4 mb-4">
                     {/* Eternal Flame Feature Badge - 3x Size */}
-                    <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 border-2 border-amber-300 shadow-lg shadow-amber-200/50">
-                      <div className="w-36 h-36 flex items-center justify-center">
+                    <div className="flex flex-col items-center justify-center p-2 md:p-4 rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 border-2 border-amber-300 shadow-lg shadow-amber-200/50">
+                      <div className="w-20 h-20 md:w-36 md:h-36 flex items-center justify-center">
                         <img
                           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
                           alt="Eternal Flame"
@@ -1272,8 +1272,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     </div>
                     
                     {/* Social Butterfly Badge - 3x Size */}
-                    <div className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-br from-violet-50 via-purple-50 to-violet-100 border-2 border-violet-300 shadow-lg shadow-violet-200/50">
-                      <div className="w-36 h-36 flex items-center justify-center">
+                    <div className="flex flex-col items-center justify-center p-2 md:p-4 rounded-2xl bg-gradient-to-br from-violet-50 via-purple-50 to-violet-100 border-2 border-violet-300 shadow-lg shadow-violet-200/50">
+                      <div className="w-20 h-20 md:w-36 md:h-36 flex items-center justify-center">
                         <img
                           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/01ebdeddb_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png"
                           alt="Social Butterfly"
@@ -1319,7 +1319,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                     </div>
                     
                     {/* Mystical fields grid - 4 columns to align properly */}
-                    <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                       {profile?.mystical_identifier &&
                       <div className="flex items-center gap-2">
                           <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0">
@@ -1460,7 +1460,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           </div>
           <ActivityFeedBanner context="commanddeck" />
           {/* Hero Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 md:gap-3 mb-6">
             {/* Gold Price Ticker - GGG = 1 gram gold */}
             <GoldPriceTicker />
             <GGGBalanceCard walletAvailable={walletAvailable} />
@@ -1564,7 +1564,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
         {/* Mode Cards Grid */}
         <div className="px-0 md:px-6 mb-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1 md:gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-1 md:gap-4">
             <ModeCard mode="earn" title="Earn" icon={DollarSign} stats="Marketplace" onClick={() => window.location.href = createPageUrl('Marketplace')} />
             <ModeCard mode="learn" title="Learn" icon={TrendingUp} stats="Guide" onClick={() => window.location.href = createPageUrl('Learn')} />
             <ModeCard mode="build" title="Build" icon={Target} stats="Missions" onClick={() => window.location.href = createPageUrl('Missions')} />

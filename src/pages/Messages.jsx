@@ -810,7 +810,7 @@ export default function Messages() {
           </div>
 
           {/* Input */}
-          <div className="p-2 pb-20 md:p-4 md:pb-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
+          <div className="p-2 pb-24 md:p-4 md:pb-4 border-t dark:border-[rgba(0,255,136,0.2)] bg-white dark:bg-[#0a0a0a] shrink-0">
             {/* Reply preview bar */}
             {replyingTo && (
               <div className="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg bg-violet-50 dark:bg-violet-900/20 border-l-3 border-violet-500">
@@ -879,10 +879,10 @@ export default function Messages() {
               <Textarea
                 placeholder="Type a message..."
                 value={messageText}
-                rows={3}
+                rows={2}
                 onChange={(e) => {setMessageText(e.target.value);sendTypingPing().catch(() => {});}}
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                className="flex-1 rounded-xl min-w-0 resize-none" />
+                className="flex-1 rounded-xl min-w-0 resize-none text-base" />
 
               <VoiceCommandButton 
                 onTranscript={(text) => setMessageText((prev) => prev ? prev + ' ' + text : text)}
