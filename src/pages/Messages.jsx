@@ -26,6 +26,7 @@ import MediaAttachment from '@/components/messages/MediaAttachment';
 import MessageBubble from '@/components/messages/MessageBubble';
 import TypingIndicator from '@/components/messages/TypingIndicator';
 import ShareAffiliateLinkButton from '@/components/messages/ShareAffiliateLinkButton';
+import VoiceCommandButton from '@/components/support/VoiceCommandButton';
 import VideoCallModal from '@/components/messages/VideoCallModal';
 import { trackSendMessage } from '@/components/gamification/challengeTracker';
 
@@ -883,6 +884,9 @@ export default function Messages() {
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                 className="flex-1 rounded-xl min-w-0 resize-none" />
 
+              <VoiceCommandButton 
+                onTranscript={(text) => setMessageText((prev) => prev ? prev + ' ' + text : text)}
+              />
               <Button
                 onClick={handleSend}
                 disabled={!messageText.trim()}
