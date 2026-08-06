@@ -31,6 +31,7 @@ import { Shield, TrendingUp, BadgeCheck, Users, Coins, Mail } from 'lucide-react
 import HelpHint from '@/components/hud/HelpHint';
 import TipButton from '@/components/creator/TipButton';
 import TestimonialButton from '@/components/TestimonialButton';
+import CallButton from '@/components/CallButton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import DestinyCardTooltip from '@/components/destiny/DestinyCardTooltip';
 
@@ -415,6 +416,7 @@ export default function MiniProfile({
                     variant="icon"
                     className="h-7 w-7"
                   />
+                  <CallButton userId={userId} userName={displayName} variant="icon" />
                   <TestimonialButton
                     toUserId={userId}
                     toUserName={displayName}

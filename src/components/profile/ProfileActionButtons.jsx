@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Calendar, Video, Loader2 } from "lucide-react";
 import FriendRequestButton from '@/components/friends/FriendRequestButton';
 import TipButton from '@/components/creator/TipButton';
+import CallButton from '@/components/CallButton';
 
 export default function ProfileActionButtons({ profile, currentUser, currentUserProfile }) {
   const [zoomLoading, setZoomLoading] = useState(false);
@@ -50,6 +51,7 @@ export default function ProfileActionButtons({ profile, currentUser, currentUser
       <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2 text-sm">
         <MessageCircle className="w-4 h-4" /> Message
       </Button>
+      <CallButton userId={profile?.user_id} userName={profile?.display_name} variant="button" />
       <Button onClick={handleBook} variant="outline" className="rounded-xl gap-2 text-sm border-violet-300 text-violet-700 hover:bg-violet-50">
         <Calendar className="w-4 h-4" /> Book
       </Button>

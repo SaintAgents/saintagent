@@ -37,6 +37,7 @@ import { RANK_BADGE_IMAGES } from '@/components/reputation/rankBadges';
 import { formatDistanceToNow } from 'date-fns';
 import CommunityStatsCard from '@/components/profile/CommunityStatsCard';
 import XPProgressCard from '@/components/progression/XPProgressCard';
+import CallButton from '@/components/CallButton';
 
 
 // Default fallback hero image
@@ -347,12 +348,13 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
             {/* Actions */}
             {!isOwnProfile &&
             <div className="space-y-3 mb-6">
-                <div className="grid grid-cols-2 gap-2">
-                  <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-2 text-sm px-3">
+                <div className="grid grid-cols-3 gap-2">
+                  <Button onClick={handleMessage} className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl gap-1 text-sm px-2">
                     <MessageCircle className="w-4 h-4" />
                     Message
                   </Button>
-                  <Button onClick={handleBook} variant="outline" className="rounded-xl gap-2 text-sm px-3 border-violet-300 text-violet-700 hover:bg-violet-50">
+                  <CallButton userId={userId} userName={profile?.display_name} variant="button" />
+                  <Button onClick={handleBook} variant="outline" className="rounded-xl gap-1 text-sm px-2 border-violet-300 text-violet-700 hover:bg-violet-50">
                     <Calendar className="w-4 h-4" />
                     Book
                   </Button>
