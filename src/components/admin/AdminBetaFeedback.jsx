@@ -75,7 +75,8 @@ function CopyButton({ feedback, typeConfig, statusConfig }) {
   );
 }
 
-export default function AdminBetaFeedback() {
+export default function AdminBetaFeedback({ viewerRole = 'admin' }) {
+  const isAdmin = viewerRole === 'admin';
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -237,18 +238,20 @@ export default function AdminBetaFeedback() {
       {/* Header with Auto-Repair Button */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-slate-900">Beta Feedback</h3>
-        <Button
-          onClick={handleAutoRepair}
-          disabled={isAutoRepairing}
-          className="bg-violet-600 hover:bg-violet-700"
-        >
-          {isAutoRepairing ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <Bot className="w-4 h-4 mr-2" />
-          )}
-          {isAutoRepairing ? 'Analyzing...' : 'Auto-Analyze Bugs'}
-        </Button>
+        {isAdmin && (
+          <Button
+            onClick={handleAutoRepair}
+            disabled={isAutoRepairing}
+            className="bg-violet-600 hover:bg-violet-700"
+          >
+            {isAutoRepairing ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Bot className="w-4 h-4 mr-2" />
+            )}
+            {isAutoRepairing ? 'Analyzing...' : 'Auto-Analyze Bugs'}
+          </Button>
+        )}
       </div>
 
       {/* Summary Cards — click to filter */}
@@ -416,20 +419,22 @@ export default function AdminBetaFeedback() {
                     <div className="flex flex-col gap-2 shrink-0 items-end">
                       <div className="flex items-center gap-1">
                         <CopyButton feedback={feedback} typeConfig={typeConfig} statusConfig={statusConfig} />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 px-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (confirm('Delete this feedback?')) {
-                              deleteMutation.mutate(feedback.id);
-                            }
-                          }}
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        {isAdmin && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm('Delete this feedback?')) {
+                                deleteMutation.mutate(feedback.id);
+                              }
+                            }}
+                            title="Delete"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
                       </div>
                       <div className="flex items-center gap-3">
                         <label
@@ -693,17 +698,19 @@ export default function AdminBetaFeedback() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex justify-end gap-2 pt-4 border-t">
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => deleteMutation.mutate(selectedFeedback.id)}
-                    disabled={deleteMutation.isPending}
-                  >
-                    <Trash2 className="w-4 h-4 mr-1" />
-                    Delete
-                  </Button>
-                </div>
+                {isAdmin && (
+                  <div className="flex justify-end gap-2 pt-4 border-t">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteMutation.mutate(selectedFeedback.id)}
+                      disabled={deleteMutation.isPending}
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
+                    </Button>
+                  </div>
+                )}
               </div>
             </>
           )}

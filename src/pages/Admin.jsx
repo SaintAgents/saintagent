@@ -257,7 +257,7 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="feedback">
-            <AdminBetaFeedback />
+            <AdminBetaFeedback viewerRole={user?.role} />
           </TabsContent>
 
           <TabsContent value="challenges">
