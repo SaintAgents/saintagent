@@ -436,6 +436,18 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                       </div>
                     </div>
 
+                    {/* Change video options */}
+                    <div className="flex gap-1.5">
+                      <button onClick={() => setShowLibrary(!showLibrary)} className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg border text-xs" style={{ borderColor, background: panelItemBgAlt, color: textColor }}>
+                        <Play className="w-3.5 h-3.5" style={{ color: accentColor }} /> {showLibrary ? 'Hide Library' : 'Change Video'}
+                      </button>
+                      <label className="flex items-center gap-1 px-2 py-1.5 rounded-lg border border-dashed cursor-pointer text-xs" style={{ borderColor }}>
+                        <input type="file" accept="video/*" onChange={handleUpload} className="hidden" />
+                        {uploading ? <div className="animate-spin rounded-full h-3 w-3 border-2 border-t-transparent" style={{ borderColor: accentColor }} /> : <Upload className="w-3.5 h-3.5" style={{ color: textMuted }} />}
+                        <span style={{ color: textMuted }}>Upload</span>
+                      </label>
+                    </div>
+
                     {/* Sliders */}
                     <SliderRow label="Opacity" value={Math.round((surfaceConfig.opacity ?? 0.3) * 100)} min={5} max={100} step={5} onChange={v => updateVideoSurface({ opacity: v / 100 })} accent={accentColor} labelColor={textMuted} unit="%" />
                     <SliderRow label="Speed" value={Math.round((surfaceConfig.speed ?? 1) * 10)} min={1} max={30} step={1} onChange={v => updateVideoSurface({ speed: v / 10 })} accent={accentColor} labelColor={textMuted} display={`${((surfaceConfig.speed ?? 1)).toFixed(1)}x`} />
