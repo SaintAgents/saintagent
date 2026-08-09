@@ -317,6 +317,47 @@ html[data-theme='hacker'] [data-profile-completion] .bg-white {
   border-color: #00ff00 !important;
 }
 
+/* =====================================================
+   COLLAPSIBLE CARD — Dark/Hacker theme overrides
+   ===================================================== */
+html[data-theme='dark'] .collapsible-card,
+html[data-theme='hacker'] .collapsible-card {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+  border-color: rgba(0, 255, 136, 0.2) !important;
+}
+html[data-theme='dark'] .collapsible-card-header,
+html[data-theme='hacker'] .collapsible-card-header {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  border-color: rgba(0, 255, 136, 0.2) !important;
+}
+html[data-theme='dark'] .collapsible-card-header:hover,
+html[data-theme='hacker'] .collapsible-card-header:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* =====================================================
+   DEEP DISCLOSURE DECK CARD — Dark/Hacker theme overrides
+   ===================================================== */
+html[data-theme='dark'] .dd-deck-card,
+html[data-theme='hacker'] .dd-deck-card {
+  background: rgba(0, 0, 0, 0.75) !important;
+  background-image: none !important;
+  border-color: rgba(0, 255, 136, 0.2) !important;
+}
+
+/* =====================================================
+   GLOBAL SCHEDULE CARD — Dark/Hacker theme overrides
+   ===================================================== */
+html[data-theme='dark'] .schedule-item,
+html[data-theme='hacker'] .schedule-item {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(0, 255, 136, 0.2) !important;
+}
+html[data-theme='dark'] .schedule-item:hover,
+html[data-theme='hacker'] .schedule-item:hover {
+  border-color: rgba(0, 255, 136, 0.4) !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;

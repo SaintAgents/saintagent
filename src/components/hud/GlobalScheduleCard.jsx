@@ -237,7 +237,7 @@ export default function GlobalScheduleCard({ limit = 5 }) {
                     return (
                       <div 
                         key={`${item.type}-${item.id}`}
-                        className="flex items-center gap-3 p-2 rounded-lg bg-white border hover:border-violet-200 hover:shadow-sm transition-all cursor-pointer"
+                        className="schedule-item flex items-center gap-3 p-2 rounded-lg bg-white border hover:border-violet-200 hover:shadow-sm transition-all cursor-pointer"
                         onClick={handleClick}
                       >
                         {/* Type indicator */}

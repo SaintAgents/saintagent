@@ -47,7 +47,7 @@ export default function DeepDisclosureDeckCard() {
   };
 
   return (
-    <div className="relative rounded-2xl overflow-hidden border-2 border-violet-200 bg-gradient-to-br from-violet-50 via-indigo-50 to-purple-50">
+    <div className="dd-deck-card relative rounded-2xl overflow-hidden border-2 border-violet-200 bg-gradient-to-br from-violet-50 via-indigo-50 to-purple-50">
       {/* Hide toggle */}
       <button
         onClick={toggleHidden}

@@ -65,7 +65,7 @@ export default function CollapsibleCard({
     <div 
       ref={cardRef}
       className={cn(
-        "relative bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden transition-all duration-300",
+        "relative bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden transition-all duration-300 collapsible-card",
         isPinned && "ring-2 ring-violet-500/20",
         className
       )}
@@ -78,7 +78,7 @@ export default function CollapsibleCard({
 
       }
       
-      <div className="bg-violet-100 px-5 py-4 relative z-10 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition-colors border-b border-slate-200/60"
+      <div className="collapsible-card-header bg-violet-100 px-5 py-4 relative z-10 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition-colors border-b border-slate-200/60"
 
       onClick={() => setIsOpen(!isOpen)}>
 
