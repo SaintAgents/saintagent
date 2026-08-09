@@ -113,7 +113,7 @@ export default function Authority144() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-950 via-purple-900 to-indigo-950 dark:bg-transparent dark:bg-none relative">
       {/* Hero Section */}
-      <div className="relative h-[400px] md:h-[500px] overflow-hidden">
+      <div className="page-hero relative h-[400px] md:h-[500px] overflow-hidden">
         {/* Mystical Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-violet-900/90 via-purple-800/80 to-indigo-900/90" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80')] bg-cover bg-center opacity-30" />

@@ -31,26 +31,43 @@ export default function SurfaceOpacityController() {
   }, []);
 
   // Inject a dynamic <style> tag
+  const heroOp = surface.heroOpacity / 100;
+  const cardOp = surface.cardOpacity / 100;
+
   const surfaceCss = `
-    /* Surface Opacity Controls */
-    main > .page-hero,
+    /* ========== HERO OPACITY ========== */
+    /* Target .page-hero at any nesting depth inside main */
     main .page-hero {
-      opacity: ${surface.heroOpacity / 100} !important;
+      opacity: ${heroOp} !important;
     }
+
+    /* ========== SURFACE VARS ========== */
     main {
       --surface-opacity: ${surface.surfaceOpacity / 100};
       --card-bg-opacity: ${surface.cardBg / 100};
-      --card-opacity: ${surface.cardOpacity / 100};
+      --card-opacity: ${cardOp};
     }
-    main .rounded-xl:not(img):not([data-no-filter]),
-    main .rounded-lg:not(img):not([data-no-filter]),
-    main .rounded-2xl:not(img):not([data-no-filter]) {
-      opacity: ${surface.cardOpacity / 100};
+
+    /* ========== CARD OPACITY ========== */
+    /* Exclude hero children and images from card opacity */
+    main .rounded-xl:not(img):not([data-no-filter]):not(.page-hero *),
+    main .rounded-lg:not(img):not([data-no-filter]):not(.page-hero *),
+    main .rounded-2xl:not(img):not([data-no-filter]):not(.page-hero *) {
+      opacity: ${cardOp};
     }
+
+    /* ========== CMD DECK BACKDROP ========== */
+    main[data-page='CommandDeck'] {
+      --cmd-backdrop: ${surface.cmdBackdrop / 100};
+    }
+
+    /* ========== CONTENT START OFFSET ========== */
     ${surface.contentStart > 0 ? `
     main > *:first-child {
       margin-top: ${surface.contentStart}px !important;
     }` : ''}
+
+    /* ========== WHITE WASH ========== */
     ${surface.whiteWash > 0 ? `
     main::before {
       content: '';
@@ -60,7 +77,8 @@ export default function SurfaceOpacityController() {
       pointer-events: none;
       z-index: 0;
     }` : ''}
-    /* Sidebar Opacity Controls */
+
+    /* ========== SIDEBAR ========== */
     aside, [data-sidebar], nav.sidebar {
       opacity: ${sidebar.sidebarOpacity / 100} !important;
     }

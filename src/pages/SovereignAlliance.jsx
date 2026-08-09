@@ -41,7 +41,7 @@ export default function SovereignAlliance() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white">
+      <div className="page-hero relative bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative max-w-6xl mx-auto px-4 py-16 text-center">
           <div className="flex justify-center mb-6">

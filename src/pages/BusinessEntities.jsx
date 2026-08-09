@@ -61,7 +61,7 @@ export default function BusinessEntities() {
   return (
     <div className="min-h-screen pb-32">
       {/* Hero */}
-      <div className="relative h-96 md:h-[432px] overflow-hidden">
+      <div className="page-hero relative h-96 md:h-[432px] overflow-hidden">
         <img src={HERO_IMAGE} alt="5D Business Entities" className="absolute inset-0 w-full h-full object-cover hero-image" data-no-filter="true" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-violet-900/30 to-transparent" />
