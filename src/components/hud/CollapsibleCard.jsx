@@ -237,11 +237,20 @@ export default function CollapsibleCard({
             </DropdownMenu>
           }
 
-          <img 
-            src={isOpen ? ICON_COLLAPSE : ICON_EXPAND} 
-            alt={isOpen ? "Collapse" : "Expand"}
-            className="w-6 h-6 transition-transform duration-200"
-          />
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <img 
+                  src={isOpen ? ICON_COLLAPSE : ICON_EXPAND} 
+                  alt={isOpen ? "Collapse" : "Expand"}
+                  className="w-6 h-6 transition-transform duration-200 cursor-pointer"
+                />
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                {isOpen ? "Collapse card" : "Expand card"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       <div className={cn(
