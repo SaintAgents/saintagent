@@ -7,6 +7,11 @@ function getSettings() {
   return {};
 }
 
+// Check if ANY surface has an active video
+function hasActiveVideo(settings) {
+  return Object.values(settings).some(s => s?.videoUrl && s?.enabled);
+}
+
 export default function VideoBackgroundLayer({ currentPageName, theme }) {
   const videoRef = useRef(null);
   const [settings, setSettings] = useState(getSettings);
@@ -33,6 +38,17 @@ export default function VideoBackgroundLayer({ currentPageName, theme }) {
   const config = (surfaceConfig?.videoUrl && surfaceConfig?.enabled) ? surfaceConfig : 
                  (globalConfig?.videoUrl && globalConfig?.enabled) ? globalConfig : null;
 
+  // Set data-video-active on <html> so CSS can make backgrounds transparent
+  useEffect(() => {
+    const active = !!config;
+    if (active) {
+      document.documentElement.setAttribute('data-video-active', 'true');
+    } else {
+      document.documentElement.removeAttribute('data-video-active');
+    }
+    return () => document.documentElement.removeAttribute('data-video-active');
+  }, [config?.videoUrl, config?.enabled, currentSurface]);
+
   if (!config) return null;
 
   // Theme filter
@@ -45,7 +61,7 @@ export default function VideoBackgroundLayer({ currentPageName, theme }) {
   const isMuted = config.muted !== false;
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
+    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
       <video
         ref={videoRef}
         key={config.videoUrl}

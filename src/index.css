@@ -128,6 +128,64 @@ html[data-theme='light'] button[role="switch"] span,
   background-color: #ffffff !important;
 }
 
+/* =====================================================
+   VIDEO BACKGROUND ACTIVE — make page transparent so video shows through
+   Works for ALL themes (light, dark, hacker, custom)
+   ===================================================== */
+html[data-video-active='true'] body {
+  background-color: transparent !important;
+}
+
+html[data-video-active='true'] .min-h-screen {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Main content area transparent */
+html[data-video-active='true'] main {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Cards get semi-transparent so content is readable but video peeks through */
+html[data-video-active='true'][data-theme='light'] .rounded-xl:not(img):not(video):not([data-no-filter]),
+html[data-video-active='true'][data-theme='light'] .rounded-lg:not(img):not(video):not([data-no-filter]),
+html[data-video-active='true'][data-theme='light'] .rounded-2xl:not(img):not(video):not([data-no-filter]),
+html[data-video-active='true'][data-theme='light'] [class*='Card']:not(img):not(video) {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+html[data-video-active='true'][data-theme='custom'] .rounded-xl:not(img):not(video):not([data-no-filter]),
+html[data-video-active='true'][data-theme='custom'] .rounded-lg:not(img):not(video):not([data-no-filter]),
+html[data-video-active='true'][data-theme='custom'] .rounded-2xl:not(img):not(video):not([data-no-filter]),
+html[data-video-active='true'][data-theme='custom'] [class*='Card']:not(img):not(video) {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Sidebar and topbar stay solid so nav is usable */
+html[data-video-active='true'] [data-sidebar],
+html[data-video-active='true'] [data-sidebar] * {
+  /* preserve sidebar styles */
+}
+
+/* Dialogs and overlays stay solid */
+html[data-video-active='true'] [role="dialog"],
+html[data-video-active='true'] [data-radix-dialog-content] {
+  background-color: inherit;
+}
+
+/* Light-specific: white/slate backgrounds become transparent */
+html[data-video-active='true'][data-theme='light'] [class*='bg-white']:not([data-sidebar]):not([data-sidebar] *):not(.rounded-xl):not(.rounded-lg):not(.rounded-2xl):not([class*='Card']):not([role="dialog"]):not(button):not(input):not(textarea):not(select),
+html[data-video-active='true'][data-theme='light'] [class*='bg-slate-50']:not([data-sidebar]):not([data-sidebar] *):not(.rounded-xl):not(.rounded-lg):not(.rounded-2xl):not([class*='Card']):not([role="dialog"]):not(button):not(input):not(textarea):not(select) {
+  background-color: transparent !important;
+}
+
+/* Ensure main content has position relative so it stays above the video */
+html[data-video-active='true'] main {
+  position: relative;
+  z-index: 1;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;
