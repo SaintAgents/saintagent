@@ -191,7 +191,6 @@ html[data-video-active='true'] main {
    The toolbar manages its own colors via inline styles;
    dark/hacker global selectors must not override them.
    ===================================================== */
-html[data-theme='dark'] [data-toolbar-panel],
 html[data-theme='dark'] [data-toolbar-panel] div,
 html[data-theme='dark'] [data-toolbar-panel] span,
 html[data-theme='dark'] [data-toolbar-panel] h2,
@@ -209,7 +208,6 @@ html[data-theme='dark'] [data-toolbar-panel] a {
   background-image: unset !important;
 }
 
-html[data-theme='hacker'] [data-toolbar-panel],
 html[data-theme='hacker'] [data-toolbar-panel] div,
 html[data-theme='hacker'] [data-toolbar-panel] span,
 html[data-theme='hacker'] [data-toolbar-panel] h2,
@@ -246,7 +244,6 @@ html[data-theme='hacker'] [data-toolbar-panel] svg line {
 }
 
 /* Video-active overrides shouldn't touch toolbar either */
-html[data-video-active='true'] [data-toolbar-panel],
 html[data-video-active='true'] [data-toolbar-panel] * {
   background-color: unset !important;
 }
@@ -262,7 +259,6 @@ html[data-theme='light'] [data-toolbar-panel] svg,
 }
 
 /* Also prevent bg-active overrides */
-html[data-bg-active='true'] [data-toolbar-panel],
 html[data-bg-active='true'] [data-toolbar-panel] * {
   background-color: unset !important;
   color: unset !important;
