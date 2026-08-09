@@ -319,15 +319,27 @@ html[data-theme='hacker'] [data-profile-completion] .bg-white {
 
 /* =====================================================
    COLLAPSIBLE CARD — Dark/Hacker theme overrides
+   Force dark translucent backgrounds on all collapsible
+   cards throughout the app in dark/hacker themes.
    ===================================================== */
+html[data-theme='dark'] .collapsible-card.rounded-2xl,
+[data-theme='dark'] .collapsible-card.rounded-2xl,
+html[data-theme='hacker'] .collapsible-card.rounded-2xl,
+[data-theme='hacker'] .collapsible-card.rounded-2xl,
 html[data-theme='dark'] .collapsible-card,
-html[data-theme='hacker'] .collapsible-card {
+[data-theme='dark'] .collapsible-card,
+html[data-theme='hacker'] .collapsible-card,
+[data-theme='hacker'] .collapsible-card {
   background-color: rgba(0, 0, 0, 0.75) !important;
+  background-image: none !important;
   border-color: rgba(0, 255, 136, 0.2) !important;
 }
 html[data-theme='dark'] .collapsible-card-header,
-html[data-theme='hacker'] .collapsible-card-header {
+[data-theme='dark'] .collapsible-card-header,
+html[data-theme='hacker'] .collapsible-card-header,
+[data-theme='hacker'] .collapsible-card-header {
   background-color: rgba(0, 0, 0, 0.6) !important;
+  background-image: none !important;
   border-color: rgba(0, 255, 136, 0.2) !important;
 }
 html[data-theme='dark'] .collapsible-card-header:hover,
@@ -339,17 +351,38 @@ html[data-theme='hacker'] .collapsible-card-header:hover {
    DEEP DISCLOSURE DECK CARD — Dark/Hacker theme overrides
    ===================================================== */
 html[data-theme='dark'] .dd-deck-card,
-html[data-theme='hacker'] .dd-deck-card {
+[data-theme='dark'] .dd-deck-card,
+html[data-theme='hacker'] .dd-deck-card,
+[data-theme='hacker'] .dd-deck-card {
   background: rgba(0, 0, 0, 0.75) !important;
   background-image: none !important;
   border-color: rgba(0, 255, 136, 0.2) !important;
+}
+html[data-theme='dark'] .dd-deck-card *,
+[data-theme='dark'] .dd-deck-card *,
+html[data-theme='hacker'] .dd-deck-card *,
+[data-theme='hacker'] .dd-deck-card * {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+html[data-theme='dark'] .dd-deck-card button,
+html[data-theme='hacker'] .dd-deck-card button {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(0, 255, 136, 0.3) !important;
+}
+html[data-theme='dark'] .dd-deck-card .rounded-xl,
+html[data-theme='hacker'] .dd-deck-card .rounded-xl {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(0, 255, 136, 0.15) !important;
 }
 
 /* =====================================================
    GLOBAL SCHEDULE CARD — Dark/Hacker theme overrides
    ===================================================== */
 html[data-theme='dark'] .schedule-item,
-html[data-theme='hacker'] .schedule-item {
+[data-theme='dark'] .schedule-item,
+html[data-theme='hacker'] .schedule-item,
+[data-theme='hacker'] .schedule-item {
   background-color: rgba(255, 255, 255, 0.05) !important;
   border-color: rgba(0, 255, 136, 0.2) !important;
 }
