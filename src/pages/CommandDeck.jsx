@@ -1301,8 +1301,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   <BadgesBar
                     badges={badges}
                     defaultIfEmpty={false}
-                    showEmptySlots={true}
-                    emptySlotCount={Math.max(0, 5 - badges.length)}
+                    showEmptySlots={false}
                     onMore={() => setBadgeGlossaryOpen(true)} />
 
 
