@@ -911,11 +911,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Cards and containers - semi-transparent to show effects through */
-        /* EXCLUDE images from these styles */
-        [data-theme='dark'] .rounded-xl:not(img):not([data-no-filter="true"]), 
-        [data-theme='dark'] .rounded-lg:not(img):not([data-no-filter="true"]),
-        [data-theme='dark'] .rounded-2xl:not(img):not([data-no-filter="true"]),
-        [data-theme='dark'] .rounded-md:not(img):not([data-no-filter="true"]) {
+        /* EXCLUDE images and toolbar from these styles */
+        [data-theme='dark'] .rounded-xl:not(img):not([data-no-filter="true"]):not([data-toolbar-panel] *):not([data-toolbar-panel]), 
+        [data-theme='dark'] .rounded-lg:not(img):not([data-no-filter="true"]):not([data-toolbar-panel] *):not([data-toolbar-panel]),
+        [data-theme='dark'] .rounded-2xl:not(img):not([data-no-filter="true"]):not([data-toolbar-panel] *):not([data-toolbar-panel]),
+        [data-theme='dark'] .rounded-md:not(img):not([data-no-filter="true"]):not([data-toolbar-panel] *):not([data-toolbar-panel]) {
           background-color: rgba(0, 0, 0, 0.75) !important;
           border: 1px solid rgba(0, 255, 136, 0.2) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.05), inset 0 1px 0 rgba(0, 255, 136, 0.08) !important;
@@ -971,17 +971,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Presence and Theme panels - enforce solid */
-        [data-theme='dark'] [class*='panel'],
-        [data-theme='dark'] [class*='dropdown'],
-        [data-theme='dark'] [class*='popover'] {
+        [data-theme='dark'] [class*='panel']:not([data-toolbar-panel]):not([data-toolbar-panel] *),
+        [data-theme='dark'] [class*='dropdown']:not([data-toolbar-panel] *),
+        [data-theme='dark'] [class*='popover']:not([data-toolbar-panel] *) {
           background-color: var(--obsidian) !important;
           border-color: rgba(0, 255, 136, 0.25) !important;
         }
 
         /* Search bar and inputs - obsidian with neon border */
-        [data-theme='dark'] input,
-        [data-theme='dark'] textarea,
-        [data-theme='dark'] select {
+        [data-theme='dark'] input:not([data-toolbar-panel] *),
+        [data-theme='dark'] textarea:not([data-toolbar-panel] *),
+        [data-theme='dark'] select:not([data-toolbar-panel] *) {
           background-color: #0a0a0a !important;
           color: #ffffff !important;
           border-color: rgba(0, 255, 136, 0.3) !important;
@@ -1004,13 +1004,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Buttons - solid with neon glow on hover */
-        [data-theme='dark'] button,
-        [data-theme='dark'] [role="button"] {
+        [data-theme='dark'] button:not([data-toolbar-panel] *),
+        [data-theme='dark'] [role="button"]:not([data-toolbar-panel] *) {
           background-color: var(--obsidian) !important;
           border-color: rgba(0, 255, 136, 0.25) !important;
         }
-        [data-theme='dark'] button:hover,
-        [data-theme='dark'] [role="button"]:hover {
+        [data-theme='dark'] button:not([data-toolbar-panel] *):hover,
+        [data-theme='dark'] [role="button"]:not([data-toolbar-panel] *):hover {
           box-shadow: 0 0 18px rgba(0, 255, 136, 0.5) !important;
           border-color: var(--neon-green) !important;
         }
@@ -1141,8 +1141,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           box-shadow: 0 0 8px rgba(0, 255, 136, 0.2) !important;
         }
 
-        /* Icons - neon glow - but NOT inside images */
-        [data-theme='dark'] svg:not(.listing-image svg) {
+        /* Icons - neon glow - but NOT inside images or toolbar */
+        [data-theme='dark'] svg:not(.listing-image svg):not([data-toolbar-panel] *) {
           filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.4));
         }
 
@@ -1568,7 +1568,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           }
 
           /* Hacker theme - Complete green on black, no white anywhere */
-          [data-theme='hacker'] *, [data-theme='hacker'] *::before, [data-theme='hacker'] *::after {
+          [data-theme='hacker'] *:not([data-toolbar-panel]):not([data-toolbar-panel] *), [data-theme='hacker'] *:not([data-toolbar-panel]):not([data-toolbar-panel] *)::before, [data-theme='hacker'] *:not([data-toolbar-panel]):not([data-toolbar-panel] *)::after {
             border-color: #00ff00 !important;
           }
           [data-theme='hacker'] body {
@@ -1594,32 +1594,32 @@ function AuthenticatedLayout({ children, currentPageName }) {
             background-image: none !important;
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] div, [data-theme='hacker'] section {
+          [data-theme='hacker'] div:not([data-toolbar-panel]):not([data-toolbar-panel] *), [data-theme='hacker'] section:not([data-toolbar-panel] *) {
             background-color: transparent !important;
             background-image: none !important;
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] h1, [data-theme='hacker'] h2, [data-theme='hacker'] h3, [data-theme='hacker'] h4, [data-theme='hacker'] h5, [data-theme='hacker'] h6, [data-theme='hacker'] p, [data-theme='hacker'] span, [data-theme='hacker'] a, [data-theme='hacker'] li, [data-theme='hacker'] label {
+          [data-theme='hacker'] h1:not([data-toolbar-panel] *), [data-theme='hacker'] h2:not([data-toolbar-panel] *), [data-theme='hacker'] h3:not([data-toolbar-panel] *), [data-theme='hacker'] h4:not([data-toolbar-panel] *), [data-theme='hacker'] h5:not([data-toolbar-panel] *), [data-theme='hacker'] h6:not([data-toolbar-panel] *), [data-theme='hacker'] p:not([data-toolbar-panel] *), [data-theme='hacker'] span:not([data-toolbar-panel] *), [data-theme='hacker'] a:not([data-toolbar-panel] *), [data-theme='hacker'] li:not([data-toolbar-panel] *), [data-theme='hacker'] label:not([data-toolbar-panel] *) {
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] [class*='bg-']:not(canvas) { background-color: transparent !important; }
-          [data-theme='hacker'] .rounded-xl:not(img):not([data-no-filter="true"]),
-          [data-theme='hacker'] .rounded-lg:not(img):not([data-no-filter="true"]),
-          [data-theme='hacker'] .rounded-2xl:not(img):not([data-no-filter="true"]),
-          [data-theme='hacker'] [class*='Card']:not(img) {
+          [data-theme='hacker'] [class*='bg-']:not(canvas):not([data-toolbar-panel]):not([data-toolbar-panel] *) { background-color: transparent !important; }
+          [data-theme='hacker'] .rounded-xl:not(img):not([data-no-filter="true"]):not([data-toolbar-panel] *):not([data-toolbar-panel]),
+          [data-theme='hacker'] .rounded-lg:not(img):not([data-no-filter="true"]):not([data-toolbar-panel] *):not([data-toolbar-panel]),
+          [data-theme='hacker'] .rounded-2xl:not(img):not([data-no-filter="true"]):not([data-toolbar-panel] *):not([data-toolbar-panel]),
+          [data-theme='hacker'] [class*='Card']:not(img):not([data-toolbar-panel] *) {
             background-color: rgba(0, 0, 0, 0.85) !important;
           }
-          [data-theme='hacker'] [class*='text-'] { color: #00ff00 !important; }
-          [data-theme='hacker'] button, [data-theme='hacker'] [role="button"] {
+          [data-theme='hacker'] [class*='text-']:not([data-toolbar-panel] *) { color: #00ff00 !important; }
+          [data-theme='hacker'] button:not([data-toolbar-panel] *), [data-theme='hacker'] [role="button"]:not([data-toolbar-panel] *) {
             background-color: #000 !important;
             color: #00ff00 !important;
             border: 1px solid #00ff00 !important;
           }
-          [data-theme='hacker'] button:hover, [data-theme='hacker'] [role="button"]:hover {
+          [data-theme='hacker'] button:not([data-toolbar-panel] *):hover, [data-theme='hacker'] [role="button"]:not([data-toolbar-panel] *):hover {
             background-color: #001a00 !important;
             box-shadow: 0 0 10px #00ff00 !important;
           }
-          [data-theme='hacker'] input, [data-theme='hacker'] textarea, [data-theme='hacker'] select {
+          [data-theme='hacker'] input:not([data-toolbar-panel] *), [data-theme='hacker'] textarea:not([data-toolbar-panel] *), [data-theme='hacker'] select:not([data-toolbar-panel] *) {
             background-color: #000000 !important;
             color: #00ff00 !important;
             border: 1px solid #00ff00 !important;
@@ -1650,13 +1650,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
             border: 1px solid #00ff00 !important;
             box-shadow: 0 0 40px rgba(0, 255, 0, 0.4) !important;
           }
-          [data-theme='hacker'] svg { color: #00ff00 !important; stroke: #00ff00 !important; }
-          [data-theme='hacker'] svg path, [data-theme='hacker'] svg circle, [data-theme='hacker'] svg rect, [data-theme='hacker'] svg line { stroke: #00ff00 !important; fill: none !important; }
+          [data-theme='hacker'] svg:not([data-toolbar-panel] *) { color: #00ff00 !important; stroke: #00ff00 !important; }
+          [data-theme='hacker'] svg:not([data-toolbar-panel] *) path, [data-theme='hacker'] svg:not([data-toolbar-panel] *) circle, [data-theme='hacker'] svg:not([data-toolbar-panel] *) rect, [data-theme='hacker'] svg:not([data-toolbar-panel] *) line { stroke: #00ff00 !important; fill: none !important; }
           [data-theme='hacker'] svg[fill] path { fill: #00ff00 !important; }
           [data-theme='hacker'] ::-webkit-scrollbar { background-color: #000 !important; }
           [data-theme='hacker'] ::-webkit-scrollbar-thumb { background-color: #00ff00 !important; }
           [data-theme='hacker'] a:hover { text-shadow: 0 0 5px #00ff00 !important; }
-          [data-theme='hacker'] [class*='shadow'] { box-shadow: 0 0 8px #00ff00 !important; }
+          [data-theme='hacker'] [class*='shadow']:not([data-toolbar-panel]):not([data-toolbar-panel] *) { box-shadow: 0 0 8px #00ff00 !important; }
 
           /* Remove border from gauge/control panel image in hacker mode */
           [data-theme='hacker'] img[alt="Command Deck"],
@@ -1671,17 +1671,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
             border: none !important;
           }
 
-          /* Hacker theme - square edges on cards but preserve circular elements */
-          html[data-theme='hacker'] .rounded-xl:not(img):not([data-keep-round]),
-          html[data-theme='hacker'] .rounded-lg:not(img):not([data-keep-round]),
-          html[data-theme='hacker'] .rounded-2xl:not(img):not([data-keep-round]),
-          html[data-theme='hacker'] .rounded-md:not(img):not([data-keep-round]),
-          html[data-theme='hacker'] .rounded-3xl:not(img):not([data-keep-round]),
-          [data-theme='hacker'] .rounded-xl:not(img):not([data-keep-round]),
-          [data-theme='hacker'] .rounded-lg:not(img):not([data-keep-round]),
-          [data-theme='hacker'] .rounded-2xl:not(img):not([data-keep-round]),
-          [data-theme='hacker'] .rounded-md:not(img):not([data-keep-round]),
-          [data-theme='hacker'] .rounded-3xl:not(img):not([data-keep-round]) {
+          /* Hacker theme - square edges on cards but preserve circular elements and toolbar */
+          html[data-theme='hacker'] .rounded-xl:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          html[data-theme='hacker'] .rounded-lg:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          html[data-theme='hacker'] .rounded-2xl:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          html[data-theme='hacker'] .rounded-md:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          html[data-theme='hacker'] .rounded-3xl:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          [data-theme='hacker'] .rounded-xl:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          [data-theme='hacker'] .rounded-lg:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          [data-theme='hacker'] .rounded-2xl:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          [data-theme='hacker'] .rounded-md:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *),
+          [data-theme='hacker'] .rounded-3xl:not(img):not([data-keep-round]):not([data-toolbar-panel]):not([data-toolbar-panel] *) {
             border-radius: 0 !important;
           }
           /* Keep circular images round in hacker mode */
@@ -1772,13 +1772,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
           }
 
           /* Hacker theme - brighter text, no fading */
-          [data-theme='hacker'] h1, [data-theme='hacker'] h2, [data-theme='hacker'] h3, [data-theme='hacker'] h4,
-          [data-theme='hacker'] [class*='font-semibold'], [data-theme='hacker'] [class*='font-bold'] {
+          [data-theme='hacker'] h1:not([data-toolbar-panel] *), [data-theme='hacker'] h2:not([data-toolbar-panel] *), [data-theme='hacker'] h3:not([data-toolbar-panel] *), [data-theme='hacker'] h4:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='font-semibold']:not([data-toolbar-panel] *), [data-theme='hacker'] [class*='font-bold']:not([data-toolbar-panel] *) {
             color: #00ff00 !important;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
           }
-          [data-theme='hacker'] p, [data-theme='hacker'] span:not(.dot-glow):not(.icon-glow),
-          [data-theme='hacker'] div:not([class*='bg-']) {
+          [data-theme='hacker'] p:not([data-toolbar-panel] *), [data-theme='hacker'] span:not(.dot-glow):not(.icon-glow):not([data-toolbar-panel] *),
+          [data-theme='hacker'] div:not([class*='bg-']):not([data-toolbar-panel]):not([data-toolbar-panel] *) {
             color: #00ff00 !important;
           }
           [data-theme='hacker'] [class*='text-slate-500'], [data-theme='hacker'] [class*='text-slate-400'],
