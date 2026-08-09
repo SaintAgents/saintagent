@@ -251,6 +251,16 @@ html[data-video-active='true'] [data-toolbar-panel] * {
   background-color: unset !important;
 }
 
+/* Light theme toolbar — ensure icon colors aren't washed out */
+html[data-theme='light'] [data-toolbar-panel] button,
+[data-theme='light'] [data-toolbar-panel] button {
+  color: unset !important;
+}
+html[data-theme='light'] [data-toolbar-panel] svg,
+[data-theme='light'] [data-toolbar-panel] svg {
+  color: unset !important;
+}
+
 /* Also prevent bg-active overrides */
 html[data-bg-active='true'] [data-toolbar-panel],
 html[data-bg-active='true'] [data-toolbar-panel] * {
