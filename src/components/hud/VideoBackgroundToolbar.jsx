@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import {
   HelpCircle, Eye, Sun, Moon, Terminal, Sparkles, Layers, PanelLeft,
   Bell, LogOut, Download, PanelRightClose, PanelRightOpen, Upload,
-  Play, X, Volume2, VolumeX, ChevronDown
+  Play, X, Volume2, VolumeX, ChevronDown, GripHorizontal
 } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
@@ -55,6 +55,50 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
   const [libraryCategory, setLibraryCategory] = useState('all');
   const [helpOpen, setHelpOpen] = useState(false);
   const panelRef = useRef(null);
+  const toolbarRef = useRef(null);
+
+  // Drag state
+  const [dragPos, setDragPos] = useState(() => {
+    try { const s = localStorage.getItem('toolbarDragPos'); if (s) return JSON.parse(s); } catch {}
+    return null; // null = default centered position
+  });
+  const dragState = useRef({ dragging: false, startX: 0, startY: 0, startLeft: 0, startTop: 0, moved: false });
+
+  const onDragStart = useCallback((clientX, clientY) => {
+    const el = toolbarRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    dragState.current = { dragging: true, startX: clientX, startY: clientY, startLeft: rect.left, startTop: rect.top, moved: false };
+  }, []);
+
+  const onDragMove = useCallback((clientX, clientY) => {
+    if (!dragState.current.dragging) return;
+    const dx = clientX - dragState.current.startX;
+    const dy = clientY - dragState.current.startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragState.current.moved = true;
+    if (!dragState.current.moved) return;
+    const newLeft = Math.max(0, Math.min(window.innerWidth - 100, dragState.current.startLeft + dx));
+    const newTop = Math.max(0, Math.min(window.innerHeight - 40, dragState.current.startTop + dy));
+    setDragPos({ left: newLeft, top: newTop });
+  }, []);
+
+  const onDragEnd = useCallback(() => {
+    dragState.current.dragging = false;
+    // persist position
+    setDragPos(prev => { if (prev) try { localStorage.setItem('toolbarDragPos', JSON.stringify(prev)); } catch {} return prev; });
+  }, []);
+
+  useEffect(() => {
+    const onMouseMove = (e) => onDragMove(e.clientX, e.clientY);
+    const onMouseUp = () => onDragEnd();
+    const onTouchMove = (e) => { if (dragState.current.dragging) { e.preventDefault(); onDragMove(e.touches[0].clientX, e.touches[0].clientY); } };
+    const onTouchEnd = () => onDragEnd();
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('touchend', onTouchEnd);
+    return () => { window.removeEventListener('mousemove', onMouseMove); window.removeEventListener('mouseup', onMouseUp); window.removeEventListener('touchmove', onTouchMove); window.removeEventListener('touchend', onTouchEnd); };
+  }, [onDragMove, onDragEnd]);
 
   const surfaceConfig = videoSettings[activeSurface] || {
     videoUrl: '', enabled: false, opacity: 0.3, speed: 1, blur: 0, themeFilter: 'both', muted: true,
@@ -161,14 +205,32 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
     <>
       {/* Main Toolbar Bar */}
       <div
+        ref={toolbarRef}
         data-toolbar-panel="true"
-        className="fixed z-50 bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 px-3 py-1.5 rounded-full shadow-2xl border"
+        className="fixed z-50 flex items-center gap-1 px-3 py-1.5 rounded-full shadow-2xl border"
         style={{
           background: bgColor,
           borderColor,
           backdropFilter: 'blur(16px)',
+          ...(dragPos
+            ? { left: dragPos.left, top: dragPos.top }
+            : { bottom: 16, left: '50%', transform: 'translateX(-50%)' }),
         }}
       >
+        {/* Drag Handle */}
+        <div
+          className="cursor-grab active:cursor-grabbing p-1 rounded-lg select-none"
+          style={{ color: textMuted }}
+          onMouseDown={(e) => { e.preventDefault(); onDragStart(e.clientX, e.clientY); }}
+          onTouchStart={(e) => { onDragStart(e.touches[0].clientX, e.touches[0].clientY); }}
+          onDoubleClick={() => { setDragPos(null); try { localStorage.removeItem('toolbarDragPos'); } catch {} }}
+          title="Drag to move · Double-click to reset"
+        >
+          <GripHorizontal className="w-4 h-4" />
+        </div>
+
+        <div className="w-px h-6 mx-0.5" style={{ background: dividerBg }} />
+
         {/* Help */}
         <button
           data-toolbar-btn
@@ -316,13 +378,16 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
         <div
           ref={panelRef}
           data-toolbar-panel="true"
-          className="fixed z-50 bottom-16 left-1/2 -translate-x-1/2 rounded-xl shadow-2xl border overflow-hidden"
+          className="fixed z-50 rounded-xl shadow-2xl border overflow-hidden"
           style={{
             width: activePanel === 'hero' ? 380 : 340,
             maxHeight: 'calc(100vh - 100px)',
             background: bgColor,
             borderColor,
             backdropFilter: 'blur(16px)',
+            ...(dragPos
+              ? { left: dragPos.left, bottom: `calc(100vh - ${dragPos.top}px + 8px)` }
+              : { bottom: 64, left: '50%', transform: 'translateX(-50%)' }),
           }}
         >
           <div className="overflow-y-auto max-h-[calc(100vh-100px)]">
