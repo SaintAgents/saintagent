@@ -161,6 +161,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
     <>
       {/* Main Toolbar Bar */}
       <div
+        data-toolbar-panel="true"
         className="fixed z-50 bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 px-3 py-1.5 rounded-full shadow-2xl border"
         style={{
           background: bgColor,
@@ -295,7 +296,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
       {/* Help Overlay */}
       {helpOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40" onClick={() => setHelpOpen(false)}>
-          <div className="rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto text-sm space-y-3 shadow-2xl border" style={{ background: isLight ? '#ffffff' : '#0f172a', borderColor: isLight ? '#e2e8f0' : '#334155', color: isLight ? '#475569' : '#cbd5e1' }} onClick={e => e.stopPropagation()}>
+          <div data-toolbar-panel="true" className="rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto text-sm space-y-3 shadow-2xl border" style={{ background: isLight ? '#ffffff' : '#0f172a', borderColor: isLight ? '#e2e8f0' : '#334155', color: isLight ? '#475569' : '#cbd5e1' }} onClick={e => e.stopPropagation()}>
             <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: textColor }}><HelpCircle className="w-5 h-5" style={{ color: accentColor }} /> Toolbar Guide</h2>
             <div className="space-y-2">
               <p><strong style={{ color: accentColor }}>👁 Hero Background</strong> — Select video backgrounds per page or globally. Browse the library or upload your own.</p>
@@ -314,6 +315,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
       {activePanel && (
         <div
           ref={panelRef}
+          data-toolbar-panel="true"
           className="fixed z-50 bottom-16 left-1/2 -translate-x-1/2 rounded-xl shadow-2xl border overflow-hidden"
           style={{
             width: activePanel === 'hero' ? 380 : 340,

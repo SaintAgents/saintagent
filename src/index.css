@@ -186,6 +186,78 @@ html[data-video-active='true'] main {
   z-index: 1;
 }
 
+/* =====================================================
+   VIDEO TOOLBAR — Shield from global dark/hacker theme overrides
+   The toolbar manages its own colors via inline styles;
+   dark/hacker global selectors must not override them.
+   ===================================================== */
+html[data-theme='dark'] [data-toolbar-panel],
+html[data-theme='dark'] [data-toolbar-panel] div,
+html[data-theme='dark'] [data-toolbar-panel] span,
+html[data-theme='dark'] [data-toolbar-panel] h2,
+html[data-theme='dark'] [data-toolbar-panel] h3,
+html[data-theme='dark'] [data-toolbar-panel] p,
+html[data-theme='dark'] [data-toolbar-panel] strong,
+html[data-theme='dark'] [data-toolbar-panel] label,
+html[data-theme='dark'] [data-toolbar-panel] button,
+html[data-theme='dark'] [data-toolbar-panel] input,
+html[data-theme='dark'] [data-toolbar-panel] a {
+  background-color: unset !important;
+  color: unset !important;
+  border-color: unset !important;
+  box-shadow: unset !important;
+  background-image: unset !important;
+}
+
+html[data-theme='hacker'] [data-toolbar-panel],
+html[data-theme='hacker'] [data-toolbar-panel] div,
+html[data-theme='hacker'] [data-toolbar-panel] span,
+html[data-theme='hacker'] [data-toolbar-panel] h2,
+html[data-theme='hacker'] [data-toolbar-panel] h3,
+html[data-theme='hacker'] [data-toolbar-panel] p,
+html[data-theme='hacker'] [data-toolbar-panel] strong,
+html[data-theme='hacker'] [data-toolbar-panel] label,
+html[data-theme='hacker'] [data-toolbar-panel] button,
+html[data-theme='hacker'] [data-toolbar-panel] input,
+html[data-theme='hacker'] [data-toolbar-panel] a {
+  background-color: unset !important;
+  color: unset !important;
+  border-color: unset !important;
+  box-shadow: unset !important;
+  background-image: unset !important;
+  border-radius: unset !important;
+}
+
+/* Toolbar SVG icons — let inline styles control color */
+html[data-theme='dark'] [data-toolbar-panel] svg,
+html[data-theme='hacker'] [data-toolbar-panel] svg {
+  color: unset !important;
+  stroke: unset !important;
+  filter: none !important;
+}
+html[data-theme='dark'] [data-toolbar-panel] svg path,
+html[data-theme='dark'] [data-toolbar-panel] svg circle,
+html[data-theme='dark'] [data-toolbar-panel] svg line,
+html[data-theme='hacker'] [data-toolbar-panel] svg path,
+html[data-theme='hacker'] [data-toolbar-panel] svg circle,
+html[data-theme='hacker'] [data-toolbar-panel] svg line {
+  stroke: unset !important;
+  fill: unset !important;
+}
+
+/* Video-active overrides shouldn't touch toolbar either */
+html[data-video-active='true'] [data-toolbar-panel],
+html[data-video-active='true'] [data-toolbar-panel] * {
+  background-color: unset !important;
+}
+
+/* Also prevent bg-active overrides */
+html[data-bg-active='true'] [data-toolbar-panel],
+html[data-bg-active='true'] [data-toolbar-panel] * {
+  background-color: unset !important;
+  color: unset !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;
