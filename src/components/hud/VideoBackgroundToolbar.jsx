@@ -209,6 +209,10 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
         data-toolbar-panel="true"
         className="fixed z-50 flex items-center gap-1 px-3 py-1.5 rounded-full shadow-2xl border"
         style={{
+          '--tb-bg': bgColor,
+          '--tb-border': borderColor,
+          '--tb-color': textColor,
+          '--tb-shadow': `0 25px 50px -12px rgba(0,0,0,0.25)`,
           background: bgColor,
           borderColor,
           backdropFilter: 'blur(16px)',
@@ -358,7 +362,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
       {/* Help Overlay */}
       {helpOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40" onClick={() => setHelpOpen(false)}>
-          <div data-toolbar-panel="true" className="rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto text-sm space-y-3 shadow-2xl border" style={{ background: isLight ? '#ffffff' : '#0f172a', borderColor: isLight ? '#e2e8f0' : '#334155', color: isLight ? '#475569' : '#cbd5e1' }} onClick={e => e.stopPropagation()}>
+          <div data-toolbar-panel="true" className="rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto text-sm space-y-3 shadow-2xl border" style={{ '--tb-bg': isLight ? '#ffffff' : '#0f172a', '--tb-border': isLight ? '#e2e8f0' : '#334155', '--tb-color': isLight ? '#475569' : '#cbd5e1', background: isLight ? '#ffffff' : '#0f172a', borderColor: isLight ? '#e2e8f0' : '#334155', color: isLight ? '#475569' : '#cbd5e1' }} onClick={e => e.stopPropagation()}>
             <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: textColor }}><HelpCircle className="w-5 h-5" style={{ color: accentColor }} /> Toolbar Guide</h2>
             <div className="space-y-2">
               <p><strong style={{ color: accentColor }}>👁 Hero Background</strong> — Select video backgrounds per page or globally. Browse the library or upload your own.</p>
@@ -380,6 +384,10 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
           data-toolbar-panel="true"
           className="fixed z-50 rounded-xl shadow-2xl border overflow-hidden"
           style={{
+            '--tb-bg': bgColor,
+            '--tb-border': borderColor,
+            '--tb-color': textColor,
+            '--tb-shadow': `0 25px 50px -12px rgba(0,0,0,0.25)`,
             width: activePanel === 'hero' ? 380 : 340,
             maxHeight: 'calc(100vh - 100px)',
             background: bgColor,

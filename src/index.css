@@ -187,159 +187,96 @@ html[data-video-active='true'] main {
 }
 
 /* =====================================================
-   VIDEO TOOLBAR — TOTAL ISOLATION from all theme overrides.
-   The toolbar manages its own colors via inline styles.
-   We neutralize every global dark/hacker/video/bg-active
-   override by resetting to 'inherit' so inline styles win.
+   VIDEO TOOLBAR — NUCLEAR ISOLATION via !important overrides.
+   Every child inside [data-toolbar-panel] gets its background,
+   color, and border RESET so inline styles on each element win.
    ===================================================== */
-
-/* --- Dark theme isolation --- */
-html[data-theme='dark'] [data-toolbar-panel],
-html[data-theme='dark'] [data-toolbar-panel] div,
-html[data-theme='dark'] [data-toolbar-panel] span,
-html[data-theme='dark'] [data-toolbar-panel] p,
-html[data-theme='dark'] [data-toolbar-panel] h2,
-html[data-theme='dark'] [data-toolbar-panel] h3,
-html[data-theme='dark'] [data-toolbar-panel] strong,
-html[data-theme='dark'] [data-toolbar-panel] label,
-html[data-theme='dark'] [data-toolbar-panel] a {
+/* NUCLEAR: triple-attribute [data-toolbar-panel] doubled for max specificity.
+   Specificity of html[attr][attr] [data-toolbar-panel][data-toolbar-panel] elem
+   = (0,4,1) which beats every Layout.jsx selector (max ~0,3,1). */
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] {
+  background: var(--tb-bg, transparent) !important;
+  border-color: var(--tb-border, transparent) !important;
+  color: var(--tb-color, inherit) !important;
+  box-shadow: var(--tb-shadow, none) !important;
+  text-shadow: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  background-image: none !important;
+}
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] div,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] span,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] p,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] h2,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] h3,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] strong,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] label,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] a {
   background-color: transparent !important;
   background-image: none !important;
-  color: inherit !important;
   border-color: inherit !important;
   box-shadow: none !important;
-}
-html[data-theme='dark'] [data-toolbar-panel] button,
-html[data-theme='dark'] [data-toolbar-panel] [role="button"] {
-  background-color: transparent !important;
-  background-image: none !important;
-  color: inherit !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
-html[data-theme='dark'] [data-toolbar-panel] button:hover,
-html[data-theme='dark'] [data-toolbar-panel] [role="button"]:hover {
-  box-shadow: none !important;
-  border-color: transparent !important;
-}
-html[data-theme='dark'] [data-toolbar-panel] input {
-  background-color: transparent !important;
-  color: inherit !important;
-  border-color: inherit !important;
-  box-shadow: none !important;
-}
-html[data-theme='dark'] [data-toolbar-panel] .rounded-xl,
-html[data-theme='dark'] [data-toolbar-panel] .rounded-lg,
-html[data-theme='dark'] [data-toolbar-panel] .rounded-2xl,
-html[data-theme='dark'] [data-toolbar-panel] .rounded-md,
-html[data-theme='dark'] [data-toolbar-panel] .rounded-full {
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* --- Hacker theme isolation --- */
-html[data-theme='hacker'] [data-toolbar-panel],
-html[data-theme='hacker'] [data-toolbar-panel] div,
-html[data-theme='hacker'] [data-toolbar-panel] span,
-html[data-theme='hacker'] [data-toolbar-panel] p,
-html[data-theme='hacker'] [data-toolbar-panel] h2,
-html[data-theme='hacker'] [data-toolbar-panel] h3,
-html[data-theme='hacker'] [data-toolbar-panel] strong,
-html[data-theme='hacker'] [data-toolbar-panel] label,
-html[data-theme='hacker'] [data-toolbar-panel] a {
-  background-color: transparent !important;
-  background-image: none !important;
-  color: inherit !important;
-  border-color: inherit !important;
-  box-shadow: none !important;
-  border-radius: inherit !important;
-}
-html[data-theme='hacker'] [data-toolbar-panel] button,
-html[data-theme='hacker'] [data-toolbar-panel] [role="button"] {
-  background-color: transparent !important;
-  background-image: none !important;
-  color: inherit !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  border-radius: inherit !important;
-}
-html[data-theme='hacker'] [data-toolbar-panel] button:hover,
-html[data-theme='hacker'] [data-toolbar-panel] [role="button"]:hover {
-  box-shadow: none !important;
-  background-color: transparent !important;
-}
-html[data-theme='hacker'] [data-toolbar-panel] input {
-  background-color: transparent !important;
-  color: inherit !important;
-  border-color: inherit !important;
-  box-shadow: none !important;
-  border-radius: inherit !important;
-}
-html[data-theme='hacker'] [data-toolbar-panel] .rounded-xl,
-html[data-theme='hacker'] [data-toolbar-panel] .rounded-lg,
-html[data-theme='hacker'] [data-toolbar-panel] .rounded-2xl,
-html[data-theme='hacker'] [data-toolbar-panel] .rounded-md,
-html[data-theme='hacker'] [data-toolbar-panel] .rounded-full {
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: inherit !important;
-}
-html[data-theme='hacker'] [data-toolbar-panel] *,
-html[data-theme='hacker'] [data-toolbar-panel] *::before,
-html[data-theme='hacker'] [data-toolbar-panel] *::after {
-  border-color: inherit !important;
-}
-
-/* --- SVG icons — let inline styles control color --- */
-html[data-theme='dark'] [data-toolbar-panel] svg,
-html[data-theme='hacker'] [data-toolbar-panel] svg {
-  color: inherit !important;
-  stroke: inherit !important;
+  text-shadow: none !important;
   filter: none !important;
 }
-html[data-theme='dark'] [data-toolbar-panel] svg path,
-html[data-theme='dark'] [data-toolbar-panel] svg circle,
-html[data-theme='dark'] [data-toolbar-panel] svg line,
-html[data-theme='hacker'] [data-toolbar-panel] svg path,
-html[data-theme='hacker'] [data-toolbar-panel] svg circle,
-html[data-theme='hacker'] [data-toolbar-panel] svg line {
-  stroke: inherit !important;
-  fill: inherit !important;
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] button,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] [role="button"] {
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
 }
-/* Hacker theme turns all SVGs green — block that for toolbar */
-html[data-theme='hacker'] [data-toolbar-panel] svg {
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] input,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] textarea {
+  background-color: transparent !important;
+  border-color: inherit !important;
+  filter: none !important;
+  box-shadow: none !important;
+}
+/* SVG icons inside toolbar */
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] svg {
   color: inherit !important;
-  stroke: inherit !important;
+  filter: none !important;
 }
-html[data-theme='hacker'] [data-toolbar-panel] svg path,
-html[data-theme='hacker'] [data-toolbar-panel] svg circle,
-html[data-theme='hacker'] [data-toolbar-panel] svg rect,
-html[data-theme='hacker'] [data-toolbar-panel] svg line {
-  stroke: inherit !important;
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] svg path,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] svg circle,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] svg rect,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] svg line,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] svg polyline {
+  stroke: currentColor !important;
   fill: none !important;
 }
-
-/* --- Video-active / bg-active isolation --- */
-html[data-video-active='true'] [data-toolbar-panel],
-html[data-video-active='true'] [data-toolbar-panel] * {
+/* Catch-all wildcard for anything else inside toolbar.
+   NOTE: color is NOT overridden — inline style={{ color }} on each
+   element works fine because only !important can beat !important,
+   and we intentionally leave color alone so inline styles win
+   over any remaining Layout.jsx color overrides (which use !important
+   but lower specificity than our background rules). */
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] * {
   background-color: transparent !important;
+  background-image: none !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
 }
-html[data-bg-active='true'] [data-toolbar-panel],
-html[data-bg-active='true'] [data-toolbar-panel] * {
-  background-color: transparent !important;
-  color: inherit !important;
+/* Toolbar slider track */
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] [role="slider"] {
+  background-color: var(--tb-color, #ffffff) !important;
+  border-color: var(--tb-border, transparent) !important;
 }
-
-/* --- Light theme — ensure icon colors aren't washed out --- */
-html[data-theme='light'] [data-toolbar-panel] button,
-html[data-theme='light'] [data-toolbar-panel] svg {
-  color: inherit !important;
-}
-
-/* --- Hacker image filter — toolbar images stay unfiltered --- */
-html[data-theme='hacker'] [data-toolbar-panel] img {
+/* Rounded classes — preserve inside toolbar */
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] .rounded-full { border-radius: 9999px !important; }
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] .rounded-xl { border-radius: 0.75rem !important; }
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] .rounded-2xl { border-radius: 1rem !important; }
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] .rounded-lg { border-radius: 0.5rem !important; }
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] .rounded-md { border-radius: 0.375rem !important; }
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] .rounded { border-radius: 0.25rem !important; }
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] .rounded-l-lg { border-radius: 0.5rem 0 0 0.5rem !important; }
+/* Toolbar images stay unfiltered in hacker mode */
+html[data-theme='hacker'][data-theme] [data-toolbar-panel][data-toolbar-panel] img {
   filter: none !important;
   -webkit-filter: none !important;
 }
