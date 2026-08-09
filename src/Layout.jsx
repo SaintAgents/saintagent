@@ -24,6 +24,8 @@ import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
 import FullscreenMatchesSwiper from '@/components/hud/FullscreenMatchesSwiper';
 import MobileCloseButton from '@/components/hud/MobileCloseButton';
 import LiveAchievementToasts from '@/components/gamification/LiveAchievementToasts';
+import VideoBackgroundLayer from '@/components/hud/VideoBackgroundLayer';
+import VideoBackgroundToolbar from '@/components/hud/VideoBackgroundToolbar';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
@@ -608,6 +610,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
       <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
+      <VideoBackgroundLayer currentPageName={currentPageName} theme={theme} />
       {/* Set data-bg-active on html for light theme canvas effects */}
       <LightBgActiveFlag theme={theme} bgEffect={bgEffect} />
 
@@ -1950,6 +1953,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Live Achievement Toasts */}
       <LiveAchievementToasts />
+
+      {/* Video Background Toolbar */}
+      <VideoBackgroundToolbar />
 
       {/* Interactive Onboarding Tour */}
       {userTourOpen && (
