@@ -812,9 +812,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Semi-transparent dark backgrounds to show effects through */
-        [data-theme='dark'] [class*='bg-white'],
-        [data-theme='dark'] [class*='bg-gray-'],
-        [data-theme='dark'] [class*='bg-slate-'] { 
+        [data-theme='dark'] [class*='bg-white']:not([data-toolbar-panel]):not([data-toolbar-panel] *),
+        [data-theme='dark'] [class*='bg-gray-']:not([data-toolbar-panel]):not([data-toolbar-panel] *),
+        [data-theme='dark'] [class*='bg-slate-']:not([data-toolbar-panel]):not([data-toolbar-panel] *) { 
           background-color: rgba(5, 5, 5, 0.75) !important; 
           color: #ffffff !important;
           border-color: rgba(0, 255, 136, 0.2) !important;
@@ -1016,8 +1016,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Active/selected states - vibrant neon glow */
-        [data-theme='dark'] [data-state="active"],
-        [data-theme='dark'] [aria-selected="true"] {
+        [data-theme='dark'] [data-state="active"]:not([data-toolbar-panel] *),
+        [data-theme='dark'] [aria-selected="true"]:not([data-toolbar-panel] *) {
           background-color: rgba(0, 255, 136, 0.1) !important;
           border-color: var(--neon-green) !important;
           box-shadow: 0 0 15px rgba(0, 255, 136, 0.4) !important;
@@ -1068,8 +1068,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Empty state containers - solid obsidian */
-        [data-theme='dark'] [class*='empty'],
-        [data-theme='dark'] [class*='placeholder'] {
+        [data-theme='dark'] [class*='empty']:not([data-toolbar-panel] *),
+        [data-theme='dark'] [class*='placeholder']:not([data-toolbar-panel] *) {
           background-color: var(--obsidian) !important;
         }
 
@@ -1134,8 +1134,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Badges and pills - neon glow */
-        [data-theme='dark'] [class*='badge'],
-        [data-theme='dark'] .badge {
+        [data-theme='dark'] [class*='badge']:not([data-toolbar-panel] *),
+        [data-theme='dark'] .badge:not([data-toolbar-panel] *) {
           background-color: var(--obsidian) !important;
           border: 1px solid rgba(0, 255, 136, 0.3) !important;
           box-shadow: 0 0 8px rgba(0, 255, 136, 0.2) !important;
@@ -1155,13 +1155,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
 
         /* Hover effects with neon glow */
-        [data-theme='dark'] [class*='hover\\:bg-']:hover {
+        [data-theme='dark'] [class*='hover\\:bg-']:not([data-toolbar-panel] *):hover {
           box-shadow: 0 0 18px rgba(0, 255, 136, 0.25) !important;
         }
 
         /* Fix violet/purple backgrounds to obsidian */
-        [data-theme='dark'] [class*='bg-violet-'],
-        [data-theme='dark'] [class*='bg-purple-'] {
+        [data-theme='dark'] [class*='bg-violet-']:not([data-toolbar-panel] *),
+        [data-theme='dark'] [class*='bg-purple-']:not([data-toolbar-panel] *) {
           background-color: rgba(0, 255, 136, 0.1) !important;
           border-color: var(--neon-green) !important;
         }
@@ -1589,7 +1589,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
             background-color: transparent !important;
             background-image: none !important;
           }
-          [data-theme='hacker'] aside, [data-theme='hacker'] header, [data-theme='hacker'] footer, [data-theme='hacker'] nav {
+          [data-theme='hacker'] aside:not([data-toolbar-panel] *), [data-theme='hacker'] header:not([data-toolbar-panel] *), [data-theme='hacker'] footer:not([data-toolbar-panel] *), [data-theme='hacker'] nav:not([data-toolbar-panel] *) {
             background-color: rgba(0, 0, 0, 0.9) !important;
             background-image: none !important;
             color: #00ff00 !important;
@@ -1625,11 +1625,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
             border: 1px solid #00ff00 !important;
             opacity: 1 !important;
           }
-          [data-theme='hacker'] select option {
+          [data-theme='hacker'] select option:not([data-toolbar-panel] *) {
             background-color: #000000 !important;
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] input::placeholder, [data-theme='hacker'] textarea::placeholder {
+          [data-theme='hacker'] input:not([data-toolbar-panel] *)::placeholder, [data-theme='hacker'] textarea:not([data-toolbar-panel] *)::placeholder {
             color: #006600 !important;
           }
           [data-theme='hacker'] [role="dialog"],
@@ -1655,7 +1655,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] svg[fill] path { fill: #00ff00 !important; }
           [data-theme='hacker'] ::-webkit-scrollbar { background-color: #000 !important; }
           [data-theme='hacker'] ::-webkit-scrollbar-thumb { background-color: #00ff00 !important; }
-          [data-theme='hacker'] a:hover { text-shadow: 0 0 5px #00ff00 !important; }
+          [data-theme='hacker'] a:not([data-toolbar-panel] *):hover { text-shadow: 0 0 5px #00ff00 !important; }
           [data-theme='hacker'] [class*='shadow']:not([data-toolbar-panel]):not([data-toolbar-panel] *) { box-shadow: 0 0 8px #00ff00 !important; }
 
           /* Remove border from gauge/control panel image in hacker mode */
@@ -1691,30 +1691,30 @@ function AuthenticatedLayout({ children, currentPageName }) {
           }
 
           /* Hacker theme - Force ALL buttons to be green on black, no exceptions */
-          [data-theme='hacker'] [class*='bg-violet-'],
-          [data-theme='hacker'] [class*='bg-purple-'],
-          [data-theme='hacker'] [class*='bg-pink-'],
-          [data-theme='hacker'] [class*='bg-rose-'],
-          [data-theme='hacker'] [class*='bg-fuchsia-'],
-          [data-theme='hacker'] [class*='bg-gradient-'] {
+          [data-theme='hacker'] [class*='bg-violet-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='bg-purple-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='bg-pink-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='bg-rose-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='bg-fuchsia-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='bg-gradient-']:not([data-toolbar-panel] *) {
             background: #000 !important;
             background-color: #000 !important;
             background-image: none !important;
             border-color: #00ff00 !important;
           }
-          [data-theme='hacker'] [class*='text-violet-'],
-          [data-theme='hacker'] [class*='text-purple-'],
-          [data-theme='hacker'] [class*='text-pink-'],
-          [data-theme='hacker'] [class*='text-rose-'],
-          [data-theme='hacker'] [class*='text-fuchsia-'] {
+          [data-theme='hacker'] [class*='text-violet-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='text-purple-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='text-pink-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='text-rose-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='text-fuchsia-']:not([data-toolbar-panel] *) {
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] [class*='from-violet-'],
-          [data-theme='hacker'] [class*='from-purple-'],
-          [data-theme='hacker'] [class*='from-pink-'],
-          [data-theme='hacker'] [class*='to-violet-'],
-          [data-theme='hacker'] [class*='to-purple-'],
-          [data-theme='hacker'] [class*='to-pink-'] {
+          [data-theme='hacker'] [class*='from-violet-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='from-purple-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='from-pink-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='to-violet-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='to-purple-']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='to-pink-']:not([data-toolbar-panel] *) {
             background: #000 !important;
             background-image: none !important;
           }
@@ -1781,8 +1781,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
           [data-theme='hacker'] div:not([class*='bg-']):not([data-toolbar-panel]):not([data-toolbar-panel] *) {
             color: #00ff00 !important;
           }
-          [data-theme='hacker'] [class*='text-slate-500'], [data-theme='hacker'] [class*='text-slate-400'],
-          [data-theme='hacker'] [class*='text-slate-600'], [data-theme='hacker'] [class*='text-gray-500'] {
+          [data-theme='hacker'] [class*='text-slate-500']:not([data-toolbar-panel] *), [data-theme='hacker'] [class*='text-slate-400']:not([data-toolbar-panel] *),
+          [data-theme='hacker'] [class*='text-slate-600']:not([data-toolbar-panel] *), [data-theme='hacker'] [class*='text-gray-500']:not([data-toolbar-panel] *) {
             color: #88ff88 !important;
           }
         `}</style>
