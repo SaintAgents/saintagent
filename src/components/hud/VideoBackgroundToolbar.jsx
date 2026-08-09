@@ -169,9 +169,9 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
   const isDark = theme === 'dark' || isHacker;
   const isLight = theme === 'light' || theme === 'custom';
 
-  const accentColor = isHacker ? '#00ff00' : isLight ? '#4f46e5' : '#d4a017';
-  const borderColor = isHacker ? '#00ff00' : isLight ? '#c7d2fe' : '#d4a01740';
-  const bgColor = isHacker ? 'rgba(0,0,0,0.95)' : isLight ? 'rgba(255,255,255,0.95)' : 'rgba(10,15,30,0.92)';
+  const accentColor = isHacker ? '#00ff00' : isLight ? '#4f46e5' : '#e5a620';
+  const borderColor = isHacker ? '#00ff00' : isLight ? '#c7d2fe' : '#2a3a5c';
+  const bgColor = isHacker ? 'rgba(0,0,0,0.95)' : isLight ? 'rgba(255,255,255,0.95)' : 'rgba(12,18,36,0.95)';
   const textColor = isLight ? '#1e293b' : '#ffffff';
   const textMuted = isLight ? '#64748b' : '#94a3b8';
   const panelItemBg = isLight ? 'rgba(241,245,249,0.8)' : 'rgba(51,65,85,0.5)';
