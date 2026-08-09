@@ -187,50 +187,116 @@ html[data-video-active='true'] main {
 }
 
 /* =====================================================
-   VIDEO TOOLBAR — Shield from global dark/hacker theme overrides
-   The toolbar manages its own colors via inline styles;
-   dark/hacker global selectors must not override them.
+   VIDEO TOOLBAR — TOTAL ISOLATION from all theme overrides.
+   The toolbar manages its own colors via inline styles.
+   We neutralize every global dark/hacker/video/bg-active
+   override by resetting to 'inherit' so inline styles win.
    ===================================================== */
+
+/* --- Dark theme isolation --- */
+html[data-theme='dark'] [data-toolbar-panel],
 html[data-theme='dark'] [data-toolbar-panel] div,
 html[data-theme='dark'] [data-toolbar-panel] span,
+html[data-theme='dark'] [data-toolbar-panel] p,
 html[data-theme='dark'] [data-toolbar-panel] h2,
 html[data-theme='dark'] [data-toolbar-panel] h3,
-html[data-theme='dark'] [data-toolbar-panel] p,
 html[data-theme='dark'] [data-toolbar-panel] strong,
 html[data-theme='dark'] [data-toolbar-panel] label,
-html[data-theme='dark'] [data-toolbar-panel] button,
-html[data-theme='dark'] [data-toolbar-panel] input,
 html[data-theme='dark'] [data-toolbar-panel] a {
-  background-color: unset !important;
-  color: unset !important;
-  border-color: unset !important;
-  box-shadow: unset !important;
-  background-image: unset !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: inherit !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
+}
+html[data-theme='dark'] [data-toolbar-panel] button,
+html[data-theme='dark'] [data-toolbar-panel] [role="button"] {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: inherit !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+html[data-theme='dark'] [data-toolbar-panel] button:hover,
+html[data-theme='dark'] [data-toolbar-panel] [role="button"]:hover {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+html[data-theme='dark'] [data-toolbar-panel] input {
+  background-color: transparent !important;
+  color: inherit !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
+}
+html[data-theme='dark'] [data-toolbar-panel] .rounded-xl,
+html[data-theme='dark'] [data-toolbar-panel] .rounded-lg,
+html[data-theme='dark'] [data-toolbar-panel] .rounded-2xl,
+html[data-theme='dark'] [data-toolbar-panel] .rounded-md,
+html[data-theme='dark'] [data-toolbar-panel] .rounded-full {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
+/* --- Hacker theme isolation --- */
+html[data-theme='hacker'] [data-toolbar-panel],
 html[data-theme='hacker'] [data-toolbar-panel] div,
 html[data-theme='hacker'] [data-toolbar-panel] span,
+html[data-theme='hacker'] [data-toolbar-panel] p,
 html[data-theme='hacker'] [data-toolbar-panel] h2,
 html[data-theme='hacker'] [data-toolbar-panel] h3,
-html[data-theme='hacker'] [data-toolbar-panel] p,
 html[data-theme='hacker'] [data-toolbar-panel] strong,
 html[data-theme='hacker'] [data-toolbar-panel] label,
-html[data-theme='hacker'] [data-toolbar-panel] button,
-html[data-theme='hacker'] [data-toolbar-panel] input,
 html[data-theme='hacker'] [data-toolbar-panel] a {
-  background-color: unset !important;
-  color: unset !important;
-  border-color: unset !important;
-  box-shadow: unset !important;
-  background-image: unset !important;
-  border-radius: unset !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: inherit !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
+  border-radius: inherit !important;
+}
+html[data-theme='hacker'] [data-toolbar-panel] button,
+html[data-theme='hacker'] [data-toolbar-panel] [role="button"] {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: inherit !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: inherit !important;
+}
+html[data-theme='hacker'] [data-toolbar-panel] button:hover,
+html[data-theme='hacker'] [data-toolbar-panel] [role="button"]:hover {
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+html[data-theme='hacker'] [data-toolbar-panel] input {
+  background-color: transparent !important;
+  color: inherit !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
+  border-radius: inherit !important;
+}
+html[data-theme='hacker'] [data-toolbar-panel] .rounded-xl,
+html[data-theme='hacker'] [data-toolbar-panel] .rounded-lg,
+html[data-theme='hacker'] [data-toolbar-panel] .rounded-2xl,
+html[data-theme='hacker'] [data-toolbar-panel] .rounded-md,
+html[data-theme='hacker'] [data-toolbar-panel] .rounded-full {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: inherit !important;
+}
+html[data-theme='hacker'] [data-toolbar-panel] *,
+html[data-theme='hacker'] [data-toolbar-panel] *::before,
+html[data-theme='hacker'] [data-toolbar-panel] *::after {
+  border-color: inherit !important;
 }
 
-/* Toolbar SVG icons — let inline styles control color */
+/* --- SVG icons — let inline styles control color --- */
 html[data-theme='dark'] [data-toolbar-panel] svg,
 html[data-theme='hacker'] [data-toolbar-panel] svg {
-  color: unset !important;
-  stroke: unset !important;
+  color: inherit !important;
+  stroke: inherit !important;
   filter: none !important;
 }
 html[data-theme='dark'] [data-toolbar-panel] svg path,
@@ -239,29 +305,43 @@ html[data-theme='dark'] [data-toolbar-panel] svg line,
 html[data-theme='hacker'] [data-toolbar-panel] svg path,
 html[data-theme='hacker'] [data-toolbar-panel] svg circle,
 html[data-theme='hacker'] [data-toolbar-panel] svg line {
-  stroke: unset !important;
-  fill: unset !important;
+  stroke: inherit !important;
+  fill: inherit !important;
+}
+/* Hacker theme turns all SVGs green — block that for toolbar */
+html[data-theme='hacker'] [data-toolbar-panel] svg {
+  color: inherit !important;
+  stroke: inherit !important;
+}
+html[data-theme='hacker'] [data-toolbar-panel] svg path,
+html[data-theme='hacker'] [data-toolbar-panel] svg circle,
+html[data-theme='hacker'] [data-toolbar-panel] svg rect,
+html[data-theme='hacker'] [data-toolbar-panel] svg line {
+  stroke: inherit !important;
+  fill: none !important;
 }
 
-/* Video-active overrides shouldn't touch toolbar either */
+/* --- Video-active / bg-active isolation --- */
+html[data-video-active='true'] [data-toolbar-panel],
 html[data-video-active='true'] [data-toolbar-panel] * {
-  background-color: unset !important;
+  background-color: transparent !important;
 }
-
-/* Light theme toolbar — ensure icon colors aren't washed out */
-html[data-theme='light'] [data-toolbar-panel] button,
-[data-theme='light'] [data-toolbar-panel] button {
-  color: unset !important;
-}
-html[data-theme='light'] [data-toolbar-panel] svg,
-[data-theme='light'] [data-toolbar-panel] svg {
-  color: unset !important;
-}
-
-/* Also prevent bg-active overrides */
+html[data-bg-active='true'] [data-toolbar-panel],
 html[data-bg-active='true'] [data-toolbar-panel] * {
-  background-color: unset !important;
-  color: unset !important;
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* --- Light theme — ensure icon colors aren't washed out --- */
+html[data-theme='light'] [data-toolbar-panel] button,
+html[data-theme='light'] [data-toolbar-panel] svg {
+  color: inherit !important;
+}
+
+/* --- Hacker image filter — toolbar images stay unfiltered --- */
+html[data-theme='hacker'] [data-toolbar-panel] img {
+  filter: none !important;
+  -webkit-filter: none !important;
 }
 
 /* =====================================================
