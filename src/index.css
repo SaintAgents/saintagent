@@ -258,6 +258,28 @@ html[data-bg-active='true'] [data-toolbar-panel] * {
   color: unset !important;
 }
 
+/* =====================================================
+   BADGE CARDS — Dark/Hacker theme overrides
+   These featured badge cards need visible dark backgrounds
+   instead of the global transparent override.
+   ===================================================== */
+html[data-theme='dark'] [data-badge-card],
+html[data-theme='hacker'] [data-badge-card] {
+  background: rgba(15, 20, 35, 0.85) !important;
+  background-image: none !important;
+  border-color: rgba(0, 255, 136, 0.25) !important;
+}
+
+html[data-theme='dark'] [data-badge-card] p,
+html[data-theme='dark'] [data-badge-card] span {
+  color: #e2e8f0 !important;
+}
+
+html[data-theme='hacker'] [data-badge-card] p,
+html[data-theme='hacker'] [data-badge-card] span {
+  color: #00ff00 !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;

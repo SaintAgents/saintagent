@@ -1247,7 +1247,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   {/* Featured Badges - 3x Size */}
                   <div className="grid grid-cols-2 gap-2 md:gap-4 mb-4">
                     {/* Eternal Flame Feature Badge - 3x Size */}
-                    <div className="flex flex-col items-center justify-center p-2 md:p-4 rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 border-2 border-amber-300 shadow-lg shadow-amber-200/50">
+                    <div data-badge-card className="flex flex-col items-center justify-center p-2 md:p-4 rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 border-2 border-amber-300 shadow-lg shadow-amber-200/50">
                       <div className="w-20 h-20 md:w-36 md:h-36 flex items-center justify-center">
                         <img
                           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/49ae4822c_Screenshot2026-01-07044514-Picsart-BackgroundRemover.png"
@@ -1266,13 +1266,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         </div>
                       </div>
                       <div className="text-center mt-3">
-                        <p className="font-bold text-amber-900 text-base">Eternal Flame</p>
-                        <p className="text-sm text-amber-700">Living Agent</p>
+                        <p className="font-bold text-amber-900 dark:text-amber-300 text-base">Eternal Flame</p>
+                        <p className="text-sm text-amber-700 dark:text-amber-400">Living Agent</p>
                       </div>
                     </div>
                     
                     {/* Social Butterfly Badge - 3x Size */}
-                    <div className="flex flex-col items-center justify-center p-2 md:p-4 rounded-2xl bg-gradient-to-br from-violet-50 via-purple-50 to-violet-100 border-2 border-violet-300 shadow-lg shadow-violet-200/50">
+                    <div data-badge-card className="flex flex-col items-center justify-center p-2 md:p-4 rounded-2xl bg-gradient-to-br from-violet-50 via-purple-50 to-violet-100 border-2 border-violet-300 shadow-lg shadow-violet-200/50">
                       <div className="w-20 h-20 md:w-36 md:h-36 flex items-center justify-center">
                         <img
                           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/01ebdeddb_Screenshot2026-01-07044414-Picsart-BackgroundRemover.png"
@@ -1292,8 +1292,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         </div>
                       </div>
                       <div className="text-center mt-3">
-                        <p className="font-bold text-violet-900 text-base">Social Butterfly</p>
-                        <p className="text-sm text-violet-700">Connector</p>
+                        <p className="font-bold text-violet-900 dark:text-violet-300 text-base">Social Butterfly</p>
+                        <p className="text-sm text-violet-700 dark:text-violet-400">Connector</p>
                       </div>
                     </div>
                   </div>
