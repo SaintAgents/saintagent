@@ -97,37 +97,34 @@
    HERO SECTIONS - fixed/sticky hero that stays in place
    while content scrolls over it
    ===================================================== */
-.page-hero {
+/* Hero fixed mode: sticky hero, content scrolls over it */
+html[data-hero-fixed='true'] .page-hero {
   position: sticky;
   top: 0;
   z-index: 0;
 }
-/* Content after the hero scrolls OVER it with a solid background */
-.page-hero ~ * {
+html[data-hero-fixed='true'] .page-hero ~ * {
   position: relative;
   z-index: 1;
 }
-html[data-theme='light'] .page-hero ~ *,
-[data-theme='light'] .page-hero ~ *,
-html[data-theme='custom'] .page-hero ~ *,
-[data-theme='custom'] .page-hero ~ * {
+html[data-hero-fixed='true'][data-theme='light'] .page-hero ~ *,
+html[data-hero-fixed='true'][data-theme='custom'] .page-hero ~ * {
   background-color: #f8fafc;
 }
-html[data-theme='dark'] .page-hero ~ *,
-[data-theme='dark'] .page-hero ~ * {
+html[data-hero-fixed='true'][data-theme='dark'] .page-hero ~ * {
   background-color: #050505;
 }
-html[data-theme='hacker'] .page-hero ~ *,
-[data-theme='hacker'] .page-hero ~ * {
+html[data-hero-fixed='true'][data-theme='hacker'] .page-hero ~ * {
   background-color: #000000;
 }
-/* When video background is active, content bg should be semi-transparent */
-html[data-video-active='true'] .page-hero ~ * {
+/* When video/canvas bg active, content bg transparent */
+html[data-hero-fixed='true'][data-video-active='true'] .page-hero ~ *,
+html[data-hero-fixed='true'][data-bg-active='true'] .page-hero ~ * {
   background-color: transparent !important;
 }
-/* When canvas bg effect is active, content bg transparent */
-html[data-bg-active='true'] .page-hero ~ * {
-  background-color: transparent !important;
+/* Hero scroll mode: normal flow, hero scrolls with content */
+html[data-hero-fixed='false'] .page-hero {
+  position: relative;
 }
 html[data-theme='light'] .page-hero,
 [data-theme='light'] .page-hero {

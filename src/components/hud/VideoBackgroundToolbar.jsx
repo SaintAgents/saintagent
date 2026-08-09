@@ -42,6 +42,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
     return {
       surfaceOpacity: 85, heroOpacity: 30, bgOpacity: 90, contentStart: 0,
       whiteWash: 0, cardBg: 90, cardOpacity: 95, cmdBackdrop: 85, applyAll: true,
+      heroFixed: true,
       ...saved,
     };
   });
@@ -141,6 +142,12 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
     setUploading(false);
     e.target.value = '';
   };
+
+  // Sync hero-fixed attribute to <html> for CSS
+  useEffect(() => {
+    const fixed = surfaceOpacity.heroFixed !== false;
+    document.documentElement.setAttribute('data-hero-fixed', fixed ? 'true' : 'false');
+  }, [surfaceOpacity.heroFixed]);
 
   // Persist collapse state
   useEffect(() => {
@@ -540,6 +547,10 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                 <div className="flex items-center justify-between pt-1">
                   <span className="text-xs" style={{ color: textMuted }}>Apply to all pages</span>
                   <Switch checked={surfaceOpacity.applyAll} onCheckedChange={v => updateSurfaceOpacity({ applyAll: v })} />
+                </div>
+                <div className="flex items-center justify-between pt-1" style={{ borderTop: `1px solid ${dividerBg}`, paddingTop: 8 }}>
+                  <span className="text-xs" style={{ color: textMuted }}>Hero stays fixed (parallax)</span>
+                  <Switch checked={surfaceOpacity.heroFixed !== false} onCheckedChange={v => updateSurfaceOpacity({ heroFixed: v })} />
                 </div>
               </div>
             )}

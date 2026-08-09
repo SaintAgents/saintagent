@@ -8,6 +8,15 @@
     <title>Base44 APP</title>
   </head>
   <body>
+    <script>
+      // Set hero-fixed attribute from localStorage before first paint
+      try {
+        var s = JSON.parse(localStorage.getItem('surfaceOpacitySettings') || '{}');
+        document.documentElement.setAttribute('data-hero-fixed', s.heroFixed !== false ? 'true' : 'false');
+      } catch(e) {
+        document.documentElement.setAttribute('data-hero-fixed', 'true');
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
