@@ -425,27 +425,26 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                   <div className="space-y-2">
                     <div className="relative rounded-lg overflow-hidden aspect-video bg-black">
                       <video src={surfaceConfig.videoUrl} autoPlay loop muted={surfaceConfig.muted !== false} playsInline className="w-full h-full object-cover" style={{ opacity: surfaceConfig.opacity ?? 0.3 }} />
-                      <div className="absolute bottom-1 right-1 flex gap-1">
-                        <button onClick={() => updateVideoSurface({ muted: !(surfaceConfig.muted !== false) })} className="p-1 bg-black/60 rounded text-white">
-                          {surfaceConfig.muted !== false ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                      <div className="absolute bottom-1 left-1 right-1 flex justify-between">
+                        <button onClick={() => setShowLibrary(!showLibrary)} style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <Play style={{ width: 12, height: 12 }} /> {showLibrary ? 'Hide' : 'Change'}
                         </button>
-                        <button onClick={() => updateVideoSurface({ enabled: !surfaceConfig.enabled })} className="p-1 bg-black/60 rounded">
-                          <Eye className={`w-3 h-3 ${surfaceConfig.enabled ? 'text-emerald-400' : 'text-slate-500'}`} />
-                        </button>
-                        <button onClick={() => updateVideoSurface({ videoUrl: '', enabled: false })} className="p-1 bg-black/60 rounded text-red-400"><X className="w-3 h-3" /></button>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          <label style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                            <input type="file" accept="video/*" onChange={handleUpload} style={{ display: 'none' }} />
+                            {uploading ? <div style={{ width: 12, height: 12, border: '2px solid #fff', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} /> : <Upload style={{ width: 12, height: 12 }} />}
+                          </label>
+                          <button onClick={() => updateVideoSurface({ muted: !(surfaceConfig.muted !== false) })} style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer' }}>
+                            {surfaceConfig.muted !== false ? <VolumeX style={{ width: 12, height: 12 }} /> : <Volume2 style={{ width: 12, height: 12 }} />}
+                          </button>
+                          <button onClick={() => updateVideoSurface({ enabled: !surfaceConfig.enabled })} style={{ background: 'rgba(0,0,0,0.7)', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer', color: surfaceConfig.enabled ? '#34d399' : '#94a3b8' }}>
+                            <Eye style={{ width: 12, height: 12 }} />
+                          </button>
+                          <button onClick={() => updateVideoSurface({ videoUrl: '', enabled: false })} style={{ background: 'rgba(0,0,0,0.7)', color: '#f87171', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer' }}>
+                            <X style={{ width: 12, height: 12 }} />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Change video options */}
-                    <div className="flex gap-1.5">
-                      <button onClick={() => setShowLibrary(!showLibrary)} className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg border text-xs" style={{ borderColor, background: panelItemBgAlt, color: textColor }}>
-                        <Play className="w-3.5 h-3.5" style={{ color: accentColor }} /> {showLibrary ? 'Hide Library' : 'Change Video'}
-                      </button>
-                      <label className="flex items-center gap-1 px-2 py-1.5 rounded-lg border border-dashed cursor-pointer text-xs" style={{ borderColor }}>
-                        <input type="file" accept="video/*" onChange={handleUpload} className="hidden" />
-                        {uploading ? <div className="animate-spin rounded-full h-3 w-3 border-2 border-t-transparent" style={{ borderColor: accentColor }} /> : <Upload className="w-3.5 h-3.5" style={{ color: textMuted }} />}
-                        <span style={{ color: textMuted }}>Upload</span>
-                      </label>
                     </div>
 
                     {/* Sliders */}
