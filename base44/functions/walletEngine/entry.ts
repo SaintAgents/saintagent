@@ -303,9 +303,27 @@ async function refund(base44, { user_id, amount, memo, related, event_id }) {
 
 async function adjustment(base44, { user_id, amount, direction, memo, admin_note, event_id }, currentUser) {
   if (currentUser?.role !== 'admin') throw new Error('Admin only');
-  if (direction === 'CREDIT') return credit(base44, { user_id, amount, tx_type: 'ADJUSTMENT_CREDIT', memo: memo || admin_note, event_id, metadata: { admin: currentUser?.email } });
-  if (direction === 'DEBIT') return debit(base44, { user_id, amount, tx_type: 'ADJUSTMENT_DEBIT', memo: memo || admin_note, event_id, metadata: { admin: currentUser?.email } });
-  throw new Error('direction must be CREDIT or DEBIT');
+  let result;
+  if (direction === 'CREDIT') {
+    result = await credit(base44, { user_id, amount, tx_type: 'ADJUSTMENT_CREDIT', memo: memo || admin_note, event_id, metadata: { admin: currentUser?.email } });
+  } else if (direction === 'DEBIT') {
+    result = await debit(base44, { user_id, amount, tx_type: 'ADJUSTMENT_DEBIT', memo: memo || admin_note, event_id, metadata: { admin: currentUser?.email } });
+  } else {
+    throw new Error('direction must be CREDIT or DEBIT');
+  }
+  // Also write to legacy GGGTransaction so both ledgers stay in sync
+  try {
+    const delta = direction === 'CREDIT' ? toNum(amount) : toNum(-amount);
+    await base44.entities.GGGTransaction.create({
+      user_id,
+      delta,
+      reason_code: direction === 'CREDIT' ? 'admin_adjustment_credit' : 'admin_adjustment_debit',
+      description: memo || admin_note || 'Admin adjustment',
+      balance_after: toNum(result.wallet?.available_balance || 0),
+      source_type: 'reward',
+    });
+  } catch (_) { /* best effort */ }
+  return result;
 }
 
 async function processMissionCompleted(base44, payload) {

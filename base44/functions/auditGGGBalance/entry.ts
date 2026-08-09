@@ -42,11 +42,13 @@ export default async function(req) {
       skip += pageSize;
     }
 
-    // Calculate computed balance from transaction ledger
-    let computedFromTxs = 0;
+    // Calculate wallet ledger balance and breakdown
+    let walletLedgerSum = 0;
     let totalCredits = 0;
     let totalDebits = 0;
     const txBreakdown = {};
+    // Track wallet-only balance (excluding dual-written EARN_REWARD)
+    let walletOnlySum = 0;
 
     for (const tx of allWalletTxs) {
       if (tx.status === 'FAILED' || tx.status === 'REVERSED') continue;
@@ -58,13 +60,19 @@ export default async function(req) {
       txBreakdown[type].count++;
       
       if (tx.direction === 'CREDIT') {
-        computedFromTxs = toNum(computedFromTxs + amount);
+        walletLedgerSum = toNum(walletLedgerSum + amount);
         totalCredits = toNum(totalCredits + amount);
         txBreakdown[type].credits = toNum(txBreakdown[type].credits + amount);
+        // Only count wallet-only (skip ALL EARN_REWARD — always dual-written)
+        if (tx.tx_type !== 'EARN_REWARD') {
+          walletOnlySum = toNum(walletOnlySum + amount);
+        }
       } else if (tx.direction === 'DEBIT') {
-        computedFromTxs = toNum(computedFromTxs - amount);
+        walletLedgerSum = toNum(walletLedgerSum - amount);
         totalDebits = toNum(totalDebits + amount);
         txBreakdown[type].debits = toNum(txBreakdown[type].debits + amount);
+        // Debits are never dual-written, always wallet-only
+        walletOnlySum = toNum(walletOnlySum - amount);
       }
     }
 
@@ -110,7 +118,11 @@ export default async function(req) {
       }
     }
 
-    // 5. Determine discrepancies
+    // 5. Compute the TRUE correct balance from both ledgers (non-overlapping)
+    // True balance = legacy GGGTransaction sum + wallet-only WalletTransaction sum
+    const trueBalance = toNum(legacySum + walletOnlySum);
+
+    // 6. Determine discrepancies
     const discrepancies = [];
     
     const walletVsProfile = toNum(walletBalance - profileBalance);
@@ -122,22 +134,12 @@ export default async function(req) {
       });
     }
 
-    const walletVsLedger = toNum(walletBalance - computedFromTxs);
-    if (Math.abs(walletVsLedger) > 0.0001) {
+    const balanceVsTruth = toNum(profileBalance - trueBalance);
+    if (Math.abs(balanceVsTruth) > 0.0001) {
       discrepancies.push({
-        type: 'WALLET_VS_LEDGER',
+        type: 'BALANCE_VS_COMBINED_LEDGER',
         severity: 'critical',
-        message: `Wallet balance (${walletBalance}) differs from WalletTransaction ledger sum (${computedFromTxs}) by ${walletVsLedger}`
-      });
-    }
-
-    const walletTotalsCheck = toNum((wallet?.total_earned || 0) - (wallet?.total_spent || 0));
-    const walletTotalsVsBalance = toNum(walletBalance - walletTotalsCheck);
-    if (wallet && Math.abs(walletTotalsVsBalance) > 0.01) {
-      discrepancies.push({
-        type: 'WALLET_TOTALS_MISMATCH',
-        severity: 'info',
-        message: `Wallet earned(${wallet.total_earned || 0}) - spent(${wallet.total_spent || 0}) = ${walletTotalsCheck}, but available_balance is ${walletBalance} (diff: ${walletTotalsVsBalance}). This can happen if wallet was initialized with a pre-existing balance.`
+        message: `Current balance (${profileBalance}) differs from true combined ledger balance (${trueBalance}) by ${balanceVsTruth}. Legacy sum: ${legacySum}, Wallet-only sum: ${walletOnlySum}.`
       });
     }
 
@@ -155,10 +157,12 @@ export default async function(req) {
         wallet_locked: walletLocked,
         wallet_total_earned: toNum(wallet?.total_earned || 0),
         wallet_total_spent: toNum(wallet?.total_spent || 0),
+        true_combined_balance: trueBalance,
       },
       ledger: {
         wallet_tx_count: allWalletTxs.length,
-        wallet_tx_computed_balance: computedFromTxs,
+        wallet_tx_full_sum: walletLedgerSum,
+        wallet_only_sum: walletOnlySum,
         total_credits: totalCredits,
         total_debits: totalDebits,
         tx_breakdown: txBreakdown,
@@ -167,8 +171,14 @@ export default async function(req) {
         legacy_tx_count: allLegacyTxs.length + legacyBySA.length,
         legacy_sum: legacySum,
       },
+      combined: {
+        legacy_sum: legacySum,
+        wallet_only_sum: walletOnlySum,
+        true_balance: trueBalance,
+        explanation: 'True balance = legacy GGGTransaction sum + wallet-only WalletTransaction sum (all EARN_REWARD excluded since they are dual-written to both ledgers)'
+      },
       discrepancies,
-      fix_available: discrepancies.some(d => d.type === 'WALLET_VS_PROFILE'),
+      fix_available: discrepancies.length > 0,
     });
   } catch (error) {
     return Response.json({ error: error.message || String(error) }, { status: 500 });
