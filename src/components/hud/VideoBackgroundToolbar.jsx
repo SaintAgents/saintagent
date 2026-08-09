@@ -428,30 +428,25 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                   ))}
                 </div>
 
-                {/* Current video */}
-                {surfaceConfig.videoUrl ? (
+                {/* Current video preview + controls */}
+                {surfaceConfig.videoUrl && (
                   <div className="space-y-2">
                     <div className="relative rounded-lg overflow-hidden aspect-video bg-black">
                       <video src={surfaceConfig.videoUrl} autoPlay loop muted={surfaceConfig.muted !== false} playsInline className="w-full h-full object-cover" style={{ opacity: surfaceConfig.opacity ?? 0.3 }} />
-                      <div className="absolute bottom-1 left-1 right-1 flex justify-between">
-                        <button onClick={() => setShowLibrary(!showLibrary)} style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Play style={{ width: 12, height: 12 }} /> {showLibrary ? 'Hide' : 'Change'}
+                      <div className="absolute bottom-1 right-1 flex gap-1">
+                        <label style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                          <input type="file" accept="video/*" onChange={handleUpload} style={{ display: 'none' }} />
+                          {uploading ? <div style={{ width: 12, height: 12, border: '2px solid #fff', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} /> : <Upload style={{ width: 12, height: 12 }} />}
+                        </label>
+                        <button onClick={() => updateVideoSurface({ muted: !(surfaceConfig.muted !== false) })} style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer' }}>
+                          {surfaceConfig.muted !== false ? <VolumeX style={{ width: 12, height: 12 }} /> : <Volume2 style={{ width: 12, height: 12 }} />}
                         </button>
-                        <div style={{ display: 'flex', gap: '4px' }}>
-                          <label style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                            <input type="file" accept="video/*" onChange={handleUpload} style={{ display: 'none' }} />
-                            {uploading ? <div style={{ width: 12, height: 12, border: '2px solid #fff', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} /> : <Upload style={{ width: 12, height: 12 }} />}
-                          </label>
-                          <button onClick={() => updateVideoSurface({ muted: !(surfaceConfig.muted !== false) })} style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer' }}>
-                            {surfaceConfig.muted !== false ? <VolumeX style={{ width: 12, height: 12 }} /> : <Volume2 style={{ width: 12, height: 12 }} />}
-                          </button>
-                          <button onClick={() => updateVideoSurface({ enabled: !surfaceConfig.enabled })} style={{ background: 'rgba(0,0,0,0.7)', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer', color: surfaceConfig.enabled ? '#34d399' : '#94a3b8' }}>
-                            <Eye style={{ width: 12, height: 12 }} />
-                          </button>
-                          <button onClick={() => updateVideoSurface({ videoUrl: '', enabled: false })} style={{ background: 'rgba(0,0,0,0.7)', color: '#f87171', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer' }}>
-                            <X style={{ width: 12, height: 12 }} />
-                          </button>
-                        </div>
+                        <button onClick={() => updateVideoSurface({ enabled: !surfaceConfig.enabled })} style={{ background: 'rgba(0,0,0,0.7)', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer', color: surfaceConfig.enabled ? '#34d399' : '#94a3b8' }}>
+                          <Eye style={{ width: 12, height: 12 }} />
+                        </button>
+                        <button onClick={() => updateVideoSurface({ videoUrl: '', enabled: false })} style={{ background: 'rgba(0,0,0,0.7)', color: '#f87171', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer' }}>
+                          <X style={{ width: 12, height: 12 }} />
+                        </button>
                       </div>
                     </div>
 
@@ -473,22 +468,27 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="space-y-2">
-                    <button onClick={() => setShowLibrary(!showLibrary)} className="w-full flex items-center justify-between px-3 py-2 rounded-lg border text-sm" style={{ borderColor, background: panelItemBgAlt, color: textColor }}>
-                      <span className="flex items-center gap-2"><Play className="w-4 h-4" style={{ color: accentColor }} /> Browse Video Library</span>
-                      <ChevronDown className={`w-4 h-4 transition-transform ${showLibrary ? 'rotate-180' : ''}`} style={{ color: accentColor }} />
-                    </button>
-                    <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed cursor-pointer transition-colors" style={{ borderColor }}>
-                      <input type="file" accept="video/*" onChange={handleUpload} className="hidden" />
-                      {uploading ? <div className="animate-spin rounded-full h-4 w-4 border-2 border-t-transparent" style={{ borderColor: accentColor }} /> : <Upload className="w-4 h-4" style={{ color: textMuted }} />}
-                      <span className="text-xs" style={{ color: textMuted }}>Upload video</span>
-                    </label>
-                    <input type="text" placeholder="Paste video URL + Enter..." className="w-full bg-transparent border rounded px-2 py-1.5 text-xs outline-none" style={{ borderColor, color: textColor }}
-                      onKeyDown={e => { if (e.key === 'Enter' && e.target.value.trim()) { updateVideoSurface({ videoUrl: e.target.value.trim(), enabled: true }); } }}
-                    />
-                  </div>
                 )}
+
+                {/* Library / Upload / URL — always visible */}
+                <div className="space-y-2">
+                  <button onClick={() => setShowLibrary(!showLibrary)} className="w-full flex items-center justify-between px-3 py-2 rounded-lg border text-sm" style={{ borderColor, background: panelItemBgAlt, color: textColor }}>
+                    <span className="flex items-center gap-2"><Play className="w-4 h-4" style={{ color: accentColor }} /> {surfaceConfig.videoUrl ? 'Change Video' : 'Browse Video Library'}</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${showLibrary ? 'rotate-180' : ''}`} style={{ color: accentColor }} />
+                  </button>
+                  {!surfaceConfig.videoUrl && (
+                    <>
+                      <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed cursor-pointer transition-colors" style={{ borderColor }}>
+                        <input type="file" accept="video/*" onChange={handleUpload} className="hidden" />
+                        {uploading ? <div className="animate-spin rounded-full h-4 w-4 border-2 border-t-transparent" style={{ borderColor: accentColor }} /> : <Upload className="w-4 h-4" style={{ color: textMuted }} />}
+                        <span className="text-xs" style={{ color: textMuted }}>Upload video</span>
+                      </label>
+                      <input type="text" placeholder="Paste video URL + Enter..." className="w-full bg-transparent border rounded px-2 py-1.5 text-xs outline-none" style={{ borderColor, color: textColor }}
+                        onKeyDown={e => { if (e.key === 'Enter' && e.target.value.trim()) { updateVideoSurface({ videoUrl: e.target.value.trim(), enabled: true }); } }}
+                      />
+                    </>
+                  )}
+                </div>
 
                 {/* Video Library */}
                 {showLibrary && (
