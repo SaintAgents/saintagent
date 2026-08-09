@@ -94,8 +94,41 @@
 }
 
 /* =====================================================
-   HERO SECTIONS - spacer above all page heroes
+   HERO SECTIONS - fixed/sticky hero that stays in place
+   while content scrolls over it
    ===================================================== */
+.page-hero {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+}
+/* Content after the hero scrolls OVER it with a solid background */
+.page-hero ~ * {
+  position: relative;
+  z-index: 1;
+}
+html[data-theme='light'] .page-hero ~ *,
+[data-theme='light'] .page-hero ~ *,
+html[data-theme='custom'] .page-hero ~ *,
+[data-theme='custom'] .page-hero ~ * {
+  background-color: #f8fafc;
+}
+html[data-theme='dark'] .page-hero ~ *,
+[data-theme='dark'] .page-hero ~ * {
+  background-color: #050505;
+}
+html[data-theme='hacker'] .page-hero ~ *,
+[data-theme='hacker'] .page-hero ~ * {
+  background-color: #000000;
+}
+/* When video background is active, content bg should be semi-transparent */
+html[data-video-active='true'] .page-hero ~ * {
+  background-color: transparent !important;
+}
+/* When canvas bg effect is active, content bg transparent */
+html[data-bg-active='true'] .page-hero ~ * {
+  background-color: transparent !important;
+}
 html[data-theme='light'] .page-hero,
 [data-theme='light'] .page-hero {
   margin-top: 0 !important;
