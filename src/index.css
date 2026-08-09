@@ -290,6 +290,33 @@ html[data-theme='hacker'] [data-badge-card] span {
   color: #00ff00 !important;
 }
 
+/* =====================================================
+   PROFILE COMPLETION CARD — Dark/Hacker theme overrides
+   ===================================================== */
+html[data-theme='dark'] [data-profile-completion],
+html[data-theme='hacker'] [data-profile-completion] {
+  background: rgba(10, 15, 30, 0.92) !important;
+  background-image: none !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+html[data-theme='dark'] [data-profile-completion] button:not([class*='bg-gradient']):not([class*='bg-emerald']),
+html[data-theme='dark'] [data-profile-completion] .bg-white {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(99, 102, 241, 0.2) !important;
+}
+
+html[data-theme='dark'] [data-profile-completion] .bg-gradient-to-r.from-violet-100 {
+  background: rgba(99, 102, 241, 0.15) !important;
+  background-image: none !important;
+}
+
+html[data-theme='hacker'] [data-profile-completion] button:not([class*='bg-gradient']):not([class*='bg-emerald']),
+html[data-theme='hacker'] [data-profile-completion] .bg-white {
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  border-color: #00ff00 !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;

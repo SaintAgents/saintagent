@@ -351,7 +351,7 @@ Only include fields that are in the missing list: ${missing.join(', ')}`,
 
   return (
     <>
-      <Card className="border-violet-200 bg-gradient-to-br from-violet-50/70 to-indigo-50/70 overflow-hidden">
+      <Card data-profile-completion className="border-violet-200 bg-gradient-to-br from-violet-50/70 to-indigo-50/70 overflow-hidden">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg flex items-center gap-2">
