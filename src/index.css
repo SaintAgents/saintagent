@@ -249,13 +249,28 @@ html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] a {
   text-shadow: none !important;
   filter: none !important;
 }
-html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] button,
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] button:not([role="switch"]),
 html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] [role="button"] {
   background-color: transparent !important;
   background-image: none !important;
   border-color: transparent !important;
   box-shadow: none !important;
   filter: none !important;
+}
+/* Switch toggle inside toolbar — needs visible track + thumb */
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] button[role="switch"] {
+  background-color: #475569 !important;
+  border-color: #475569 !important;
+  border-radius: 9999px !important;
+  filter: none !important;
+}
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] button[role="switch"][data-state="checked"] {
+  background-color: #6366F1 !important;
+  border-color: #6366F1 !important;
+}
+html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] button[role="switch"] span {
+  background-color: #ffffff !important;
+  border-radius: 9999px !important;
 }
 html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] input,
 html[data-theme][data-theme] [data-toolbar-panel][data-toolbar-panel] textarea {
