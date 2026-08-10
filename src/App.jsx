@@ -32,6 +32,7 @@ import ReviewerWorkflow from './pages/ReviewerWorkflow';
 import ReviewManagerDashboard from './pages/ReviewManagerDashboard';
 import VCardLanding from './pages/VCardLanding';
 import CelestialInsights from './pages/CelestialInsights';
+import BusinessPlanBuilder from './pages/BusinessPlanBuilder';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -165,6 +166,7 @@ const AppRoutes = () => (
     <Route path="/ReviewerWorkflow" element={<LayoutWrapper currentPageName="ReviewerWorkflow"><ReviewerWorkflow /></LayoutWrapper>} />
     <Route path="/ReviewManagerDashboard" element={<LayoutWrapper currentPageName="ReviewManagerDashboard"><ReviewManagerDashboard /></LayoutWrapper>} />
     <Route path="/CelestialInsights" element={<LayoutWrapper currentPageName="CelestialInsights"><CelestialInsights /></LayoutWrapper>} />
+    <Route path="/BusinessPlanBuilder" element={<LayoutWrapper currentPageName="BusinessPlanBuilder"><BusinessPlanBuilder /></LayoutWrapper>} />
     <Route path="/vcard/:saNumber" element={<VCardLanding />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />

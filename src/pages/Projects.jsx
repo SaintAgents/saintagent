@@ -192,6 +192,12 @@ export default function Projects() {
                 <span className="hidden md:inline">Budget Forecast</span>
               </Button>
             </Link>
+            <Link to="/BusinessPlanBuilder">
+              <Button variant="outline" className="rounded-xl gap-2 border-amber-300 text-amber-700 hover:bg-amber-50">
+                <Folder className="w-4 h-4" />
+                <span className="hidden md:inline">GGT Business Plan</span>
+              </Button>
+            </Link>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>

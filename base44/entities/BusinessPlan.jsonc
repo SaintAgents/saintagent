@@ -1,0 +1,350 @@
+{
+  "name": "BusinessPlan",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to Project entity if linked"
+    },
+    "owner_id": {
+      "type": "string"
+    },
+    "owner_name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_progress",
+        "complete",
+        "submitted",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "funding_track": {
+      "type": "string",
+      "enum": [
+        "humanitarian",
+        "infrastructure",
+        "commercial",
+        "hybrid"
+      ],
+      "description": "Funding Track Classification"
+    },
+    "project_type": {
+      "type": "string",
+      "enum": [
+        "eco_agriculture",
+        "clean_energy",
+        "local_infrastructure",
+        "technology_platform",
+        "water_stewardship",
+        "housing",
+        "healing_wellness",
+        "education",
+        "governance",
+        "other"
+      ]
+    },
+    "entity_structure": {
+      "type": "string",
+      "enum": [
+        "508c1a",
+        "sovereign_trust",
+        "public_benefit_corp",
+        "decentralized_association",
+        "llc",
+        "cooperative",
+        "ngo",
+        "other"
+      ]
+    },
+    "sovereign_intake": {
+      "type": "object",
+      "description": "Module 1: Sovereign & Asset Alignment data",
+      "properties": {
+        "mission_statement": {
+          "type": "string"
+        },
+        "asset_description": {
+          "type": "string"
+        },
+        "rwa_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "land_stewardship": {
+          "type": "string"
+        },
+        "tokenization_ready": {
+          "type": "boolean",
+          "default": false
+        },
+        "ggrr_alignment": {
+          "type": "string"
+        },
+        "collateral_value": {
+          "type": "number"
+        },
+        "collateral_currency": {
+          "type": "string",
+          "default": "USD"
+        }
+      }
+    },
+    "financial_model": {
+      "type": "object",
+      "description": "Module 2: Dual-Engine Financial Modeling",
+      "properties": {
+        "traditional": {
+          "type": "object",
+          "properties": {
+            "revenue_year1": {
+              "type": "number"
+            },
+            "revenue_year2": {
+              "type": "number"
+            },
+            "revenue_year3": {
+              "type": "number"
+            },
+            "costs_year1": {
+              "type": "number"
+            },
+            "costs_year2": {
+              "type": "number"
+            },
+            "costs_year3": {
+              "type": "number"
+            },
+            "capex": {
+              "type": "number"
+            },
+            "runway_months": {
+              "type": "number"
+            },
+            "break_even_month": {
+              "type": "number"
+            }
+          }
+        },
+        "regenerative": {
+          "type": "object",
+          "properties": {
+            "ecological_yield": {
+              "type": "string"
+            },
+            "carbon_offset_tons": {
+              "type": "number"
+            },
+            "biodiversity_score": {
+              "type": "number"
+            },
+            "community_roi": {
+              "type": "string"
+            },
+            "local_economic_velocity": {
+              "type": "string"
+            },
+            "jobs_created": {
+              "type": "number"
+            },
+            "lives_impacted": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "impact_matrix": {
+      "type": "object",
+      "description": "Module 3: Impact & Stewardship Matrix",
+      "properties": {
+        "sdg_goals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "planetary_health_indicators": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "humanitarian_allocation_pct": {
+          "type": "number",
+          "default": 10
+        },
+        "humanitarian_allocation_amount": {
+          "type": "number"
+        },
+        "beneficiary_communities": {
+          "type": "string"
+        },
+        "impact_measurement_method": {
+          "type": "string"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "description": "Module 4: Regulatory, Governance & Trust Framework",
+      "properties": {
+        "entity_structure_notes": {
+          "type": "string"
+        },
+        "multi_sig_required": {
+          "type": "boolean",
+          "default": false
+        },
+        "signatories_count": {
+          "type": "number"
+        },
+        "oversight_board": {
+          "type": "boolean",
+          "default": false
+        },
+        "transparency_measures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compliance_jurisdictions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "custody_protocol": {
+          "type": "string"
+        }
+      }
+    },
+    "risk_assessment": {
+      "type": "object",
+      "description": "Risk & Resiliency data",
+      "properties": {
+        "supply_chain_risks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "climate_factors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "regulatory_risks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mitigation_strategies": {
+          "type": "string"
+        },
+        "stress_test_score": {
+          "type": "number"
+        }
+      }
+    },
+    "resource_calculator": {
+      "type": "object",
+      "description": "Interactive Resource Calculator data",
+      "properties": {
+        "land_area_acres": {
+          "type": "number"
+        },
+        "material_costs": {
+          "type": "number"
+        },
+        "energy_requirements_kwh": {
+          "type": "number"
+        },
+        "labor_headcount": {
+          "type": "number"
+        },
+        "labor_cost_monthly": {
+          "type": "number"
+        },
+        "total_estimated_cost": {
+          "type": "number"
+        }
+      }
+    },
+    "escrow_milestones": {
+      "type": "array",
+      "description": "Milestone-Based Escrow Planner",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "target_date": {
+            "type": "string"
+          },
+          "verification_method": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "in_progress",
+              "verified",
+              "released"
+            ]
+          }
+        }
+      },
+      "default": []
+    },
+    "amount_requested": {
+      "type": "number"
+    },
+    "geographic_focus": {
+      "type": "string"
+    },
+    "team_size": {
+      "type": "number"
+    },
+    "timeline_months": {
+      "type": "number"
+    },
+    "pitch_deck_url": {
+      "type": "string"
+    },
+    "dossier_url": {
+      "type": "string"
+    },
+    "ai_generated_summary": {
+      "type": "string"
+    },
+    "completion_pct": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "owner_id"
+  ]
+}
