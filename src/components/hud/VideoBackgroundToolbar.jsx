@@ -43,6 +43,9 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
       surfaceOpacity: 85, heroOpacity: 30, bgOpacity: 90, contentStart: 0,
       whiteWash: 0, cardBg: 90, cardOpacity: 95, cmdBackdrop: 85, applyAll: true,
       heroFixed: true,
+      fontDarker: 0, fontLighter: 100, fontSize: 100,
+      bgVideoOpacity: 90, heroVideoHeight: 100, glow: 0,
+      bgOverlay: 0, cmdCards: 100,
       ...saved,
     };
   });
@@ -544,6 +547,21 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                 <SliderRow label="Card Background" value={surfaceOpacity.cardBg} min={0} max={100} onChange={v => updateSurfaceOpacity({ cardBg: v })} accent={accentColor} labelColor={textMuted} unit="%" />
                 <SliderRow label="Card Opacity" value={surfaceOpacity.cardOpacity} min={0} max={100} onChange={v => updateSurfaceOpacity({ cardOpacity: v })} accent={accentColor} labelColor={textMuted} unit="%" />
                 <SliderRow label="Cmd Deck Backdrop" value={surfaceOpacity.cmdBackdrop} min={0} max={100} onChange={v => updateSurfaceOpacity({ cmdBackdrop: v })} accent={accentColor} labelColor={textMuted} unit="%" />
+                <SliderRow label="Command Deck Cards" value={surfaceOpacity.cmdCards ?? 100} min={0} max={100} onChange={v => updateSurfaceOpacity({ cmdCards: v })} accent={accentColor} labelColor={textMuted} unit="%" />
+
+                <div style={{ borderTop: `1px solid ${dividerBg}`, paddingTop: 8, marginTop: 4 }}>
+                  <SliderRow label="Font Darker" value={surfaceOpacity.fontDarker ?? 0} min={0} max={100} onChange={v => updateSurfaceOpacity({ fontDarker: v })} accent={accentColor} labelColor={textMuted} />
+                  <SliderRow label="Font Lighter" value={surfaceOpacity.fontLighter ?? 100} min={0} max={100} onChange={v => updateSurfaceOpacity({ fontLighter: v })} accent={accentColor} labelColor={textMuted} />
+                  <SliderRow label="Font Size" value={surfaceOpacity.fontSize ?? 100} min={50} max={150} onChange={v => updateSurfaceOpacity({ fontSize: v })} accent={accentColor} labelColor={textMuted} unit="%" />
+                </div>
+
+                <div style={{ borderTop: `1px solid ${dividerBg}`, paddingTop: 8, marginTop: 4 }}>
+                  <SliderRow label="Background Video Opacity" value={surfaceOpacity.bgVideoOpacity ?? 90} min={0} max={100} onChange={v => updateSurfaceOpacity({ bgVideoOpacity: v })} accent={accentColor} labelColor={textMuted} unit="%" />
+                  <SliderRow label="Hero Video Height" value={surfaceOpacity.heroVideoHeight ?? 100} min={20} max={100} onChange={v => updateSurfaceOpacity({ heroVideoHeight: v })} accent={accentColor} labelColor={textMuted} unit="vh" />
+                  <SliderRow label="Glow" value={surfaceOpacity.glow ?? 0} min={0} max={100} onChange={v => updateSurfaceOpacity({ glow: v })} accent={accentColor} labelColor={textMuted} unit="%" />
+                  <SliderRow label="Background Overlay" value={surfaceOpacity.bgOverlay ?? 0} min={0} max={100} onChange={v => updateSurfaceOpacity({ bgOverlay: v })} accent={accentColor} labelColor={textMuted} unit="%" />
+                </div>
+
                 <div className="flex items-center justify-between pt-1">
                   <span className="text-xs" style={{ color: textMuted }}>Apply to all pages</span>
                   <Switch checked={surfaceOpacity.applyAll} onCheckedChange={v => updateSurfaceOpacity({ applyAll: v })} />
