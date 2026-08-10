@@ -99,10 +99,11 @@ export default function SurfaceOpacityController() {
       text-shadow: 0 0 ${surface.fontDarker / 10}px rgba(0,0,0,${surface.fontDarker / 100}) !important;
     }` : ''}
 
+    ${(surface.fontLighter ?? 100) !== 100 ? `
     main p, main span, main h1, main h2, main h3, main h4, main h5, main h6,
     main a, main label, main li {
-      filter: brightness(${(surface.fontLighter ?? 100) / 100}) !important;
-    }
+      filter: brightness(${surface.fontLighter / 100}) !important;
+    }` : ''}
 
     /* ========== FONT SIZE ========== */
     ${(surface.fontSize ?? 100) !== 100 ? `
