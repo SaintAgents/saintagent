@@ -156,7 +156,7 @@ const NAV_GROUPS = [
   { key: 'connect', label: 'Connect', icon: Users, items: ['forum', 'advice', 'mentorship', 'meetings', 'teams', 'profiles', 'crm', 'activity', 'messages', 'circles', 'events', 'communityfeed'] },
   { key: 'build', label: 'Build & Manage', icon: Folder, items: ['projects', 'deals', 'reviewworkflow', 'reviewmanager', 'business5d', 'betafeedback', 'marketplace', 'broadcast', 'schedule', 'leader', 'studio', 'contentstudio', 'affiliate', 'collaborators'] },
   { key: 'treasury', label: 'Treasury & Exchange', icon: Coins, isTreasury: true, items: ['ggt', 'g3dex', 'gggcrypto', 'drx', 'authority144', 'sovereignalliance'] },
-  { key: 'intelligence', label: 'Intelligence', icon: Orbit, items: ['synchronicity'] },
+  { key: 'intelligence', label: 'Intelligence', icon: Orbit, items: ['synchronicity', 'matches', 'celestial'] },
 ];
 
 // Build flat NAV_ITEMS from groups for backward compatibility (popup nav, etc.)
