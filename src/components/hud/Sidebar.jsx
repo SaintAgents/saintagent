@@ -96,62 +96,74 @@ import { createPageUrl } from '@/utils';
 import { getStoredViewMode, isNavItemVisible } from './DeckViewModeSelector';
 
 
-// Web pages group - these will have special styling
-const WEB_PAGES = ['authority144', 'topgggmission', 'gggcrypto', 'sovereignalliance', 'ggt'];
+// Flat lookup for all nav items
+const ALL_NAV_ITEMS = {
+  command: { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
+  news: { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
+  gallery: { id: 'gallery', label: 'Hero Gallery', Icon: Eye, page: 'CommandDeck', hint: 'View and explore the hero image gallery', action: 'openGallery' },
+  insights: { id: 'insights', label: 'Insights & Analysis', Icon: BookOpen, page: 'Insights', hint: 'Deep-dive analyses, strategic frameworks, and thought leadership' },
+  videos: { id: 'videos', label: 'SaintTube', Icon: Play, page: 'Videos', hint: 'Upload and watch videos (max 20 min)' },
+  testimonials: { id: 'testimonials', label: 'Testimonials', Icon: Quote, page: 'Testimonials', hint: 'View and share community testimonials' },
+  glossary: { id: 'glossary', label: 'Glossary', Icon: BookOpen, page: 'Glossary', hint: 'Reference guide to SaintAgent terms, Ultranet, and ecosystem concepts' },
+  celestial: { id: 'celestial', label: 'Celestial Insights', Icon: Star, page: 'CelestialInsights', hint: 'Personalized oracle readings — horoscope, tarot, I Ching, runes & more' },
+  initiations: { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
+  quests: { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
+  missions: { id: 'missions', label: 'Missions', Icon: Zap, page: 'Missions', hint: 'Join collaborative missions and quests' },
+  matches: { id: 'matches', label: 'Matches', Icon: CircleAlert, page: 'Matches', hint: 'AI-powered connections based on your profile' },
+  gamification: { id: 'gamification', label: 'Gamification', Icon: Sparkles, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
+  leaderboards: { id: 'leaderboards', label: 'Leaderboards', Icon: Medal, page: 'Leaderboards', hint: 'View rankings, top players, and your position' },
+  lottery: { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
+  topgggmission: { id: 'topgggmission', label: 'Top GGG Mission', Icon: Globe, page: 'TopGGGMission', hint: 'The Ultranet Era - Sovereign Digital Infrastructure' },
+  forum: { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
+  advice: { id: 'advice', label: 'Wisdom Exchange', Icon: IterationCcw, page: 'Advice', hint: 'Seek guidance, share wisdom, AI-powered insights' },
+  mentorship: { id: 'mentorship', label: 'Mentorship', Icon: Users, page: 'Mentorship', hint: 'Find mentors or become one' },
+  meetings: { id: 'meetings', label: 'Meetings', Icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
+  teams: { id: 'teams', label: 'Teams & Guilds', Icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
+  profiles: { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
+  crm: { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
+  activity: { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
+  messages: { id: 'messages', label: 'Messages', Icon: MessageCircle, page: 'Messages', hint: 'Direct and group conversations' },
+  circles: { id: 'circles', label: 'Circles', Icon: Users, page: 'Circles', hint: 'Join interest and value-based communities' },
+  events: { id: 'events', label: 'Events', Icon: CircleDot, page: 'Events', hint: 'Discover and create meetups' },
+  communityfeed: { id: 'communityfeed', label: 'Community Feed', Icon: FileText, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
+  projects: { id: 'projects', label: 'Projects', Icon: Folder, page: 'Projects', hint: 'Manage and discover projects' },
+  deals: { id: 'deals', label: 'Deal Tracking', Icon: Target, page: 'Deals', hint: 'Manage sales pipeline and deals' },
+  reviewworkflow: { id: 'reviewworkflow', label: 'Review Queue', Icon: ClipboardCheck, page: 'ReviewerWorkflow', hint: 'Your assigned project reviews and guided review workflow' },
+  reviewmanager: { id: 'reviewmanager', label: 'Review Manager', Icon: Shield, page: 'ReviewManagerDashboard', hint: 'Assign reviews, monitor progress, and audit reviewer performance', adminOnly: true },
+  business5d: { id: 'business5d', label: '5D Business Entities', Icon: Building2, page: 'BusinessEntities', hint: 'Conscious businesses & transformational organizations' },
+  betafeedback: { id: 'betafeedback', label: 'Beta Feedback', Icon: Smile, page: 'BetaFeedback', hint: 'Submit feedback to help improve the platform' },
+  marketplace: { id: 'marketplace', label: 'Marketplace', Icon: ShoppingBag, page: 'Marketplace', hint: 'Browse and list services' },
+  broadcast: { id: 'broadcast', label: 'Broadcast', Icon: Mic, page: 'Broadcast', hint: 'Live podcasts, town halls & community broadcasts' },
+  schedule: { id: 'schedule', label: 'Global Schedule', Icon: Globe, page: 'Schedule', hint: 'View all meetings, events & broadcasts in one place' },
+  leader: { id: 'leader', label: 'Leader Channel', Icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
+  studio: { id: 'studio', label: 'Creator Studio', Icon: Paintbrush, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
+  contentstudio: { id: 'contentstudio', label: 'Content Studio', Icon: Palette, page: 'ContentStudio', hint: 'Create, collaborate, and publish content with AI assistance' },
+  affiliate: { id: 'affiliate', label: 'Affiliate Center', Icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
+  collaborators: { id: 'collaborators', label: 'Collaborators', Icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
+  ggt: { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation' },
+  g3dex: { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
+  gggcrypto: { id: 'gggcrypto', label: 'GGG Crypto', Icon: Coins, page: 'GGGCrypto', hint: 'Gaia Global Gold - Gold-backed cryptocurrency with staking and swap' },
+  drx: { id: 'drx', label: 'Digital Rights Exchange', Icon: Key, page: 'DigitalRightsExchange', hint: 'Programmable digital asset rights - license, rent, and monetize your content' },
+  authority144: { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Divine Currency Control & 144,000 Sacred Mission' },
+  sovereignalliance: { id: 'sovereignalliance', label: 'Sovereign Alliance', Icon: Shield, page: 'SovereignAlliance', hint: 'A to Z Guide to Freedom - Education & Action for Sovereignty' },
+  synchronicity: { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Orbit, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
+  settings: { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
+};
 
+const NAV_GROUPS = [
+  { key: 'discover', label: 'Discover', icon: Newspaper, items: ['news', 'gallery', 'insights', 'videos', 'testimonials', 'glossary', 'celestial'] },
+  { key: 'participate', label: 'Participate', icon: Trophy, items: ['initiations', 'quests', 'missions', 'matches', 'gamification', 'leaderboards', 'lottery', 'topgggmission'] },
+  { key: 'connect', label: 'Connect', icon: Users, items: ['forum', 'advice', 'mentorship', 'meetings', 'teams', 'profiles', 'crm', 'activity', 'messages', 'circles', 'events', 'communityfeed'] },
+  { key: 'build', label: 'Build & Manage', icon: Folder, items: ['projects', 'deals', 'reviewworkflow', 'reviewmanager', 'business5d', 'betafeedback', 'marketplace', 'broadcast', 'schedule', 'leader', 'studio', 'contentstudio', 'affiliate', 'collaborators'] },
+  { key: 'treasury', label: 'Treasury & Exchange', icon: Coins, isTreasury: true, items: ['ggt', 'g3dex', 'gggcrypto', 'drx', 'authority144', 'sovereignalliance'] },
+  { key: 'intelligence', label: 'Intelligence', icon: Orbit, items: ['synchronicity'] },
+];
+
+// Build flat NAV_ITEMS from groups for backward compatibility (popup nav, etc.)
 const NAV_ITEMS = [
-  { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
-  { id: 'betafeedback', label: 'Beta Feedback', Icon: Smile, page: 'BetaFeedback', hint: 'Submit feedback to help improve the platform' },
-  { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
-  { id: 'advice', label: 'Wisdom Exchange', Icon: IterationCcw, page: 'Advice', hint: 'Seek guidance, share wisdom, AI-powered insights' },
-  { id: 'initiations', label: 'Initiations', Icon: Eye, page: 'Initiations', hint: 'Sacred pathways, 144K Activation & 7th Seal initiations' },
-  { id: 'quests', label: 'Quests', Icon: Trophy, page: 'Quests', hint: 'Quest system, badges, leaderboards & sacred connections' },
-  { id: 'synchronicity', label: 'Synchronicity Engine', Icon: Orbit, page: 'SynchronicityEngine', hint: 'Share and discover meaningful coincidences' },
-  { id: 'celestial', label: 'Celestial Insights', Icon: Star, page: 'CelestialInsights', hint: 'Personalized oracle readings — horoscope, tarot, I Ching, runes & more' },
-  { id: 'gamification', label: 'Gamification', Icon: Sparkles, page: 'Gamification', hint: 'Challenges, achievements, and leaderboards' },
-  { id: 'leaderboards', label: 'Leaderboards', Icon: Medal, page: 'Leaderboards', hint: 'View rankings, top players, and your position' },
-  { id: 'mentorship', label: 'Mentorship', Icon: Users, page: 'Mentorship', hint: 'Find mentors or become one' },
-  { id: 'matches', label: 'Matches', Icon: CircleAlert, page: 'Matches', hint: 'AI-powered connections based on your profile' },
-  { id: 'meetings', label: 'Meetings', Icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
-  { id: 'missions', label: 'Missions', Icon: Zap, page: 'Missions', hint: 'Join collaborative missions and quests' },
-  { id: 'teams', label: 'Teams & Guilds', Icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
-  { id: 'projects', label: 'Projects', Icon: Folder, page: 'Projects', hint: 'Manage and discover projects' },
-  { id: 'profiles', label: 'Profiles', Icon: User, page: 'Profiles', hint: 'Discover members by rank and expertise' },
-  { id: 'crm', label: 'Contact Network', Icon: Users, page: 'CRM', hint: 'Federated CRM with trust-gated sharing' },
-  { id: 'deals', label: 'Deal Tracking', Icon: Target, page: 'Deals', hint: 'Manage sales pipeline and deals' },
-  { id: 'business5d', label: '5D Business Entities', Icon: Building2, page: 'BusinessEntities', hint: 'Conscious businesses & transformational organizations' },
-  { id: 'drx', label: 'Digital Rights Exchange', Icon: Key, page: 'DigitalRightsExchange', hint: 'Programmable digital asset rights - license, rent, and monetize your content' },
-  { id: 'activity', label: 'Activity Feed', Icon: TrendingUp, page: 'ActivityFeed', hint: 'See recent community activity' },
-  { id: 'communityfeed', label: 'Community Feed', Icon: FileText, page: 'CommunityFeed', hint: 'Share and engage with community posts' },
-  { id: 'collaborators', label: 'Collaborators', Icon: Users, page: 'FindCollaborators', hint: 'Find people to work with' },
-  { id: 'marketplace', label: 'Marketplace', Icon: ShoppingBag, page: 'Marketplace', hint: 'Browse and list services' },
-  { id: 'messages', label: 'Messages', Icon: MessageCircle, page: 'Messages', hint: 'Direct and group conversations' },
-  { id: 'events', label: 'Events', Icon: CircleDot, page: 'Events', hint: 'Discover and create meetups' },
-  { id: 'broadcast', label: 'Broadcast', Icon: Mic, page: 'Broadcast', hint: 'Live podcasts, town halls & community broadcasts' },
-  { id: 'schedule', label: 'Global Schedule', Icon: Globe, page: 'Schedule', hint: 'View all meetings, events & broadcasts in one place' },
-  { id: 'leader', label: 'Leader Channel', Icon: Radio, page: 'LeaderChannel', hint: 'Exclusive channel for verified leaders' },
-  { id: 'circles', label: 'Circles', Icon: Users, page: 'Circles', hint: 'Join interest and value-based communities' },
-  { id: 'studio', label: 'Creator Studio', Icon: Paintbrush, page: 'Studio', hint: 'Manage your offerings, content, and subscriptions' },
-  { id: 'contentstudio', label: 'Content Studio', Icon: Palette, page: 'ContentStudio', hint: 'Create, collaborate, and publish content with AI assistance' },
-  { id: 'affiliate', label: 'Affiliate Center', Icon: Share2, page: 'AffiliateCenter', hint: 'Share your referral link and track referrals' },
-  { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
-  { id: 'gallery', label: 'Hero Gallery', Icon: Eye, page: 'CommandDeck', hint: 'View and explore the hero image gallery', action: 'openGallery' },
-  { id: 'insights', label: 'Insights & Analysis', Icon: BookOpen, page: 'Insights', hint: 'Deep-dive analyses, strategic frameworks, and thought leadership' },
-  { id: 'g3dex', label: 'G3DEX Trading', Icon: Coins, page: 'G3Dex', hint: 'Swap, trade Neo-NFTs, escrow commodities & gold-backed assets' },
-  { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
-  { id: 'videos', label: 'SaintTube', Icon: Play, page: 'Videos', hint: 'Upload and watch videos (max 20 min)' },
-  { id: 'testimonials', label: 'Testimonials', Icon: Quote, page: 'Testimonials', hint: 'View and share community testimonials' },
-  { id: 'glossary', label: 'Glossary', Icon: BookOpen, page: 'Glossary', hint: 'Reference guide to SaintAgent terms, Ultranet, and ecosystem concepts' },
-  { id: 'reviewworkflow', label: 'Review Queue', Icon: ClipboardCheck, page: 'ReviewerWorkflow', hint: 'Your assigned project reviews and guided review workflow' },
-  { id: 'reviewmanager', label: 'Review Manager', Icon: Shield, page: 'ReviewManagerDashboard', hint: 'Assign reviews, monitor progress, and audit reviewer performance', adminOnly: true },
-  // Web Pages Group - grouped together with special styling
-  { id: 'ggt', label: 'Gaia Global Treasury', Icon: Shield, page: 'GaiaGlobalTreasury', hint: 'Transparent regulatory framework for verified collateral & global asset reconciliation', isWebPage: true },
-  { id: 'authority144', label: '144 Authority', Icon: Crown, page: 'Authority144', hint: 'Gaia Global Treasury - Divine Currency Control & 144,000 Sacred Mission', isWebPage: true },
-  { id: 'topgggmission', label: 'Top GGG Mission', Icon: Globe, page: 'TopGGGMission', hint: 'The Ultranet Era - Sovereign Digital Infrastructure for Humanity\'s Golden Age', isWebPage: true },
-  { id: 'gggcrypto', label: 'GGG Crypto', Icon: Coins, page: 'GGGCrypto', hint: 'Gaia Global Gold - Gold-backed cryptocurrency with staking and swap', isWebPage: true },
-  { id: 'sovereignalliance', label: 'Sovereign Alliance', Icon: Shield, page: 'SovereignAlliance', hint: 'A to Z Guide to Freedom - Education & Action for Sovereignty', isWebPage: true },
-  // Settings at the end
-  { id: 'settings', label: 'Settings', Icon: Settings, page: 'Settings', hint: 'Account and app preferences' },
+  ALL_NAV_ITEMS.command,
+  ...NAV_GROUPS.flatMap(g => g.items.map(id => ALL_NAV_ITEMS[id]).filter(Boolean)),
+  ALL_NAV_ITEMS.settings,
 ];
 
 const STATUS_OPTIONS = [
@@ -183,6 +195,11 @@ export default function Sidebar({
   const [navPopupOpen, setNavPopupOpen] = useState(false);
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
+  // Track which nav groups are expanded — default: group containing active page
+  const [expandedGroups, setExpandedGroups] = useState(() => {
+    const activeGroup = NAV_GROUPS.find(g => g.items.includes(currentPage));
+    return activeGroup ? { [activeGroup.key]: true } : { discover: true };
+  });
   const [presenceOpen, setPresenceOpen] = useState(true);
   const [presenceHidden, setPresenceHidden] = useState(() => {
     try { return localStorage.getItem('presenceHidden') === 'true'; } catch { return false; }
@@ -208,6 +225,17 @@ export default function Sidebar({
   });
   const [viewMode, setViewMode] = useState(getStoredViewMode);
   const isDark = theme === 'dark';
+
+  // Auto-expand the group containing the active page
+  React.useEffect(() => {
+    const activeGroup = NAV_GROUPS.find(g => g.items.includes(currentPage));
+    if (activeGroup) {
+      setExpandedGroups(prev => {
+        if (prev[activeGroup.key]) return prev;
+        return { [activeGroup.key]: true };
+      });
+    }
+  }, [currentPage]);
 
   // Listen for view mode changes from Command Deck
   React.useEffect(() => {
@@ -421,155 +449,198 @@ export default function Sidebar({
           </button>
         </div>
         {navOpen && (
-          <nav className={cn("p-3 pt-0 space-y-1", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
+          <nav className={cn("p-3 pt-0 space-y-0.5", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
             <TooltipProvider delayDuration={200}>
+              {/* Command Deck — always at top */}
               {(() => {
-                const filteredItems = NAV_ITEMS.filter(item => {
-                  if (item.adminOnly && currentUser?.role !== 'admin') return false;
-                  if (!isNavItemVisible(item.id, viewMode)) return false;
-                  return true;
-                });
-                
-                // Find where web pages start
-                const webPageStartIndex = filteredItems.findIndex(item => item.isWebPage);
-                const hasWebPages = webPageStartIndex !== -1;
-                
-                return filteredItems.map((item, index) => {
-                  const isActive = currentPage === item.id;
-                  const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
-                  const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
-                  const isLocked = item.locked || isLeaderLocked;
-                  const showExpanded = !isCollapsed || inPopup;
-                  const ItemIcon = item.Icon;
-                  
-                  // Check if this is the first web page item
-                  const isFirstWebPage = hasWebPages && index === webPageStartIndex;
-                  // Check if this is a web page item
-                  const isWebPage = item.isWebPage;
-                  // Check if this is the last web page (next item is settings or end)
-                  const nextItem = filteredItems[index + 1];
-                  const isLastWebPage = isWebPage && (!nextItem || !nextItem.isWebPage);
-                  
-                  const navLink = (
-                    <Link
-                      key={item.id}
-                      to={isLocked ? '#' : createPageUrl(item.page)}
-                      onClick={(e) => {
-                        if (isLocked) { e.preventDefault(); return; }
-                        if (item.action === 'openGallery') {
-                          e.preventDefault();
-                          document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex: 0 } }));
-                        }
-                      }}
+                const item = ALL_NAV_ITEMS.command;
+                if (!isNavItemVisible(item.id, viewMode)) return null;
+                const isActive = currentPage === item.id;
+                const showExpanded = !isCollapsed || inPopup;
+                const link = (
+                  <Link
+                    to={createPageUrl(item.page)}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
+                      isActive ? "bg-violet-100 text-violet-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                      isCollapsed && !inPopup && "px-1.5 py-1.5 justify-center"
+                    )}
+                  >
+                    <LayoutDashboard className={cn("w-5 h-5 shrink-0", isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600")} />
+                    {showExpanded && <span className="font-medium text-sm text-slate-900">{item.label}</span>}
+                  </Link>
+                );
+                return (
+                  <Tooltip>
+                    <TooltipTrigger asChild>{link}</TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
+                      <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                      <p className="text-xs text-slate-600">{item.hint}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })()}
+
+              {/* Grouped Navigation */}
+              {NAV_GROUPS.map(group => {
+                const groupItems = group.items
+                  .map(id => ALL_NAV_ITEMS[id])
+                  .filter(item => {
+                    if (!item) return false;
+                    if (item.adminOnly && currentUser?.role !== 'admin') return false;
+                    if (!isNavItemVisible(item.id, viewMode)) return false;
+                    return true;
+                  });
+                if (groupItems.length === 0) return null;
+
+                const isGroupExpanded = !!expandedGroups[group.key];
+                const hasActivePage = groupItems.some(item => currentPage === item.id);
+                const showExpanded = !isCollapsed || inPopup;
+                const GroupIcon = group.icon;
+
+                // Collapsed sidebar — show only group icon
+                if (!showExpanded) {
+                  return (
+                    <Tooltip key={group.key}>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() => setExpandedGroups(prev => ({ ...prev, [group.key]: !prev[group.key] }))}
+                          className={cn(
+                            "w-full flex items-center justify-center p-2 rounded-lg transition-colors relative",
+                            hasActivePage ? "bg-violet-100 text-violet-600" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                          )}
+                        >
+                          <GroupIcon className="w-5 h-5" />
+                          {hasActivePage && <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-violet-500 rounded-full" />}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p className="text-sm font-medium">{group.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                }
+
+                return (
+                  <div key={group.key} className={cn("mt-1", group.isTreasury && "mt-2")}>
+                    {/* Treasury gets a visual divider */}
+                    {group.isTreasury && <div className="mx-2 mb-1.5 border-t border-amber-200" />}
+                    <button
+                      onClick={() => setExpandedGroups(prev => ({ ...prev, [group.key]: !prev[group.key] }))}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group",
-                        isActive 
-                          ? "bg-violet-100 text-violet-700" 
-                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-                        isLocked && "opacity-60 cursor-not-allowed",
-                        isCollapsed && !inPopup && "px-1.5 py-1.5 justify-center"
+                        "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors text-left",
+                        group.isTreasury
+                          ? "hover:bg-amber-50"
+                          : "hover:bg-slate-50",
+                        hasActivePage && !isGroupExpanded && (group.isTreasury ? "bg-amber-50" : "bg-violet-50/50")
                       )}
                     >
-                      {ItemIcon && <ItemIcon className={cn(
-                        "w-5 h-5 shrink-0",
-                        isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600"
-                      )} />}
-                      {showExpanded && (
-                        <>
-                          <span className="font-medium text-sm text-slate-900">{item.label}</span>
-                          {badgeValue > 0 && !isLocked && (
-                            <Badge className="ml-auto bg-violet-600 text-white text-xs">
-                              {badgeValue}
-                            </Badge>
-                          )}
-                          {isLocked && (
-                            <div className="ml-auto flex items-center gap-1">
-                              <Lock className="w-3 h-3 text-slate-400" />
-                              <Badge variant="outline" className="text-xs text-slate-500">
-                                Locked
-                              </Badge>
-                            </div>
-                          )}
-                        </>
-                      )}
-                      {!showExpanded && badgeValue > 0 && !isLocked && (
-                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                          {badgeValue}
-                        </span>
-                      )}
-                      {!showExpanded && isLocked && (
-                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-slate-200 text-slate-500 rounded-full flex items-center justify-center">
-                          <Lock className="w-2.5 h-2.5" />
-                        </span>
-                      )}
-                    </Link>
-                  );
-                  
-                  // Wrap web pages in a special container
-                  const wrappedNavLink = (() => {
-                    if (((isCollapsed && !inPopup) || item.hint) && !isLocked) {
-                      return (
-                        <Tooltip key={item.id}>
-                          <TooltipTrigger asChild>
-                            {navLink}
-                          </TooltipTrigger>
-                          <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
-                            <p className="text-sm font-medium text-slate-900">{item.label}</p>
-                            {item.hint && <p className="text-xs text-slate-600">{item.hint}</p>}
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    }
-                    
-                    if (isLocked && item.id === 'leader') {
-                      return (
-                        <Tooltip key={item.id}>
-                          <TooltipTrigger asChild>
-                            {navLink}
-                          </TooltipTrigger>
-                          <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
-                            <div className="space-y-1">
-                              <p className="font-medium text-sm text-slate-900">Leader Channel Locked</p>
-                              <p className="text-xs text-slate-600">
-                                Become a Verified 144k Leader to unlock.
-                              </p>
-                            </div>
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    }
-                    
-                    return navLink;
-                  })();
-                  
-                  // Add web pages container styling
-                  if (isFirstWebPage && showExpanded) {
-                    return (
-                      <React.Fragment key={item.id}>
-                        <div className="pt-2 pb-1">
-                          <span className="px-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Web Pages</span>
-                        </div>
-                        <div className="bg-slate-50/80 rounded-lg py-1 -mx-1 px-1 space-y-0.5">
-                          {wrappedNavLink}
-                        </div>
-                      </React.Fragment>
-                    );
-                  }
-                  
-                  if (isWebPage && !isFirstWebPage && showExpanded) {
-                    // Continue the web pages container
-                    return (
-                      <div key={item.id} className={cn(
-                        "bg-slate-50/80 -mx-1 px-1",
-                        isLastWebPage ? "rounded-b-lg pb-1" : ""
+                      <GroupIcon className={cn(
+                        "w-3.5 h-3.5 shrink-0",
+                        group.isTreasury ? "text-amber-600" : hasActivePage ? "text-violet-500" : "text-slate-400"
+                      )} />
+                      <span className={cn(
+                        "text-[10px] font-semibold uppercase tracking-wider flex-1",
+                        group.isTreasury ? "text-amber-700" : "text-slate-500"
                       )}>
-                        {wrappedNavLink}
+                        {group.label}
+                      </span>
+                      {isGroupExpanded
+                        ? <ChevronUp className="w-3 h-3 text-slate-400" />
+                        : <ChevronDown className="w-3 h-3 text-slate-400" />}
+                    </button>
+
+                    {isGroupExpanded && (
+                      <div className={cn(
+                        "space-y-0.5 pl-1 mt-0.5",
+                        group.isTreasury && "bg-amber-50/40 rounded-lg py-1 -mx-0.5 px-1.5"
+                      )}>
+                        {groupItems.map(item => {
+                          const isActive = currentPage === item.id;
+                          const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
+                          const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
+                          const isLocked = item.locked || isLeaderLocked;
+                          const ItemIcon = item.Icon;
+
+                          const navLink = (
+                            <Link
+                              key={item.id}
+                              to={isLocked ? '#' : createPageUrl(item.page)}
+                              onClick={(e) => {
+                                if (isLocked) { e.preventDefault(); return; }
+                                if (item.action === 'openGallery') {
+                                  e.preventDefault();
+                                  document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex: 0 } }));
+                                }
+                              }}
+                              className={cn(
+                                "flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-all relative group",
+                                isActive
+                                  ? group.isTreasury ? "bg-amber-100 text-amber-800" : "bg-violet-100 text-violet-700"
+                                  : "text-slate-600 hover:bg-slate-50/80 hover:text-slate-900",
+                                isLocked && "opacity-60 cursor-not-allowed"
+                              )}
+                            >
+                              {ItemIcon && <ItemIcon className={cn(
+                                "w-4 h-4 shrink-0",
+                                isActive
+                                  ? group.isTreasury ? "text-amber-600" : "text-violet-600"
+                                  : "text-slate-400 group-hover:text-slate-500"
+                              )} />}
+                              <span className="font-medium text-[13px] text-slate-800 truncate">{item.label}</span>
+                              {badgeValue > 0 && !isLocked && (
+                                <Badge className="ml-auto bg-violet-600 text-white text-[10px] px-1.5 py-0">{badgeValue}</Badge>
+                              )}
+                              {isLocked && (
+                                <Lock className="w-3 h-3 ml-auto text-slate-400" />
+                              )}
+                            </Link>
+                          );
+
+                          return (
+                            <Tooltip key={item.id}>
+                              <TooltipTrigger asChild>{navLink}</TooltipTrigger>
+                              <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
+                                <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                                {item.hint && <p className="text-xs text-slate-600">{item.hint}</p>}
+                              </TooltipContent>
+                            </Tooltip>
+                          );
+                        })}
                       </div>
-                    );
-                  }
-                  
-                  return wrappedNavLink;
-                });
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Settings — always at bottom */}
+              {(() => {
+                const item = ALL_NAV_ITEMS.settings;
+                if (!isNavItemVisible(item.id, viewMode)) return null;
+                const isActive = currentPage === item.id;
+                const showExpanded = !isCollapsed || inPopup;
+                const link = (
+                  <Link
+                    to={createPageUrl(item.page)}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all relative group mt-2",
+                      isActive ? "bg-violet-100 text-violet-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                      isCollapsed && !inPopup && "px-1.5 py-1.5 justify-center mt-1"
+                    )}
+                  >
+                    <Settings className={cn("w-5 h-5 shrink-0", isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600")} />
+                    {showExpanded && <span className="font-medium text-sm text-slate-900">{item.label}</span>}
+                  </Link>
+                );
+                return (
+                  <Tooltip>
+                    <TooltipTrigger asChild>{link}</TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
+                      <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                      <p className="text-xs text-slate-600">{item.hint}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                );
               })()}
             </TooltipProvider>
           </nav>
