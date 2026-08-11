@@ -454,7 +454,6 @@ export default function Sidebar({
               {/* Command Deck — always at top */}
               {(() => {
                 const item = ALL_NAV_ITEMS.command;
-                if (!isNavItemVisible(item.id, viewMode)) return null;
                 const isActive = currentPage === item.id;
                 const showExpanded = !isCollapsed || inPopup;
                 const link = (
@@ -488,7 +487,6 @@ export default function Sidebar({
                   .filter(item => {
                     if (!item) return false;
                     if (item.adminOnly && currentUser?.role !== 'admin') return false;
-                    if (!isNavItemVisible(item.id, viewMode)) return false;
                     return true;
                   });
                 if (groupItems.length === 0) return null;
@@ -616,7 +614,6 @@ export default function Sidebar({
               {/* Settings — always at bottom */}
               {(() => {
                 const item = ALL_NAV_ITEMS.settings;
-                if (!isNavItemVisible(item.id, viewMode)) return null;
                 const isActive = currentPage === item.id;
                 const showExpanded = !isCollapsed || inPopup;
                 const link = (
@@ -1181,10 +1178,7 @@ export default function Sidebar({
           <div className={cn("space-y-1 p-2", navPopupCollapsed && "p-1")}>
             <TooltipProvider delayDuration={100}>
               {NAV_ITEMS.filter(item => {
-                // Admin check
                 if (item.adminOnly && currentUser?.role !== 'admin') return false;
-                // View mode filtering (same as sidebar)
-                if (!isNavItemVisible(item.id, viewMode)) return false;
                 return true;
               }).map((item) => {
                 const isLeaderLocked = item.id === 'leader' && profile?.leader_tier !== 'verified144k';
