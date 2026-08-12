@@ -522,13 +522,14 @@ export default function Authority144() {
       </div>
 
       {/* Partner Sites Footer */}
-      <div className="bg-purple-950/50 border-t border-purple-700/30 py-12">
+      <div className="bg-purple-950/80 border-t border-purple-700/30 py-12">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h3 className="text-xl font-serif text-amber-100 mb-6">Connected Platforms</h3>
+          <h3 className="text-xl font-serif text-amber-200 mb-6" style={{ color: '#fde68a' }}>Connected Platforms</h3>
           <div className="flex flex-wrap items-center justify-center gap-6">
             <Button 
               variant="outline"
-              className="border-amber-500/30 text-amber-200 hover:bg-amber-500/20"
+              className="border-amber-600 text-slate-900 hover:bg-amber-500/20 font-medium"
+              style={{ color: '#1e1b4b', borderColor: '#d97706' }}
               onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
             >
               <Globe className="w-4 h-4 mr-2" />
@@ -536,14 +537,15 @@ export default function Authority144() {
             </Button>
             <Button 
               variant="outline"
-              className="border-violet-500/30 text-violet-200 hover:bg-violet-500/20"
+              className="border-violet-600 text-slate-900 hover:bg-violet-500/20 font-medium"
+              style={{ color: '#1e1b4b', borderColor: '#7c3aed' }}
               onClick={() => window.open('https://www.saintagents.com/', '_blank')}
             >
               <Shield className="w-4 h-4 mr-2" />
               Saint Agents
             </Button>
           </div>
-          <p className="text-purple-300/50 text-sm mt-6 italic">
+          <p className="text-sm mt-6 italic" style={{ color: '#6b21a8' }}>
             "We are not here to rule. We are here to restore, to correct, to guide, and to rebuild."
           </p>
         </div>
