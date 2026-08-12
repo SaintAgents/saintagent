@@ -449,6 +449,23 @@ html[data-theme='hacker'] .schedule-item:hover {
   border-color: rgba(0, 255, 136, 0.4) !important;
 }
 
+/* =====================================================
+   AUTHORITY 144 PAGE — Exempt from all global overrides
+   This page manages its own dark theme internally.
+   ===================================================== */
+html[data-theme][data-theme] [data-authority-page] .rounded-xl:not(img),
+html[data-theme][data-theme] [data-authority-page] .rounded-lg:not(img),
+html[data-theme][data-theme] [data-authority-page] .rounded-2xl:not(img) {
+  background-color: rgba(59, 7, 100, 0.6) !important;
+  border-color: rgba(126, 34, 206, 0.3) !important;
+  box-shadow: none !important;
+}
+html[data-video-active='true'][data-theme] [data-authority-page] .rounded-xl:not(img),
+html[data-video-active='true'][data-theme] [data-authority-page] .rounded-lg:not(img),
+html[data-video-active='true'][data-theme] [data-authority-page] .rounded-2xl:not(img) {
+  background-color: rgba(59, 7, 100, 0.85) !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;

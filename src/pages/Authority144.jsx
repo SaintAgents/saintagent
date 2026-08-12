@@ -113,67 +113,105 @@ export default function Authority144() {
   return (
     <div className="min-h-screen relative" data-authority-page style={{ background: 'linear-gradient(to bottom right, #2e1065, #581c87, #312e81)' }}>
       <style>{`
-        /* Override global theme rules that strip dark backgrounds on this page */
-        [data-authority-page],
-        [data-authority-page] * {
-          --authority-override: 1;
+        /* ============================================
+           AUTHORITY 144 PAGE — NUCLEAR THEME ISOLATION
+           This page has its own dark purple background
+           and light text. All global theme overrides
+           must be neutralized.
+           ============================================ */
+
+        /* Triple-attribute selector for max specificity to beat Layout.jsx rules */
+        html[data-theme][data-theme][data-theme] [data-authority-page],
+        html[data-theme][data-theme][data-theme] [data-authority-page] div,
+        html[data-theme][data-theme][data-theme] [data-authority-page] section {
+          background-color: transparent !important;
+          background-image: none !important;
         }
-        html[data-theme] [data-authority-page] .rounded-xl:not(img),
-        html[data-theme] [data-authority-page] .rounded-lg:not(img),
-        html[data-theme] [data-authority-page] .rounded-2xl:not(img),
-        html[data-theme] [data-authority-page] .rounded-md:not(img) {
+
+        /* The root container keeps its inline gradient */
+        html[data-theme][data-theme][data-theme] [data-authority-page].min-h-screen {
+          background: linear-gradient(to bottom right, #2e1065, #581c87, #312e81) !important;
+        }
+
+        /* Cards and rounded containers get dark purple */
+        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-xl:not(img):not(svg):not(iframe),
+        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-lg:not(img):not(svg),
+        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-2xl:not(img):not(svg),
+        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-md:not(img):not(svg) {
           background-color: rgba(59, 7, 100, 0.6) !important;
           border-color: rgba(126, 34, 206, 0.3) !important;
           box-shadow: none !important;
         }
-        html[data-theme] [data-authority-page] [class*='bg-gradient-'] {
-          background: inherit !important;
-          background-image: inherit !important;
+
+        /* Rounded-full elements (icons, coin) keep gradient via inline */
+        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-full {
+          background-color: inherit !important;
+          border: inherit !important;
+          box-shadow: inherit !important;
         }
-        /* Preserve text colors from being overridden */
-        html[data-theme] [data-authority-page] h1,
-        html[data-theme] [data-authority-page] h2,
-        html[data-theme] [data-authority-page] h3,
-        html[data-theme] [data-authority-page] h4 {
+
+        /* ALL text inside this page: inherit from the element's own class */
+        html[data-theme][data-theme][data-theme] [data-authority-page] h1,
+        html[data-theme][data-theme][data-theme] [data-authority-page] h2,
+        html[data-theme][data-theme][data-theme] [data-authority-page] h3,
+        html[data-theme][data-theme][data-theme] [data-authority-page] h4,
+        html[data-theme][data-theme][data-theme] [data-authority-page] p,
+        html[data-theme][data-theme][data-theme] [data-authority-page] span,
+        html[data-theme][data-theme][data-theme] [data-authority-page] a,
+        html[data-theme][data-theme][data-theme] [data-authority-page] label,
+        html[data-theme][data-theme][data-theme] [data-authority-page] li,
+        html[data-theme][data-theme][data-theme] [data-authority-page] td,
+        html[data-theme][data-theme][data-theme] [data-authority-page] th {
+          color: inherit !important;
           text-shadow: none !important;
         }
-        html[data-bg-active='true'] [data-authority-page] p,
-        html[data-bg-active='true'] [data-authority-page] span,
-        html[data-bg-active='true'] [data-authority-page] div,
-        html[data-bg-active='true'] [data-authority-page] h1,
-        html[data-bg-active='true'] [data-authority-page] h2,
-        html[data-bg-active='true'] [data-authority-page] h3,
-        html[data-bg-active='true'] [data-authority-page] h4,
-        html[data-bg-active='true'] [data-authority-page] label,
-        html[data-bg-active='true'] [data-authority-page] a,
-        html[data-bg-active='true'] [data-authority-page] li {
+
+        /* SVG icons inherit color */
+        html[data-theme][data-theme][data-theme] [data-authority-page] svg {
           color: inherit !important;
+          filter: none !important;
         }
-        html[data-video-active='true'] [data-authority-page] p,
-        html[data-video-active='true'] [data-authority-page] span,
-        html[data-video-active='true'] [data-authority-page] div,
-        html[data-video-active='true'] [data-authority-page] h1,
-        html[data-video-active='true'] [data-authority-page] h2,
-        html[data-video-active='true'] [data-authority-page] h3,
-        html[data-video-active='true'] [data-authority-page] h4,
-        html[data-video-active='true'] [data-authority-page] label,
-        html[data-video-active='true'] [data-authority-page] a,
-        html[data-video-active='true'] [data-authority-page] li {
-          color: inherit !important;
-        }
-        /* Buttons keep their styling */
-        html[data-theme] [data-authority-page] button {
+
+        /* Buttons: reset global overrides so Tailwind classes work */
+        html[data-theme][data-theme][data-theme] [data-authority-page] button {
           background-color: inherit !important;
           border-color: inherit !important;
           box-shadow: none !important;
+          color: inherit !important;
         }
-        /* Tab list stays dark */
-        html[data-theme] [data-authority-page] [role="tablist"] {
+
+        /* Tab list */
+        html[data-theme][data-theme][data-theme] [data-authority-page] [role="tablist"] {
           background-color: rgba(59, 7, 100, 0.5) !important;
           border-color: rgba(126, 34, 206, 0.5) !important;
         }
-        html[data-theme] [data-authority-page] [role="tab"] {
+        html[data-theme][data-theme][data-theme] [data-authority-page] [role="tab"] {
           background-color: transparent !important;
+          color: inherit !important;
+          box-shadow: none !important;
+          border-color: transparent !important;
+        }
+        html[data-theme][data-theme][data-theme] [data-authority-page] [role="tab"][data-state="active"] {
+          background-color: rgba(245, 158, 11, 0.2) !important;
+        }
+
+        /* bg-active and video-active overrides neutralized for this page */
+        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page] *,
+        html[data-video-active='true'][data-theme][data-theme] [data-authority-page] * {
+          color: inherit !important;
+          background-color: inherit !important;
+        }
+        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page].min-h-screen,
+        html[data-video-active='true'][data-theme][data-theme] [data-authority-page].min-h-screen {
+          background: linear-gradient(to bottom right, #2e1065, #581c87, #312e81) !important;
+        }
+        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page] .rounded-xl:not(img),
+        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page] .rounded-lg:not(img),
+        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page] .rounded-2xl:not(img),
+        html[data-video-active='true'][data-theme][data-theme] [data-authority-page] .rounded-xl:not(img),
+        html[data-video-active='true'][data-theme][data-theme] [data-authority-page] .rounded-lg:not(img),
+        html[data-video-active='true'][data-theme][data-theme] [data-authority-page] .rounded-2xl:not(img) {
+          background-color: rgba(59, 7, 100, 0.6) !important;
         }
       `}</style>
       {/* Hero Section */}
