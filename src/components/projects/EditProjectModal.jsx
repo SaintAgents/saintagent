@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Save, Loader2 } from 'lucide-react';
+import FileAttachmentUploader, { FileAttachmentDisplay } from '@/components/projects/FileAttachmentUploader';
 
 export default function EditProjectModal({ open, onClose, project }) {
   const queryClient = useQueryClient();
@@ -28,6 +29,8 @@ export default function EditProjectModal({ open, onClose, project }) {
         website_url: project.website_url || '',
         geography: project.geography || '',
         strategic_intent: project.strategic_intent || '',
+        attachment_urls: project.attachment_urls || [],
+        other_documents_urls: project.other_documents_urls || [],
       });
     }
   }, [project?.id]);
@@ -183,6 +186,17 @@ export default function EditProjectModal({ open, onClose, project }) {
               value={formData.strategic_intent}
               onChange={(e) => setFormData({ ...formData, strategic_intent: e.target.value })}
               className="mt-1 min-h-16"
+            />
+          </div>
+
+          <div>
+            <Label>Project Documents</Label>
+            <p className="text-xs text-slate-500 mt-0.5 mb-2">Upload pitch decks, business plans, financial projections, and other supporting documents.</p>
+            <FileAttachmentUploader
+              files={(formData.attachment_urls || []).map(url => typeof url === 'string' ? { url, name: url.split('/').pop() } : url)}
+              onChange={(files) => setFormData({ ...formData, attachment_urls: files.map(f => f.url), other_documents_urls: files.map(f => f.url) })}
+              maxFiles={20}
+              label="Upload Documents"
             />
           </div>
         </div>

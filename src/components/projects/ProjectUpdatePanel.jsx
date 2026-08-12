@@ -16,6 +16,7 @@ import {
   AlertCircle, Heart, MessageCircle, Share2, Image, Edit2, Trash2
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
+import FileAttachmentUploader, { FileAttachmentDisplay } from '@/components/projects/FileAttachmentUploader';
 
 const UPDATE_TYPE_CONFIG = {
   progress: { label: 'Progress', icon: TrendingUp, color: 'bg-blue-100 text-blue-700' },
@@ -113,6 +114,9 @@ function UpdateCard({ update, currentUserEmail, onEdit, onDelete }) {
         <img src={update.image_url} alt="" className="mt-3 rounded-lg w-full max-h-64 object-cover" />
       )}
 
+      {/* Attachments */}
+      <FileAttachmentDisplay files={update.attachment_urls} />
+
       {/* Actions */}
       <div className="flex items-center gap-4 mt-4 pt-3 border-t">
         <button className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-rose-600 transition-colors">
@@ -142,6 +146,7 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
   const [shareToFeed, setShareToFeed] = useState(true);
   const [imageUrl, setImageUrl] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [attachments, setAttachments] = useState([]);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -196,6 +201,7 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
         progress_percentage: updateType === 'progress' ? progress[0] : undefined,
         milestone_name: updateType === 'milestone' ? milestoneName : undefined,
         image_url: imageUrl || undefined,
+        attachment_urls: attachments.length > 0 ? attachments : undefined,
         shared_to_feed: shareToFeed,
         notified_users: teamMembers.map(m => m.user_id)
       });
@@ -226,6 +232,7 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
       setProgress([50]);
       setMilestoneName('');
       setImageUrl('');
+      setAttachments([]);
     }
   });
 
@@ -238,6 +245,7 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
         progress_percentage: updateType === 'progress' ? progress[0] : undefined,
         milestone_name: updateType === 'milestone' ? milestoneName : undefined,
         image_url: imageUrl || undefined,
+        attachment_urls: attachments.length > 0 ? attachments : [],
       });
     },
     onSuccess: () => {
@@ -248,6 +256,7 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
       setProgress([50]);
       setMilestoneName('');
       setImageUrl('');
+      setAttachments([]);
     }
   });
 
@@ -264,6 +273,7 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
     setProgress([update.progress_percentage ?? 50]);
     setMilestoneName(update.milestone_name || '');
     setImageUrl(update.image_url || '');
+    setAttachments(update.attachment_urls || []);
   };
 
   return (
@@ -351,13 +361,19 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
                     />
                     <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-sm text-slate-600">
                       <Image className="w-4 h-4" />
-                      {uploading ? 'Uploading...' : 'Add Image'}
+                      {uploading ? 'Uploading...' : 'Add Cover Image'}
                     </div>
                   </label>
                   {imageUrl && (
                     <img src={imageUrl} alt="" className="mt-2 rounded-lg max-h-32 object-cover" />
                   )}
                 </div>
+
+                <FileAttachmentUploader
+                  files={attachments}
+                  onChange={setAttachments}
+                  label="Attach Documents"
+                />
 
                 <div className="flex items-center gap-2">
                   <Checkbox 
@@ -423,6 +439,11 @@ export default function ProjectUpdatePanel({ projectId, projectTitle, isTeamMemb
             {updateType === 'milestone' && (
               <Input placeholder="Milestone name..." value={milestoneName} onChange={(e) => setMilestoneName(e.target.value)} />
             )}
+            <FileAttachmentUploader
+              files={attachments}
+              onChange={setAttachments}
+              label="Attach Documents"
+            />
             <Button 
               className="w-full bg-violet-600 hover:bg-violet-700"
               onClick={() => editMutation.mutate()}

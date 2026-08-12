@@ -10,6 +10,7 @@ import {
   Clock, AlertTriangle, Shield, Brain, TrendingUp, MessageSquare, Megaphone, UserPlus, Pencil
 } from 'lucide-react';
 import EditProjectModal from '@/components/projects/EditProjectModal';
+import { FileAttachmentDisplay } from '@/components/projects/FileAttachmentUploader';
 import { cn } from '@/lib/utils';
 import ProjectEvaluationPanel from '@/components/evaluation/ProjectEvaluationPanel';
 import CoordinatorReviewPanel from '@/components/projects/CoordinatorReviewPanel';
@@ -297,6 +298,17 @@ export default function ProjectDetailCard({ project: initialProject }) {
                   </Badge>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Project Documents */}
+          {project.attachment_urls?.length > 0 && (
+            <div>
+              <h4 className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1">
+                <FileText className="w-4 h-4" />
+                Project Documents
+              </h4>
+              <FileAttachmentDisplay files={project.attachment_urls.map(url => typeof url === 'string' ? { url, name: url.split('/').pop() } : url)} />
             </div>
           )}
 

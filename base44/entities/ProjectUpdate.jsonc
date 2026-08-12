@@ -46,6 +46,25 @@
     "image_url": {
       "type": "string"
     },
+    "attachment_urls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          }
+        }
+      },
+      "default": [],
+      "description": "Uploaded file attachments"
+    },
     "visibility": {
       "type": "string",
       "enum": [

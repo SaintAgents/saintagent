@@ -15,6 +15,7 @@ import {
   ChevronDown, ChevronUp
 } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
+import FileAttachmentUploader, { FileAttachmentDisplay } from '@/components/projects/FileAttachmentUploader';
 
 const TYPE_CONFIG = {
   general: { label: 'General', icon: MessageSquare, color: 'bg-slate-100 text-slate-700' },
@@ -28,6 +29,7 @@ const TYPE_CONFIG = {
 function DiscussionThread({ discussion, projectId, currentUser, profile }) {
   const [expanded, setExpanded] = useState(false);
   const [replyText, setReplyText] = useState('');
+  const [replyAttachments, setReplyAttachments] = useState([]);
   const queryClient = useQueryClient();
 
   const { data: replies = [] } = useQuery({
@@ -44,7 +46,8 @@ function DiscussionThread({ discussion, projectId, currentUser, profile }) {
         author_id: currentUser.email,
         author_name: profile?.display_name || currentUser.full_name,
         author_avatar: profile?.avatar_url,
-        content: replyText
+        content: replyText,
+        attachment_urls: replyAttachments.length > 0 ? replyAttachments : undefined
       });
       await base44.entities.ProjectDiscussion.update(discussion.id, {
         reply_count: (discussion.reply_count || 0) + 1,
@@ -56,6 +59,7 @@ function DiscussionThread({ discussion, projectId, currentUser, profile }) {
       queryClient.invalidateQueries({ queryKey: ['discussionReplies', discussion.id] });
       queryClient.invalidateQueries({ queryKey: ['projectDiscussions', projectId] });
       setReplyText('');
+      setReplyAttachments([]);
     }
   });
 
@@ -127,6 +131,7 @@ function DiscussionThread({ discussion, projectId, currentUser, profile }) {
           {discussion.content && (
             <p className="text-sm text-slate-700 py-3 whitespace-pre-wrap">{discussion.content}</p>
           )}
+          <FileAttachmentDisplay files={discussion.attachment_urls} />
 
           {/* Replies */}
           {replies.length > 0 && (
@@ -143,6 +148,7 @@ function DiscussionThread({ discussion, projectId, currentUser, profile }) {
                       <span className="text-[10px] text-slate-400">{format(parseISO(reply.created_date), 'MMM d, h:mm a')}</span>
                     </div>
                     <p className="text-sm text-slate-700 mt-0.5">{reply.content}</p>
+                    <FileAttachmentDisplay files={reply.attachment_urls} />
                   </div>
                 </div>
               ))}
@@ -151,7 +157,7 @@ function DiscussionThread({ discussion, projectId, currentUser, profile }) {
 
           {/* Reply Input */}
           {!discussion.is_resolved && (
-            <div className="flex gap-2 pt-3 border-t">
+            <div className="space-y-2 pt-3 border-t">
               <Textarea
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
@@ -159,14 +165,20 @@ function DiscussionThread({ discussion, projectId, currentUser, profile }) {
                 className="text-sm min-h-[60px]"
                 rows={2}
               />
-              <div className="flex flex-col gap-1">
+              <FileAttachmentUploader
+                files={replyAttachments}
+                onChange={setReplyAttachments}
+                label="Attach Files"
+                maxFiles={5}
+              />
+              <div className="flex items-center gap-2">
                 <Button 
                   size="sm" 
-                  className="h-8 px-3 bg-violet-600 hover:bg-violet-700"
+                  className="h-8 px-3 bg-violet-600 hover:bg-violet-700 gap-1.5"
                   onClick={() => replyMutation.mutate()}
                   disabled={!replyText.trim() || replyMutation.isPending}
                 >
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-3.5 h-3.5" /> Reply
                 </Button>
                 {(discussion.discussion_type === 'blocker' || discussion.discussion_type === 'decision') && (
                   <Button 
@@ -193,6 +205,7 @@ export default function ProjectDiscussionPanel({ projectId }) {
   const [newTitle, setNewTitle] = useState('');
   const [newContent, setNewContent] = useState('');
   const [newType, setNewType] = useState('general');
+  const [newAttachments, setNewAttachments] = useState([]);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -225,7 +238,8 @@ export default function ProjectDiscussionPanel({ projectId }) {
         author_id: currentUser.email,
         author_name: profile?.display_name || currentUser.full_name,
         author_avatar: profile?.avatar_url,
-        discussion_type: newType
+        discussion_type: newType,
+        attachment_urls: newAttachments.length > 0 ? newAttachments : undefined
       });
     },
     onSuccess: () => {
@@ -234,6 +248,7 @@ export default function ProjectDiscussionPanel({ projectId }) {
       setNewTitle('');
       setNewContent('');
       setNewType('general');
+      setNewAttachments([]);
     }
   });
 
@@ -287,6 +302,11 @@ export default function ProjectDiscussionPanel({ projectId }) {
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 rows={4}
+              />
+              <FileAttachmentUploader
+                files={newAttachments}
+                onChange={setNewAttachments}
+                label="Attach Documents"
               />
               <Button 
                 className="w-full bg-violet-600 hover:bg-violet-700"

@@ -15,6 +15,7 @@ import {
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
+import FileAttachmentUploader, { FileAttachmentDisplay } from '@/components/projects/FileAttachmentUploader';
 
 const RECOMMENDATION_CONFIG = {
   fund: { label: 'Fund', icon: CheckCircle2, color: 'emerald' },
@@ -41,6 +42,7 @@ export default function CoordinatorReviewPanel({ project }) {
   const [comment, setComment] = useState('');
   const [areasReviewed, setAreasReviewed] = useState([]);
   const [flags, setFlags] = useState('');
+  const [reviewAttachments, setReviewAttachments] = useState([]);
 
   // Fetch existing reviews
   const { data: reviews = [], isLoading } = useQuery({
@@ -101,6 +103,7 @@ export default function CoordinatorReviewPanel({ project }) {
       comment: comment.trim(),
       areas_reviewed: areasReviewed,
       flags: flags.trim() ? flags.split('\n').map(f => f.trim()).filter(Boolean) : [],
+      attachment_urls: reviewAttachments.length > 0 ? reviewAttachments : [],
     });
   };
 
@@ -118,6 +121,7 @@ export default function CoordinatorReviewPanel({ project }) {
       setComment(existingReview.comment || '');
       setAreasReviewed(existingReview.areas_reviewed || []);
       setFlags((existingReview.flags || []).join('\n'));
+      setReviewAttachments(existingReview.attachment_urls || []);
     }
   }, [existingReview?.id]);
 
@@ -193,6 +197,8 @@ export default function CoordinatorReviewPanel({ project }) {
                     ))}
                   </div>
                 )}
+
+                <FileAttachmentDisplay files={review.attachment_urls} />
 
                 {review.flags?.length > 0 && (
                   <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200">
@@ -300,6 +306,16 @@ export default function CoordinatorReviewPanel({ project }) {
         </div>
 
         {/* Flags */}
+        <div>
+          <label className="text-sm font-medium text-slate-700 mb-2 block">Supporting Documents</label>
+          <FileAttachmentUploader
+            files={reviewAttachments}
+            onChange={setReviewAttachments}
+            label="Attach Documents"
+            maxFiles={10}
+          />
+        </div>
+
         <div>
           <label className="text-sm font-medium text-slate-700 mb-2 block">
             <AlertTriangle className="w-3 h-3 inline mr-1 text-rose-500" />
