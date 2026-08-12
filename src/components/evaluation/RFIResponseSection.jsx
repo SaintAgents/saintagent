@@ -15,6 +15,13 @@ export default function RFIResponseSection({ project, currentUser }) {
   const rfiItems = project?.phase1_rfi_items || [];
   const existingResponses = project?.rfi_responses || [];
 
+  const isOwnerOrAdmin = currentUser && (
+    currentUser.role === 'admin' ||
+    project?.owner_id === currentUser.email ||
+    project?.claimed_by === currentUser.email ||
+    project?.created_by_id === currentUser.id
+  );
+
   const handleFileUpload = async (index, files) => {
     if (!files?.length) return;
     setUploading(prev => ({ ...prev, [index]: true }));
@@ -122,6 +129,7 @@ export default function RFIResponseSection({ project, currentUser }) {
                       Answered by {existing.responded_by} • {new Date(existing.responded_at).toLocaleDateString()}
                     </p>
                   </div>
+                  {isOwnerOrAdmin && (
                   <Button
                     variant="ghost"
                     size="sm"
@@ -133,6 +141,7 @@ export default function RFIResponseSection({ project, currentUser }) {
                   >
                     Edit response
                   </Button>
+                  )}
                   {responses[index] !== undefined && (
                     <div className="mt-2 space-y-2">
                       <Textarea
@@ -177,7 +186,7 @@ export default function RFIResponseSection({ project, currentUser }) {
                     </div>
                   )}
                 </div>
-              ) : (
+              ) : isOwnerOrAdmin ? (
                 <div className="ml-6 mt-2 space-y-2">
                   <Textarea
                     value={responses[index] || ''}
@@ -204,6 +213,10 @@ export default function RFIResponseSection({ project, currentUser }) {
                       Submit Response
                     </Button>
                   </div>
+                </div>
+              ) : (
+                <div className="ml-6 mt-2">
+                  <p className="text-xs text-slate-400 italic">Awaiting response from project owner</p>
                 </div>
               )}
             </div>

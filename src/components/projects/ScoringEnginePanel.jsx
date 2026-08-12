@@ -14,7 +14,13 @@ import { cn } from '@/lib/utils';
 import EthicalFloorIndicator from './EthicalFloorIndicator';
 import RFIListPanel from './RFIListPanel';
 
-export default function ScoringEnginePanel({ project, onUpdate }) {
+export default function ScoringEnginePanel({ project, onUpdate, currentUser }) {
+  const isOwnerOrAdmin = currentUser && (
+    currentUser.role === 'admin' ||
+    project.owner_id === currentUser.email ||
+    project.claimed_by === currentUser.email ||
+    project.created_by_id === currentUser.id
+  );
   const [showDetails, setShowDetails] = useState(false);
   const queryClient = useQueryClient();
 
@@ -45,17 +51,19 @@ export default function ScoringEnginePanel({ project, onUpdate }) {
     <div className="space-y-4">
       {/* Run Scoring Engine */}
       <div className="flex items-center gap-3 flex-wrap">
-        <Button
-          onClick={() => scoreMutation.mutate()}
-          disabled={scoreMutation.isPending}
-          className="bg-violet-600 hover:bg-violet-700 gap-2"
-        >
-          {scoreMutation.isPending ? (
-            <><Loader2 className="w-4 h-4 animate-spin" /> Running Scoring Engine...</>
-          ) : (
-            <><Zap className="w-4 h-4" /> Run Auto-Scoring Engine</>
-          )}
-        </Button>
+        {isOwnerOrAdmin && (
+          <Button
+            onClick={() => scoreMutation.mutate()}
+            disabled={scoreMutation.isPending}
+            className="bg-violet-600 hover:bg-violet-700 gap-2"
+          >
+            {scoreMutation.isPending ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Running Scoring Engine...</>
+            ) : (
+              <><Zap className="w-4 h-4" /> Run Auto-Scoring Engine</>
+            )}
+          </Button>
+        )}
         {project.metadata?.scoring_engine_version && (
           <Badge variant="outline" className="text-xs">
             Engine {project.metadata.scoring_engine_version}

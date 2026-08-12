@@ -222,7 +222,7 @@ export default function ProjectEvaluationPanel({ project: initialProject, onUpda
       )}
 
       {/* Automated Scoring Engine */}
-      <ScoringEnginePanel project={project} onUpdate={() => {
+      <ScoringEnginePanel project={project} currentUser={currentUser} onUpdate={() => {
         refetchProject();
         queryClient.invalidateQueries({ queryKey: ['projectEvaluations', project.id] });
         queryClient.invalidateQueries({ queryKey: ['evaluationAuditLogs', project.id] });
