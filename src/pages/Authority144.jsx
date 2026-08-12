@@ -6,42 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
 import { 
-  Crown, 
-  Shield, 
-  Coins, 
-  Users, 
-  Star, 
-  Sparkles, 
-  ExternalLink, 
-  Globe,
-  Scale,
-  Zap,
-  Heart,
-  Eye,
-  Lock,
-  ChevronDown,
-  Clock,
-  Target,
-  Award
+  Crown, Shield, Coins, Users, Star, Sparkles, ExternalLink, Globe,
+  Scale, Zap, Heart, Eye, Lock, ChevronDown, Clock, Target, Award
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/utils';
-import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
-import ForwardButton, { LoopStartIndicator } from '@/components/hud/ForwardButton';
 
-// Jubilee countdown calculator
 const useJubileeCountdown = () => {
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  
   useEffect(() => {
     const jubileeDate = new Date('2026-02-22T00:00:00');
-    
     const updateCountdown = () => {
-      const now = new Date();
-      const diff = jubileeDate - now;
-      
+      const diff = jubileeDate - new Date();
       if (diff > 0) {
         setCountdown({
           days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -51,16 +28,12 @@ const useJubileeCountdown = () => {
         });
       }
     };
-    
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
     return () => clearInterval(interval);
   }, []);
-  
   return countdown;
 };
-
-const HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/authority_hero.jpg";
 
 const MISSION_PILLARS = [
   { icon: Crown, title: 'Councils of Governance', description: 'Form sacred councils to guide humanity\'s transition into the Golden Age with wisdom, integrity, and divine alignment.' },
@@ -87,7 +60,7 @@ const WHO_WE_SEEK = [
 export default function Authority144() {
   const [activeTab, setActiveTab] = useState('overview');
   const countdown = useJubileeCountdown();
-  
+
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
@@ -98,9 +71,7 @@ export default function Authority144() {
     queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
     enabled: !!currentUser?.email
   });
-  const profile = profiles?.[0];
 
-  // Count verified leaders
   const { data: verifiedLeaders = [] } = useQuery({
     queryKey: ['verifiedLeaders'],
     queryFn: () => base44.entities.UserProfile.filter({ leader_tier: 'verified144k' }),
@@ -110,117 +81,30 @@ export default function Authority144() {
   const seatsRemaining = Math.max(0, 144 - foundingSoulsCount);
   const totalSoulsProgress = Math.min(100, (foundingSoulsCount / 144000) * 100);
 
+  // Inline styles to resist global theme overrides
+  const S = {
+    page: { background: '#f8f5ff', color: '#1e1b4b', minHeight: '100vh' },
+    hero: { background: 'linear-gradient(135deg, #4c1d95, #6d28d9, #7c3aed)', color: '#fff' },
+    heroOverlay: { position: 'absolute', inset: 0, background: 'url(https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80) center/cover', opacity: 0.15 },
+    countdown: { background: 'linear-gradient(to right, #ede9fe, #f3e8ff, #ede9fe)', borderTop: '1px solid #c4b5fd', borderBottom: '1px solid #c4b5fd' },
+    card: { background: '#ffffff', border: '1px solid #e9d5ff', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' },
+    cardAccent: { background: 'linear-gradient(135deg, #fef3c7, #fde68a)', border: '1px solid #fcd34d', borderRadius: '0.75rem' },
+    tabList: { background: '#ede9fe', border: '1px solid #c4b5fd', borderRadius: '0.5rem' },
+    footer: { background: '#1e1b4b', color: '#e9d5ff' },
+    heading: { color: '#1e1b4b' },
+    subtext: { color: '#6b21a8' },
+    mutedText: { color: '#7c3aed' },
+    faintText: { color: '#9333ea' },
+    iconWrap: { background: '#fef3c7', borderRadius: '0.75rem', padding: '0.75rem' },
+    iconColor: { color: '#d97706' },
+    pillItem: { background: '#f5f3ff', borderRadius: '0.5rem', padding: '0.75rem' },
+  };
+
   return (
-    <div className="min-h-screen relative" data-authority-page style={{ background: 'linear-gradient(to bottom right, #2e1065, #581c87, #312e81)' }}>
-      <style>{`
-        /* ============================================
-           AUTHORITY 144 PAGE — NUCLEAR THEME ISOLATION
-           This page has its own dark purple background
-           and light text. All global theme overrides
-           must be neutralized.
-           ============================================ */
-
-        /* Triple-attribute selector for max specificity to beat Layout.jsx rules */
-        html[data-theme][data-theme][data-theme] [data-authority-page],
-        html[data-theme][data-theme][data-theme] [data-authority-page] div,
-        html[data-theme][data-theme][data-theme] [data-authority-page] section {
-          background-color: transparent !important;
-          background-image: none !important;
-        }
-
-        /* The root container keeps its inline gradient */
-        html[data-theme][data-theme][data-theme] [data-authority-page].min-h-screen {
-          background: linear-gradient(to bottom right, #2e1065, #581c87, #312e81) !important;
-        }
-
-        /* Cards and rounded containers get dark purple */
-        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-xl:not(img):not(svg):not(iframe),
-        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-lg:not(img):not(svg),
-        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-2xl:not(img):not(svg),
-        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-md:not(img):not(svg) {
-          background-color: rgba(59, 7, 100, 0.6) !important;
-          border-color: rgba(126, 34, 206, 0.3) !important;
-          box-shadow: none !important;
-        }
-
-        /* Rounded-full elements (icons, coin) keep gradient via inline */
-        html[data-theme][data-theme][data-theme] [data-authority-page] .rounded-full {
-          background-color: inherit !important;
-          border: inherit !important;
-          box-shadow: inherit !important;
-        }
-
-        /* ALL text inside this page: inherit from the element's own class */
-        html[data-theme][data-theme][data-theme] [data-authority-page] h1,
-        html[data-theme][data-theme][data-theme] [data-authority-page] h2,
-        html[data-theme][data-theme][data-theme] [data-authority-page] h3,
-        html[data-theme][data-theme][data-theme] [data-authority-page] h4,
-        html[data-theme][data-theme][data-theme] [data-authority-page] p,
-        html[data-theme][data-theme][data-theme] [data-authority-page] span,
-        html[data-theme][data-theme][data-theme] [data-authority-page] a,
-        html[data-theme][data-theme][data-theme] [data-authority-page] label,
-        html[data-theme][data-theme][data-theme] [data-authority-page] li,
-        html[data-theme][data-theme][data-theme] [data-authority-page] td,
-        html[data-theme][data-theme][data-theme] [data-authority-page] th {
-          color: inherit !important;
-          text-shadow: none !important;
-        }
-
-        /* SVG icons inherit color */
-        html[data-theme][data-theme][data-theme] [data-authority-page] svg {
-          color: inherit !important;
-          filter: none !important;
-        }
-
-        /* Buttons: reset global overrides so Tailwind classes work */
-        html[data-theme][data-theme][data-theme] [data-authority-page] button {
-          background-color: inherit !important;
-          border-color: inherit !important;
-          box-shadow: none !important;
-          color: inherit !important;
-        }
-
-        /* Tab list */
-        html[data-theme][data-theme][data-theme] [data-authority-page] [role="tablist"] {
-          background-color: rgba(59, 7, 100, 0.5) !important;
-          border-color: rgba(126, 34, 206, 0.5) !important;
-        }
-        html[data-theme][data-theme][data-theme] [data-authority-page] [role="tab"] {
-          background-color: transparent !important;
-          color: inherit !important;
-          box-shadow: none !important;
-          border-color: transparent !important;
-        }
-        html[data-theme][data-theme][data-theme] [data-authority-page] [role="tab"][data-state="active"] {
-          background-color: rgba(245, 158, 11, 0.2) !important;
-        }
-
-        /* bg-active and video-active overrides neutralized for this page */
-        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page] *,
-        html[data-video-active='true'][data-theme][data-theme] [data-authority-page] * {
-          color: inherit !important;
-          background-color: inherit !important;
-        }
-        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page].min-h-screen,
-        html[data-video-active='true'][data-theme][data-theme] [data-authority-page].min-h-screen {
-          background: linear-gradient(to bottom right, #2e1065, #581c87, #312e81) !important;
-        }
-        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page] .rounded-xl:not(img),
-        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page] .rounded-lg:not(img),
-        html[data-bg-active='true'][data-theme][data-theme] [data-authority-page] .rounded-2xl:not(img),
-        html[data-video-active='true'][data-theme][data-theme] [data-authority-page] .rounded-xl:not(img),
-        html[data-video-active='true'][data-theme][data-theme] [data-authority-page] .rounded-lg:not(img),
-        html[data-video-active='true'][data-theme][data-theme] [data-authority-page] .rounded-2xl:not(img) {
-          background-color: rgba(59, 7, 100, 0.6) !important;
-        }
-      `}</style>
-      {/* Hero Section */}
-      <div className="page-hero relative h-[400px] md:h-[500px] overflow-hidden">
-        {/* Mystical Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-900/90 via-purple-800/80 to-indigo-900/90" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80')] bg-cover bg-center opacity-30" />
-        
-        {/* Sacred Geometry Overlay */}
+    <div style={S.page}>
+      {/* Hero */}
+      <div className="page-hero relative h-[400px] md:h-[500px] overflow-hidden" style={S.hero}>
+        <div style={S.heroOverlay} />
         <div className="absolute inset-0 opacity-20">
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <defs>
@@ -231,99 +115,54 @@ export default function Authority144() {
             <rect width="100" height="100" fill="url(#sacred-grid)" />
           </svg>
         </div>
-        
-        {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          {/* Golden Coin/Seal */}
-          <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="mb-6"
-          >
-            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 p-1 shadow-2xl shadow-amber-500/50">
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center">
-                <div className="text-amber-900">
-                  <Crown className="w-16 h-16 md:w-20 md:h-20" />
-                </div>
+          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.8 }} className="mb-6">
+            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full p-1 shadow-2xl" style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b, #d97706)', boxShadow: '0 0 40px rgba(251,191,36,0.4)' }}>
+              <div className="w-full h-full rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #fcd34d, #fbbf24, #f59e0b)' }}>
+                <Crown className="w-16 h-16 md:w-20 md:h-20" style={{ color: '#78350f' }} />
               </div>
             </div>
           </motion.div>
-          
-          <motion.h1 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-amber-100 drop-shadow-2xl mb-4"
-            style={{ textShadow: '0 0 40px rgba(251,191,36,0.5)' }}
-          >
+          <motion.h1 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4"
+            style={{ color: '#fef3c7', textShadow: '0 0 40px rgba(251,191,36,0.5)' }}>
             144 Authority
           </motion.h1>
-          
-          <motion.p 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-xl md:text-2xl text-amber-200/90 font-light tracking-wide mb-2"
-          >
+          <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }}
+            className="text-xl md:text-2xl font-light tracking-wide mb-2" style={{ color: '#fde68a' }}>
             Welcome to the Vault of Earth's Divine Treasury
           </motion.p>
-          
-          <motion.p 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
-            className="text-base md:text-lg text-purple-200/80 max-w-2xl"
-          >
+          <motion.p initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.7 }}
+            className="text-base md:text-lg max-w-2xl" style={{ color: '#ddd6fe' }}>
             Where Sovereign Trust Meets Quantum Integrity
           </motion.p>
-          
-          {/* CTA Buttons */}
-          <motion.div 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.6 }}
-            className="flex flex-wrap items-center justify-center gap-4 mt-8"
-          >
-            <Button 
-              className="bg-amber-500 hover:bg-amber-600 text-amber-950 font-semibold px-6 py-3 rounded-xl shadow-lg shadow-amber-500/30"
-              onClick={() => setActiveTab('treasury')}
-            >
+          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }}
+            className="flex flex-wrap items-center justify-center gap-4 mt-8">
+            <Button onClick={() => setActiveTab('treasury')}
+              style={{ background: '#f59e0b', color: '#451a03', border: 'none', fontWeight: 600, padding: '0.75rem 1.5rem', borderRadius: '0.75rem' }}>
               Enter the Treasury
             </Button>
-            <Button 
-              variant="outline"
-              className="border-amber-400/50 text-amber-200 hover:bg-amber-500/20 px-6 py-3 rounded-xl"
-              onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
-            >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Visit Gaia Treasury
+            <Button variant="outline" onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
+              style={{ borderColor: '#fbbf24', color: '#fef3c7', background: 'transparent', padding: '0.75rem 1.5rem', borderRadius: '0.75rem' }}>
+              <ExternalLink className="w-4 h-4 mr-2" /> Visit Gaia Treasury
             </Button>
           </motion.div>
         </div>
-        
-        {/* Scroll Indicator */}
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute bottom-6 left-1/2 -translate-x-1/2"
-        >
-          <ChevronDown className="w-8 h-8 text-amber-300/60" />
+        <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-6 left-1/2 -translate-x-1/2">
+          <ChevronDown className="w-8 h-8" style={{ color: '#fde68a' }} />
         </motion.div>
       </div>
 
       {/* Jubilee Countdown */}
-      <div className="border-y border-amber-500/30 py-8" style={{ background: 'linear-gradient(to right, rgba(88,28,135,0.5), rgba(109,40,217,0.5), rgba(88,28,135,0.5))' }}>
+      <div className="py-8" style={S.countdown}>
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-4">
-            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-2">
-              <Clock className="w-3 h-3 mr-1" />
-              The Jubilee
+            <Badge style={{ background: '#fef3c7', color: '#92400e', border: '1px solid #fcd34d' }}>
+              <Clock className="w-3 h-3 mr-1" /> The Jubilee
             </Badge>
-            <h2 className="text-2xl font-serif text-amber-100">February 22nd, 2026</h2>
-            <p className="text-purple-200/70 text-sm mt-1">The moment when divine wealth flows freely to humanity</p>
+            <h2 className="text-2xl font-serif mt-2" style={S.heading}>February 22nd, 2026</h2>
+            <p className="text-sm mt-1" style={S.subtext}>The moment when divine wealth flows freely to humanity</p>
           </div>
-          
           <div className="grid grid-cols-4 gap-4 max-w-lg mx-auto">
             {[
               { value: countdown.days, label: 'Days' },
@@ -332,10 +171,8 @@ export default function Authority144() {
               { value: countdown.seconds, label: 'Seconds' },
             ].map((item, i) => (
               <div key={i} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-amber-400 drop-shadow-lg">
-                  {item.value}
-                </div>
-                <div className="text-xs text-purple-300/70 uppercase tracking-wider">{item.label}</div>
+                <div className="text-3xl md:text-4xl font-bold" style={{ color: '#b45309' }}>{item.value}</div>
+                <div className="text-xs uppercase tracking-wider" style={S.faintText}>{item.label}</div>
               </div>
             ))}
           </div>
@@ -345,154 +182,105 @@ export default function Authority144() {
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full grid grid-cols-4 mb-8 bg-purple-900/50 border border-purple-700/50">
-            <TabsTrigger value="overview" className="text-purple-200 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="144k" className="text-purple-200 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
-              The 144,000
-            </TabsTrigger>
-            <TabsTrigger value="treasury" className="text-purple-200 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
-              Treasury
-            </TabsTrigger>
-            <TabsTrigger value="mission" className="text-purple-200 data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
-              Mission
-            </TabsTrigger>
+          <TabsList className="w-full grid grid-cols-4 mb-8" style={S.tabList}>
+            {['overview', '144k', 'treasury', 'mission'].map(tab => (
+              <TabsTrigger key={tab} value={tab}
+                style={{ color: activeTab === tab ? '#7c3aed' : '#6b21a8', background: activeTab === tab ? '#fff' : 'transparent', fontWeight: activeTab === tab ? 600 : 400, borderRadius: '0.375rem' }}>
+                {tab === 'overview' ? 'Overview' : tab === '144k' ? 'The 144,000' : tab === 'treasury' ? 'Treasury' : 'Mission'}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-8">
-            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="bg-gradient-to-br from-purple-900/60 to-violet-900/60 border-purple-700/50">
-                <CardContent className="pt-6 text-center">
-                  <Users className="w-10 h-10 text-amber-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-amber-300">144,000</div>
-                  <div className="text-purple-200/70 text-sm">Souls Called to Sacred Service</div>
-                  <Badge className="mt-2 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
-                    Gathering in Progress
-                  </Badge>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-gradient-to-br from-purple-900/60 to-violet-900/60 border-purple-700/50">
-                <CardContent className="pt-6 text-center">
-                  <Star className="w-10 h-10 text-amber-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-amber-300">{foundingSoulsCount}</div>
-                  <div className="text-purple-200/70 text-sm">Founding Souls Recorded</div>
-                  <div className="text-xs text-purple-300/50 mt-1">{seatsRemaining} Sacred Seats Remaining</div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-gradient-to-br from-purple-900/60 to-violet-900/60 border-purple-700/50">
-                <CardContent className="pt-6 text-center">
-                  <Shield className="w-10 h-10 text-amber-400 mx-auto mb-3" />
-                  <div className="text-3xl font-bold text-amber-300">2026</div>
-                  <div className="text-purple-200/70 text-sm">The Great Restoration</div>
-                  <Badge className="mt-2 bg-amber-500/20 text-amber-300 border-amber-500/30">
-                    Jubilee Year
-                  </Badge>
-                </CardContent>
-              </Card>
+              {[
+                { icon: Users, value: '144,000', label: 'Souls Called to Sacred Service', badge: 'Gathering in Progress', badgeBg: '#d1fae5', badgeColor: '#065f46' },
+                { icon: Star, value: foundingSoulsCount, label: 'Founding Souls Recorded', sub: `${seatsRemaining} Sacred Seats Remaining` },
+                { icon: Shield, value: '2026', label: 'The Great Restoration', badge: 'Jubilee Year', badgeBg: '#fef3c7', badgeColor: '#92400e' },
+              ].map((stat, i) => (
+                <div key={i} className="text-center p-6" style={S.card}>
+                  <stat.icon className="w-10 h-10 mx-auto mb-3" style={S.iconColor} />
+                  <div className="text-3xl font-bold" style={{ color: '#92400e' }}>{stat.value}</div>
+                  <div className="text-sm mt-1" style={S.subtext}>{stat.label}</div>
+                  {stat.badge && <Badge className="mt-2" style={{ background: stat.badgeBg, color: stat.badgeColor, border: 'none' }}>{stat.badge}</Badge>}
+                  {stat.sub && <div className="text-xs mt-1" style={S.faintText}>{stat.sub}</div>}
+                </div>
+              ))}
             </div>
 
-            {/* Mission Pillars */}
             <div>
-              <h3 className="text-2xl font-serif text-amber-100 mb-6 text-center">Sacred Calling</h3>
+              <h3 className="text-2xl font-serif mb-6 text-center" style={S.heading}>Sacred Calling</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {MISSION_PILLARS.map((pillar, i) => (
-                  <Card key={i} className="bg-purple-900/40 border-purple-700/30 hover:border-amber-500/50 transition-all">
-                    <CardContent className="pt-6">
-                      <div className="flex items-start gap-4">
-                        <div className="p-3 rounded-xl bg-amber-500/20">
-                          <pillar.icon className="w-6 h-6 text-amber-400" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-amber-200 mb-1">{pillar.title}</h4>
-                          <p className="text-sm text-purple-200/70">{pillar.description}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div key={i} className="p-5 flex items-start gap-4" style={S.card}>
+                    <div style={S.iconWrap}><pillar.icon className="w-6 h-6" style={S.iconColor} /></div>
+                    <div>
+                      <h4 className="font-semibold mb-1" style={{ color: '#1e1b4b' }}>{pillar.title}</h4>
+                      <p className="text-sm" style={S.subtext}>{pillar.description}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* External Link Card */}
-            <Card className="bg-gradient-to-r from-amber-500/10 via-purple-900/40 to-amber-500/10 border-amber-500/30">
-              <CardContent className="py-8 text-center">
-                <Globe className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-                <h3 className="text-xl font-serif text-amber-100 mb-2">Gaia Global Treasury</h3>
-                <p className="text-purple-200/70 mb-4 max-w-lg mx-auto">
-                  Divine wealth restoring humanity's inheritance through sacred stewardship and golden age economics.
-                </p>
-                <Button 
-                  className="bg-amber-500 hover:bg-amber-600 text-amber-950 gap-2"
-                  onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Visit Official Site
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="text-center p-8" style={S.cardAccent}>
+              <Globe className="w-12 h-12 mx-auto mb-4" style={S.iconColor} />
+              <h3 className="text-xl font-serif mb-2" style={{ color: '#78350f' }}>Gaia Global Treasury</h3>
+              <p className="mb-4 max-w-lg mx-auto text-sm" style={{ color: '#92400e' }}>
+                Divine wealth restoring humanity's inheritance through sacred stewardship and golden age economics.
+              </p>
+              <Button onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
+                style={{ background: '#d97706', color: '#fff', border: 'none' }}>
+                <ExternalLink className="w-4 h-4 mr-1" /> Visit Official Site
+              </Button>
+            </div>
           </TabsContent>
 
           {/* 144,000 Tab */}
           <TabsContent value="144k" className="space-y-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-serif text-amber-100 mb-4">The 144,000</h2>
-              <p className="text-purple-200/80 max-w-2xl mx-auto">
+              <h2 className="text-3xl font-serif mb-4" style={S.heading}>The 144,000</h2>
+              <p className="max-w-2xl mx-auto" style={S.subtext}>
                 We are seeking the 144,000 awakened souls to serve as Councils of Governance and Agents of Positive Change — the chosen stewards of the New Earth, Gaia.
               </p>
             </div>
 
-            {/* Progress */}
-            <Card className="bg-purple-900/40 border-purple-700/30">
-              <CardContent className="py-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-amber-200 font-medium">Gathering Progress</span>
-                  <span className="text-amber-400 font-bold">{totalSoulsProgress.toFixed(2)}%</span>
-                </div>
-                <Progress value={totalSoulsProgress} className="h-3 bg-purple-800/50" />
-                <div className="flex justify-between mt-2 text-xs text-purple-300/60">
-                  <span>{foundingSoulsCount} joined</span>
-                  <span>144,000 goal</span>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="p-6" style={S.card}>
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-medium" style={S.heading}>Gathering Progress</span>
+                <span className="font-bold" style={{ color: '#b45309' }}>{totalSoulsProgress.toFixed(2)}%</span>
+              </div>
+              <Progress value={totalSoulsProgress} className="h-3" />
+              <div className="flex justify-between mt-2 text-xs" style={S.faintText}>
+                <span>{foundingSoulsCount} joined</span>
+                <span>144,000 goal</span>
+              </div>
+            </div>
 
-            {/* Who We Seek */}
-            <Card className="bg-purple-900/40 border-purple-700/30">
-              <CardHeader>
-                <CardTitle className="text-amber-100 flex items-center gap-2">
-                  <Eye className="w-5 h-5 text-amber-400" />
-                  Who We Seek
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {WHO_WE_SEEK.map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-purple-800/30">
-                      <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
-                      <span className="text-purple-100 text-sm">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="p-6" style={S.card}>
+              <h3 className="font-semibold mb-4 flex items-center gap-2" style={S.heading}>
+                <Eye className="w-5 h-5" style={S.iconColor} /> Who We Seek
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {WHO_WE_SEEK.map((item, i) => (
+                  <div key={i} className="flex items-center gap-3" style={S.pillItem}>
+                    <Sparkles className="w-4 h-4 shrink-0" style={S.iconColor} />
+                    <span className="text-sm" style={S.heading}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-            {/* CTA */}
-            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-amber-500/10 to-purple-900/40 border border-amber-500/30">
-              <p className="text-lg text-amber-200/90 mb-4 font-serif italic">
+            <div className="text-center p-8" style={{ ...S.card, background: '#fef9ee', borderColor: '#fcd34d' }}>
+              <p className="text-lg mb-4 font-serif italic" style={{ color: '#78350f' }}>
                 "If your soul resonates with this sacred calling, you are being invited to step forward and claim your place among the 144,000."
               </p>
-              <Button 
-                className="bg-amber-500 hover:bg-amber-600 text-amber-950 font-semibold px-8 py-3"
-                onClick={() => window.location.href = createPageUrl('Initiations')}
-              >
+              <Button onClick={() => window.location.href = createPageUrl('Initiations')}
+                style={{ background: '#d97706', color: '#fff', border: 'none', fontWeight: 600, padding: '0.75rem 2rem' }}>
                 Answer the Calling
               </Button>
-              <p className="text-purple-300/60 text-sm mt-4 italic">
+              <p className="text-sm mt-4 italic" style={S.faintText}>
                 "Many are called, few are chosen. Will you answer?"
               </p>
             </div>
@@ -501,98 +289,71 @@ export default function Authority144() {
           {/* Treasury Tab */}
           <TabsContent value="treasury" className="space-y-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-serif text-amber-100 mb-4">The Seat of Divine Currency Control</h2>
-              <p className="text-purple-200/80 max-w-3xl mx-auto">
+              <h2 className="text-3xl font-serif mb-4" style={S.heading}>The Seat of Divine Currency Control</h2>
+              <p className="max-w-3xl mx-auto" style={S.subtext}>
                 Gaia Global Treasury is not merely a financial construct — it is a divinely-seeded planetary trust, formed from ancient covenants and protected lineages, designed to safeguard and redistribute the true wealth of Earth for the ascension of humanity.
               </p>
             </div>
 
-            {/* Treasury Features */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {TREASURY_FEATURES.map((feature, i) => (
-                <Card key={i} className="bg-gradient-to-br from-purple-900/60 to-violet-900/60 border-purple-700/50 hover:border-amber-500/50 transition-all">
-                  <CardContent className="pt-6 text-center">
-                    <div className="p-4 rounded-full bg-amber-500/20 w-fit mx-auto mb-4">
-                      <feature.icon className="w-8 h-8 text-amber-400" />
-                    </div>
-                    <h4 className="font-semibold text-amber-200 mb-2">{feature.title}</h4>
-                    <p className="text-sm text-purple-200/70">{feature.description}</p>
-                  </CardContent>
-                </Card>
+                <div key={i} className="text-center p-6" style={S.card}>
+                  <div className="w-fit mx-auto mb-4" style={{ ...S.iconWrap, borderRadius: '9999px', padding: '1rem' }}>
+                    <feature.icon className="w-8 h-8" style={S.iconColor} />
+                  </div>
+                  <h4 className="font-semibold mb-2" style={S.heading}>{feature.title}</h4>
+                  <p className="text-sm" style={S.subtext}>{feature.description}</p>
+                </div>
               ))}
             </div>
 
-            {/* Iframe Embed */}
-            <Card className="bg-purple-900/20 border-purple-700/30 overflow-hidden">
-              <CardHeader>
-                <CardTitle className="text-amber-100 flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-amber-400" />
-                    Live Treasury Portal
-                  </span>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="text-amber-300 hover:text-amber-200"
-                    onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
-                  >
-                    <ExternalLink className="w-4 h-4 mr-1" />
-                    Open Full Site
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="relative w-full h-[600px] bg-purple-950">
-                  <iframe
-                    src="https://gaiaglobaltreasury.org/"
-                    className="w-full h-full border-0"
-                    title="Gaia Global Treasury"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  />
-                </div>
-              </CardContent>
-            </Card>
+            <div className="overflow-hidden" style={S.card}>
+              <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid #e9d5ff' }}>
+                <span className="flex items-center gap-2 font-semibold" style={S.heading}>
+                  <Globe className="w-5 h-5" style={S.iconColor} /> Live Treasury Portal
+                </span>
+                <Button variant="ghost" size="sm" onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
+                  style={{ color: '#7c3aed' }}>
+                  <ExternalLink className="w-4 h-4 mr-1" /> Open Full Site
+                </Button>
+              </div>
+              <div className="w-full h-[600px]" style={{ background: '#1e1b4b' }}>
+                <iframe src="https://gaiaglobaltreasury.org/" className="w-full h-full border-0" title="Gaia Global Treasury" />
+              </div>
+            </div>
           </TabsContent>
 
           {/* Mission Tab */}
           <TabsContent value="mission" className="space-y-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-serif text-amber-100 mb-4">The Return Mission</h2>
-              <p className="text-purple-200/80 max-w-2xl mx-auto">
-                To Restore What Was Lost & Activate What Was Dormant
-              </p>
+              <h2 className="text-3xl font-serif mb-4" style={S.heading}>The Return Mission</h2>
+              <p className="max-w-2xl mx-auto" style={S.subtext}>To Restore What Was Lost & Activate What Was Dormant</p>
             </div>
 
-            {/* Mission Points */}
-            <Card className="bg-purple-900/40 border-purple-700/30">
-              <CardHeader>
-                <CardTitle className="text-amber-100">The Return Mission exists to:</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[
-                    'Restore the original divine blueprint',
-                    'Anchor the Golden Age timeline',
-                    'Re-establish spiritual sovereignty',
-                    'Protect humanity\'s sacred resources',
-                    'Activate the next phase of ascension',
-                    'Guide the transition from old structures',
-                    'Initiate the Jubilee and renewal',
-                    'Prepare humanity for 2026 convergence',
-                    'Uplift those misled and return them to truth',
-                  ].map((point, i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-purple-800/30">
-                      <div className="w-6 h-6 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0">
-                        <span className="text-xs font-bold text-amber-400">{i + 1}</span>
-                      </div>
-                      <span className="text-purple-100 text-sm">{point}</span>
+            <div className="p-6" style={S.card}>
+              <h3 className="font-semibold mb-4" style={S.heading}>The Return Mission exists to:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  'Restore the original divine blueprint',
+                  'Anchor the Golden Age timeline',
+                  'Re-establish spiritual sovereignty',
+                  'Protect humanity\'s sacred resources',
+                  'Activate the next phase of ascension',
+                  'Guide the transition from old structures',
+                  'Initiate the Jubilee and renewal',
+                  'Prepare humanity for 2026 convergence',
+                  'Uplift those misled and return them to truth',
+                ].map((point, i) => (
+                  <div key={i} className="flex items-center gap-3" style={S.pillItem}>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ background: '#fef3c7' }}>
+                      <span className="text-xs font-bold" style={{ color: '#b45309' }}>{i + 1}</span>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    <span className="text-sm" style={S.heading}>{point}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-            {/* The Great Events */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
                 { title: 'The Great Jubilee', desc: 'A cleansing of burdens, debts, karmic cycles, and generational limitations.' },
@@ -600,52 +361,41 @@ export default function Authority144() {
                 { title: 'The Great Awakening', desc: 'A global shift in consciousness unlocking spiritual gifts and soul memory.' },
                 { title: 'The Great Reunification', desc: 'The healing of divided timelines, fractured identities, and separated soul-families.' },
               ].map((event, i) => (
-                <Card key={i} className="bg-gradient-to-br from-amber-500/10 to-purple-900/40 border-amber-500/30">
-                  <CardContent className="pt-6">
-                    <h4 className="font-serif text-xl text-amber-200 mb-2">{event.title}</h4>
-                    <p className="text-purple-200/70 text-sm">{event.desc}</p>
-                  </CardContent>
-                </Card>
+                <div key={i} className="p-6" style={S.cardAccent}>
+                  <h4 className="font-serif text-xl mb-2" style={{ color: '#78350f' }}>{event.title}</h4>
+                  <p className="text-sm" style={{ color: '#92400e' }}>{event.desc}</p>
+                </div>
               ))}
             </div>
 
-            {/* Declaration */}
-            <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-purple-900/60 to-violet-900/60 border border-purple-700/50">
-              <h3 className="text-xl font-serif text-amber-200 mb-6">The Declaration of the Return</h3>
-              <div className="space-y-2 text-purple-100/90 font-light">
+            <div className="text-center p-8" style={{ ...S.card, background: '#f5f3ff' }}>
+              <h3 className="text-xl font-serif mb-6" style={{ color: '#4c1d95' }}>The Declaration of the Return</h3>
+              <div className="space-y-2 font-light" style={{ color: '#5b21b6' }}>
                 <p>We are here because the cycle has completed.</p>
                 <p>We are here because the lineage has awakened.</p>
                 <p>We are here because the codes have returned.</p>
-                <p className="text-amber-300 font-medium pt-2">We are here because it is time.</p>
+                <p className="font-medium pt-2" style={{ color: '#b45309' }}>We are here because it is time.</p>
               </div>
             </div>
           </TabsContent>
         </Tabs>
       </div>
 
-      {/* Partner Sites Footer */}
-      <div className="border-t border-purple-700/30 py-12" style={{ backgroundColor: 'rgba(46,16,101,0.9)' }}>
+      {/* Footer */}
+      <div className="py-12" style={S.footer}>
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h3 className="text-xl font-serif text-amber-100 mb-6">Connected Platforms</h3>
+          <h3 className="text-xl font-serif mb-6" style={{ color: '#e9d5ff' }}>Connected Platforms</h3>
           <div className="flex flex-wrap items-center justify-center gap-6">
-            <Button 
-              variant="outline"
-              className="border-amber-500/30 text-amber-200 hover:bg-amber-500/20 font-medium"
-              onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
-            >
-              <Globe className="w-4 h-4 mr-2" />
-              Gaia Global Treasury
+            <Button variant="outline" onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
+              style={{ borderColor: '#7c3aed', color: '#e9d5ff', background: 'transparent' }}>
+              <Globe className="w-4 h-4 mr-2" /> Gaia Global Treasury
             </Button>
-            <Button 
-              variant="outline"
-              className="border-violet-500/30 text-violet-200 hover:bg-violet-500/20 font-medium"
-              onClick={() => window.open('https://www.saintagents.com/', '_blank')}
-            >
-              <Shield className="w-4 h-4 mr-2" />
-              Saint Agents
+            <Button variant="outline" onClick={() => window.open('https://www.saintagents.com/', '_blank')}
+              style={{ borderColor: '#7c3aed', color: '#e9d5ff', background: 'transparent' }}>
+              <Shield className="w-4 h-4 mr-2" /> Saint Agents
             </Button>
           </div>
-          <p className="text-purple-300/60 text-sm mt-6 italic">
+          <p className="text-sm mt-6 italic" style={{ color: '#a78bfa' }}>
             "We are not here to rule. We are here to restore, to correct, to guide, and to rebuild."
           </p>
         </div>
