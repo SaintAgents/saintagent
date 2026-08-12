@@ -51,17 +51,21 @@ export default function PlanetaryGrid({
     // Latitude lines
     for (let i = -3; i <= 3; i++) {
       const y = centerY + (i * radius / 4);
-      const xOffset = Math.sqrt(radius * radius - (i * radius / 4) ** 2) || 0;
+      const sqVal = radius * radius - (i * radius / 4) ** 2;
+      const xOffset = sqVal > 0 ? Math.sqrt(sqVal) : 0;
+      if (xOffset < 0.5) continue;
       ctx.beginPath();
-      ctx.ellipse(centerX, y, xOffset, xOffset * 0.3, 0, 0, Math.PI * 2);
+      ctx.ellipse(centerX, y, xOffset, Math.max(0.5, xOffset * 0.3), 0, 0, Math.PI * 2);
       ctx.stroke();
     }
     
     // Longitude lines
     for (let i = 0; i < 12; i++) {
       const angle = (i / 12) * Math.PI;
+      const rx = Math.abs(radius * Math.cos(angle));
+      if (rx < 0.5) continue;
       ctx.beginPath();
-      ctx.ellipse(centerX, centerY, radius * Math.cos(angle), radius, angle, 0, Math.PI * 2);
+      ctx.ellipse(centerX, centerY, rx, radius, angle, 0, Math.PI * 2);
       ctx.stroke();
     }
     
