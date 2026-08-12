@@ -80,9 +80,15 @@ export default function CoordinatorReviewPanel({ project }) {
     },
   });
 
+  const canReview = user && (user.role === 'admin' || user.role === 'coordinator');
+
   const handleSubmit = () => {
     if (!comment.trim()) {
       toast.error('Please add a comment');
+      return;
+    }
+    if (comment.trim().length < 50) {
+      toast.error('Review comment must be at least 50 characters');
       return;
     }
     submitMutation.mutate({
@@ -205,6 +211,11 @@ export default function CoordinatorReviewPanel({ project }) {
       ) : null}
 
       {/* Submit / Edit Review Form */}
+      {!canReview ? (
+        <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 text-center">
+          <p className="text-sm text-slate-500">Only Admins and Coordinators can submit reviews.</p>
+        </div>
+      ) : (
       <div className="p-4 rounded-xl border-2 border-dashed border-violet-300 bg-violet-50/50 space-y-4">
         <h4 className="font-semibold text-slate-900 flex items-center gap-2">
           <ClipboardCheck className="w-4 h-4 text-violet-600" />
@@ -276,13 +287,16 @@ export default function CoordinatorReviewPanel({ project }) {
 
         {/* Comment */}
         <div>
-          <label className="text-sm font-medium text-slate-700 mb-2 block">Review Comment *</label>
+          <label className="text-sm font-medium text-slate-700 mb-2 block">Review Comment * <span className="font-normal text-slate-400">(min 50 characters)</span></label>
           <Textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share your assessment of this project's readiness, strengths, concerns, and overall positioning for funding..."
             rows={4}
           />
+          <p className={cn("text-xs mt-1", comment.trim().length < 50 ? "text-amber-600" : "text-slate-400")}>
+            {comment.trim().length}/50 characters minimum
+          </p>
         </div>
 
         {/* Flags */}
@@ -301,7 +315,7 @@ export default function CoordinatorReviewPanel({ project }) {
 
         <Button
           onClick={handleSubmit}
-          disabled={submitMutation.isPending || !comment.trim()}
+          disabled={submitMutation.isPending || !comment.trim() || comment.trim().length < 50}
           className="bg-violet-600 hover:bg-violet-700 gap-2"
         >
           {submitMutation.isPending ? (
@@ -312,6 +326,7 @@ export default function CoordinatorReviewPanel({ project }) {
           {existingReview ? 'Update Review' : 'Submit Review'}
         </Button>
       </div>
+      )}
     </div>
   );
 }
