@@ -111,7 +111,71 @@ export default function Authority144() {
   const totalSoulsProgress = Math.min(100, (foundingSoulsCount / 144000) * 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-950 via-purple-900 to-indigo-950 dark:bg-transparent dark:bg-none relative">
+    <div className="min-h-screen relative" data-authority-page style={{ background: 'linear-gradient(to bottom right, #2e1065, #581c87, #312e81)' }}>
+      <style>{`
+        /* Override global theme rules that strip dark backgrounds on this page */
+        [data-authority-page],
+        [data-authority-page] * {
+          --authority-override: 1;
+        }
+        html[data-theme] [data-authority-page] .rounded-xl:not(img),
+        html[data-theme] [data-authority-page] .rounded-lg:not(img),
+        html[data-theme] [data-authority-page] .rounded-2xl:not(img),
+        html[data-theme] [data-authority-page] .rounded-md:not(img) {
+          background-color: rgba(59, 7, 100, 0.6) !important;
+          border-color: rgba(126, 34, 206, 0.3) !important;
+          box-shadow: none !important;
+        }
+        html[data-theme] [data-authority-page] [class*='bg-gradient-'] {
+          background: inherit !important;
+          background-image: inherit !important;
+        }
+        /* Preserve text colors from being overridden */
+        html[data-theme] [data-authority-page] h1,
+        html[data-theme] [data-authority-page] h2,
+        html[data-theme] [data-authority-page] h3,
+        html[data-theme] [data-authority-page] h4 {
+          text-shadow: none !important;
+        }
+        html[data-bg-active='true'] [data-authority-page] p,
+        html[data-bg-active='true'] [data-authority-page] span,
+        html[data-bg-active='true'] [data-authority-page] div,
+        html[data-bg-active='true'] [data-authority-page] h1,
+        html[data-bg-active='true'] [data-authority-page] h2,
+        html[data-bg-active='true'] [data-authority-page] h3,
+        html[data-bg-active='true'] [data-authority-page] h4,
+        html[data-bg-active='true'] [data-authority-page] label,
+        html[data-bg-active='true'] [data-authority-page] a,
+        html[data-bg-active='true'] [data-authority-page] li {
+          color: inherit !important;
+        }
+        html[data-video-active='true'] [data-authority-page] p,
+        html[data-video-active='true'] [data-authority-page] span,
+        html[data-video-active='true'] [data-authority-page] div,
+        html[data-video-active='true'] [data-authority-page] h1,
+        html[data-video-active='true'] [data-authority-page] h2,
+        html[data-video-active='true'] [data-authority-page] h3,
+        html[data-video-active='true'] [data-authority-page] h4,
+        html[data-video-active='true'] [data-authority-page] label,
+        html[data-video-active='true'] [data-authority-page] a,
+        html[data-video-active='true'] [data-authority-page] li {
+          color: inherit !important;
+        }
+        /* Buttons keep their styling */
+        html[data-theme] [data-authority-page] button {
+          background-color: inherit !important;
+          border-color: inherit !important;
+          box-shadow: none !important;
+        }
+        /* Tab list stays dark */
+        html[data-theme] [data-authority-page] [role="tablist"] {
+          background-color: rgba(59, 7, 100, 0.5) !important;
+          border-color: rgba(126, 34, 206, 0.5) !important;
+        }
+        html[data-theme] [data-authority-page] [role="tab"] {
+          background-color: transparent !important;
+        }
+      `}</style>
       {/* Hero Section */}
       <div className="page-hero relative h-[400px] md:h-[500px] overflow-hidden">
         {/* Mystical Background */}
@@ -211,7 +275,7 @@ export default function Authority144() {
       </div>
 
       {/* Jubilee Countdown */}
-      <div className="bg-gradient-to-r from-purple-900/50 via-violet-800/50 to-purple-900/50 border-y border-amber-500/30 py-8">
+      <div className="border-y border-amber-500/30 py-8" style={{ background: 'linear-gradient(to right, rgba(88,28,135,0.5), rgba(109,40,217,0.5), rgba(88,28,135,0.5))' }}>
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-4">
             <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/30 mb-2">
@@ -522,14 +586,13 @@ export default function Authority144() {
       </div>
 
       {/* Partner Sites Footer */}
-      <div className="bg-purple-950/80 border-t border-purple-700/30 py-12">
+      <div className="border-t border-purple-700/30 py-12" style={{ backgroundColor: 'rgba(46,16,101,0.9)' }}>
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h3 className="text-xl font-serif mb-6" style={{ color: '#3b0764' }}>Connected Platforms</h3>
+          <h3 className="text-xl font-serif text-amber-100 mb-6">Connected Platforms</h3>
           <div className="flex flex-wrap items-center justify-center gap-6">
             <Button 
               variant="outline"
-              className="border-amber-600 text-slate-900 hover:bg-amber-500/20 font-medium"
-              style={{ color: '#1e1b4b', borderColor: '#d97706' }}
+              className="border-amber-500/30 text-amber-200 hover:bg-amber-500/20 font-medium"
               onClick={() => window.open('https://gaiaglobaltreasury.org/', '_blank')}
             >
               <Globe className="w-4 h-4 mr-2" />
@@ -537,15 +600,14 @@ export default function Authority144() {
             </Button>
             <Button 
               variant="outline"
-              className="border-violet-600 text-slate-900 hover:bg-violet-500/20 font-medium"
-              style={{ color: '#1e1b4b', borderColor: '#7c3aed' }}
+              className="border-violet-500/30 text-violet-200 hover:bg-violet-500/20 font-medium"
               onClick={() => window.open('https://www.saintagents.com/', '_blank')}
             >
               <Shield className="w-4 h-4 mr-2" />
               Saint Agents
             </Button>
           </div>
-          <p className="text-sm mt-6 italic" style={{ color: '#6b21a8' }}>
+          <p className="text-purple-300/60 text-sm mt-6 italic">
             "We are not here to rule. We are here to restore, to correct, to guide, and to rebuild."
           </p>
         </div>
