@@ -524,7 +524,7 @@ export default function Authority144() {
       {/* Partner Sites Footer */}
       <div className="bg-purple-950/80 border-t border-purple-700/30 py-12">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h3 className="text-xl font-serif text-amber-200 mb-6" style={{ color: '#fde68a' }}>Connected Platforms</h3>
+          <h3 className="text-xl font-serif mb-6" style={{ color: '#3b0764' }}>Connected Platforms</h3>
           <div className="flex flex-wrap items-center justify-center gap-6">
             <Button 
               variant="outline"
