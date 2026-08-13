@@ -108,7 +108,7 @@ html[data-theme='light'] .page-hero::after {
   left: 0 !important;
   right: 0 !important;
   bottom: 0 !important;
-  background: linear-gradient(180deg, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.15) 70%, transparent 100%) !important;
+  background: rgba(0, 0, 0, 0.55) !important;
   pointer-events: none !important;
   z-index: 1 !important;
 }
