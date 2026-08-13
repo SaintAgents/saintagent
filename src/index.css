@@ -97,6 +97,28 @@
    HERO SECTIONS - fixed/sticky hero that stays in place
    while content scrolls over it
    ===================================================== */
+/* Light theme: darken hero overlays so white text is always readable.
+   Adds a pseudo-element dark scrim over every .page-hero in light theme. */
+html[data-theme='light'] .page-hero::after,
+[data-theme='light'] .page-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.30) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+/* Ensure hero content text sits above the scrim */
+html[data-theme='light'] .page-hero .hero-content,
+[data-theme='light'] .page-hero .hero-content {
+  z-index: 2;
+}
+/* Gallery trigger and other absolute-positioned controls above scrim */
+html[data-theme='light'] .page-hero > .absolute,
+[data-theme='light'] .page-hero > .absolute {
+  z-index: 2;
+}
+
 /* Hero fixed mode: sticky hero, content scrolls over it */
 html[data-hero-fixed='true'] .page-hero {
   position: sticky;
