@@ -239,11 +239,11 @@ export default function Profile() {
 
   const ROLE_LABELS = { member: 'Member', contributor: 'Contributor', moderator: 'Moderator', guardian: 'Guardian', reviewer: 'Reviewer', council_member: 'Council Member', administrator: 'Administrator', architect: 'Architect', founder_custodian: 'Founder' };
 
-  // Fetch user skills
+  // Fetch user skills (always by user_id/email, since SkillsPicker saves with email)
   const { data: skills = [] } = useQuery({
-    queryKey: ['skills', userIdentifier],
-    queryFn: () => base44.entities.Skill.filter({ user_id: userIdentifier }),
-    enabled: !!userIdentifier,
+    queryKey: ['skills', profile?.user_id],
+    queryFn: () => base44.entities.Skill.filter({ user_id: profile.user_id }),
+    enabled: !!profile?.user_id,
     staleTime: 1800000,
     refetchOnWindowFocus: false,
   });
