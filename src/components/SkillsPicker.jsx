@@ -44,7 +44,7 @@ export default function SkillsPicker({ open, onClose, userId }) {
   });
 
   const removeSkillMutation = useMutation({
-    mutationFn: (id) => base44.entities.Skill.delete({ id }),
+    mutationFn: (id) => base44.entities.Skill.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['skills', userId] })
   });
 
