@@ -226,23 +226,8 @@ export default function ContactImportModal({ open, onClose, currentUserId }) {
         
         // Award GGG to user profile if this is their first import
         if (!contribution || !contribution.import_ggg_awarded) {
-          const userProfiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
-          const userProfile = userProfiles?.[0];
-          if (userProfile) {
-            const newBalance = (userProfile.ggg_balance || 0) + 0.030;
-            await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
-            
-            // Log transaction
-            await base44.entities.GGGTransaction.create({
-              user_id: currentUserId,
-              source_type: 'reward',
-              source_id: contribution?.id,
-              delta: 0.030,
-              reason_code: 'crm_import',
-              description: 'First-time CRM contact base upload',
-              balance_after: newBalance
-            });
-          }
+          const { awardGGG } = await import('@/lib/awardGGG');
+          await awardGGG(currentUserId, 0.030, 'crm_import', 'First-time CRM contact base upload', 'reward', contribution?.id);
         }
       } catch (err) {
         console.error('Failed to award import GGG:', err);

@@ -199,16 +199,14 @@ export default function AdminBetaFeedback({ viewerRole = 'admin' }) {
         const reward = 0.03 * multiplier;
         
         if (profile) {
-          const newBalance = (profile.ggg_balance || 0) + reward;
-          await base44.entities.UserProfile.update(profile.id, { ggg_balance: newBalance });
-          await base44.entities.GGGTransaction.create({
-            user_id: feedback.reporter_id,
-            delta: reward,
-            reason_code: 'feedback_resolved',
-            description: `Feedback resolved bonus${bonusActive ? ' (bonus period)' : ''}`,
-            balance_after: newBalance,
-            source_type: 'reward'
-          });
+          const { awardGGG } = await import('@/lib/awardGGG');
+          await awardGGG(
+            feedback.reporter_id,
+            reward,
+            'feedback_resolved',
+            `Feedback resolved bonus${bonusActive ? ' (bonus period)' : ''}`,
+            'reward'
+          );
           toast.success(`Awarded ${reward.toFixed(2)} GGG to ${feedback.reporter_name || feedback.reporter_id} for resolved feedback${bonusActive ? ' (bonus!)' : ''}`);
         }
       } catch (e) {

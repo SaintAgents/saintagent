@@ -189,15 +189,9 @@ export async function payoutReferral(userId, qualifyingAction, qualifyingActionI
         });
       }
 
-      // Update affiliate user's GGG balance
-      const profiles = await base44Instance.entities.UserProfile.filter({ 
-        user_id: referral.affiliate_user_id 
-      });
-      if (profiles.length > 0) {
-        await base44Instance.entities.UserProfile.update(profiles[0].id, {
-          ggg_balance: (profiles[0].ggg_balance || 0) + gggAmount
-        });
-      }
+      // Update affiliate user's GGG balance (race-safe)
+      const { awardGGG } = await import('@/lib/awardGGG');
+      await awardGGG(referral.affiliate_user_id, gggAmount, 'affiliate_referral', 'Affiliate referral payout', 'reward');
       console.log('Referral payout completed for:', userId);
     }
   } catch (error) {

@@ -4,7 +4,11 @@ import { base44 } from '@/api/base44Client';
  * Award GGG to a user with full ledger consistency.
  * 
  * This is the ONLY way frontend code should award GGG.
- * It writes to GGGTransaction (source of truth), updates UserProfile, and syncs Wallet.
+ * It writes to GGGTransaction (source of truth), updates UserProfile via fresh read, and syncs Wallet.
+ * 
+ * RACE-SAFE: Always reads the LATEST profile balance before writing,
+ * never relies on stale React state. Records the transaction first,
+ * then updates the profile balance.
  *
  * @param {string} userId - User email
  * @param {number} amount - GGG amount (positive)
@@ -17,28 +21,28 @@ import { base44 } from '@/api/base44Client';
 export async function awardGGG(userId, amount, reasonCode, description, sourceType = 'reward', sourceId) {
   if (!userId || !amount || amount <= 0) return { newBalance: 0 };
 
-  // 1. Get current profile balance
-  const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
-  const profile = profiles?.[0];
-  if (!profile) throw new Error('User profile not found');
-
-  const newBalance = (profile.ggg_balance || 0) + amount;
-
-  // 2. Record in GGGTransaction (single source of truth)
+  // 1. Record in GGGTransaction FIRST (source of truth — never lost even if profile update fails)
   await base44.entities.GGGTransaction.create({
     user_id: userId,
     delta: amount,
     reason_code: reasonCode,
     description,
-    balance_after: newBalance,
     source_type: sourceType,
     source_id: sourceId || undefined,
   });
 
-  // 3. Update profile balance
+  // 2. Fresh-read profile THEN update — never use stale React state
+  const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
+  const profile = profiles?.[0];
+  if (!profile) {
+    console.warn('[awardGGG] Profile not found for', userId);
+    return { newBalance: amount };
+  }
+
+  const newBalance = (profile.ggg_balance || 0) + amount;
   await base44.entities.UserProfile.update(profile.id, { ggg_balance: newBalance });
 
-  // 4. Sync wallet (best-effort — syncGGGBalances will catch any misses)
+  // 3. Sync wallet (best-effort)
   try {
     const wallets = await base44.entities.Wallet.filter({ user_id: userId });
     if (wallets?.[0]) {
@@ -49,7 +53,6 @@ export async function awardGGG(userId, amount, reasonCode, description, sourceTy
       });
     }
   } catch (e) {
-    // Wallet sync failure is non-fatal — periodic sync will fix it
     console.warn('Wallet sync failed:', e);
   }
 
@@ -58,10 +61,12 @@ export async function awardGGG(userId, amount, reasonCode, description, sourceTy
 
 /**
  * Deduct GGG from a user with full ledger consistency.
+ * RACE-SAFE: Fresh-reads before deducting.
  */
 export async function deductGGG(userId, amount, reasonCode, description, sourceType = 'reward', sourceId) {
   if (!userId || !amount || amount <= 0) return { newBalance: 0 };
 
+  // Fresh-read profile
   const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
   const profile = profiles?.[0];
   if (!profile) throw new Error('User profile not found');

@@ -136,20 +136,20 @@ export default function Activation144K({ profile, onComplete }) {
           status: 'active'
         });
         
-        // Award RP and GGG only on first completion
+        // Award RP only — GGG goes through awardGGG for consistency
         await base44.entities.UserProfile.update(profile.id, {
           rank_points: (profile.rank_points || 0) + rewards.rp,
-          ggg_balance: (profile.ggg_balance || 0) + parseFloat(rewards.ggg)
         });
         
-        await base44.entities.GGGTransaction.create({
-          user_id: profile.user_id,
-          source_type: 'mission',
-          delta: parseFloat(rewards.ggg),
-          reason_code: '144k_activation',
-          description: '144K Activation completed at coherence level ' + coherence,
-          balance_after: (profile.ggg_balance || 0) + parseFloat(rewards.ggg)
-        });
+        // Award GGG via centralized function (race-safe)
+        const { awardGGG } = await import('@/lib/awardGGG');
+        await awardGGG(
+          profile.user_id,
+          parseFloat(rewards.ggg),
+          '144k_activation',
+          '144K Activation completed at coherence level ' + coherence,
+          'mission'
+        );
       }
     },
     onSuccess: () => {

@@ -45,35 +45,17 @@ export default function SubscriptionCard({ tier, currentSubscription, profile })
       // Create subscription
       const subscription = await base44.entities.Subscription.create(data);
 
-      // Deduct GGG from subscriber
-      await base44.entities.UserProfile.update(userProfile.id, {
-        ggg_balance: userProfile.ggg_balance - data.price_paid_ggg
-      });
+      // Deduct GGG from subscriber (race-safe)
+      const { deductGGG, awardGGG } = await import('@/lib/awardGGG');
+      await deductGGG(currentUser.email, data.price_paid_ggg, 'tier_subscription', `Subscribed to ${tier.creator_name}'s ${tier.tier_name}`, 'subscription', subscription.id);
 
       // Add GGG to creator (85% after 15% platform fee)
       const creatorEarning = data.price_paid_ggg * 0.85;
-      const creatorProfile = await base44.entities.UserProfile.filter({ user_id: tier.creator_id });
-      if (creatorProfile[0]) {
-        await base44.entities.UserProfile.update(creatorProfile[0].id, {
-          ggg_balance: (creatorProfile[0].ggg_balance || 0) + creatorEarning,
-          total_earnings: (creatorProfile[0].total_earnings || 0) + creatorEarning
-        });
-      }
+      await awardGGG(tier.creator_id, creatorEarning, 'subscription_revenue', `Subscription to ${tier.tier_name}`, 'reward', subscription.id);
 
       // Update tier subscriber count
       await base44.entities.CreatorTier.update(tier.id, {
         current_subscribers: (tier.current_subscribers || 0) + 1
-      });
-
-      // Create transaction record
-      await base44.entities.GGGTransaction.create({
-        user_id: currentUser.email,
-        source_type: 'subscription',
-        source_id: subscription.id,
-        delta: -data.price_paid_ggg,
-        reason_code: 'tier_subscription',
-        description: `Subscribed to ${tier.creator_name}'s ${tier.tier_name}`,
-        balance_after: userProfile.ggg_balance - data.price_paid_ggg
       });
 
       return subscription;

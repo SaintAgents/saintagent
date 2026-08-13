@@ -5,9 +5,9 @@ function tid(prefix = 'tx') { return `${prefix}_${crypto.randomUUID?.() || Math.
 function toNum(n) { return Math.round((Number(n) || 0) * 10000000) / 10000000; }
 
 async function getOrCreateWallet(base44, userId) {
-  const rows = await base44.entities.Wallet.filter({ user_id: userId });
+  const rows = await base44.asServiceRole.entities.Wallet.filter({ user_id: userId });
   if (rows?.length) return rows[0];
-  const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
+  const profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_id: userId });
   const startingAvail = toNum(profiles?.[0]?.ggg_balance || 0);
   const created = await base44.entities.Wallet.create({
     user_id: userId,
@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
     }
 
     // Check idempotency - already earned?
-    const existing = await base44.entities.WalletTransaction.filter({ event_id: eventId });
+    const existing = await base44.asServiceRole.entities.WalletTransaction.filter({ event_id: eventId });
     if (existing?.length > 0) {
       return Response.json({ 
         awarded: false, 
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     }
 
     // Look up active reward rule
-    const rules = await base44.entities.GGGRewardRule.filter({ action_type, is_active: true });
+    const rules = await base44.asServiceRole.entities.GGGRewardRule.filter({ action_type, is_active: true });
     const rule = rules?.[0];
     if (!rule) {
       return Response.json({ 
@@ -93,15 +93,15 @@ Deno.serve(async (req) => {
       total_rewards: toNum((wallet.total_rewards || 0) + amount),
       updated_at: nowIso(),
     };
-    const saved = await base44.entities.Wallet.update(wallet.id, updates);
+    const saved = await base44.asServiceRole.entities.Wallet.update(wallet.id, updates);
 
-    // Update profile balance — read current profile balance and ADD the delta
-    // (profile balance may differ from wallet balance due to other earning paths)
-    const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
+    // Update profile balance — fresh read current profile balance and ADD the delta
+    // Uses asServiceRole to avoid permission issues
+    const profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_id: userId });
     if (profiles?.[0]) {
       const currentProfileBalance = toNum(profiles[0].ggg_balance || 0);
       const newProfileBalance = toNum(currentProfileBalance + amount);
-      await base44.entities.UserProfile.update(profiles[0].id, { ggg_balance: newProfileBalance });
+      await base44.asServiceRole.entities.UserProfile.update(profiles[0].id, { ggg_balance: newProfileBalance });
     }
 
     // Write transaction

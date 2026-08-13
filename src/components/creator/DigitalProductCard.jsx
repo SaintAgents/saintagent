@@ -89,36 +89,18 @@ export default function DigitalProductCard({ product, showPurchase = true }) {
         access_granted: true
       });
 
-      // Deduct from buyer
-      await base44.entities.UserProfile.update(userProfile.id, {
-        ggg_balance: userProfile.ggg_balance - product.price_ggg
-      });
+      // Deduct from buyer (race-safe)
+      const { deductGGG, awardGGG } = await import('@/lib/awardGGG');
+      await deductGGG(currentUser.email, product.price_ggg, 'product_purchase', `Purchased "${product.title}"`, 'purchase', purchase.id);
 
       // Add to creator (85% after 15% platform fee)
       const creatorEarning = product.price_ggg * 0.85;
-      const creatorProfiles = await base44.entities.UserProfile.filter({ user_id: product.creator_id });
-      if (creatorProfiles[0]) {
-        await base44.entities.UserProfile.update(creatorProfiles[0].id, {
-          ggg_balance: (creatorProfiles[0].ggg_balance || 0) + creatorEarning,
-          total_earnings: (creatorProfiles[0].total_earnings || 0) + creatorEarning
-        });
-      }
+      await awardGGG(product.creator_id, creatorEarning, 'product_sale', `Sale of "${product.title}"`, 'reward', purchase.id);
 
       // Update product stats
       await base44.entities.DigitalProduct.update(product.id, {
         sales_count: (product.sales_count || 0) + 1,
         total_revenue_ggg: (product.total_revenue_ggg || 0) + product.price_ggg
-      });
-
-      // Create transaction
-      await base44.entities.GGGTransaction.create({
-        user_id: currentUser.email,
-        source_type: 'purchase',
-        source_id: purchase.id,
-        delta: -product.price_ggg,
-        reason_code: 'product_purchase',
-        description: `Purchased "${product.title}"`,
-        balance_after: userProfile.ggg_balance - product.price_ggg
       });
 
       // Notify creator

@@ -78,10 +78,9 @@ export default function GaiaBankTab() {
         throw new Error('Invalid amount');
       }
 
-      // Deduct from GGG balance
-      await base44.entities.UserProfile.update(profile.id, {
-        ggg_balance: (profile.ggg_balance || 0) - numAmount
-      });
+      // Deduct from GGG balance (race-safe via deductGGG)
+      const { deductGGG } = await import('@/lib/awardGGG');
+      await deductGGG(currentUser.email, numAmount, 'bank_deposit', 'Deposit to Gaia Bank', 'reward');
 
       // Add to bank balance (locked_balance for savings)
       await base44.entities.Wallet.update(bankAccount.id, {
@@ -124,10 +123,9 @@ export default function GaiaBankTab() {
         throw new Error('Insufficient bank balance');
       }
 
-      // Add to GGG balance
-      await base44.entities.UserProfile.update(profile.id, {
-        ggg_balance: (profile.ggg_balance || 0) + numAmount
-      });
+      // Add to GGG balance (race-safe via awardGGG)
+      const { awardGGG } = await import('@/lib/awardGGG');
+      await awardGGG(currentUser.email, numAmount, 'bank_withdrawal', 'Withdrawal from Gaia Bank', 'reward');
 
       // Deduct from bank balance (locked_balance)
       await base44.entities.Wallet.update(bankAccount.id, {

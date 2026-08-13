@@ -92,22 +92,15 @@ export default function JournalTab({ profile }) {
       // Check if user has reached 33 entries and should earn GGG
       const currentCount = entries.length + 1;
       if (currentCount >= GGG_THRESHOLD) {
-        // Award GGG for this entry
-        const currentBalance = profile?.ggg_balance || 0;
-        await base44.entities.UserProfile.update(profile.id, {
-          ggg_balance: currentBalance + GGG_REWARD
-        });
-        
-        // Log the transaction
-        await base44.entities.GGGTransaction.create({
-          user_id: userId,
-          source_type: 'reward',
-          source_id: entry.id,
-          delta: GGG_REWARD,
-          reason_code: 'journal_entry',
-          description: `Journal entry reward (entry #${currentCount})`,
-          balance_after: currentBalance + GGG_REWARD
-        });
+        const { awardGGG } = await import('@/lib/awardGGG');
+        await awardGGG(
+          userId,
+          GGG_REWARD,
+          'journal_entry',
+          `Journal entry reward (entry #${currentCount})`,
+          'reward',
+          entry.id
+        );
       }
       
       return entry;

@@ -63,22 +63,17 @@ export default function QuestManagementCard({ quest, profile }) {
 
       // Award GGG if any milestone/completion payouts
       if (gggToAward > 0 && quest.user_id) {
-        await base44.entities.GGGTransaction.create({
-          user_id: quest.user_id,
-          delta: gggToAward,
-          source_type: 'reward',
-          source_id: quest.id,
-          reason_code: isComplete ? 'quest_completed' : 'quest_milestone',
-          description: isComplete
+        const { awardGGG } = await import('@/lib/awardGGG');
+        await awardGGG(
+          quest.user_id,
+          gggToAward,
+          isComplete ? 'quest_completed' : 'quest_milestone',
+          isComplete
             ? `Quest completed: ${quest.title} (+${gggToAward} GGG)`
             : `Quest milestone: ${quest.title} (+${gggToAward} GGG)`,
-        });
-        // Update profile balance
-        if (profile?.id) {
-          await base44.entities.UserProfile.update(profile.id, {
-            ggg_balance: (profile.ggg_balance || 0) + gggToAward,
-          });
-        }
+          'reward',
+          quest.id
+        );
       }
 
       // Award RP on completion

@@ -158,23 +158,9 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
             });
           }
           
-          // Award GGG to user
-          const userProfiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
-          const userProfile = userProfiles?.[0];
-          if (userProfile) {
-            const newBalance = (userProfile.ggg_balance || 0) + 0.0154;
-            await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
-            
-            await base44.entities.GGGTransaction.create({
-              user_id: currentUserId,
-              source_type: 'reward',
-              source_id: contact.id,
-              delta: 0.0154,
-              reason_code: 'crm_federated',
-              description: 'Contact added to federated network',
-              balance_after: newBalance
-            });
-          }
+          // Award GGG to user (race-safe)
+          const { awardGGG } = await import('@/lib/awardGGG');
+          await awardGGG(currentUserId, 0.0154, 'crm_federated', 'Contact added to federated network', 'reward', contact.id);
         }
       } else {
         savedContact = await base44.entities.Contact.create(payload);
@@ -200,22 +186,8 @@ export default function ContactFormModal({ open, onClose, contact, currentUserId
             });
           }
           
-          const userProfiles = await base44.entities.UserProfile.filter({ user_id: currentUserId });
-          const userProfile = userProfiles?.[0];
-          if (userProfile) {
-            const newBalance = (userProfile.ggg_balance || 0) + 0.0154;
-            await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
-            
-            await base44.entities.GGGTransaction.create({
-              user_id: currentUserId,
-              source_type: 'reward',
-              source_id: savedContact.id,
-              delta: 0.0154,
-              reason_code: 'crm_federated',
-              description: 'Contact added to federated network',
-              balance_after: newBalance
-            });
-          }
+          const { awardGGG } = await import('@/lib/awardGGG');
+          await awardGGG(currentUserId, 0.0154, 'crm_federated', 'Contact added to federated network', 'reward', savedContact.id);
         }
       }
       return savedContact;

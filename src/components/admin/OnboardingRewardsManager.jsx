@@ -76,24 +76,9 @@ export default function OnboardingRewardsManager() {
   // Mutation to award GGG to a user
   const awardMutation = useMutation({
     mutationFn: async (userId) => {
-      // Create GGG transaction
-      await base44.entities.GGGTransaction.create({
-        user_id: userId,
-        delta: ONBOARDING_GGG_REWARD,
-        reason_code: 'onboarding_completion',
-        description: 'GGG awarded for completing onboarding (manual)',
-        source_type: 'reward'
-      });
-
-      // Update user profile balance
-      const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
-      if (profiles.length > 0) {
-        const profile = profiles[0];
-        await base44.entities.UserProfile.update(profile.id, {
-          ggg_balance: (profile.ggg_balance || 0) + ONBOARDING_GGG_REWARD
-        });
-      }
-
+      // awardGGG handles everything: GGGTransaction + profile update + wallet sync
+      const { awardGGG } = await import('@/lib/awardGGG');
+      await awardGGG(userId, ONBOARDING_GGG_REWARD, 'onboarding_completion', 'GGG awarded for completing onboarding (manual)', 'reward');
       return userId;
     },
     onSuccess: () => {

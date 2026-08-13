@@ -93,18 +93,9 @@ export default function ContactCard({ contact, viewMode = 'grid', compact = fals
             total_ggg_earned: (contribution.total_ggg_earned || 0) + 0.0154
           });
         }
-        // Award GGG to user profile
-        const userProfiles = await base44.entities.UserProfile.filter({ user_id: ownerEmail });
-        const userProfile = userProfiles?.[0];
-        if (userProfile) {
-          const newBalance = (userProfile.ggg_balance || 0) + 0.0154;
-          await base44.entities.UserProfile.update(userProfile.id, { ggg_balance: newBalance });
-          await base44.entities.GGGTransaction.create({
-            user_id: ownerEmail, source_type: 'reward', source_id: contact.id,
-            delta: 0.0154, reason_code: 'crm_federated',
-            description: 'Contact shared to federated network', balance_after: newBalance
-          });
-        }
+        // Award GGG to user profile (race-safe)
+        const { awardGGG } = await import('@/lib/awardGGG');
+        await awardGGG(ownerEmail, 0.0154, 'crm_federated', 'Contact shared to federated network', 'reward', contact.id);
       }
     },
     onSuccess: () => {

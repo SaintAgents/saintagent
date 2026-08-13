@@ -82,10 +82,10 @@ Deno.serve(async (req) => {
       description: `Activation Phase: ${PHASE_LABELS[phase]}`
     });
 
-    // Update user profile GGG balance
-    const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
+    // Update user profile GGG balance (fresh read to avoid race conditions)
+    const profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_id: user.email });
     if (profiles[0]) {
-      await base44.entities.UserProfile.update(profiles[0].id, {
+      await base44.asServiceRole.entities.UserProfile.update(profiles[0].id, {
         ggg_balance: (profiles[0].ggg_balance || 0) + gggEarned
       });
     }

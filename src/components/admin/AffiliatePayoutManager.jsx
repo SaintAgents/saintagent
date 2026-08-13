@@ -138,24 +138,9 @@ export default function AffiliatePayoutManager() {
         notes: note
       });
 
-      // Credit to user's GGG balance via transaction
-      await base44.entities.GGGTransaction.create({
-        user_id: affiliateUserId,
-        source_type: 'referral',
-        source_id: payout.id,
-        delta: amount,
-        reason_code: 'affiliate_payout',
-        description: `Affiliate commission payout`
-      });
-
-      // Update user profile GGG balance
-      const userProfiles = await base44.entities.UserProfile.filter({ user_id: affiliateUserId });
-      if (userProfiles[0]) {
-        const currentBalance = userProfiles[0].ggg_balance || 0;
-        await base44.entities.UserProfile.update(userProfiles[0].id, {
-          ggg_balance: currentBalance + amount
-        });
-      }
+      // Credit to user's GGG balance (race-safe)
+      const { awardGGG } = await import('@/lib/awardGGG');
+      await awardGGG(affiliateUserId, amount, 'affiliate_payout', 'Affiliate commission payout', 'referral', payout.id);
 
       return payout;
     },
@@ -184,24 +169,9 @@ export default function AffiliatePayoutManager() {
         processed_at: new Date().toISOString()
       });
 
-      // Credit to user's GGG balance
-      await base44.entities.GGGTransaction.create({
-        user_id: payout.affiliate_user_id,
-        source_type: 'referral',
-        source_id: payout.id,
-        delta: payout.amount_ggg,
-        reason_code: 'affiliate_payout',
-        description: `Affiliate commission payout`
-      });
-
-      // Update user profile GGG balance
-      const userProfiles = await base44.entities.UserProfile.filter({ user_id: payout.affiliate_user_id });
-      if (userProfiles[0]) {
-        const currentBalance = userProfiles[0].ggg_balance || 0;
-        await base44.entities.UserProfile.update(userProfiles[0].id, {
-          ggg_balance: currentBalance + payout.amount_ggg
-        });
-      }
+      // Credit to user's GGG balance (race-safe)
+      const { awardGGG } = await import('@/lib/awardGGG');
+      await awardGGG(payout.affiliate_user_id, payout.amount_ggg, 'affiliate_payout', 'Affiliate commission payout', 'referral', payout.id);
 
       return payout;
     },

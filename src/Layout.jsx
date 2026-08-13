@@ -1920,7 +1920,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Global Alert Popup */}
       <GlobalAlertPopup />
-      <LearnTutorialPopup profile={profile} onRewardGGG={async (amount, reason) => { if (profile?.id) { await base44.entities.UserProfile.update(profile.id, { ggg_balance: (profile.ggg_balance || 0) + amount }); queryClient.invalidateQueries({ queryKey: ['myProfile'] }); } }} />
+      <LearnTutorialPopup profile={profile} onRewardGGG={async (amount, reason) => { if (profile?.user_id) { const { awardGGG } = await import('@/lib/awardGGG'); await awardGGG(profile.user_id, amount, 'learn_tutorial', reason || 'Tutorial completion reward', 'reward'); queryClient.invalidateQueries({ queryKey: ['myProfile'] }); } }} />
 
       {/* Meeting Reminder Service */}
               {currentUser && <MeetingReminderService />}
