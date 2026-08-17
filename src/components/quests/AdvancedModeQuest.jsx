@@ -7,8 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
   Rocket, CheckCircle, Circle, Lock, ChevronRight, Sparkles, Eye,
-  Users, MessageSquare, Target, BarChart3, Briefcase, Zap, Shield, Gift, Star
+  Users, MessageSquare, Target, BarChart3, Briefcase, Zap, Shield, Gift, Star, ExternalLink
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const QUEST_STEPS = [
@@ -20,6 +21,8 @@ const QUEST_STEPS = [
     color: 'text-violet-500 bg-violet-50',
     check: (profile) => !!(profile?.avatar_url && profile?.bio && profile?.location),
     hint: 'Go to your Profile page and fill in the essentials.',
+    link: '/Profile',
+    linkLabel: 'Go to Profile',
   },
   {
     id: 'discover_matches',
@@ -29,6 +32,8 @@ const QUEST_STEPS = [
     color: 'text-amber-500 bg-amber-50',
     check: (_, flags) => flags?.visited_matches,
     hint: 'Navigate to the Matches page from the sidebar.',
+    link: '/Matches',
+    linkLabel: 'Go to Matches',
   },
   {
     id: 'send_message',
@@ -38,6 +43,8 @@ const QUEST_STEPS = [
     color: 'text-blue-500 bg-blue-50',
     check: (_, flags) => flags?.sent_message,
     hint: 'Open Messages and reach out to someone.',
+    link: '/Messages',
+    linkLabel: 'Go to Messages',
   },
   {
     id: 'join_mission',
@@ -47,6 +54,8 @@ const QUEST_STEPS = [
     color: 'text-emerald-500 bg-emerald-50',
     check: (_, flags) => flags?.joined_mission,
     hint: 'Head to the Missions page and click Join on any mission.',
+    link: '/Missions',
+    linkLabel: 'Go to Missions',
   },
   {
     id: 'explore_marketplace',
@@ -56,6 +65,8 @@ const QUEST_STEPS = [
     color: 'text-pink-500 bg-pink-50',
     check: (_, flags) => flags?.visited_marketplace,
     hint: 'Visit the Marketplace from the sidebar.',
+    link: '/Marketplace',
+    linkLabel: 'Go to Marketplace',
   },
   {
     id: 'explore_projects',
@@ -65,6 +76,8 @@ const QUEST_STEPS = [
     color: 'text-cyan-500 bg-cyan-50',
     check: (_, flags) => flags?.visited_projects,
     hint: 'Check out the Projects page.',
+    link: '/Projects',
+    linkLabel: 'Go to Projects',
   },
   {
     id: 'earn_ggg',
@@ -74,6 +87,8 @@ const QUEST_STEPS = [
     color: 'text-yellow-500 bg-yellow-50',
     check: (profile) => (profile?.ggg_balance || 0) > 0,
     hint: 'Complete quests, attend events, or help others to earn GGG.',
+    link: '/Missions',
+    linkLabel: 'Earn GGG',
   },
   {
     id: 'unlock_advanced',
@@ -134,10 +149,17 @@ function StepCard({ step, index, isCompleted, isCurrent, isLocked }) {
           </div>
           <p className="text-xs text-slate-500 mb-2">{step.description}</p>
           {isCurrent && !step.isFinal && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <p className="text-[11px] text-violet-500 italic flex items-center gap-1">
                 <Eye className="w-3 h-3" /> {step.hint}
               </p>
+              {step.link && (
+                <Link to={step.link}>
+                  <Button size="sm" variant="default" className="text-xs h-7 ml-auto gap-1 bg-violet-600 hover:bg-violet-700 text-white">
+                    {step.linkLabel || 'Go'} <ExternalLink className="w-3 h-3" />
+                  </Button>
+                </Link>
+              )}
             </div>
           )}
         </div>
