@@ -176,16 +176,7 @@ export default function QuestManagementCard({ quest, profile }) {
             )}
           </div>
           {quest.status === 'active' && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-7 gap-1 text-xs"
-              onClick={() => incrementMutation.mutate()}
-              disabled={incrementMutation.isPending}
-            >
-              <ArrowUpCircle className="w-3 h-3" />
-              +1 Progress
-            </Button>
+            <Badge className="bg-blue-50 text-blue-600 text-[10px]">In Progress</Badge>
           )}
           {quest.status === 'completed' && (
             <Badge className="bg-emerald-100 text-emerald-700 gap-1">
