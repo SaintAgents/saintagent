@@ -157,7 +157,7 @@ function StepCard({ step, index, isCompleted, isCurrent, isLocked }) {
               )}
               <Link to={step.link}>
                 <Button size="sm" variant="default" className="text-xs h-7 gap-1 bg-violet-600 hover:bg-violet-700 text-white">
-                  {step.linkLabel || 'Go'} <ExternalLink className="w-3 h-3" />
+                  {step.linkLabel || 'Go'} <ChevronRight className="w-3 h-3" />
                 </Button>
               </Link>
             </div>
