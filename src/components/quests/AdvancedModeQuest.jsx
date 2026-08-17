@@ -87,8 +87,8 @@ const QUEST_STEPS = [
     color: 'text-yellow-500 bg-yellow-50',
     check: (profile) => (profile?.ggg_balance || 0) > 0,
     hint: 'Complete quests, attend events, or help others to earn GGG.',
-    link: '/Missions',
-    linkLabel: 'Earn GGG',
+    link: '/GaiaGlobalTreasury',
+    linkLabel: 'View GGG Balance',
   },
   {
     id: 'unlock_advanced',
@@ -202,8 +202,8 @@ export default function AdvancedModeQuest({ userId, profile }) {
   // Auto-check steps based on real data — no manual marking needed
   const autoFlags = useMemo(() => {
     const f = { ...flags };
-    // Profile-based checks
-    if (profile?.avatar_url && profile?.bio && profile?.location) f.explore_profile = true;
+    // Profile-based checks — avatar + at least one of bio/location
+    if (profile?.avatar_url && (profile?.bio || profile?.location)) f.explore_profile = true;
     if ((profile?.ggg_balance || 0) > 0) f.earn_ggg = true;
     // Activity-based checks
     if (userMessages.length > 0) f.send_message = true;
@@ -227,9 +227,12 @@ export default function AdvancedModeQuest({ userId, profile }) {
   }, [autoFlags, quest?.id]);
 
   const completedSteps = QUEST_STEPS.filter((s) => {
-    if (s.id === 'explore_profile' || s.id === 'earn_ggg') return s.check(profile, autoFlags);
     if (s.id === 'unlock_advanced') return autoFlags.advanced_unlocked;
-    return autoFlags[s.id];
+    // For all steps, check autoFlags first (covers both auto-detected and stored flags)
+    if (autoFlags[s.id]) return true;
+    // Fallback to check function for profile-based steps
+    if (s.check) return s.check(profile, autoFlags);
+    return false;
   });
 
   const currentStepIndex = completedSteps.length;
