@@ -87,7 +87,7 @@ const QUEST_STEPS = [
   },
 ];
 
-function StepCard({ step, index, isCompleted, isCurrent, isLocked, onMarkComplete }) {
+function StepCard({ step, index, isCompleted, isCurrent, isLocked }) {
   const Icon = step.icon;
 
   return (
@@ -138,9 +138,6 @@ function StepCard({ step, index, isCompleted, isCurrent, isLocked, onMarkComplet
               <p className="text-[11px] text-violet-500 italic flex items-center gap-1">
                 <Eye className="w-3 h-3" /> {step.hint}
               </p>
-              <Button size="sm" variant="outline" className="text-xs h-7 ml-auto" onClick={() => onMarkComplete(step.id)}>
-                Mark Complete <ChevronRight className="w-3 h-3 ml-1" />
-              </Button>
             </div>
           )}
         </div>
@@ -160,18 +157,54 @@ export default function AdvancedModeQuest({ userId, profile }) {
     enabled: !!userId,
   });
 
+  // Check if user has sent any messages
+  const { data: userMessages = [] } = useQuery({
+    queryKey: ['advancedQuest_messages', userId],
+    queryFn: () => base44.entities.Message.filter({ from_user_id: userId }, '-created_date', 1),
+    enabled: !!userId,
+  });
+
+  // Check if user has joined any mission
+  const { data: userMissions = [] } = useQuery({
+    queryKey: ['advancedQuest_missions', userId],
+    queryFn: async () => {
+      const missions = await base44.entities.Mission.filter({}, '-created_date', 50);
+      return missions.filter(m => m.participant_ids?.includes(userId) || m.creator_id === userId);
+    },
+    enabled: !!userId,
+  });
+
   const quest = questRecords[0];
   const flags = quest?.initiation_data?.choices_made || {};
 
-  // Auto-check profile-based steps
+  // Auto-check steps based on real data — no manual marking needed
   const autoFlags = useMemo(() => {
     const f = { ...flags };
+    // Profile-based checks
     if (profile?.avatar_url && profile?.bio && profile?.location) f.explore_profile = true;
     if ((profile?.ggg_balance || 0) > 0) f.earn_ggg = true;
+    // Activity-based checks
+    if (userMessages.length > 0) f.send_message = true;
+    if (userMissions.length > 0) f.joined_mission = true;
+    // Visit-based flags are still stored when user navigates (set via page visit tracking)
     return f;
-  }, [flags, profile]);
+  }, [flags, profile, userMessages, userMissions]);
 
-  const completedSteps = QUEST_STEPS.filter((s, i) => {
+  // Persist auto-detected flags back to the quest record
+  React.useEffect(() => {
+    if (!quest?.id) return;
+    const storedFlags = quest.initiation_data?.choices_made || {};
+    const newKeys = Object.keys(autoFlags).filter(k => autoFlags[k] && !storedFlags[k]);
+    if (newKeys.length === 0) return;
+    const merged = { ...storedFlags, ...autoFlags };
+    const stepsCompleted = QUEST_STEPS.filter(s => merged[s.id]).map(s => s.id);
+    base44.entities.Quest.update(quest.id, {
+      current_count: stepsCompleted.length,
+      initiation_data: { ...quest.initiation_data, steps_completed: stepsCompleted, choices_made: merged },
+    }).then(() => queryClient.invalidateQueries({ queryKey: ['advancedModeQuest'] }));
+  }, [autoFlags, quest?.id]);
+
+  const completedSteps = QUEST_STEPS.filter((s) => {
     if (s.id === 'explore_profile' || s.id === 'earn_ggg') return s.check(profile, autoFlags);
     if (s.id === 'unlock_advanced') return autoFlags.advanced_unlocked;
     return autoFlags[s.id];
@@ -219,22 +252,6 @@ export default function AdvancedModeQuest({ userId, profile }) {
             current_count: 0,
             completed: false,
           })),
-        },
-      });
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['advancedModeQuest'] }),
-  });
-
-  const markCompleteMutation = useMutation({
-    mutationFn: async (stepId) => {
-      const newFlags = { ...autoFlags, [stepId]: true };
-      const stepsCompleted = [...(quest.initiation_data?.steps_completed || []), stepId];
-      await base44.entities.Quest.update(quest.id, {
-        current_count: stepsCompleted.length,
-        initiation_data: {
-          ...quest.initiation_data,
-          steps_completed: stepsCompleted,
-          choices_made: newFlags,
         },
       });
     },
@@ -379,7 +396,6 @@ export default function AdvancedModeQuest({ userId, profile }) {
                 isCompleted={done}
                 isCurrent={isCurrent}
                 isLocked={locked}
-                onMarkComplete={(id) => markCompleteMutation.mutate(id)}
               />
             );
           })}
