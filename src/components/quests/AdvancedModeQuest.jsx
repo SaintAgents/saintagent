@@ -19,7 +19,7 @@ const QUEST_STEPS = [
     description: 'Upload an avatar, add a bio, and set your location to make yourself discoverable.',
     icon: Users,
     color: 'text-violet-500 bg-violet-50',
-    check: (profile) => !!(profile?.avatar_url && profile?.bio && profile?.location),
+    check: (profile) => !!(profile?.avatar_url && (profile?.bio || profile?.location)),
     hint: 'Go to your Profile page and fill in the essentials.',
     link: '/Profile',
     linkLabel: 'Go to Profile',
@@ -148,18 +148,18 @@ function StepCard({ step, index, isCompleted, isCurrent, isLocked }) {
             {step.isFinal && !isCompleted && <Badge className="text-[10px] px-1.5 py-0 bg-amber-100 text-amber-700">Final</Badge>}
           </div>
           <p className="text-xs text-slate-500 mb-2">{step.description}</p>
-          {isCurrent && !step.isFinal && (
+          {!isCompleted && !step.isFinal && step.link && (
             <div className="flex items-center gap-2 flex-wrap">
-              <p className="text-[11px] text-violet-500 italic flex items-center gap-1">
-                <Eye className="w-3 h-3" /> {step.hint}
-              </p>
-              {step.link && (
-                <Link to={step.link}>
-                  <Button size="sm" variant="default" className="text-xs h-7 ml-auto gap-1 bg-violet-600 hover:bg-violet-700 text-white">
-                    {step.linkLabel || 'Go'} <ExternalLink className="w-3 h-3" />
-                  </Button>
-                </Link>
+              {isCurrent && (
+                <p className="text-[11px] text-violet-500 italic flex items-center gap-1">
+                  <Eye className="w-3 h-3" /> {step.hint}
+                </p>
               )}
+              <Link to={step.link}>
+                <Button size="sm" variant="default" className="text-xs h-7 gap-1 bg-violet-600 hover:bg-violet-700 text-white">
+                  {step.linkLabel || 'Go'} <ExternalLink className="w-3 h-3" />
+                </Button>
+              </Link>
             </div>
           )}
         </div>
