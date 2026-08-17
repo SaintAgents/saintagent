@@ -22,6 +22,9 @@ import { Link } from 'react-router-dom';
 const ITEMS_PER_PAGE = 12;
 
 export default function Projects() {
+  // Track visit for quest system
+  React.useEffect(() => { try { localStorage.setItem('quest_visited_projects', '1'); } catch {} }, []);
+
   const [q, setQ] = useState('');
   const [selected, setSelected] = useState(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);

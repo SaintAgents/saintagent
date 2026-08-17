@@ -199,6 +199,17 @@ export default function AdvancedModeQuest({ userId, profile }) {
   const quest = questRecords[0];
   const flags = quest?.initiation_data?.choices_made || {};
 
+  // Read localStorage visit flags once on mount
+  const [visitFlags] = useState(() => {
+    try {
+      return {
+        matches: !!localStorage.getItem('quest_visited_matches'),
+        marketplace: !!localStorage.getItem('quest_visited_marketplace'),
+        projects: !!localStorage.getItem('quest_visited_projects'),
+      };
+    } catch { return {}; }
+  });
+
   // Auto-check steps based on real data — no manual marking needed
   const autoFlags = useMemo(() => {
     const f = { ...flags };
@@ -208,9 +219,12 @@ export default function AdvancedModeQuest({ userId, profile }) {
     // Activity-based checks
     if (userMessages.length > 0) f.send_message = true;
     if (userMissions.length > 0) f.joined_mission = true;
-    // Visit-based flags are still stored when user navigates (set via page visit tracking)
+    // Visit-based checks from localStorage
+    if (visitFlags.matches) f.discover_matches = true;
+    if (visitFlags.marketplace) f.explore_marketplace = true;
+    if (visitFlags.projects) f.explore_projects = true;
     return f;
-  }, [flags, profile, userMessages, userMissions]);
+  }, [flags, profile, userMessages, userMissions, visitFlags]);
 
   // Persist auto-detected flags back to the quest record
   React.useEffect(() => {

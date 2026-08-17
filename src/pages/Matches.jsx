@@ -39,6 +39,9 @@ import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import RecommendationsTab from '@/components/matches/RecommendationsTab';
 
 export default function Matches() {
+  // Track visit for quest system
+  React.useEffect(() => { try { localStorage.setItem('quest_visited_matches', '1'); } catch {} }, []);
+
   const [tab, setTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [valuesQuery, setValuesQuery] = useState('');

@@ -38,6 +38,9 @@ import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 const MARKETPLACE_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/7fc6cc632_mp2.png";
 
 export default function Marketplace() {
+  // Track visit for quest system
+  React.useEffect(() => { try { localStorage.setItem('quest_visited_marketplace', '1'); } catch {} }, []);
+
   const [tab, setTab] = useState('browse');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
