@@ -190,7 +190,19 @@ export default function Quests() {
         )}
 
         {activeTab === 'manage' && (
-          <QuestManagementPanel userId={currentUser?.email} profile={profile} />
+          <div className="space-y-4">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
+              <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-amber-800">These are AI-generated lore quests</p>
+                <p className="text-xs text-amber-600 mt-0.5">They don't have real completion criteria tied to platform activity. Your real progression quest is on the Overview tab.</p>
+                <Button size="sm" variant="outline" className="mt-2 text-xs h-7 gap-1 border-amber-300 text-amber-700 hover:bg-amber-100" onClick={() => setActiveTab('overview')}>
+                  <Trophy className="w-3 h-3" /> Go to Real Quest
+                </Button>
+              </div>
+            </div>
+            <QuestManagementPanel userId={currentUser?.email} profile={profile} />
+          </div>
         )}
 
         {activeTab === 'timeline' && (
