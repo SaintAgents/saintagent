@@ -449,9 +449,9 @@ Only include fields that are in the missing list: ${missing.join(', ')}`,
           ) : (
             <div className="space-y-3">
               {/* Magic Fill + Go to Profile */}
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <Button
-                  className="flex-1 gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 shadow-md"
+                  className="gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 shadow-md"
                   onClick={handleMagicFill}
                   disabled={magicFilling}
                 >
@@ -469,7 +469,7 @@ Only include fields that are in the missing list: ${missing.join(', ')}`,
                 </Button>
                 <Button
                   variant="outline"
-                  className="gap-2 shrink-0"
+                  className="gap-2"
                   onClick={() => window.location.href = createPageUrl('Profile')}
                 >
                   <User className="w-4 h-4" />
