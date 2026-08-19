@@ -501,7 +501,8 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
           projectEndDate={project.end_date}
         />
       ) : viewMode === 'board' ? (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="overflow-x-auto -mx-4 px-4 pb-4">
+        <div className="grid grid-cols-4 gap-4 min-w-[700px]">
           {STATUS_COLUMNS.map((column) => (
             <div key={column.id} className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 min-h-[400px]">
               <div className="flex items-center justify-between mb-4">
@@ -535,6 +536,7 @@ export default function ProjectDetailView({ project, onBack, currentUser, profil
               </ScrollArea>
             </div>
           ))}
+        </div>
         </div>
       ) : (
         /* List View */
