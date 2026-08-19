@@ -192,7 +192,8 @@ export default function ProjectsTab({ profile, currentUser }) {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+      <div className="overflow-x-auto -mx-6 px-6 pb-2">
+      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-7 gap-4 min-w-[600px]">
         {/* Total Projects */}
         <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700/50">
           <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-3">
@@ -226,6 +227,8 @@ export default function ProjectsTab({ profile, currentUser }) {
         </div>
       </div>
 
+      </div>
+
       {/* Funding Secured */}
       <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700/50 inline-block">
         <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-slate-700/50 flex items-center justify-center mb-3">
@@ -251,7 +254,8 @@ export default function ProjectsTab({ profile, currentUser }) {
 
       {/* Pipeline Columns */}
       {projects.length > 0 && (
-        <div className="grid grid-cols-5 gap-4">
+        <div className="overflow-x-auto -mx-6 px-6 pb-4">
+          <div className="grid grid-cols-5 gap-4 min-w-[800px]">
           {PIPELINE_STAGES.map((stage) => (
             <div key={stage.id} className="space-y-3">
               {/* Column Header */}
@@ -347,6 +351,7 @@ export default function ProjectsTab({ profile, currentUser }) {
               </ScrollArea>
             </div>
           ))}
+          </div>
         </div>
       )}
 
