@@ -29,7 +29,7 @@ export default function Projects() {
   const [selected, setSelected] = useState(null);
 
   // Auto-open project from URL ?id= param (e.g. from deep search)
-  const urlProjectId = React.useMemo(() => new URLSearchParams(window.location.search).get('id'), []);
+  const urlProjectId = new URLSearchParams(window.location.search).get('id');
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [classifying, setClassifying] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -68,19 +68,16 @@ export default function Projects() {
   });
 
   // Auto-open project from URL ?id= param
+  const autoOpenedRef = React.useRef(false);
   React.useEffect(() => {
-    if (!urlProjectId || selected) return;
-    // Try from already-loaded list first, otherwise fetch directly
-    const fromList = projects.find(p => p.id === urlProjectId);
-    if (fromList) {
-      setSelected(fromList);
-    } else if (projects.length > 0) {
-      // Projects loaded but no match — fetch individually
-      base44.entities.Project.filter({ id: urlProjectId }).then(res => {
-        if (res?.[0]) setSelected(res[0]);
-      });
-    }
-  }, [urlProjectId, projects]);
+    if (!urlProjectId || autoOpenedRef.current) return;
+    base44.entities.Project.filter({ id: urlProjectId }).then(res => {
+      if (res?.[0] && !autoOpenedRef.current) {
+        autoOpenedRef.current = true;
+        setSelected(res[0]);
+      }
+    });
+  }, [urlProjectId]);
 
   const filtered = (projects || []).filter((p) => {
     const f = advFilters;
