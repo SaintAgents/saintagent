@@ -30,6 +30,11 @@ export default function Projects() {
 
   // Auto-open project from URL ?id= param (e.g. from deep search)
   const urlProjectId = React.useMemo(() => new URLSearchParams(window.location.search).get('id'), []);
+  const { data: urlProject } = useQuery({
+    queryKey: ['projectById', urlProjectId],
+    queryFn: () => base44.entities.Project.get(urlProjectId),
+    enabled: !!urlProjectId,
+  });
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [classifying, setClassifying] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -69,11 +74,10 @@ export default function Projects() {
 
   // Auto-open project from URL ?id= param
   React.useEffect(() => {
-    if (urlProjectId && projects.length > 0 && !selected) {
-      const match = projects.find(p => p.id === urlProjectId);
-      if (match) setSelected(match);
+    if (urlProjectId && urlProject && !selected) {
+      setSelected(urlProject);
     }
-  }, [urlProjectId, projects]);
+  }, [urlProjectId, urlProject]);
 
   const filtered = (projects || []).filter((p) => {
     const f = advFilters;
