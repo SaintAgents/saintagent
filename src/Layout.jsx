@@ -424,7 +424,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
             openProfile(item.user_id);
             setSearchOpen(false);
           } else if (type === 'project') {
-            window.location.href = createPageUrl('Projects');
+            window.location.href = createPageUrl('Projects') + `?id=${item.id}`;
             setSearchOpen(false);
           } else if (type === 'dailylog') {
             window.location.href = createPageUrl('DailyOps') + `?date=${item.date}`;

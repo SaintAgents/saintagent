@@ -27,6 +27,9 @@ export default function Projects() {
 
   const [q, setQ] = useState('');
   const [selected, setSelected] = useState(null);
+
+  // Auto-open project from URL ?id= param (e.g. from deep search)
+  const urlProjectId = React.useMemo(() => new URLSearchParams(window.location.search).get('id'), []);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [classifying, setClassifying] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -63,6 +66,14 @@ export default function Projects() {
     queryKey: ['projects_all'],
     queryFn: () => base44.entities.Project.list('-created_date', 500),
   });
+
+  // Auto-open project from URL ?id= param
+  React.useEffect(() => {
+    if (urlProjectId && projects.length > 0 && !selected) {
+      const match = projects.find(p => p.id === urlProjectId);
+      if (match) setSelected(match);
+    }
+  }, [urlProjectId, projects]);
 
   const filtered = (projects || []).filter((p) => {
     const f = advFilters;

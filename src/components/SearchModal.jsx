@@ -518,6 +518,26 @@ export default function SearchModal({ open, onClose, onSelect }) {
                 </div>
               )}
 
+              {/* Projects */}
+              {(tab === 'all' || tab === 'projects') && filteredProjects.length > 0 && (
+                <div>
+                  {tab === 'all' && <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-4">Projects</h3>}
+                  {filteredProjects.map(project => (
+                    <button
+                      key={project.id}
+                      onClick={() => { onSelect?.('project', project); onClose(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"
+                    >
+                      <Folder className="w-10 h-10 p-2 rounded-lg bg-cyan-100 text-cyan-600" />
+                      <div className="text-left flex-1">
+                        <p className="font-medium text-slate-900">{project.title}</p>
+                        <p className="text-sm text-slate-500 truncate">{project.description || 'No description'}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {filteredPages.length === 0 && filteredProfiles.length === 0 && filteredListings.length === 0 && 
                filteredMissions.length === 0 && filteredCircles.length === 0 && 
                filteredPosts.length === 0 && filteredProjects.length === 0 &&
