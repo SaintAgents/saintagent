@@ -123,7 +123,7 @@ export default function BusinessProjectsTab({ entity, isOwner, isTeamMember, cur
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filtered.map(p => (
-            <ProjectMiniCard key={p.id} project={p} onClick={() => window.location.href = createPageUrl('ProjectTrack') + `?id=${p.id}`} />
+            <ProjectMiniCard key={p.id} project={p} onClick={() => document.dispatchEvent(new CustomEvent('openProjectDetail', { detail: { project: p } }))} />
           ))}
         </div>
       )}

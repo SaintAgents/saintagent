@@ -133,7 +133,7 @@ export default function BusinessDashboardTab({ entity, isOwner, isTeamMember, cu
           <div className="space-y-3">
             {recentProjects.map(p => (
               <div key={p.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-violet-50 transition-colors cursor-pointer"
-                   onClick={() => window.location.href = createPageUrl('ProjectTrack') + `?id=${p.id}`}>
+                   onClick={() => document.dispatchEvent(new CustomEvent('openProjectDetail', { detail: { project: p } }))}>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-slate-900 truncate">{p.title}</p>
                   <p className="text-xs text-slate-500">{p.status?.replace(/_/g, ' ')}</p>

@@ -246,17 +246,24 @@ function AuthenticatedLayout({ children, currentPageName }) {
     const handleOpenFullscreenMatches = () => {
       setFullscreenMatchesOpen(true);
     };
+    const handleOpenProjectDetail = (e) => {
+      if (e.detail?.project) {
+        setSearchProject(e.detail.project);
+      }
+    };
     document.addEventListener('click', handleProfileClick);
     document.addEventListener('openProfile', handleOpenProfile);
     document.addEventListener('openFloatingChat', handleOpenChat);
     document.addEventListener('openFloatingSidePanel', handleOpenFloatingSidePanel);
     document.addEventListener('openFullscreenMatches', handleOpenFullscreenMatches);
+    document.addEventListener('openProjectDetail', handleOpenProjectDetail);
     return () => {
       document.removeEventListener('click', handleProfileClick);
       document.removeEventListener('openProfile', handleOpenProfile);
       document.removeEventListener('openFloatingChat', handleOpenChat);
       document.removeEventListener('openFloatingSidePanel', handleOpenFloatingSidePanel);
       document.removeEventListener('openFullscreenMatches', handleOpenFullscreenMatches);
+      document.removeEventListener('openProjectDetail', handleOpenProjectDetail);
     };
     }, []);
 
@@ -430,6 +437,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           } else if (type === 'project') {
             setSearchProject(item);
             setSearchOpen(false);
+            return;
           } else if (type === 'dailylog') {
             window.location.href = createPageUrl('DailyOps') + `?date=${item.date}`;
             setSearchOpen(false);

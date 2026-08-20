@@ -341,7 +341,7 @@ export default function TopBar({
     } else if (type === 'event') {
       window.location.href = createPageUrl('EventDetail') + `?id=${item.id}`;
     } else if (type === 'project') {
-      window.location.href = createPageUrl('ProjectTrack') + `?id=${item.id}`;
+      document.dispatchEvent(new CustomEvent('openProjectDetail', { detail: { project: item } }));
     }
   };
 
