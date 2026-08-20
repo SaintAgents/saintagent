@@ -424,14 +424,16 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
             />
           ))}
           {items.length > limit && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full text-xs text-violet-700 border-violet-200 bg-violet-50 hover:bg-violet-100 mt-2"
-              onClick={() => setTab(type === 'profile' ? 'people' : type + 's')}
-            >
-              Show all {items.length} results →
-            </Button>
+            <div className="flex justify-center mt-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-1/2 text-xs text-violet-700 border-2 border-violet-300 bg-violet-50 hover:bg-violet-100"
+                onClick={() => setTab(type === 'profile' ? 'people' : type + 's')}
+              >
+                Show all {items.length} results →
+              </Button>
+            </div>
           )}
         </div>
       );
@@ -453,32 +455,34 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
           />
         ))}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-3 mt-3 border-t border-slate-200">
-            <span className="text-sm text-slate-700 font-medium">
-              Showing {start + 1}–{Math.min(start + PAGE_SIZE, items.length)} of {items.length}
-            </span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-3 text-sm font-medium border-slate-300"
-                disabled={tabPage === 0}
-                onClick={() => setTabPage(p => p - 1)}
-              >
-                ← Previous
-              </Button>
-              <span className="text-sm text-slate-600 font-medium px-2">
-                {tabPage + 1} / {totalPages}
+          <div className="pt-3 mt-3 border-t border-slate-200">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <span className="text-xs text-slate-700 font-medium">
+                {start + 1}–{Math.min(start + PAGE_SIZE, items.length)} of {items.length}
               </span>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-3 text-sm font-medium border-slate-300"
-                disabled={tabPage >= totalPages - 1}
-                onClick={() => setTabPage(p => p + 1)}
-              >
-                Next →
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 px-2 text-xs font-medium border-2 border-slate-300"
+                  disabled={tabPage === 0}
+                  onClick={() => setTabPage(p => p - 1)}
+                >
+                  ← Prev
+                </Button>
+                <span className="text-xs text-slate-600 font-medium px-1">
+                  {tabPage + 1}/{totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 px-2 text-xs font-medium border-2 border-slate-300"
+                  disabled={tabPage >= totalPages - 1}
+                  onClick={() => setTabPage(p => p + 1)}
+                >
+                  Next →
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -719,14 +723,16 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
                               </button>
                             ))}
                             {filteredResults.pages.length > 5 && (
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
-                                className="w-full text-xs text-violet-700 border-violet-200 bg-violet-50 hover:bg-violet-100 mt-2"
-                                onClick={() => setTab('pages')}
-                              >
-                                Show all {filteredResults.pages.length} pages →
-                              </Button>
+                              <div className="flex justify-center mt-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="w-1/2 text-xs text-violet-700 border-2 border-violet-300 bg-violet-50 hover:bg-violet-100"
+                                  onClick={() => setTab('pages')}
+                                >
+                                  Show all {filteredResults.pages.length} pages →
+                                </Button>
+                              </div>
                             )}
                           </div>
                         </div>
