@@ -107,21 +107,21 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
         return (
           <>
             {item.cover_image_url ? (
-              <img src={item.cover_image_url} alt="" className="w-12 h-12 rounded-lg object-cover" />
+              <img src={item.cover_image_url} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
             ) : (
-              <div className={`w-12 h-12 rounded-lg ${config.bgColor} flex items-center justify-center`}>
-                <Icon className={`w-6 h-6 ${config.iconColor}`} />
+              <div className={`w-10 h-10 rounded-lg ${config.bgColor} flex items-center justify-center shrink-0`}>
+                <Icon className={`w-5 h-5 ${config.iconColor}`} />
               </div>
             )}
             <div className="flex-1 min-w-0">
               <p className="font-medium text-slate-900 truncate">{item.title}</p>
-              <p className="text-sm text-slate-500 truncate">{item.description?.substring(0, 60)}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <Badge variant={item.is_free ? "secondary" : "outline"} className="text-xs">
+              <p className="text-xs text-slate-500 truncate">{item.description?.substring(0, 40)}</p>
+              <div className="flex items-center gap-1 mt-1 flex-wrap">
+                <Badge variant={item.is_free ? "secondary" : "outline"} className="text-[10px] px-1.5">
                   {item.is_free ? 'Free' : `$${item.price_amount}`}
                 </Badge>
                 {item.category && (
-                  <Badge variant="outline" className="text-xs">{item.category}</Badge>
+                  <Badge variant="outline" className="text-[10px] px-1.5">{item.category}</Badge>
                 )}
               </div>
             </div>
@@ -131,12 +131,12 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
       case 'mission':
         return (
           <>
-            <div className={`w-12 h-12 rounded-lg ${config.bgColor} flex items-center justify-center`}>
-              <Icon className={`w-6 h-6 ${config.iconColor}`} />
+            <div className={`w-10 h-10 rounded-lg ${config.bgColor} flex items-center justify-center shrink-0`}>
+              <Icon className={`w-5 h-5 ${config.iconColor}`} />
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium text-slate-900 truncate">{item.title}</p>
-              <p className="text-sm text-slate-500 truncate">{item.objective || item.description?.substring(0, 60)}</p>
+              <p className="text-xs text-slate-500 truncate">{item.objective?.substring(0, 40) || item.description?.substring(0, 40)}</p>
               <div className="flex items-center gap-2 mt-1">
                 {item.status && (
                   <Badge variant={item.status === 'active' ? 'default' : 'secondary'} className="text-xs">
@@ -168,15 +168,15 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
         return (
           <>
             {item.image_url ? (
-              <img src={item.image_url} alt="" className="w-12 h-12 rounded-lg object-cover" />
+              <img src={item.image_url} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
             ) : (
-              <div className={`w-12 h-12 rounded-lg ${config.bgColor} flex items-center justify-center`}>
-                <Icon className={`w-6 h-6 ${config.iconColor}`} />
+              <div className={`w-10 h-10 rounded-lg ${config.bgColor} flex items-center justify-center shrink-0`}>
+                <Icon className={`w-5 h-5 ${config.iconColor}`} />
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-slate-900 truncate">{item.name}</p>
-              <p className="text-sm text-slate-500 truncate">{item.description?.substring(0, 60)}</p>
+              <p className="font-medium text-slate-900 truncate text-sm">{item.name}</p>
+              <p className="text-xs text-slate-500 truncate">{item.description?.substring(0, 40)}</p>
               <div className="flex items-center gap-2 mt-1">
                 {item.circle_type && (
                   <Badge variant="outline" className="text-xs capitalize">{item.circle_type}</Badge>
@@ -203,8 +203,8 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
       case 'event':
         return (
           <>
-            <div className={`w-12 h-12 rounded-lg ${config.bgColor} flex items-center justify-center`}>
-              <Icon className={`w-6 h-6 ${config.iconColor}`} />
+            <div className={`w-10 h-10 rounded-lg ${config.bgColor} flex items-center justify-center shrink-0`}>
+              <Icon className={`w-5 h-5 ${config.iconColor}`} />
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium text-slate-900 truncate">{item.title}</p>
@@ -252,13 +252,13 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
       default:
         return (
           <>
-            <div className={`w-10 h-10 rounded-lg ${config.bgColor} flex items-center justify-center`}>
+            <div className={`w-10 h-10 rounded-lg ${config.bgColor} flex items-center justify-center shrink-0`}>
               <Icon className={`w-5 h-5 ${config.iconColor}`} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-slate-900 truncate">{item.title || item.name || 'Untitled'}</p>
-              <p className="text-sm text-slate-500 truncate">
-                {item.description || item.content?.substring(0, 60) || item.overview || ''}
+              <p className="font-medium text-slate-900 truncate text-sm">{item.title || item.name || 'Untitled'}</p>
+              <p className="text-xs text-slate-500 truncate">
+                {item.description?.substring(0, 40) || item.content?.substring(0, 40) || item.overview?.substring(0, 40) || ''}
               </p>
             </div>
           </>
@@ -269,7 +269,7 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
   return (
     <button
       onClick={() => onClick?.(type, item)}
-      className={`w-full flex items-center gap-2 p-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left overflow-hidden ${
+      className={`w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors text-left overflow-hidden max-w-full ${
         highlight ? 'bg-violet-50 ring-1 ring-violet-200' : ''
       }`}
     >

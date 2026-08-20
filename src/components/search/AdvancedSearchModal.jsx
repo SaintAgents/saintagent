@@ -424,15 +424,14 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
             />
           ))}
           {items.length > limit && (
-            <div className="flex justify-center mt-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-1/2 text-xs text-violet-700 border-2 border-violet-300 bg-violet-50 hover:bg-violet-100"
+            <div className="flex justify-center mt-2 px-2">
+              <button 
+                className="w-1/2 max-w-[200px] py-1.5 text-xs font-semibold text-violet-700 bg-violet-50 hover:bg-violet-100 rounded-md"
+                style={{ border: '2px solid #8b5cf6' }}
                 onClick={() => setTab(type === 'profile' ? 'people' : type + 's')}
               >
-                Show all {items.length} results →
-              </Button>
+                Show all {items.length} →
+              </button>
             </div>
           )}
         </div>
@@ -455,33 +454,31 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
           />
         ))}
         {totalPages > 1 && (
-          <div className="pt-3 mt-3 border-t border-slate-200">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className="text-xs text-slate-700 font-medium">
+          <div className="pt-2 mt-2 border-t border-slate-200">
+            <div className="flex items-center justify-between gap-1">
+              <span className="text-[11px] text-slate-600 shrink-0">
                 {start + 1}–{Math.min(start + PAGE_SIZE, items.length)} of {items.length}
               </span>
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 px-2 text-xs font-medium border-2 border-slate-300"
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  className="h-6 px-2 text-[11px] font-medium rounded bg-white disabled:opacity-40"
+                  style={{ border: '2px solid #cbd5e1' }}
                   disabled={tabPage === 0}
                   onClick={() => setTabPage(p => p - 1)}
                 >
-                  ← Prev
-                </Button>
-                <span className="text-xs text-slate-600 font-medium px-1">
+                  ←
+                </button>
+                <span className="text-[11px] text-slate-600 px-1">
                   {tabPage + 1}/{totalPages}
                 </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 px-2 text-xs font-medium border-2 border-slate-300"
+                <button
+                  className="h-6 px-2 text-[11px] font-medium rounded bg-white disabled:opacity-40"
+                  style={{ border: '2px solid #cbd5e1' }}
                   disabled={tabPage >= totalPages - 1}
                   onClick={() => setTabPage(p => p + 1)}
                 >
-                  Next →
-                </Button>
+                  →
+                </button>
               </div>
             </div>
           </div>
@@ -657,8 +654,8 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
           )}
 
           {/* Results */}
-          <ScrollArea className="flex-1 h-full">
-            <div className="p-4">
+          <ScrollArea className="flex-1 h-full min-w-0">
+            <div className="p-4 overflow-hidden">
               {/* Sort bar */}
               {(query || hasActiveFilters) && tab !== 'pages' && (
                 <div className="flex items-center justify-between mb-4 pb-3 border-b">
@@ -723,15 +720,14 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
                               </button>
                             ))}
                             {filteredResults.pages.length > 5 && (
-                              <div className="flex justify-center mt-2">
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="w-1/2 text-xs text-violet-700 border-2 border-violet-300 bg-violet-50 hover:bg-violet-100"
+                              <div className="flex justify-center mt-2 px-2">
+                                <button 
+                                  className="w-1/2 max-w-[200px] py-1.5 text-xs font-semibold text-violet-700 bg-violet-50 hover:bg-violet-100 rounded-md"
+                                  style={{ border: '2px solid #8b5cf6' }}
                                   onClick={() => setTab('pages')}
                                 >
                                   Show all {filteredResults.pages.length} pages →
-                                </Button>
+                                </button>
                               </div>
                             )}
                           </div>
