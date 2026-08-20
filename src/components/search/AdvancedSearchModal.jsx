@@ -453,7 +453,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
             onClick={handleSelect}
           />
         ))}
-        {totalPages > 1 && (
+        {(totalPages > 1 || tabPage > 0) && (
           <div className="pt-2 mt-2 border-t border-slate-200">
             <div className="flex items-center justify-between gap-1">
               <span className="text-[11px] text-slate-600 shrink-0">
@@ -466,7 +466,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
                   disabled={tabPage === 0}
                   onClick={() => setTabPage(p => p - 1)}
                 >
-                  ←
+                  ← Prev
                 </button>
                 <span className="text-[11px] text-slate-600 px-1">
                   {tabPage + 1}/{totalPages}
@@ -477,7 +477,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
                   disabled={tabPage >= totalPages - 1}
                   onClick={() => setTabPage(p => p + 1)}
                 >
-                  →
+                  Next →
                 </button>
               </div>
             </div>

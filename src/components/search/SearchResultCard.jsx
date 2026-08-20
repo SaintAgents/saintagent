@@ -114,8 +114,8 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-slate-900 truncate">{item.title}</p>
-              <p className="text-xs text-slate-500 truncate">{item.description?.substring(0, 40)}</p>
+              <p className="font-medium text-slate-900 text-sm break-words whitespace-normal">{item.title}</p>
+              <p className="text-xs text-slate-500 break-words whitespace-normal">{item.description?.substring(0, 200)}</p>
               <div className="flex items-center gap-1 mt-1 flex-wrap">
                 <Badge variant={item.is_free ? "secondary" : "outline"} className="text-[10px] px-1.5">
                   {item.is_free ? 'Free' : `$${item.price_amount}`}
@@ -135,8 +135,8 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
               <Icon className={`w-5 h-5 ${config.iconColor}`} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-slate-900 truncate">{item.title}</p>
-              <p className="text-xs text-slate-500 truncate">{item.objective?.substring(0, 40) || item.description?.substring(0, 40)}</p>
+              <p className="font-medium text-slate-900 text-sm break-words whitespace-normal">{item.title}</p>
+              <p className="text-xs text-slate-500 break-words whitespace-normal">{item.objective?.substring(0, 200) || item.description?.substring(0, 200)}</p>
               <div className="flex items-center gap-2 mt-1">
                 {item.status && (
                   <Badge variant={item.status === 'active' ? 'default' : 'secondary'} className="text-xs">
@@ -175,8 +175,8 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-slate-900 truncate text-sm">{item.name}</p>
-              <p className="text-xs text-slate-500 truncate">{item.description?.substring(0, 40)}</p>
+              <p className="font-medium text-slate-900 text-sm break-words whitespace-normal">{item.name}</p>
+              <p className="text-xs text-slate-500 break-words whitespace-normal">{item.description?.substring(0, 200)}</p>
               <div className="flex items-center gap-2 mt-1">
                 {item.circle_type && (
                   <Badge variant="outline" className="text-xs capitalize">{item.circle_type}</Badge>
@@ -256,9 +256,9 @@ export default function SearchResultCard({ type, item, onClick, highlight }) {
               <Icon className={`w-5 h-5 ${config.iconColor}`} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-slate-900 truncate text-sm">{item.title || item.name || 'Untitled'}</p>
-              <p className="text-xs text-slate-500 truncate">
-                {item.description?.substring(0, 40) || item.content?.substring(0, 40) || item.overview?.substring(0, 40) || ''}
+              <p className="font-medium text-slate-900 text-sm break-words whitespace-normal">{item.title || item.name || 'Untitled'}</p>
+              <p className="text-xs text-slate-500 break-words whitespace-normal">
+                {item.description?.substring(0, 200) || item.content?.substring(0, 200) || item.overview?.substring(0, 200) || ''}
               </p>
             </div>
           </>
