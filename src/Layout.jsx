@@ -9,6 +9,8 @@ import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
+import FloatingPanel from '@/components/hud/FloatingPanel';
+import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
 import RightSideTabs from '@/components/hud/RightSideTabs';
 import DatingMatchesPopup from '@/components/hud/DatingMatchesPopup';
 import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
@@ -419,12 +421,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
     setSearchOpen(true);
   };
 
+  const [searchProject, setSearchProject] = useState(null);
+
   const handleSearchSelect = (type, item) => {
           if (type === 'profile') {
             openProfile(item.user_id);
             setSearchOpen(false);
           } else if (type === 'project') {
-            window.location.href = createPageUrl('Projects') + `?id=${item.id}`;
+            setSearchProject(item);
             setSearchOpen(false);
           } else if (type === 'dailylog') {
             window.location.href = createPageUrl('DailyOps') + `?date=${item.date}`;
@@ -1889,6 +1893,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
           recipientAvatar={floatingChat.recipientAvatar}
           onClose={() => setFloatingChat(null)}
         />
+      )}
+
+      {/* Search Project Detail Panel */}
+      {searchProject && (
+        <FloatingPanel title={searchProject.title || 'Project Details'} onClose={() => setSearchProject(null)}>
+          <ProjectDetailCard project={searchProject} />
+        </FloatingPanel>
       )}
 
       {/* Right Side Tabs (Help + Chat) */}
