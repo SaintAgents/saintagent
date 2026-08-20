@@ -399,9 +399,48 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
     return !!val;
   });
 
+  const [tabPage, setTabPage] = useState(0);
+  const PAGE_SIZE = 10;
+
+  // Reset pagination when tab or query changes
+  useEffect(() => {
+    setTabPage(0);
+  }, [tab, query]);
+
   const renderResults = (type, items, limit = 5) => {
-    const displayItems = tab === 'all' ? items.slice(0, limit) : items;
-    if (displayItems.length === 0) return null;
+    if (items.length === 0) return null;
+
+    // "All" tab: show limited items with "show all" link
+    if (tab === 'all') {
+      const displayItems = items.slice(0, limit);
+      return (
+        <div className="space-y-1">
+          {displayItems.map(item => (
+            <SearchResultCard
+              key={item.id}
+              type={type}
+              item={item}
+              onClick={handleSelect}
+            />
+          ))}
+          {items.length > limit && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full text-xs text-slate-500"
+              onClick={() => setTab(type === 'profile' ? 'people' : type + 's')}
+            >
+              Show all {items.length} results
+            </Button>
+          )}
+        </div>
+      );
+    }
+
+    // Individual tabs: paginated
+    const totalPages = Math.ceil(items.length / PAGE_SIZE);
+    const start = tabPage * PAGE_SIZE;
+    const displayItems = items.slice(start, start + PAGE_SIZE);
 
     return (
       <div className="space-y-1">
@@ -413,15 +452,32 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
             onClick={handleSelect}
           />
         ))}
-        {tab === 'all' && items.length > limit && (
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="w-full text-xs text-slate-500"
-            onClick={() => setTab(type === 'profile' ? 'people' : type + 's')}
-          >
-            Show all {items.length} results
-          </Button>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between pt-3 mt-3 border-t">
+            <span className="text-xs text-slate-500">
+              Showing {start + 1}–{Math.min(start + PAGE_SIZE, items.length)} of {items.length}
+            </span>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs"
+                disabled={tabPage === 0}
+                onClick={() => setTabPage(p => p - 1)}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 text-xs"
+                disabled={tabPage >= totalPages - 1}
+                onClick={() => setTabPage(p => p + 1)}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
         )}
       </div>
     );
@@ -732,7 +788,7 @@ export default function AdvancedSearchModal({ open, onClose, onSelect, initialQu
                           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-2">
                             <Folder className="w-4 h-4" /> Projects ({filteredResults.projects.length})
                           </h3>
-                          {renderResults('project', filteredResults.projects)}
+                          {renderResults('project', filteredResults.projects, 10)}
                         </div>
                       )}
                     </>
