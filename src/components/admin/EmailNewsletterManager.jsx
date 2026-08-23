@@ -1260,7 +1260,7 @@ Return ONLY the formatted content.`;
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Eye className="w-5 h-5" />
-                Email Preview (Final)
+                Newsletter Preview
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -1269,22 +1269,45 @@ Return ONLY the formatted content.`;
                   Compose your newsletter to see a preview.
                 </p>
               ) : (
-                <div className="border rounded-lg overflow-hidden">
-                  <div className="bg-slate-100 dark:bg-slate-800 p-4 border-b">
-                    <p className="text-sm text-slate-500">Subject:</p>
-                    <p className="font-semibold">{subject || '(No subject)'}</p>
-                    <p className="text-xs text-slate-400 mt-1">
-                      {selectedArticles.length} article(s) embedded • {previewImages.filter(Boolean).length} image(s)
-                    </p>
+                <div className="max-w-3xl mx-auto">
+                  {/* Simulated email client header */}
+                  <div className="rounded-t-xl border border-b-0 border-slate-200 bg-white p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-400" />
+                        <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                        <div className="w-3 h-3 rounded-full bg-green-400" />
+                      </div>
+                      <span className="text-xs text-slate-400 ml-2">Email Preview</span>
+                    </div>
+                    <div className="space-y-1.5 text-sm">
+                      <div className="flex gap-2">
+                        <span className="text-slate-400 w-16 shrink-0">From:</span>
+                        <span className="text-slate-700 font-medium">SaintAgent Newsletter</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <span className="text-slate-400 w-16 shrink-0">Subject:</span>
+                        <span className="text-slate-900 font-semibold">{subject || '(No subject)'}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <span className="text-slate-400 w-16 shrink-0">To:</span>
+                        <span className="text-slate-500">{displayEmails.length} subscriber{displayEmails.length !== 1 ? 's' : ''}</span>
+                      </div>
+                    </div>
                   </div>
+                  {/* Email body render */}
                   <div 
-                    className="p-0 bg-slate-100 dark:bg-slate-800 min-h-[300px] max-h-[600px] overflow-y-auto"
-                    style={{ backgroundColor: '#f5f5f5' }}
+                    className="border border-slate-200 rounded-b-xl overflow-hidden"
+                    style={{ backgroundColor: '#f5f5f5', padding: '20px' }}
                   >
                     <div 
-                      dangerouslySetInnerHTML={{ __html: buildFinalEmailContent() || '<p class="text-center py-8 text-slate-500">(No content)</p>' }}
+                      dangerouslySetInnerHTML={{ __html: buildFinalEmailContent() || '<p style="text-align:center;padding:32px;color:#94a3b8;">(No content)</p>' }}
                     />
                   </div>
+                  {/* Meta info */}
+                  <p className="text-xs text-slate-400 text-center mt-3">
+                    {selectedArticles.length} article(s) embedded • {previewImages.filter(Boolean).length} header image(s)
+                  </p>
                 </div>
               )}
             </CardContent>
