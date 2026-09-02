@@ -814,7 +814,7 @@ export default function TopBar({
               </span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-96 max-w-96 p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
+          <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-96 max-w-96 p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002, backgroundColor: 'rgba(255, 255, 255, 0.87)' }}>
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
               <h3 className="font-semibold text-slate-900 dark:text-slate-100">Messages</h3>
               <div className="flex items-center gap-2">
