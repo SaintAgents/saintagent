@@ -313,6 +313,7 @@ export default function FloatingChatWidget({ recipientId, recipientName, recipie
 
   return (
     <div 
+      data-chat-widget
       className={cn(
         "fixed bg-white shadow-2xl border border-slate-200 z-[150] flex flex-col overflow-hidden",
         dockedSide ? "rounded-lg" : "rounded-lg"

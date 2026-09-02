@@ -476,6 +476,74 @@ html[data-theme='hacker'] .schedule-item:hover {
   border-color: rgba(0, 255, 136, 0.4) !important;
 }
 
+/* =====================================================
+   FLOATING CHAT WIDGET — Shield from dark/hacker theme overrides
+   Force light-mode readable styling so message text is never invisible.
+   ===================================================== */
+html[data-theme='dark'] [data-chat-widget],
+html[data-theme='hacker'] [data-chat-widget] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+html[data-theme='dark'] [data-chat-widget] *,
+html[data-theme='hacker'] [data-chat-widget] * {
+  color: inherit;
+}
+html[data-theme][data-theme] [data-chat-widget] div:not(.bg-violet-600):not([class*='bg-violet-']),
+html[data-theme][data-theme] [data-chat-widget] p,
+html[data-theme][data-theme] [data-chat-widget] span {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+html[data-theme][data-theme] [data-chat-widget] .bg-violet-600 {
+  background-color: #7c3aed !important;
+}
+html[data-theme][data-theme] [data-chat-widget] .bg-violet-600 *,
+html[data-theme][data-theme] [data-chat-widget] .bg-violet-600 {
+  color: #ffffff !important;
+}
+html[data-theme][data-theme] [data-chat-widget] .bg-slate-100 {
+  background-color: #f1f5f9 !important;
+}
+html[data-theme][data-theme] [data-chat-widget] .bg-slate-100 *,
+html[data-theme][data-theme] [data-chat-widget] .text-slate-900 {
+  color: #0f172a !important;
+}
+html[data-theme][data-theme] [data-chat-widget] .text-slate-500,
+html[data-theme][data-theme] [data-chat-widget] .text-slate-400 {
+  color: #94a3b8 !important;
+}
+html[data-theme][data-theme] [data-chat-widget] input,
+html[data-theme][data-theme] [data-chat-widget] textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+html[data-theme][data-theme] [data-chat-widget] input::placeholder,
+html[data-theme][data-theme] [data-chat-widget] textarea::placeholder {
+  color: #94a3b8 !important;
+}
+html[data-theme][data-theme] [data-chat-widget] button:not(.bg-violet-600):not([class*='bg-violet-']) {
+  background-color: transparent !important;
+}
+html[data-theme][data-theme] [data-chat-widget] .border-t,
+html[data-theme][data-theme] [data-chat-widget] .border-b {
+  border-color: #e2e8f0 !important;
+}
+html[data-theme][data-theme] [data-chat-widget] svg {
+  filter: none !important;
+}
+html[data-theme='hacker'] [data-chat-widget] img {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+html[data-theme][data-theme] [data-chat-widget] .rounded-lg,
+html[data-theme][data-theme] [data-chat-widget] .rounded-2xl,
+html[data-theme][data-theme] [data-chat-widget] .rounded-xl {
+  box-shadow: none !important;
+  border: inherit !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;
