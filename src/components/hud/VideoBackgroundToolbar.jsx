@@ -570,6 +570,26 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                   <span className="text-xs" style={{ color: textMuted }}>Hero stays fixed (parallax)</span>
                   <Switch checked={surfaceOpacity.heroFixed !== false} onCheckedChange={v => updateSurfaceOpacity({ heroFixed: v })} />
                 </div>
+
+                <button
+                  onClick={() => {
+                    const defaults = {
+                      surfaceOpacity: 85, heroOpacity: 30, bgOpacity: 90, contentStart: 0,
+                      whiteWash: 0, cardBg: 90, cardOpacity: 95, cmdBackdrop: 85, applyAll: true,
+                      heroFixed: true, fontDarker: 0, fontLighter: 100, fontSize: 100,
+                      bgVideoOpacity: 90, heroVideoHeight: 100, glow: 0, bgOverlay: 0, cmdCards: 100,
+                    };
+                    setSurfaceOpacity(defaults);
+                    saveSettings(SURFACE_OPACITY_KEY, defaults);
+                    window.dispatchEvent(new CustomEvent('surfaceOpacityChanged', { detail: defaults }));
+                  }}
+                  className="w-full mt-2 px-3 py-1.5 text-xs rounded-lg border transition-colors"
+                  style={{ borderColor: '#ef4444', color: '#ef4444', background: 'transparent' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#ef444420'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                >
+                  ↺ Reset All to Defaults
+                </button>
               </div>
             )}
 
@@ -583,6 +603,21 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                 <SliderRow label="Sidebar Opacity" value={sidebarSettings.sidebarOpacity} min={0} max={100} onChange={v => updateSidebar({ sidebarOpacity: v })} accent={accentColor} labelColor={textMuted} unit="%" />
                 <SliderRow label="Sidebar Background" value={sidebarSettings.sidebarBg} min={0} max={100} onChange={v => updateSidebar({ sidebarBg: v })} accent={accentColor} labelColor={textMuted} unit="%" />
                 <SliderRow label="Font Brightness" value={sidebarSettings.fontBrightness} min={30} max={150} onChange={v => updateSidebar({ fontBrightness: v })} accent={accentColor} labelColor={textMuted} unit="%" />
+
+                <button
+                  onClick={() => {
+                    const defaults = { sidebarOpacity: 100, sidebarBg: 90, fontBrightness: 100 };
+                    setSidebarSettings(defaults);
+                    saveSettings(SIDEBAR_OPACITY_KEY, defaults);
+                    window.dispatchEvent(new CustomEvent('sidebarOpacityChanged', { detail: defaults }));
+                  }}
+                  className="w-full mt-2 px-3 py-1.5 text-xs rounded-lg border transition-colors"
+                  style={{ borderColor: '#ef4444', color: '#ef4444', background: 'transparent' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#ef444420'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                >
+                  ↺ Reset to Defaults
+                </button>
               </div>
             )}
           </div>
