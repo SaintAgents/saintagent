@@ -1,0 +1,37 @@
+{
+  "name": "Check Alignment Badges on Journal Entry",
+  "description": "Automatically checks if a user qualifies for Grid Aligned or Sacred Flame badges when they create an alignment journal entry",
+  "trigger": {
+    "condition": "${ ((.trigger.data.entry_type == \"heart_coherence\") or (.trigger.data.entry_type == \"alignment\") or (.trigger.data.entry_type == \"grid_mission\") or (.trigger.data.entry_type == \"transformative\")) }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "JournalEntry"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "check_alignment_badges_on_journal_entry",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "checkAlignmentBadges",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "checkAlignmentBadges"
+  }
+}
