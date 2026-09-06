@@ -419,7 +419,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // GGG Balance - ALWAYS use profile as source, NEVER query wallet (causes rate limits)
   // Profile is the authoritative source and loads instantly with user data
-  const walletAvailable = profile?.ggg_balance ?? 0;
+  const walletAvailable = Math.max(0, profile?.ggg_balance ?? 0);
   // Use rp_points for calculation, but also check rank_points as fallback
   const rpPoints = profile?.rp_points || profile?.rank_points || 0;
   const rpInfo = getRPRank(rpPoints);

@@ -32,7 +32,7 @@ async function getOrCreateWallet(base44, userId) {
 async function updateProfileBalance(base44, userId, available) {
   const profiles = await base44.entities.UserProfile.filter({ user_id: userId });
   if (profiles?.[0]) {
-    await base44.entities.UserProfile.update(profiles[0].id, { ggg_balance: toNum(available) });
+    await base44.entities.UserProfile.update(profiles[0].id, { ggg_balance: Math.max(0, toNum(available)) });
   }
 }
 

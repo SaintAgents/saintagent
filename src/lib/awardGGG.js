@@ -39,7 +39,7 @@ export async function awardGGG(userId, amount, reasonCode, description, sourceTy
     return { newBalance: amount };
   }
 
-  const newBalance = (profile.ggg_balance || 0) + amount;
+  const newBalance = Math.max(0, (profile.ggg_balance || 0) + amount);
   await base44.entities.UserProfile.update(profile.id, { ggg_balance: newBalance });
 
   // 3. Sync wallet (best-effort)
@@ -74,7 +74,7 @@ export async function deductGGG(userId, amount, reasonCode, description, sourceT
   const currentBalance = profile.ggg_balance || 0;
   if (currentBalance < amount) throw new Error('Insufficient GGG balance');
 
-  const newBalance = currentBalance - amount;
+  const newBalance = Math.max(0, currentBalance - amount);
 
   await base44.entities.GGGTransaction.create({
     user_id: userId,

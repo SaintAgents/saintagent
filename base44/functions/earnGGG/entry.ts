@@ -100,7 +100,7 @@ Deno.serve(async (req) => {
     const profiles = await base44.asServiceRole.entities.UserProfile.filter({ user_id: userId });
     if (profiles?.[0]) {
       const currentProfileBalance = toNum(profiles[0].ggg_balance || 0);
-      const newProfileBalance = toNum(currentProfileBalance + amount);
+      const newProfileBalance = Math.max(0, toNum(currentProfileBalance + amount));
       await base44.asServiceRole.entities.UserProfile.update(profiles[0].id, { ggg_balance: newProfileBalance });
     }
 
