@@ -29,6 +29,10 @@ export default function EmailNewsletterManager() {
   const [previewMode, setPreviewMode] = useState(false);
   const [aiLoading, setAiLoading] = useState(null);
   const [previewImages, setPreviewImages] = useState([]);
+  const [headerImage, setHeaderImage] = useState('');
+  const [footerImage, setFooterImage] = useState('');
+  const [uploadingHeader, setUploadingHeader] = useState(false);
+  const [uploadingFooter, setUploadingFooter] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState(null);
   const [aiPopoverOpen, setAiPopoverOpen] = useState(false);
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
@@ -182,6 +186,8 @@ export default function EmailNewsletterManager() {
       setSubject(template.subject_template || '');
       setBody(template.body_template || '');
       setPreviewImages(template.header_images || []);
+      setHeaderImage(template.header_image || '');
+      setFooterImage(template.footer_image || '');
       setSelectedTemplateId(templateId);
       toast.success(`Loaded template: ${template.name}`);
     }
@@ -200,6 +206,8 @@ export default function EmailNewsletterManager() {
       subject_template: subject,
       body_template: body,
       header_images: previewImages.filter(Boolean),
+      header_image: headerImage,
+      footer_image: footerImage,
       include_articles: selectedArticles.length > 0,
       version: 1,
       version_history: [],
@@ -212,6 +220,8 @@ export default function EmailNewsletterManager() {
     setSubject(template.subject_template || '');
     setBody(template.body_template || '');
     setPreviewImages(template.header_images || []);
+    setHeaderImage(template.header_image || '');
+    setFooterImage(template.footer_image || '');
     setSelectedTemplateId(template.id);
     toast.success(`Loaded template: ${template.name}`);
   };
@@ -388,12 +398,17 @@ Return ONLY the formatted content.`;
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
     `;
 
-    // Add header images at the top (user-uploaded)
+    // Add header image at the top
+    if (headerImage) {
+      html += `<div style="width: 100%;"><img src="${headerImage}" alt="Newsletter header" style="width: 100%; max-width: 640px; height: auto; display: block;" /></div>`;
+    }
+
+    // Legacy: Add additional header images (user-uploaded)
     if (previewImages.filter(Boolean).length > 0) {
       previewImages.filter(Boolean).forEach((imgUrl) => {
         html += `
           <div style="width: 100%;">
-            <img src="${imgUrl}" alt="Newsletter header" style="width: 100%; max-width: 640px; height: auto; display: block;" />
+            <img src="${imgUrl}" alt="Newsletter image" style="width: 100%; max-width: 640px; height: auto; display: block;" />
           </div>
         `;
       });
@@ -501,9 +516,15 @@ Return ONLY the formatted content.`;
             Empowering the 144,000 • Building the New Earth Together
           </p>
         </div>
-      </div>
-    </div>
-    `;
+      </div>`;
+    
+    // Add footer image at the bottom
+    if (footerImage) {
+      html += `<div style="width: 100%;"><img src="${footerImage}" alt="Newsletter footer" style="width: 100%; max-width: 640px; height: auto; display: block;" /></div>`;
+    }
+
+    html += `</div>`;
+    
 
     return html;
   };
@@ -1003,48 +1024,26 @@ Return ONLY the formatted content.`;
                 </p>
               </div>
 
-              {/* Preview Images for Email */}
-              <div>
-                <Label className="flex items-center gap-2 mb-2">
-                  <Plus className="w-4 h-4" />
-                  Add Images
-                </Label>
-                <div className="space-y-3">
-                  {previewImages.map((img, idx) => (
-                    <div key={idx} className="flex items-center gap-2">
-                      {img && (
-                        <img src={img} alt="" className="w-12 h-12 object-cover rounded" />
-                      )}
-                      <Input 
-                        value={img}
-                        onChange={(e) => {
-                          const newImages = [...previewImages];
-                          newImages[idx] = e.target.value;
-                          setPreviewImages(newImages);
-                        }}
-                        placeholder="https://example.com/image.jpg"
-                        className="flex-1"
-                      />
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => setPreviewImages(previewImages.filter((_, i) => i !== idx))}
+              {/* Header & Footer Images */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Header Image */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Upload className="w-4 h-4" />
+                    Header Image
+                  </Label>
+                  {headerImage ? (
+                    <div className="relative group">
+                      <img src={headerImage} alt="Header" className="w-full h-28 object-cover rounded-lg border" />
+                      <button
+                        onClick={() => setHeaderImage('')}
+                        className="absolute top-1.5 right-1.5 p-1 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        <X className="w-4 h-4" />
-                      </Button>
+                        <X className="w-3.5 h-3.5" />
+                      </button>
                     </div>
-                  ))}
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setPreviewImages([...previewImages, ''])}
-                      className="gap-2"
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add URL
-                    </Button>
-                    <label>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center h-28 border-2 border-dashed rounded-lg cursor-pointer hover:border-violet-400 hover:bg-violet-50/50 transition-colors">
                       <input
                         type="file"
                         accept="image/*"
@@ -1052,24 +1051,79 @@ Return ONLY the formatted content.`;
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (!file) return;
+                          setUploadingHeader(true);
                           try {
-                            const { file_url } = await base44.integrations.Core.UploadFile({ file });
-                            setPreviewImages([...previewImages, file_url]);
-                            toast.success('Image uploaded');
+                            const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+                            setHeaderImage(file_url);
+                            toast.success('Header image uploaded');
                           } catch (err) {
                             toast.error('Upload failed');
+                          } finally {
+                            setUploadingHeader(false);
                           }
                           e.target.value = '';
                         }}
                       />
-                      <Button variant="outline" size="sm" className="gap-2" asChild>
-                        <span>
-                          <Upload className="w-4 h-4" />
-                          Upload Image
-                        </span>
-                      </Button>
+                      {uploadingHeader ? (
+                        <Loader2 className="w-6 h-6 text-violet-400 animate-spin" />
+                      ) : (
+                        <>
+                          <Upload className="w-6 h-6 text-slate-400 mb-1" />
+                          <span className="text-xs text-slate-500">Upload header</span>
+                        </>
+                      )}
                     </label>
-                  </div>
+                  )}
+                </div>
+
+                {/* Footer Image */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Upload className="w-4 h-4" />
+                    Footer Image
+                  </Label>
+                  {footerImage ? (
+                    <div className="relative group">
+                      <img src={footerImage} alt="Footer" className="w-full h-28 object-cover rounded-lg border" />
+                      <button
+                        onClick={() => setFooterImage('')}
+                        className="absolute top-1.5 right-1.5 p-1 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center h-28 border-2 border-dashed rounded-lg cursor-pointer hover:border-violet-400 hover:bg-violet-50/50 transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          setUploadingFooter(true);
+                          try {
+                            const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+                            setFooterImage(file_url);
+                            toast.success('Footer image uploaded');
+                          } catch (err) {
+                            toast.error('Upload failed');
+                          } finally {
+                            setUploadingFooter(false);
+                          }
+                          e.target.value = '';
+                        }}
+                      />
+                      {uploadingFooter ? (
+                        <Loader2 className="w-6 h-6 text-violet-400 animate-spin" />
+                      ) : (
+                        <>
+                          <Upload className="w-6 h-6 text-slate-400 mb-1" />
+                          <span className="text-xs text-slate-500">Upload footer</span>
+                        </>
+                      )}
+                    </label>
+                  )}
                 </div>
               </div>
 
