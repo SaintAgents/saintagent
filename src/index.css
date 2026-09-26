@@ -544,6 +544,92 @@ html[data-theme][data-theme] [data-chat-widget] .rounded-xl {
   border: inherit !important;
 }
 
+/* =====================================================
+   NEWS VIEWER MODAL — Shield article content from theme overrides
+   Forces readable text on a solid background regardless of theme.
+   ===================================================== */
+html[data-theme='dark'] [data-news-viewer],
+html[data-theme='hacker'] [data-news-viewer] {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+html[data-theme='dark'] [data-news-viewer] h1,
+html[data-theme='dark'] [data-news-viewer] h2,
+html[data-theme='dark'] [data-news-viewer] h3,
+html[data-theme='dark'] [data-news-viewer] h4,
+html[data-theme='hacker'] [data-news-viewer] h1,
+html[data-theme='hacker'] [data-news-viewer] h2,
+html[data-theme='hacker'] [data-news-viewer] h3,
+html[data-theme='hacker'] [data-news-viewer] h4 {
+  color: #f1f5f9 !important;
+  text-shadow: none !important;
+}
+html[data-theme='dark'] [data-news-viewer] p,
+html[data-theme='dark'] [data-news-viewer] span,
+html[data-theme='dark'] [data-news-viewer] div,
+html[data-theme='dark'] [data-news-viewer] li,
+html[data-theme='dark'] [data-news-viewer] td,
+html[data-theme='dark'] [data-news-viewer] th,
+html[data-theme='dark'] [data-news-viewer] a,
+html[data-theme='dark'] [data-news-viewer] strong,
+html[data-theme='dark'] [data-news-viewer] em,
+html[data-theme='hacker'] [data-news-viewer] p,
+html[data-theme='hacker'] [data-news-viewer] span,
+html[data-theme='hacker'] [data-news-viewer] div,
+html[data-theme='hacker'] [data-news-viewer] li,
+html[data-theme='hacker'] [data-news-viewer] td,
+html[data-theme='hacker'] [data-news-viewer] th,
+html[data-theme='hacker'] [data-news-viewer] a,
+html[data-theme='hacker'] [data-news-viewer] strong,
+html[data-theme='hacker'] [data-news-viewer] em {
+  color: #cbd5e1 !important;
+  background-color: transparent !important;
+  text-shadow: none !important;
+}
+html[data-theme='dark'] [data-news-viewer] strong,
+html[data-theme='hacker'] [data-news-viewer] strong {
+  color: #f1f5f9 !important;
+}
+html[data-theme='dark'] [data-news-viewer] a,
+html[data-theme='hacker'] [data-news-viewer] a {
+  color: #a78bfa !important;
+}
+html[data-theme='dark'] [data-news-viewer] .border-b,
+html[data-theme='dark'] [data-news-viewer] .border-t,
+html[data-theme='hacker'] [data-news-viewer] .border-b,
+html[data-theme='hacker'] [data-news-viewer] .border-t {
+  border-color: #334155 !important;
+}
+html[data-theme='dark'] [data-news-viewer] button,
+html[data-theme='hacker'] [data-news-viewer] button {
+  background-color: transparent !important;
+  border-color: #475569 !important;
+}
+html[data-theme='hacker'] [data-news-viewer] img {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+html[data-theme='dark'] [data-news-viewer] svg,
+html[data-theme='hacker'] [data-news-viewer] svg {
+  filter: none !important;
+}
+/* Light theme: ensure article text is dark and readable */
+html[data-theme='light'] [data-news-viewer] {
+  background-color: #ffffff !important;
+}
+html[data-theme='light'] [data-news-viewer] p,
+html[data-theme='light'] [data-news-viewer] span,
+html[data-theme='light'] [data-news-viewer] div,
+html[data-theme='light'] [data-news-viewer] li {
+  color: #1e293b !important;
+}
+html[data-theme='light'] [data-news-viewer] h1,
+html[data-theme='light'] [data-news-viewer] h2,
+html[data-theme='light'] [data-news-viewer] h3,
+html[data-theme='light'] [data-news-viewer] h4 {
+  color: #0f172a !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;
