@@ -66,7 +66,7 @@ export default function NewsViewerModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden p-0 gap-0">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden p-0 gap-0 flex flex-col">
         {/* Header with navigation */}
         <div className="flex items-center justify-between p-4 border-b dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
           <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ export default function NewsViewerModal({
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto max-h-[calc(90vh-60px)]">
+        <div className="overflow-y-auto flex-1 min-h-0">
           {currentArticle.image_url && (
             <div className="relative h-48 md:h-64 overflow-hidden group">
               <img 
@@ -182,7 +182,7 @@ export default function NewsViewerModal({
             
             {currentArticle.content && (
               <div 
-                className="prose prose-slate dark:prose-invert max-w-none
+                className="prose prose-slate dark:prose-invert max-w-none break-words overflow-hidden
                   [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4
                   [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-3
                   [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:mt-5 [&_h3]:mb-2
