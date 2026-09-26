@@ -94,7 +94,7 @@ export default function NewsCard() {
                 </span>
                 <span className="flex items-center gap-1">
                   <Eye className="w-3 h-3" />
-                  {article.views_count || 0}
+                  {article.view_count || 0}
                 </span>
                 <span className="flex items-center gap-1 text-rose-400">
                   <Heart className="w-3 h-3" />
