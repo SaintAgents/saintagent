@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import './newsletterTheme.css';
 import TemplateManagerModal from './TemplateManagerModal';
 import ABTestingPanel from './ABTestingPanel';
 
@@ -667,7 +668,7 @@ Return ONLY the formatted content.`;
   const displayEmails = emailList.length > 0 ? emailList : storedEmails;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-newsletter-manager>
       <Tabs defaultValue="compose" className="w-full">
         <TabsList className="grid grid-cols-3 w-full max-w-md">
           <TabsTrigger value="compose" className="gap-2">
@@ -705,7 +706,7 @@ Return ONLY the formatted content.`;
                         <SelectTrigger>
                           <SelectValue placeholder="Select a template..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent data-newsletter-manager>
                           {templates.length === 0 ? (
                             <SelectItem value="none" disabled>No templates saved yet</SelectItem>
                           ) : (
@@ -734,7 +735,7 @@ Return ONLY the formatted content.`;
                           Save as Template
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent data-newsletter-manager>
                         <DialogHeader>
                           <DialogTitle>Save as Template</DialogTitle>
                         </DialogHeader>
@@ -755,7 +756,7 @@ Return ONLY the formatted content.`;
                                 <SelectTrigger className="mt-1">
                                   <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent data-newsletter-manager>
                                   <SelectItem value="newsletter">Newsletter</SelectItem>
                                   <SelectItem value="announcement">Announcement</SelectItem>
                                   <SelectItem value="promotional">Promotional</SelectItem>
@@ -907,7 +908,7 @@ Return ONLY the formatted content.`;
                   <SelectTrigger>
                     <SelectValue placeholder={loadingPress ? "Loading..." : pressReleases.length === 0 ? "No press releases available" : "Select analysis/press release..."} />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent data-newsletter-manager>
                     {pressReleases.length === 0 ? (
                       <SelectItem value="none" disabled>No press releases found</SelectItem>
                     ) : (
@@ -947,7 +948,7 @@ Return ONLY the formatted content.`;
                         AI Format
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-80 p-3" align="end">
+                    <PopoverContent data-newsletter-manager className="w-80 p-3" align="end">
                       <div className="space-y-3">
                         <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                           <Sparkles className="w-4 h-4 text-violet-500" />
@@ -1354,7 +1355,7 @@ Return ONLY the formatted content.`;
                     className="border border-slate-200 rounded-b-xl overflow-hidden"
                     style={{ backgroundColor: '#f5f5f5', padding: '20px' }}
                   >
-                    <div 
+                    <div data-newsletter-email
                       dangerouslySetInnerHTML={{ __html: buildFinalEmailContent() || '<p style="text-align:center;padding:32px;color:#94a3b8;">(No content)</p>' }}
                     />
                   </div>

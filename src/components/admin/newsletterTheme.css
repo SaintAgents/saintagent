@@ -1,0 +1,22 @@
+/* Keep newsletter controls readable when the app theme uses data-theme. */
+html[data-theme='dark'] [data-newsletter-manager] {
+  --foreground: 210 40% 98%;
+  --card-foreground: 210 40% 98%;
+  --muted-foreground: 215 20% 76%;
+  --popover-foreground: 210 40% 98%;
+  color: hsl(var(--foreground));
+}
+html[data-theme='dark'] [data-newsletter-manager] :is(h1, h2, h3, h4, label, button, span, p, li, input, textarea):not([data-newsletter-email] *) {
+  color: hsl(var(--foreground)) !important;
+  text-shadow: none !important;
+}
+html[data-theme='dark'] [data-newsletter-manager] :is(.text-slate-400, .text-slate-500, .text-slate-600):not([data-newsletter-email] *) {
+  color: hsl(var(--muted-foreground)) !important;
+}
+html[data-theme='dark'] [data-newsletter-manager] :is(input, textarea)::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+  opacity: 1;
+}
+html[data-theme='dark'] [data-newsletter-manager] button:disabled {
+  opacity: 0.65;
+}
