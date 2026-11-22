@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import SidebarLeaderboard from '@/components/hud/SidebarLeaderboard';
+import SidebarPageSearch from '@/components/hud/SidebarPageSearch';
 import {
   Select,
   SelectContent,
@@ -450,6 +451,13 @@ export default function Sidebar({
         </div>
         {navOpen && (
           <nav className={cn("p-3 pt-0 space-y-0.5", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
+            <SidebarPageSearch
+              pages={Object.values(ALL_NAV_ITEMS).filter(item => !item.action && !item.locked &&
+                (!item.adminOnly || currentUser?.role === 'admin') &&
+                (item.id !== 'leader' || profile?.leader_tier === 'verified144k'))}
+              collapsed={isCollapsed && !inPopup}
+              onExpand={onToggle}
+            >
             <TooltipProvider delayDuration={200}>
               {/* Command Deck — always at top */}
               {(() => {
@@ -640,6 +648,7 @@ export default function Sidebar({
                 );
               })()}
             </TooltipProvider>
+            </SidebarPageSearch>
           </nav>
         )}
       </div>
