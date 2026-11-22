@@ -971,6 +971,7 @@ export default function TopBar({
             <DropdownMenuContent 
               align="end" 
               sideOffset={12}
+              id="topbar-profile-menu"
               style={{ zIndex: 99999 }}
               className="w-72 bg-white dark:bg-[#050505] border border-slate-200 dark:border-[#00ff88] shadow-xl dark:shadow-[0_0_20px_rgba(0,255,136,0.3)] animate-in slide-in-from-right-2 duration-200 p-0 max-h-[calc(100vh-80px)] overflow-y-auto"
             >

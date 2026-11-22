@@ -630,6 +630,18 @@ html[data-theme='light'] [data-news-viewer] h4 {
   color: #0f172a !important;
 }
 
+/* Keep the profile menu opaque above the dashboard in every theme. */
+#topbar-profile-menu {
+  background: hsl(var(--popover)) !important;
+  opacity: 1 !important;
+}
+html[data-theme='dark'] #topbar-profile-menu {
+  background: var(--obsidian, #050505) !important;
+}
+html[data-theme='hacker'] #topbar-profile-menu {
+  background: #000 !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;
