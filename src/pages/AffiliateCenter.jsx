@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,17 +104,15 @@ export default function AffiliateCenter() {
   const [activeTab, setActiveTab] = useState('links');
   const queryClient = useQueryClient();
 
-  // Fetch current user first
-  const { data: currentUser, isLoading: userLoading } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
-  });
+  const { user: currentUser, isLoadingAuth: userLoading } = useAuth();
 
-  // Fetch user profile
-  const { data: profiles, isLoading: profileLoading } = useQuery({
-    queryKey: ['userProfile', currentUser?.email],
-    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }),
-    enabled: !!currentUser?.email
+  // Use the same profile and cache as the signed-in header.
+  const { data: profiles, isLoading: profileLoading, isFetching: profileFetching, isError: profileError, refetch: refetchProfile } = useQuery({
+    queryKey: ['myProfile', currentUser?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1),
+    enabled: !!currentUser?.email,
+    staleTime: 0,
+    retry: 1,
   });
   const profile = profiles?.[0];
 
@@ -121,7 +120,7 @@ export default function AffiliateCenter() {
   const saAffiliateCode = profile?.sa_number ? `SA${profile.sa_number}` : null;
 
   // Fetch or create affiliate code
-  const { data: affiliateCodes = [], isLoading: codeLoading } = useQuery({
+  const { data: affiliateCodes = [], isLoading: codeLoading, isError: codeError, refetch: refetchCodes } = useQuery({
     queryKey: ['affiliateCodes', currentUser?.email, saAffiliateCode],
     queryFn: async () => {
       let codes = await base44.entities.AffiliateCode.filter({ user_id: currentUser.email });
@@ -238,8 +237,8 @@ export default function AffiliateCenter() {
     ? ((stats.paid - (currentTier.minPaid)) / (nextTier.minPaid - currentTier.minPaid)) * 100
     : 100;
 
-  // Show loading state - wait for user and profile to load
-  const isLoading = userLoading || (currentUser && profileLoading) || (profile?.handle && codeLoading);
+  // Wait for a fresh profile before showing a missing-profile or missing-number state.
+  const isLoading = userLoading || profileLoading || (profileFetching && !saAffiliateCode) || (!!saAffiliateCode && codeLoading);
   
   // If still loading, show spinner
   if (isLoading) {
@@ -253,20 +252,26 @@ export default function AffiliateCenter() {
     );
   }
 
-  // If no SA number yet - show message to complete profile
-  if (!profile?.sa_number) {
+  if (!saAffiliateCode || (codeError && !affiliateCode)) {
+    const loadError = !currentUser?.email || (profileError && !saAffiliateCode) || codeError;
+    const title = loadError ? 'Couldn’t load Affiliate Center' : profile ? 'SA number required' : 'Profile required';
+    const message = loadError
+      ? 'We couldn’t verify your profile or load your invite link. Please try again.'
+      : profile
+        ? 'Your profile exists, but it doesn’t have an SA number yet. An SA number is needed to create your affiliate link.'
+        : 'We couldn’t find a profile for this account. Open Profile to finish setting it up.';
     return (
       <div className="p-6">
         <Card className="max-w-md mx-auto">
           <CardContent className="pt-6 text-center">
             <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-4" />
-            <h2 className="text-lg font-semibold mb-2">Profile Required</h2>
-            <p className="text-sm mb-4">
-              Complete your profile to get your SA number and affiliate link.
-            </p>
-            <Button onClick={() => window.location.href = '/Profile'}>
-              Go to Profile
-            </Button>
+            <h2 className="text-lg font-semibold mb-2">{title}</h2>
+            <p className="text-sm mb-4">{message}</p>
+            {loadError ? (
+              <Button onClick={() => !currentUser?.email ? window.location.reload() : codeError ? refetchCodes() : refetchProfile()}>Try again</Button>
+            ) : (
+              <Button onClick={() => window.location.href = '/Profile'}>Go to Profile</Button>
+            )}
           </CardContent>
         </Card>
       </div>
