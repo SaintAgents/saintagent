@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Bell, ChevronDown, ChevronUp, Mail, PanelRight, X } from 'lucide-react';
+import { Bell, Mail, PanelRight, X } from 'lucide-react';
 import DockDeckIcon from '@/components/dock/DockDeckIcon';
-import { shortcuts, peek } from '@/components/canopy/canopyCatalog';
+import { peek } from '@/components/canopy/canopyCatalog';
 import useCanopySettings from '@/components/canopy/useCanopySettings';
 import useCanopyDeployment from '@/components/canopy/useCanopyDeployment';
 import CanopyResize from '@/components/canopy/CanopyResize';
@@ -18,7 +18,7 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
   const [overlay, setOverlay] = useState(null);
   const [focus, setFocus] = useState('');
   const hud = useCanopyDeployment(user.id, location.pathname, settings, sidebarCollapsed, sidebarWidth, topbarCollapsed);
-  const { mode, setMode, desktop, showHandle, enabled, root, style, recent, handle } = hud;
+  const { mode, setMode, desktop, enabled, root, style, recent } = hud;
   const focusFromToolbar = useRef(false);
   useEffect(() => {
     const expanded = mode !== 'closed';
@@ -50,12 +50,6 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
   const unread = notifications.filter(n => !n.is_read).length;
   const ids = mode === 'peek' ? peek : settings.cards;
   return <div ref={root} className="sa-canopy" data-canopy-mode={mode} style={style} hidden={!enabled}>
-    {showHandle && mode !== 'split' && <div className="canopy-handle" data-form={settings.form}>
-      <button type="button" aria-label="Command Canopy" aria-expanded={mode !== 'closed'} aria-controls="canopy-workspace" className="canopy-notch" {...handle}>
-        {mode === 'full' ? <ChevronUp size={17} /> : <ChevronDown size={17} />}{settings.form === 'bar' && 'Command Canopy'}
-      </button>
-      {settings.form === 'bar' && <><div className="canopy-handle-links">{shortcuts.map(([label, target]) => <button key={label} onClick={() => open(target)}>{target === 'notifications' && <Bell size={13} />}{label}{target === 'notifications' && unread > 0 && <b>{unread}</b>}</button>)}</div><CanopyResize className="canopy-handle-resize" label="Resize Canopy handle" value={hud.width} min={380} max={1600} direction="right" onChange={(value, done) => hud.resize('width', value, done, commit)} /></>}
-    </div>}
     {mode !== 'closed' && <section id="canopy-workspace" aria-label="Command Canopy workspace" className="canopy-workspace">
       <div className="canopy-heading"><strong>SaintAgent Command Canopy</strong><div><button onClick={() => open('/Messages')} aria-label="Inbox" title="Inbox"><Mail size={15} /></button><button onClick={() => open('notifications')} aria-label="Notifications" title="Notifications"><Bell size={15} />{unread > 0 && <b>{unread}</b>}</button><button onClick={() => { setFocus(''); setMode(mode === 'full' ? 'peek' : 'full'); }}>{mode === 'full' ? 'Peek' : 'Full view'}</button><button onClick={() => setMode(mode === 'split' ? 'full' : 'split')} aria-label={mode === 'split' ? 'Exit split view' : 'Open split view'} title={mode === 'split' ? 'Exit split view' : 'Open split view'}><PanelRight size={15} /></button><button onClick={() => open('dock')} aria-label="Open Dock Deck" title="Open Dock Deck"><DockDeckIcon /></button><button onClick={() => setMode('closed')} aria-label="Close Canopy" title="Close Canopy"><X size={15} /></button></div></div>
       <ActivityTicker placement="canopy" />
