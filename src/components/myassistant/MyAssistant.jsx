@@ -48,11 +48,11 @@ export default function MyAssistant({ userId, currentPage, supportOnly = false, 
   useEffect(() => {
     if (supportOnly) return;
     const summon = () => show();
-    const keyboard = e => { if (!e.repeat && !e.defaultPrevented && e.altKey && e.shiftKey && e.code === 'KeyA') { e.preventDefault(); open ? close() : show(); } };
+    const keyboard = e => { if (!e.repeat && !e.defaultPrevented && e.altKey && e.shiftKey && e.code === 'KeyA') { e.preventDefault(); open && tab === 'chat' ? close() : show(); } };
     document.addEventListener('openMyAssistant', summon);
     document.addEventListener('keydown', keyboard);
     return () => { document.removeEventListener('openMyAssistant', summon); document.removeEventListener('keydown', keyboard); };
-  }, [open, supportOnly]);
+  }, [open, supportOnly, tab]);
   function saveSettings(patch) {
     const next = { ...settings, ...patch }; setSettings(next);
     try { localStorage.setItem(key, JSON.stringify(next)); } catch {}
@@ -74,7 +74,7 @@ export default function MyAssistant({ userId, currentPage, supportOnly = false, 
     {!open && <Button ref={launcher} data-deck-tour="help" onClick={() => supportOnly || tab === 'support' ? showSupport() : show()} title={supportOnly ? 'Open Saint Support' : 'Open My Assistant (Alt+Shift+A)'} className={`fixed bottom-24 right-4 z-[170] gap-2 shadow-lg md:bottom-6 md:right-16 ${supportOnly ? 'hidden md:inline-flex' : ''}`} aria-keyshortcuts={supportOnly ? undefined : 'Alt+Shift+A'} aria-label={`Open ${title}`} aria-controls="sa-assistant-panel"><Icon />{title}</Button>}
     <AssistantWindow title={title} icon={Icon} accent={accents[settings.accent] || accents.primary} open={open && !supportModal} onClose={close}>
       {!supportOnly && <div className="flex shrink-0 flex-wrap items-center gap-1 border-b px-3 py-2">
-        {[['chat', 'Chat'], ['support', 'Saint Support'], ['work', count.isSuccess ? `Saved work · ${count.data.memory || 0} memories` : 'Saved work'], ['settings', 'Settings']].map(([id, label]) => <Button size="sm" aria-pressed={tab === id} key={id} onClick={() => { setInitialWork('memory'); if (id === 'chat') setActivated(true); if (id === 'support') voice.stop(); setTab(id); }}>{label}</Button>)}
+        {[['chat', 'Chat'], ['support', 'Saint Support'], ['work', count.isSuccess ? `Saved work · ${count.data.memory || 0} memories` : 'Saved work'], ['settings', 'Settings']].map(([id, label]) => <Button size="sm" variant={tab === id ? 'default' : 'ghost'} className="aria-pressed:ring-1 aria-pressed:ring-inset aria-pressed:ring-current" aria-pressed={tab === id} key={id} onClick={() => { setInitialWork('memory'); if (id === 'chat') setActivated(true); if (id === 'support') voice.stop(); setTab(id); }}>{label}</Button>)}
         {tab === 'chat' && <Button size="sm" variant="ghost" disabled={chat.sending || chat.loading} onClick={() => { if (window.confirm('Start a new conversation? This stops resuming the current chat; it does not delete saved work or erase chat history.')) { chat.reset(); setInput(''); voice.setVoiceTurn(null); voice.stop(); } }}>New chat</Button>}
       </div>}
       <RightSideTabs visible={open && tab === 'support' && !supportModal} panelOpen={open} onOpen={showSupport} onClose={close} onModalChange={setSupportModal} previewOnly={previewOnly} />

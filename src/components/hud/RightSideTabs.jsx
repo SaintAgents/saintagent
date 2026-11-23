@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { HelpCircle, X, Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff, CreditCard, Camera, Mic } from 'lucide-react';
+import { Send, Loader2, Shield, Smile, Target, Coins, TrendingUp, Heart, BellRing, BellOff, Bot, Sparkles, BookOpen, ArrowLeft, Globe, EyeOff, CreditCard, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/lib/AuthContext';
+import { useQuery } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
 import BetaFeedbackModal from '@/components/feedback/BetaFeedbackModal';
 import ConciergeAgentChat from '@/components/support/ConciergeAgentChat';
@@ -14,7 +14,7 @@ import LearnPanel from '@/components/learn/LearnPanel';
 import BusinessCardDialog from '@/components/profile/BusinessCardDialog';
 import HelpPanelThemeOverrides from '@/components/hud/HelpPanelThemeOverrides';
 import VoiceCommandButton from '@/components/support/VoiceCommandButton';
-import { format, parseISO } from 'date-fns';
+import { useLocation } from 'react-router-dom';
 
 const QUICK_QUESTIONS = [
   { icon: Globe, label: '5D Business Walkthrough', question: 'Walk me through creating a 5D business entity step by step' },
@@ -140,30 +140,7 @@ PLATFORM KNOWLEDGE:
 
 Always guide users to explore features and complete their profiles for better matches. Encourage community participation and conscious connection.`;
 
-// Get current page from URL - check search params first (Base44 uses ?page= pattern)
-const getCurrentPage = () => {
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const pageParam = urlParams.get('page');
-    if (pageParam) return pageParam;
-    
-    // Fallback to path-based detection
-    const path = window.location.pathname;
-    const segments = path.split('/').filter(Boolean);
-    const pageName = segments[segments.length - 1] || 'CommandDeck';
-    if (pageName === '' || pageName === 'index.html') return 'CommandDeck';
-    return pageName;
-  } catch {
-    return 'CommandDeck';
-  }
-};
-
-export default function RightSideTabs({ previewOnly = false }) {
-  // Help panel state
-  const [helpOpen, setHelpOpen] = useState(false);
-  const [helpHovered, setHelpHovered] = useState(false);
-  // Track which pages user explicitly dismissed the panel on this session
-  const [dismissedPages, setDismissedPages] = useState(new Set());
+export default function RightSideTabs({ visible, panelOpen, onOpen, onClose, onModalChange, previewOnly = false }) {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [businessCardOpen, setBusinessCardOpen] = useState(false);
   const [capturing, setCapturing] = useState(false);
@@ -178,7 +155,7 @@ export default function RightSideTabs({ previewOnly = false }) {
         useCORS: true,
         allowTaint: true,
         logging: false,
-        ignoreElements: (el) => el.closest('[data-help-panel]') || el.closest('[role="dialog"]'),
+        ignoreElements: (el) => el.closest('[data-support-content]') || el.closest('[role="dialog"]'),
       });
       const link = document.createElement("a");
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
@@ -199,75 +176,25 @@ export default function RightSideTabs({ previewOnly = false }) {
   const helpScrollRef = useRef(null);
   const helpInputRef = useRef(null);
 
-  const queryClient = useQueryClient();
-
-  // Fetch current user's profile for the business card
-  const { data: currentUser } = useQuery({
-    queryKey: ['authMe'],
-    queryFn: () => base44.auth.me(),
-    staleTime: 600000,
-    retry: 1,
-  });
+  const { user: currentUser } = useAuth();
   const { data: myProfiles } = useQuery({
     queryKey: ['myProfile', currentUser?.email],
     queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1),
-    enabled: !!currentUser?.email,
+    enabled: (visible || businessCardOpen) && !!currentUser?.email,
     staleTime: 300000,
   });
   const myProfile = myProfiles?.[0];
 
-  // Hover timeout refs for smooth interactions
-  const helpTimeoutRef = useRef(null);
-
-
-  // Help panel hover handlers
-  const handleHelpMouseEnter = () => {
-    clearTimeout(helpTimeoutRef.current);
-    setHelpHovered(true);
-  };
-  const handleHelpMouseLeave = () => {
-    helpTimeoutRef.current = setTimeout(() => {
-      if (!helpOpen) setHelpHovered(false);
-    }, 300);
-  };
-
-
-
-  // Auto-scroll help messages - scroll to top for initial greeting, bottom for new messages
+  const { pathname, search } = useLocation();
+  const trackedPage = new URLSearchParams(search).get('page') || pathname.split('/').filter(Boolean).at(-1) || 'CommandDeck';
+  useEffect(() => { setHelpMessages([]); }, [trackedPage]);
   useEffect(() => {
-    if (helpScrollRef.current) {
-      if (helpMessages.length <= 1) {
-        helpScrollRef.current.scrollTop = 0;
-      } else {
-        helpScrollRef.current.scrollTop = helpScrollRef.current.scrollHeight;
-      }
-    }
-  }, [helpMessages]);
+    const scroll = helpScrollRef.current;
+    if (visible && scroll) scroll.scrollTop = helpMessages.length <= 1 ? 0 : scroll.scrollHeight;
+  }, [visible, helpMessages]);
+  useEffect(() => { onModalChange(feedbackOpen || businessCardOpen); }, [feedbackOpen, businessCardOpen, onModalChange]);
 
-  // Track current page and reset help when page changes
-  const [trackedPage, setTrackedPage] = useState(() => getCurrentPage());
-  
-  // Check for page changes periodically (URL can change without remount)
-  useEffect(() => {
-    const checkPageChange = () => {
-      const currentPage = getCurrentPage();
-      if (currentPage !== trackedPage) {
-        setTrackedPage(currentPage);
-        // Reset help messages when page changes so it picks up new context
-        setHelpMessages([]);
-        // Close help panel on page change (but preserve userDismissed so it won't auto-reopen)
-        setHelpOpen(false);
-        setHelpHovered(false);
-      }
-    };
-    
-    // Check immediately and on interval
-    checkPageChange();
-    const interval = setInterval(checkPageChange, 500);
-    return () => clearInterval(interval);
-  }, [trackedPage]);
-
-  // Suppress help panel entirely - persisted preference
+  // Pause automatic support openings without hiding the Support tab.
   const [helpSuppressed, setHelpSuppressed] = useState(() => {
     try { return localStorage.getItem('help_suppressed') === 'true'; } catch { return false; }
   });
@@ -276,10 +203,7 @@ export default function RightSideTabs({ previewOnly = false }) {
     const newVal = !helpSuppressed;
     setHelpSuppressed(newVal);
     try { localStorage.setItem('help_suppressed', newVal ? 'true' : 'false'); } catch {}
-    if (newVal) {
-      setHelpOpen(false);
-      setHelpHovered(false);
-    }
+    if (newVal) onClose();
   };
 
   // Auto-open help toggle - persisted preference
@@ -293,32 +217,21 @@ export default function RightSideTabs({ previewOnly = false }) {
     try { localStorage.setItem('help_auto_open', newVal ? 'on' : 'off'); } catch {}
   };
 
-  // Auto-open help on first visit to each page (if enabled) — desktop only
-  // Skip if user already dismissed the panel this session
+  // On desktop, open Support on the first visit unless the shared panel is already open.
   useEffect(() => {
-    if (previewOnly || !autoOpenHelp || helpSuppressed || dismissedPages.has(getCurrentPage())) return;
-    // Never auto-open on mobile — it blocks the entire page
-    if (window.innerWidth < 768) return;
-    const currentPage = getCurrentPage();
-    const visitedKey = `visited_page_${currentPage}`;
+    if (previewOnly || !autoOpenHelp || helpSuppressed || window.innerWidth < 768 || !PAGE_CONTEXT[trackedPage]) return;
+    const visitedKey = `visited_page_${trackedPage}`;
     try {
-      const hasVisited = localStorage.getItem(visitedKey);
-      if (!hasVisited && PAGE_CONTEXT[currentPage]) {
-        setHelpOpen(true);
-        setHelpHovered(true);
-        localStorage.setItem(visitedKey, '1');
-      }
+      if (localStorage.getItem(visitedKey)) return;
+      localStorage.setItem(visitedKey, '1');
+      if (!panelOpen) onOpen();
     } catch {}
-  }, [trackedPage, autoOpenHelp, dismissedPages]);
+  }, [trackedPage, autoOpenHelp, helpSuppressed, panelOpen, onOpen, previewOnly]);
 
   // Focus input when help opens and set initial greeting with page context
   useEffect(() => {
-    if ((helpOpen || helpHovered) && helpInputRef.current) {
-      setTimeout(() => helpInputRef.current?.focus(), 100);
-    }
-    // Set initial greeting with page context when opened
-    if ((helpOpen || helpHovered) && helpMessages.length === 0) {
-      const currentPage = getCurrentPage();
+    if (visible && !conciergeMode && !learnMode && helpMessages.length === 0) {
+      const currentPage = trackedPage;
       const pageContext = PAGE_CONTEXT[currentPage];
       let greeting = "Hi! I'm Saint Support, your guide to the SaintAgent platform. 🌟\n\n";
       if (pageContext) {
@@ -329,7 +242,10 @@ export default function RightSideTabs({ previewOnly = false }) {
       greeting += "Feel free to explore the suggestions below, or ask me anything!";
       setHelpMessages([{ role: 'assistant', content: greeting }]);
     }
-  }, [helpOpen, helpHovered]);
+  }, [visible, trackedPage, conciergeMode, learnMode, helpMessages.length]);
+  useEffect(() => {
+    if (visible && !conciergeMode && !learnMode) helpInputRef.current?.focus({ preventScroll: true });
+  }, [visible, conciergeMode, learnMode]);
 
   // Check if user is asking for a walkthrough
   const detectWalkthroughRequest = (text) => {
@@ -341,8 +257,7 @@ export default function RightSideTabs({ previewOnly = false }) {
 
   const launchWalkthrough = (id) => {
     document.dispatchEvent(new CustomEvent('launchWalkthrough', { detail: { id } }));
-    setHelpOpen(false);
-    setHelpHovered(false);
+    onClose();
   };
 
   // Help send message
@@ -371,7 +286,7 @@ export default function RightSideTabs({ previewOnly = false }) {
       ).join('\n');
 
       // Get current page context
-      const currentPage = getCurrentPage();
+      const currentPage = trackedPage;
       const pageContext = PAGE_CONTEXT[currentPage] || "";
       const contextNote = pageContext ? `\n\nCURRENT PAGE CONTEXT: ${pageContext}\nBe ready to help with questions specific to this page.` : "";
 
@@ -402,93 +317,25 @@ export default function RightSideTabs({ previewOnly = false }) {
 
 
 
-  const showHelpPanel = helpOpen || helpHovered;
-
-  // Listen for mobile tab bar events
   useEffect(() => {
-    const handleOpenHelp = () => {
-      setHelpOpen(true);
-      setHelpHovered(true);
+    const openHelp = () => { setConciergeMode(false); setLearnMode(false); onOpen(); };
+    const openTab = e => {
+      if (e.detail?.tab === 'help') openHelp();
+      if (e.detail?.tab === 'concierge') { setConciergeMode(true); setLearnMode(false); onOpen(); }
     };
-    const handleOpenRightSideTab = (e) => {
-      if (e.detail?.tab === 'help' || e.detail?.tab === 'concierge') {
-        if (e.detail.tab === 'concierge') setConciergeMode(true);
-        setHelpOpen(true);
-        setHelpHovered(true);
-      }
-    };
-    document.addEventListener('openGlobalHelp', handleOpenHelp);
-    document.addEventListener('openRightSideTab', handleOpenRightSideTab);
+    document.addEventListener('openGlobalHelp', openHelp);
+    document.addEventListener('openRightSideTab', openTab);
     return () => {
-      document.removeEventListener('openGlobalHelp', handleOpenHelp);
-      document.removeEventListener('openRightSideTab', handleOpenRightSideTab);
+      document.removeEventListener('openGlobalHelp', openHelp);
+      document.removeEventListener('openRightSideTab', openTab);
     };
-  }, []);
+  }, [onOpen]);
 
-  if (helpSuppressed) {
-    return (
-      <>
-        <HelpPanelThemeOverrides />
-        <BetaFeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
-        <BusinessCardDialog open={businessCardOpen} onOpenChange={setBusinessCardOpen} profile={myProfile} />
-        {/* Tiny restore button */}
-        <button
-          onClick={toggleSuppressed}
-          className="fixed right-0 bottom-28 z-[60] hidden md:flex items-center justify-center w-8 h-8 rounded-l-lg bg-violet-600/60 hover:bg-violet-600 text-white/70 hover:text-white transition-all shadow-md"
-          style={{ right:'var(--dock-occupied, 0px)' }}
-          title="Show help panel"
-        >
-          <HelpCircle className="w-4 h-4" />
-        </button>
-      </>
-    );
-  }
-
-  return (
-    <>
+  return <>
       <HelpPanelThemeOverrides />
       <BetaFeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
       <BusinessCardDialog open={businessCardOpen} onOpenChange={setBusinessCardOpen} profile={myProfile} />
-      
-      {/* Help Tab */}
-      <div data-deck-tour="help"
-        className={cn(
-          "fixed right-0 z-[60] transition-all duration-300 ease-out",
-          // On mobile, only show if panel is open (triggered from menu)
-          showHelpPanel ? "block" : "hidden md:block"
-        )}
-        style={{ bottom: '100px', right:'var(--dock-occupied, 0px)' }}
-        onMouseEnter={handleHelpMouseEnter}
-        onMouseLeave={handleHelpMouseLeave}
-      >
-        {/* Tab Handle - hidden on mobile */}
-        <div 
-          className={cn(
-            "absolute right-0 top-0 items-center justify-center w-8 cursor-pointer transition-all duration-300 hidden md:flex",
-            "bg-gradient-to-br from-violet-400 to-purple-500 text-white shadow-md",
-            "rounded-l-md border border-violet-300",
-            showHelpPanel ? "translate-x-0 opacity-0" : "translate-x-0"
-          )}
-          style={{ height: '32px', minHeight: '32px', maxHeight: '32px' }}
-          onClick={() => { setHelpOpen(true); setDismissedPages(prev => { const next = new Set(prev); next.delete(getCurrentPage()); return next; }); }}
-        >
-          <HelpCircle className="w-4 h-4" />
-        </div>
-
-        {/* Sliding Panel */}
-        <div 
-          className={cn(
-            "fixed border border-slate-200 shadow-2xl overflow-hidden transition-all duration-300 ease-out z-[70] flex flex-col",
-            "bg-white",
-            // Mobile: full screen overlay but leave space at top for topbar
-            "inset-0 top-[3.5rem] pb-20",
-            // Desktop: positioned bottom-right panel with fixed height
-            "md:inset-auto md:top-auto md:pb-0 md:bottom-28 md:right-2 md:rounded-xl md:w-[380px] md:max-w-[calc(100vw-1rem)] md:h-[min(580px,calc(100vh-200px))]",
-            showHelpPanel ? "opacity-100 md:right-2" : "translate-x-full opacity-0 pointer-events-none"
-          )}
-          data-solid-panel="true"
-          data-help-panel="true"
-        >
+      <div data-support-content className={cn('min-h-0 flex-1 flex-col overflow-hidden', visible ? 'flex' : 'hidden')}>
           {conciergeMode ? (
             <div className="flex flex-col h-full min-h-0 overflow-hidden">
               <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 shrink-0">
@@ -541,18 +388,10 @@ export default function RightSideTabs({ previewOnly = false }) {
                     size="sm" 
                     className="h-7 px-2 gap-1 text-white/90 hover:text-white hover:bg-white/20 font-medium text-xs"
                     onClick={toggleSuppressed}
-                    title="Dismiss help panel"
+                    title={helpSuppressed ? 'Restore automatic Saint Support' : 'Dismiss automatic Saint Support'}
                   >
                     <EyeOff className="w-4 h-4" />
-                    Dismiss
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/20"
-                    onClick={() => { setHelpOpen(false); setHelpHovered(false); setDismissedPages(prev => new Set(prev).add(getCurrentPage())); }}
-                  >
-                    <X className="w-4 h-4" />
+                    {helpSuppressed ? 'Restore' : 'Dismiss'}
                   </Button>
                 </div>
               </div>
@@ -629,7 +468,7 @@ export default function RightSideTabs({ previewOnly = false }) {
               </div>
 
               {/* Input */}
-              <div className="p-3 border-t border-slate-200 bg-white">
+              <div className="max-h-[65%] shrink-0 overflow-y-auto p-3 border-t border-slate-200 bg-white">
                 {/* Screen Capture Button - Top Item */}
                 <button
                   type="button"
@@ -685,10 +524,10 @@ export default function RightSideTabs({ previewOnly = false }) {
                     className="flex-1 rounded-xl bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
                     disabled={helpLoading}
                   />
-                  <VoiceCommandButton
+                  {visible && <VoiceCommandButton
                     onTranscript={(text) => sendHelpMessage(text)}
                     disabled={helpLoading}
-                  />
+                  />}
                   <Button type="submit" size="icon" className="rounded-xl bg-violet-600 hover:bg-violet-700 shrink-0" disabled={!helpInput.trim() || helpLoading}>
                     <Send className="w-4 h-4" />
                   </Button>
@@ -696,10 +535,6 @@ export default function RightSideTabs({ previewOnly = false }) {
               </div>
             </>
           )}
-        </div>
       </div>
-
-
-    </>
-  );
+    </>;
 }
