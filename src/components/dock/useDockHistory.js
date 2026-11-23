@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { safePath } from '@/components/dock/dockCatalog';
 
-const limit = 20;
+const limit = 15;
 const empty = { entries: [], lastPath: null };
 
 function readHistory(key) {

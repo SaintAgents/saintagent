@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { downloadBlob, qrImage } from '@/components/publicprofile/publicLinks';
 
-export default function SharePublicProfile({ url, label, initialOpen = false }) {
+export default function SharePublicProfile({ url, label, initialOpen = false, allowShare = false }) {
   const [open, setOpen] = useState(initialOpen);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState('');
@@ -10,6 +10,11 @@ export default function SharePublicProfile({ url, label, initialOpen = false }) 
   async function copy() {
     try { await navigator.clipboard.writeText(url); setStatus('Link copied.'); }
     catch { setStatus('Could not copy the link.'); }
+  }
+  async function share() {
+    if (!navigator.share) return copy();
+    try { await navigator.share({ title: label, url }); }
+    catch (error) { if (error.name !== 'AbortError') await copy(); }
   }
   async function download() {
     setBusy(true); setStatus('');
@@ -23,6 +28,7 @@ export default function SharePublicProfile({ url, label, initialOpen = false }) 
   return <div className="space-y-2">
     <div className="flex flex-wrap justify-center gap-2">
       <Button type="button" variant="outline" onClick={copy}>Copy link</Button>
+      {allowShare && <Button type="button" variant="outline" onClick={share}>Share</Button>}
       <Button type="button" variant="outline" onClick={() => setOpen(!open)} aria-expanded={open}>{open ? 'Hide QR code' : 'Show QR code'}</Button>
     </div>
     {open && <div className="flex flex-col items-center gap-2">

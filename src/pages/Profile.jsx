@@ -686,7 +686,7 @@ export default function Profile() {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="basic" className="space-y-6" onValueChange={value => { if (value === 'linktree') setLinkTreeVisited(true); }}>
+        <Tabs defaultValue={isOwnProfile && window.location.hash === '#digital-card' ? 'digital-card' : 'basic'} className="space-y-6" onValueChange={value => { if (value === 'linktree') setLinkTreeVisited(true); }}>
           <div className="flex flex-col gap-1 w-full max-w-4xl overflow-x-hidden">
             {/* Row 1 */}
             <TabsList className="flex overflow-x-auto scrollbar-hide justify-start w-full gap-1 h-auto p-1 flex-nowrap md:flex-wrap">

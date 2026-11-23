@@ -21,7 +21,7 @@ import { format, parseISO } from 'date-fns';
 import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
 
-export default function CommunityFeedCard({ maxHeight = '400px' }) {
+export default function CommunityFeedCard({ maxHeight = '400px', postsLimit, onShowMore }) {
   const [newPostText, setNewPostText] = useState('');
   const [commentText, setCommentText] = useState({});
   const [expandedComments, setExpandedComments] = useState({});
@@ -58,14 +58,16 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
   });
   const profile = profiles?.[0];
 
-  const { data: posts = [], isLoading: postsLoading } = useQuery({
-    queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 20),
+  const feed = useQuery({
+    queryKey: postsLimit ? ['posts', 'dock', postsLimit] : ['posts'],
+    queryFn: () => postsLimit ? base44.entities.Post.list({ sort: '-created_date', limit: postsLimit }) : base44.entities.Post.list('-created_date', 20),
     staleTime: 30000,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    refetchInterval: 60000,
+    refetchInterval: postsLimit ? false : 60000,
   });
+  const posts = postsLimit ? feed.data?.items ?? [] : feed.data ?? [];
+  const postsLoading = feed.isLoading;
 
   const { data: allLikes = [] } = useQuery({
     queryKey: ['postLikes'],
@@ -440,9 +442,10 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
         </div>
 
         {/* Feed */}
+        {postsLimit && <Button size="sm" variant="outline" disabled={feed.isFetching} onClick={() => feed.refetch()}>{feed.isFetching ? 'Refreshing…' : 'Refresh feed'}</Button>}
         <ScrollArea style={{ maxHeight }} ref={scrollRef}>
           <div className="space-y-3 pr-2">
-            {postsLoading ? (
+            {postsLimit && feed.isError ? <p role="alert">Could not load the feed. Try refreshing.</p> : postsLoading ? (
               <div className="text-center py-8 text-slate-400">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-violet-500 mx-auto mb-2" />
                 <p className="text-xs">Loading feed...</p>
@@ -453,7 +456,7 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
                 <p className="text-xs">No posts yet — be the first to share!</p>
               </div>
             ) : (
-              posts.slice(0, 10).map((post) => {
+              (postsLimit ? posts : posts.slice(0, 10)).map((post) => {
                 const postComments = computePostComments(post.id);
                 const isLiked = isLikedByUser(post.id);
                 const showComments = expandedComments[post.id];
@@ -675,6 +678,7 @@ export default function CommunityFeedCard({ maxHeight = '400px' }) {
             )}
           </div>
         </ScrollArea>
+        {postsLimit && feed.data?.has_more && <Button size="sm" variant="outline" onClick={() => onShowMore(postsLimit + 5)}>Show more</Button>}
       </CardContent>
     </Card>
   );

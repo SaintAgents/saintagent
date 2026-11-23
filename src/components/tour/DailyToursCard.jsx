@@ -24,12 +24,13 @@ export default function DailyToursCard({ userId, embedded = false }) {
     });
     return () => cancelAnimationFrame(frame);
   }, [embedded, hash, key, userId]);
-  const { query, record, sections, save } = useDailyTours(userId);
+  const { query, record, sections, save } = useDailyTours(userId, !embedded);
   const completed = sections.filter((count, index) => count === DAILY_TOURS[index].sections.length).length;
   if (!userId) return null;
 
   const open = (index, event) => {
     trigger.current = event.currentTarget;
+    if (embedded) { setStep(0); setDay(index); return; }
     save.reset();
     const show = () => { setStep(sections[index] === DAILY_TOURS[index].sections.length ? 0 : sections[index]); setDay(index); };
     if (record) show();
@@ -38,7 +39,7 @@ export default function DailyToursCard({ userId, embedded = false }) {
   const advance = () => {
     const count = step + 1;
     const proceed = () => count === DAILY_TOURS[day].sections.length ? setDay(null) : setStep(count);
-    if (sections[day] >= count) proceed();
+    if (embedded || sections[day] >= count) proceed();
     else save.mutate({ day, count }, { onSuccess: proceed });
   };
 
@@ -46,15 +47,15 @@ export default function DailyToursCard({ userId, embedded = false }) {
     <section id={embedded ? undefined : 'daily-tours'} ref={card} tabIndex={-1} data-readable-surface className="daily-tours-library relative scroll-mt-40 space-y-4 p-4 text-card-foreground" aria-label="Tour library">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <p className="text-sm text-muted-foreground">Start with the full-screen overview or choose any topic tour. Read or listen at your own pace.</p>
-        {record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}
+        {!embedded && record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}
       </div>
       <Button ref={overviewTrigger} type="button" variant="outline" className="h-auto min-h-10 whitespace-normal" onClick={() => setOverviewOpen(true)}><LayoutDashboard aria-hidden="true" /> Command Deck Overview · Full screen</Button>
-      {query.isPending ? <p role="status" className="text-sm">Loading tours…</p> : query.isError ? <div className="flex items-center gap-3"><p role="alert" className="text-sm">Tours couldn’t be loaded.</p><Button type="button" size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></div> : (
+      {!embedded && query.isPending ? <p role="status" className="text-sm">Loading tours…</p> : !embedded && query.isError ? <div className="flex items-center gap-3"><p role="alert" className="text-sm">Tours couldn’t be loaded.</p><Button type="button" size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></div> : (
         <ol className="daily-tours-grid grid grid-cols-1 gap-2">
           {DAILY_TOURS.map((tour, index) => {
-            const done = sections[index] === tour.sections.length;
+            const done = !embedded && sections[index] === tour.sections.length;
             return <li key={tour.title} className="min-w-0"><Button type="button" variant="outline" className="h-full min-h-10 w-full justify-start whitespace-normal px-3 text-left" disabled={save.isPending} onClick={(event) => open(index, event)}>
-              {done ? <CheckCircle aria-label="Completed; select to replay" /> : <BookOpen aria-hidden="true" />}<span className="min-w-0 break-words">{tour.actionLabel ? `${done ? 'Replay' : sections[index] ? 'Resume' : 'Start'} ${tour.actionLabel}` : `Tour ${index + 1}: ${tour.title}`}{!done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
+              {done ? <CheckCircle aria-label="Completed; select to replay" /> : <BookOpen aria-hidden="true" />}<span className="min-w-0 break-words">{embedded ? `Play ${tour.actionLabel || tour.title}` : tour.actionLabel ? `${done ? 'Replay' : sections[index] ? 'Resume' : 'Start'} ${tour.actionLabel}` : `Tour ${index + 1}: ${tour.title}`}{!embedded && !done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
             </Button></li>;
           })}
         </ol>

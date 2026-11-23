@@ -4,11 +4,11 @@ import { DAILY_TOURS } from '@/components/tour/dailyTours';
 
 const EMPTY_PROGRESS = DAILY_TOURS.map(() => 0);
 
-export default function useDailyTours(userId) {
+export default function useDailyTours(userId, enabled = true) {
   const queryClient = useQueryClient();
   const queryKey = ['dailyTourProgress', userId];
   const query = useQuery({
-    queryKey, enabled: !!userId,
+    queryKey, enabled: enabled && !!userId,
     queryFn: async () => {
       const { items } = await base44.entities.DailyTourProgress.filter({ created_by_id: userId }, { sort: 'created_date', limit: 1 });
       return items[0] ?? null;
