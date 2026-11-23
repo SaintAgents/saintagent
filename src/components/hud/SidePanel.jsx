@@ -607,7 +607,6 @@ export default function SidePanel({
             <div className="p-4 space-y-6">
               <div>
                 <SidePanelQuickAccess />
-                <SidePanelBookmarks onNavigate={onToggle} />
                 <SidePanelMyGroups onNavigate={onToggle} />
               </div>
               {/* Stored Cards Section */}
@@ -962,6 +961,7 @@ export default function SidePanel({
                   </Button>
                 </div>
               </CollapsibleCard>
+              <SidePanelBookmarks onNavigate={onToggle} />
             </div>
           </ScrollArea>
 
@@ -1068,7 +1068,6 @@ export default function SidePanel({
         <div className="p-4 pb-24 space-y-6">
           {isOpen && <div>
             <SidePanelQuickAccess />
-            <SidePanelBookmarks onNavigate={onToggle} />
             <SidePanelMyGroups onNavigate={onToggle} />
           </div>}
           {/* Stored Cards Section */}
@@ -1495,6 +1494,7 @@ export default function SidePanel({
               </div>
             </div>
           </CollapsibleCard>
+          {isOpen && <SidePanelBookmarks onNavigate={onToggle} />}
         </div>
 
       {/* Popout Panels */}
