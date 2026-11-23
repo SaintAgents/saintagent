@@ -36,4 +36,4 @@ export const assistantDraft = (mode, question) => mode === 'oracle'
   ? `Oracle reflection (symbolic, not factual): Help me reflect on this through symbolism, archetypes and intuition. Keep interpretation clearly separate from facts, ask me one reflective question back, and make no predictions about my life.\n\nMy question: ${question}`
   : `Practical planning: Help me turn this into concrete next steps. Suggest existing SaintAgent missions, projects or pages I could explore and draft a first milestone. Only advise; do not take any action for me.\n\nMy goal: ${question}`;
 
-export const laterPhases = ['Cross-platform search', 'Living Blueprint memory', 'Expanded research & creation tools', 'Approval-based actions', 'Seven-Point Guidance', 'Multi-agent orchestration'];
+export const laterPhases = ['Shared Blueprint across tools', 'Expanded research & creation tools', 'Approval-based actions beyond Planner drafts', 'Multi-agent orchestration'];
