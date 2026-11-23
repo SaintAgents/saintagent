@@ -9,7 +9,8 @@ export function readDockLocal(id) {
 function load(user) {
   const local = readDockLocal(user.id), remote = user.dock_preferences;
   const saved = local && (local.revision || 0) >= (remote?.revision || 0) ? local : remote;
-  return { ...initial(), ...saved };
+  const prefs = { ...initial(), ...saved };
+  return { ...prefs, cards: prefs.cards.filter(card => card.type !== 'Watched Countries') };
 }
 export default function useDockPreferences(user, preview = false) {
   const [prefs, setPrefs] = useState(() => preview ? initial() : load(user));

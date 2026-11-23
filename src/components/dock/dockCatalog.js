@@ -11,7 +11,6 @@ export const widgetLibrary = {
   'InSite Browser':'Launch the existing SaintAgent browser.', Inspiration:'Cycle through short reflection prompts in a frameless card.',
   Watchlist:'See up to 30 watched records and open your full Watchlist.',
   'Quick Call':'Find members and CRM contacts, pin favorites, and place calls.',
-  'Watched Countries':'Keep a local country focus list and view country stats.',
   Macro:'Record, name, and replay your page navigation.',
   Members:'Search the member directory and open profiles.',
   'Conference Rooms':'Create or join a private audio room and copy member invite links.',
