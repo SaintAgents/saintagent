@@ -30,6 +30,7 @@ import {
 import { format, parseISO } from "date-fns";
 import ForumFilePicker from '@/components/groups/ForumFilePicker';
 import ForumPostAttachments from '@/components/groups/ForumPostAttachments';
+import ForumLinkedText from '@/components/groups/ForumLinkedText';
 
 const POST_TYPE_CONFIG = {
   discussion: { icon: MessageSquare, color: 'bg-blue-100 text-blue-700', label: 'Discussion' },
@@ -261,7 +262,7 @@ export default function GroupForum({ circle, user }) {
               </DialogHeader>
 
               <div className="py-4 border-b">
-                <p className="text-slate-700 whitespace-pre-wrap">{selectedPost.content}</p>
+                <ForumLinkedText text={selectedPost.content} playable className="text-slate-700 whitespace-pre-wrap break-words" />
                 <ForumPostAttachments key={selectedPost.id} postId={selectedPost.id} userId={user.id} />
               </div>
 
@@ -277,14 +278,14 @@ export default function GroupForum({ circle, user }) {
                       <AvatarImage src={reply.author_avatar} />
                       <AvatarFallback>{reply.author_name?.[0]}</AvatarFallback>
                     </Avatar>
-                    <div className="flex-1">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-medium text-sm">{reply.author_name}</span>
                         <span className="text-xs text-slate-400">
                           {format(parseISO(reply.created_date), 'MMM d, h:mm a')}
                         </span>
                       </div>
-                      <p className="text-sm text-slate-600">{reply.content}</p>
+                      <ForumLinkedText text={reply.content} playable className="text-sm text-slate-600 break-words" />
                     </div>
                   </div>
                 ))}
@@ -329,9 +330,9 @@ function PostCard({ post, onClick }) {
   const Icon = config.icon;
 
   return (
-    <button
+    <article
       onClick={onClick}
-      className="w-full text-left bg-white rounded-xl border p-4 hover:shadow-md transition-all"
+      className="w-full cursor-pointer text-left bg-white rounded-xl border p-4 hover:shadow-md transition-all"
     >
       <div className="flex items-start gap-3">
         <div className={cn("p-2 rounded-lg", config.color)}>
@@ -344,10 +345,10 @@ function PostCard({ post, onClick }) {
               <Pin className="w-3 h-3 text-amber-500" />
             )}
           </div>
-          <h4 className="font-medium text-slate-900 mb-1 line-clamp-1">
-            {post.title || post.content?.slice(0, 60) || 'Attachments'}
+          <h4 className="font-medium text-slate-900 mb-1">
+            <button type="button" className="block max-w-full truncate text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring">{post.title || post.content?.slice(0, 60) || 'Attachments'}</button>
           </h4>
-          <p className="text-sm text-slate-500 line-clamp-2">{post.content}</p>
+          <ForumLinkedText text={post.content} className="text-sm text-slate-500 line-clamp-2 break-words" />
           <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">
             <span className="flex items-center gap-1">
               <Avatar className="w-4 h-4">
@@ -368,6 +369,6 @@ function PostCard({ post, onClick }) {
           </div>
         </div>
       </div>
-    </button>
+    </article>
   );
 }
