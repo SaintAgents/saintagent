@@ -11,11 +11,13 @@ import GlobalGoalsProgress from '@/components/impact/GlobalGoalsProgress';
 import ImpactBreakdownChart from '@/components/impact/ImpactBreakdownChart';
 import GGGEarningsChart from '@/components/impact/GGGEarningsChart';
 
-export default function ImpactDashboard({ embedded = false, afterStats }) {
-  const { data: currentUser } = useQuery({
+export default function ImpactDashboard({ embedded = false, afterStats, previewUser }) {
+  const { data: account } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    enabled: !previewUser,
   });
+  const currentUser = previewUser || account;
 
   const email = currentUser?.email;
 

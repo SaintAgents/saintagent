@@ -24,7 +24,7 @@ const workspacePages = {
 const tabs = [['overview','Overview'], ['opportunities','Opportunities'], ...['projects','missions','challenges','collectives','gatherings','research'].map(id => [id, workspacePages[id][0]])];
 export const isImpactTab = id => tabs.some(([key]) => id === key) || Object.hasOwn(workspacePages, id);
 
-export default function ImpactWorkspace({ active, select, demo }) {
+export default function ImpactWorkspace({ active, select, demo, previewUser }) {
   const [title, Page] = workspacePages[active] || [];
   const dark = useSyncExternalStore(subscribeTheme, readDark, () => false);
   return <div className="impact-module-stack">
@@ -35,7 +35,7 @@ export default function ImpactWorkspace({ active, select, demo }) {
       {Page ? <div key={active} className="impact-surface impact-embedded-shell">
         <header className="impact-workspace-heading"><p className="impact-kicker">Global Impact / Workspace</p><h2 className="text-2xl font-bold">{title}</h2></header>
         <div className={`impact-embedded${dark ? ' dark' : ''}`} data-impact-module={active} tabIndex={active === 'overview' ? undefined : 0} role="region" aria-label={`${title} content`}>
-          <ErrorBoundary><Suspense fallback={<p role="status" className="p-4">Loading {title}…</p>}><Page embedded {...(active === 'overview' && { afterStats: <ImpactTimeline key={demo ? 'demo' : 'live'} demo={demo} /> })} /></Suspense></ErrorBoundary>
+          <ErrorBoundary><Suspense fallback={<p role="status" className="p-4">Loading {title}…</p>}><Page embedded {...(active === 'overview' && { previewUser, afterStats: <ImpactTimeline key={demo ? 'demo' : 'live'} demo={demo} /> })} /></Suspense></ErrorBoundary>
         </div>
       </div> : <ImpactOpportunities key={demo ? 'demo' : 'live'} demo={demo} />}
     </section>
