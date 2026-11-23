@@ -72,7 +72,7 @@ export default function SurfaceOpacityController() {
 
     /* ========== WHITE WASH ========== */
     ${surface.whiteWash > 0 ? `
-    main::before {
+    html:not([data-theme='hacker']) main::before {
       content: '';
       position: fixed;
       inset: 0;

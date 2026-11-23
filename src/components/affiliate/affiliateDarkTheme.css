@@ -14,9 +14,41 @@ html[data-theme='dark'] main[data-page='AffiliateCenter'] {
   color: hsl(var(--foreground)) !important;
 }
 
+/* Chromo Green keeps the same structure, with its own monochrome palette. */
+html[data-theme='hacker'] main[data-page='AffiliateCenter'] {
+  --background: 0 0% 0%;
+  --card: 120 32% 6%;
+  --muted: 120 30% 11%;
+  --muted-foreground: 120 75% 73%;
+  --accent: 120 60% 15%;
+  --accent-foreground: 120 100% 70%;
+  background-color: hsl(var(--background)) !important;
+}
+
+html[data-theme='hacker'] main[data-page='AffiliateCenter'] .page-hero {
+  opacity: 1 !important;
+}
+html[data-theme='hacker'] main[data-page='AffiliateCenter'] .affiliate-hero-scrim.bg-gradient-to-b {
+  background: linear-gradient(180deg, hsl(var(--background) / 0.3), hsl(var(--background) / 0.68) 65%, hsl(var(--background))) !important;
+  opacity: 1 !important;
+}
+html[data-theme='hacker'] main[data-page='AffiliateCenter'] .bg-card.rounded-xl {
+  background-color: hsl(var(--card)) !important;
+  box-shadow: none !important;
+  opacity: 1;
+}
+html[data-theme='hacker'] main[data-page='AffiliateCenter'] [role='tablist'].bg-muted {
+  background-color: hsl(var(--muted)) !important;
+  box-shadow: none !important;
+  opacity: 1;
+}
+html[data-theme='hacker'] main[data-page='AffiliateCenter'] [role='tab'][data-state='active'] {
+  background-color: hsl(var(--accent)) !important;
+}
+
 /* Keep the toolbar's white wash off this dark page, and shade only the hero art. */
 html[data-theme='dark'] main[data-page='AffiliateCenter']::before {
-  content: none;
+  content: none !important;
 }
 html[data-theme='dark'] main[data-page='AffiliateCenter'] .page-hero {
   opacity: 1 !important;

@@ -630,6 +630,12 @@ html[data-theme='light'] [data-news-viewer] h4 {
   color: #0f172a !important;
 }
 
+/* Keep Chromo Green chrome black even over a custom backdrop. */
+html[data-theme='hacker'] #app-topbar,
+html[data-theme='hacker'] [data-sidebar].fixed.left-0 {
+  background-color: hsl(0 0% 0%) !important;
+}
+
 /* Keep the profile menu opaque above the dashboard in every theme. */
 #topbar-profile-menu {
   background: hsl(var(--popover)) !important;
