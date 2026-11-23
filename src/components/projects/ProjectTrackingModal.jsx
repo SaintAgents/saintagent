@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import ProjectVaultDocuments from '@/components/vault/ProjectVaultDocuments';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -77,10 +78,6 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
     queryFn: () => base44.entities.ProjectActivity.filter({ project_id: project.id }, '-created_date', 50)
   });
 
-  const { data: attachments = [] } = useQuery({
-    queryKey: ['projectAttachments', project.id],
-    queryFn: () => base44.entities.ProjectAttachment.filter({ project_id: project.id }, '-created_date', 50)
-  });
 
   const { data: timeEntries = [] } = useQuery({
     queryKey: ['projectTimeEntries', project.id],
@@ -240,23 +237,7 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
     queryClient.invalidateQueries({ queryKey: ['projectActivities', project.id] });
   };
 
-  const handleFileUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    await base44.entities.ProjectAttachment.create({
-      project_id: project.id,
-      filename: file.name,
-      file_url,
-      file_type: file.type,
-      file_size: file.size,
-      uploader_id: currentUser?.email,
-      uploader_name: profile?.display_name || currentUser?.full_name
-    });
-    queryClient.invalidateQueries({ queryKey: ['projectAttachments', project.id] });
-    logActivity('attachment_added', `Uploaded: ${file.name}`);
-  };
+
 
   // Calculate milestone progress
   const getMilestoneProgress = (milestoneId) => {
@@ -822,37 +803,7 @@ export default function ProjectTrackingModal({ project, onClose, currentUser, pr
 
             {/* Files Tab */}
             <TabsContent value="files" className="mt-4 space-y-3">
-              <label className="block">
-                <Button variant="outline" className="gap-2 cursor-pointer" asChild>
-                  <span>
-                    <Upload className="w-4 h-4" /> Upload File
-                    <input type="file" className="hidden" onChange={handleFileUpload} />
-                  </span>
-                </Button>
-              </label>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {attachments.map((att) => (
-                  <Card key={att.id} className="hover:border-slate-300 transition-colors">
-                    <CardContent className="p-3">
-                      <a href={att.file_url} target="_blank" rel="noopener noreferrer" className="block">
-                        <FileText className="w-8 h-8 text-slate-400 mb-2" />
-                        <div className="text-sm font-medium truncate">{att.filename}</div>
-                        <div className="text-xs text-slate-500">
-                          {att.uploader_name} · {format(new Date(att.created_date), 'MMM d')}
-                        </div>
-                      </a>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              {attachments.length === 0 && (
-                <div className="text-center py-8 text-slate-500">
-                  <Paperclip className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                  <p>No files uploaded yet</p>
-                </div>
-              )}
+              <ProjectVaultDocuments project={project} user={currentUser} />
             </TabsContent>
 
             {/* Activity Tab */}
