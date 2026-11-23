@@ -9,18 +9,20 @@ import NewsViewerModal from '@/components/news/NewsViewerModal';
 import CommunityFeedCard from '@/components/community/CommunityFeedCard';
 import DockTools from '@/components/dock/DockTools';
 import DockOnlineMembers from '@/components/dock/DockOnlineMembers';
+import DockHistory from '@/components/dock/DockHistory';
 import DockSharing from '@/components/dock/DockSharing';
 import DockLinkTree from '@/components/dock/DockLinkTree';
 import WatchlistWidget from '@/components/watch/WatchlistWidget';
 import { links, safePath } from '@/components/dock/dockCatalog';
 
-export default function DockWidget({ card, user, save, navigate, shortcuts, recent, openModal, visible, panelOpen }) {
+export default function DockWidget({ card, user, save, navigate, shortcuts, history, openModal, visible, panelOpen }) {
   const {type, settings} = card;
   const {data: news, isError} = useQuery({queryKey:['dock-news'], queryFn:async () => (await base44.entities.NewsArticle.filter({is_published:true}, {sort:'-published_date',limit:8})).items, enabled:visible && type === 'News'});
   const { data:notifications = [] } = useQuery({queryKey:['notifications',user.email], queryFn:() => base44.entities.Notification.filter({user_id:user.email}, '-created_date', 30), enabled:visible && type === 'Notifications', staleTime:300000});
   const [article, setArticle] = useState(null);
   if (type === 'News') return <><div className="dock-links">{isError ? <p>News could not be loaded.</p> : !news ? <p>Loading headlines…</p> : news.length ? news.map(a => <button key={a.id} onClick={() => setArticle(a)}>{a.title}</button>) : <p>No published headlines.</p>}<Link to="/News">All news</Link></div>{article && <NewsViewerModal article={article} open onClose={() => setArticle(null)} />}</>;
-  if (['Notifications','Recent'].includes(type)) return <CanopyWidget id={type} {...{user, notifications, recent}} open={navigate} />;
+  if (type === 'Recent') return <DockHistory history={history} />;
+  if (type === 'Notifications') return <CanopyWidget id={type} {...{user, notifications}} open={navigate} />;
   if (type === 'World Clock') return <CanopyClock id={type} settings={settings} commit={save} />;
   if (type === 'Tours') return <DailyToursCard userId={user.id} embedded />;
   if (type === 'Community Feed') return <CommunityFeedCard maxHeight="22rem" />;

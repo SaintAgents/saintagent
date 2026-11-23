@@ -14,6 +14,7 @@ import DockPinProvider from '@/components/dock/DockPinContext';
 import useDockPreferences from '@/components/dock/useDockPreferences';
 import useDockActions from '@/components/dock/useDockActions';
 import useDockPanel from '@/components/dock/useDockPanel';
+import useDockHistory from '@/components/dock/useDockHistory';
 import '@/components/dock/dock.css';
 
 export default function DockDeck({user, disabled, children}) {
@@ -23,7 +24,8 @@ export default function DockDeck({user, disabled, children}) {
   const [modal,setModal]=useState(null), [drag,setDrag]=useState(null);
   const visited = useRef(new Set());
   const dragId=useRef(null), panel=useRef(null), launcher=useRef(null);
-  const {shown, setOpen, wide, width, max, resize, recent} = useDockPanel({prefs,commit,disabled,panel,actions,location,dragId,setDrag,setModal});
+  const {shown, setOpen, wide, width, max, resize} = useDockPanel({prefs,commit,disabled,panel,actions,dragId,setDrag,setModal});
+  const history = useDockHistory(user.id, location.pathname, disabled);
   const countedOpening = useRef(false);
   const compactLauncher = (prefs.launcherUses ?? 0) >= 3;
   useEffect(() => {
@@ -39,7 +41,7 @@ export default function DockDeck({user, disabled, children}) {
   const openModal=type => {if (!shown) setOpen(true);setModal(type);};
   const drop=(e, apply) => {e.preventDefault();e.stopPropagation();if(dragId.current) apply(dragId.current);dragId.current=null;setDrag(null);};
   const columns=width>=930 ? 3 : width>=535 ? 2 : 1;
-  const cardProps=card => ({card,user,navigate,openModal,shortcuts:prefs.shortcuts,recent,drag,panelOpen:shown || card.place==='float',columnWidth:(width-12*(columns+1))/columns,patch:update=>actions.patch(card.id,update),remove:()=>actions.remove(card.id),shift:dir=>actions.shift(card.id,dir),
+  const cardProps=card => ({card,user,navigate,openModal,shortcuts:prefs.shortcuts,history,drag,panelOpen:shown || card.place==='float',columnWidth:(width-12*(columns+1))/columns,patch:update=>actions.patch(card.id,update),remove:()=>actions.remove(card.id),shift:dir=>actions.shift(card.id,dir),
     dragStart:(e,id)=>{if(!wide){e.preventDefault();return;}e.dataTransfer.setData('text/plain',id);e.dataTransfer.effectAllowed='move';dragId.current=id;setDrag(id);},dragEnd:()=>{dragId.current=null;setDrag(null);},reorder:(e,target)=>drop(e,id=>actions.reorder(id,target))});
   return <DockPinProvider {...{prefs, commit, disabled}}>{children}<div className="dock-root" hidden={disabled} data-dock-open={shown}>
     {!shown && <Button ref={launcher} className="dock-launcher" data-dock-handle={compactLauncher ? '' : undefined} variant="outline" onClick={() => setOpen(true)} aria-label="Open Dock Deck" title="Open Dock Deck" aria-controls="dock-deck" aria-expanded={false}><DockDeckIcon />{!compactLauncher && prefs.label && 'Dock Deck'}</Button>}

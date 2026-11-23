@@ -1,13 +1,12 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { safePath } from '@/components/dock/dockCatalog';
 
-export default function useDockPanel({prefs,commit,disabled,panel,actions,location,dragId,setDrag,setModal}) {
-  const [open,setOpen]=useState(false), [viewport,setViewport]=useState(()=>window.innerWidth), [draft,setDraft]=useState(null), [recent,setRecent]=useState([]);
+export default function useDockPanel({prefs,commit,disabled,panel,actions,dragId,setDrag,setModal}) {
+  const [open,setOpen]=useState(false), [viewport,setViewport]=useState(()=>window.innerWidth), [draft,setDraft]=useState(null);
   const wide=viewport>=768, max=Math.min(1122,Math.floor(viewport*.88));
   const width=wide ? Math.min(max,Math.max(320,draft ?? prefs.width)) : viewport;
   const shown=open&&!disabled;
   useEffect(()=>{const update=()=>setViewport(window.innerWidth);window.addEventListener('resize',update);return ()=>window.removeEventListener('resize',update);},[]);
-  useEffect(()=>{if(!disabled){const path=location.pathname;setRecent(list=>[path,...list.filter(p=>p!==path)].slice(0,8));}},[disabled,location.pathname]);
   useLayoutEffect(()=>{
     const style=document.documentElement.style;
     style.setProperty('--dock-occupied', `${shown && wide ? width : 0}px`);
@@ -30,5 +29,5 @@ export default function useDockPanel({prefs,commit,disabled,panel,actions,locati
     document.addEventListener('openDockDeck',launch); document.addEventListener('pinDockItem',pin); window.addEventListener('dragover',over);window.addEventListener('drop',drop);
     return ()=>{document.removeEventListener('openDockDeck',launch);document.removeEventListener('pinDockItem',pin);window.removeEventListener('dragover',over);window.removeEventListener('drop',drop);};
   },[disabled,actions,panel,dragId,setDrag]);
-  return {shown,setOpen,wide,width,max,recent,resize:(value,done)=>{if(!done){setDraft(value);return;}if(value!==prefs.width)commit({width:value});setDraft(null);}};
+  return {shown,setOpen,wide,width,max,resize:(value,done)=>{if(!done){setDraft(value);return;}if(value!==prefs.width)commit({width:value});setDraft(null);}};
 }
