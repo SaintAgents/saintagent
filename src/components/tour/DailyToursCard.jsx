@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { BookOpen, CheckCircle, Lock } from 'lucide-react';
+import { BookOpen, CheckCircle, LayoutDashboard } from 'lucide-react';
+import DeckOverviewDialog from '@/components/tour/DeckOverviewDialog';
 import { Button } from '@/components/ui/button';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import DailyTourDialog from '@/components/tour/DailyTourDialog';
@@ -9,6 +10,9 @@ import useDailyTours from '@/components/tour/useDailyTours';
 export default function DailyToursCard({ userId }) {
   const [day, setDay] = useState(null);
   const [step, setStep] = useState(0);
+  const [overviewOpen, setOverviewOpen] = useState(false);
+  const [overviewIndex, setOverviewIndex] = useState(0);
+  const overviewTrigger = useRef(null);
   const trigger = useRef(null);
   const card = useRef(null);
   const { hash, key } = useLocation();
@@ -20,7 +24,7 @@ export default function DailyToursCard({ userId }) {
     });
     return () => cancelAnimationFrame(frame);
   }, [hash, key, userId]);
-  const { query, record, sections, unlocked, nextUnlock, save } = useDailyTours(userId);
+  const { query, record, sections, save } = useDailyTours(userId);
   const completed = sections.filter((count, index) => count === DAILY_TOURS[index].sections.length).length;
   if (!userId) return null;
 
@@ -41,21 +45,27 @@ export default function DailyToursCard({ userId }) {
   return (
     <section id="daily-tours" ref={card} tabIndex={-1} data-readable-surface className="relative z-[1] mx-0 mb-6 scroll-mt-32 space-y-4 rounded-[var(--radius)] border bg-card p-4 text-card-foreground md:mx-6 md:p-5" aria-labelledby="daily-tours-title">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div><h2 id="daily-tours-title" className="flex items-center gap-2 font-heading text-lg font-semibold"><BookOpen size={18} aria-hidden="true" /> Getting Started Tours</h2><p className="mt-1 text-sm text-muted-foreground">Learn SaintAgent with seven guided tours. Each section includes a practice demo and optional voice narration. A new tour unlocks every 24 hours after you start.</p></div>
+        <div><h2 id="daily-tours-title" className="flex items-center gap-2 font-heading text-lg font-semibold"><BookOpen size={18} aria-hidden="true" /> Getting Started Tours</h2><p className="mt-1 text-sm text-muted-foreground">Start with the full-screen overview or play any of the seven topic tours in any order. Read or listen at your own pace.</p></div>
         {record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}
       </div>
+      <Button ref={overviewTrigger} type="button" variant="outline" className="h-auto min-h-10 whitespace-normal" onClick={() => setOverviewOpen(true)}><LayoutDashboard aria-hidden="true" /> Command Deck Overview · Full screen</Button>
       {query.isPending ? <p role="status" className="text-sm">Loading tours…</p> : query.isError ? <div className="flex items-center gap-3"><p role="alert" className="text-sm">Tours couldn’t be loaded.</p><Button type="button" size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></div> : (
         <ol className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
           {DAILY_TOURS.map((tour, index) => {
-            const locked = index >= unlocked;
             const done = sections[index] === tour.sections.length;
-            return <li key={tour.title}><Button type="button" variant="outline" className="h-auto min-h-10 w-full justify-start whitespace-normal px-3 text-left" disabled={locked || save.isPending} onClick={(event) => open(index, event)}>
-              {locked ? <Lock aria-label="Locked" /> : done ? <CheckCircle aria-label="Completed" /> : <BookOpen aria-hidden="true" />}<span>Day {index + 1}: {tour.title}{!done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
+            return <li key={tour.title}><Button type="button" variant="outline" className="h-auto min-h-10 w-full justify-start whitespace-normal px-3 text-left" disabled={save.isPending} onClick={(event) => open(index, event)}>
+              {done ? <CheckCircle aria-label="Completed; select to replay" /> : <BookOpen aria-hidden="true" />}<span>Tour {index + 1}: {tour.title}{!done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
             </Button></li>;
           })}
         </ol>
       )}
-      {nextUnlock && <p className="text-xs text-muted-foreground">Next tour unlocks {new Date(nextUnlock).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}.</p>}
+      {overviewOpen && <DeckOverviewDialog index={overviewIndex} onSelect={setOverviewIndex} onClose={() => setOverviewOpen(false)} returnFocus={target => {
+        overviewTrigger.current?.focus({ preventScroll: true });
+        if (!target?.isConnected) return;
+        target.scrollIntoView({ block: 'center', inline: 'nearest' });
+        const outline = { outline: '3px dashed currentColor', outlineOffset: '-3px' };
+        target.animate?.([outline, outline], { duration: 5000 });
+      }} />}
       {save.isPending && !record && <p role="status" className="text-sm">Starting your tour…</p>}
       {day === null && save.isError && <p role="alert" className="text-sm text-destructive">Your tour couldn’t start. Please try again.</p>}
       {day !== null && <DailyTourDialog day={day} step={step} busy={save.isPending} error={save.isError} onClose={() => { save.reset(); setDay(null); }} onBack={() => { save.reset(); setStep(step - 1); }} onAdvance={advance} returnFocus={() => trigger.current?.focus()} />}

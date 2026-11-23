@@ -64,6 +64,7 @@ export default function CollapsibleCard({
   return (
     <div 
       ref={cardRef}
+      data-tour-card={cardId}
       className={cn(
         "relative bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden transition-all duration-300 collapsible-card",
         isPinned && "ring-2 ring-violet-500/20",

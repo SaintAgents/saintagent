@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
 
-const DAY_MS = 86_400_000;
 const EMPTY_PROGRESS = DAILY_TOURS.map(() => 0);
 
 export default function useDailyTours(userId) {
@@ -18,16 +16,7 @@ export default function useDailyTours(userId) {
   });
   const record = query.data;
   const sections = record?.sections_completed ?? EMPTY_PROGRESS;
-  const startedAt = record ? new Date(record.created_date).getTime() : null;
-  const [now, setNow] = useState(Date.now);
-  const unlocked = startedAt === null ? 1 : Math.min(DAILY_TOURS.length, 1 + Math.floor(Math.max(0, now - startedAt) / DAY_MS));
-  const nextUnlock = startedAt !== null && unlocked < DAILY_TOURS.length ? startedAt + unlocked * DAY_MS : null;
 
-  useEffect(() => {
-    if (!nextUnlock) return;
-    const timer = setTimeout(() => setNow(Date.now()), Math.max(0, nextUnlock - Date.now()) + 25);
-    return () => clearTimeout(timer);
-  }, [nextUnlock]);
 
   const save = useMutation({
     mutationFn: async ({ day, count } = {}) => {
@@ -37,8 +26,7 @@ export default function useDailyTours(userId) {
     },
     onSuccess: (saved) => {
       queryClient.setQueryData(queryKey, saved);
-      setNow(Date.now());
     },
   });
-  return { query, record, sections, unlocked, nextUnlock, save };
+  return { query, record, sections, save };
 }

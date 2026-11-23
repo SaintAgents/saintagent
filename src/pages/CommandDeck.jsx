@@ -910,7 +910,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     )}>
       {/* Page Header */}
       <div className="px-0 md:px-6 pt-6 pb-4 w-full" style={{ marginTop: '48px' }}>
-          <div className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
+          <div data-deck-tour="header" className="relative flex items-start justify-between mb-6 p-4 rounded-2xl overflow-hidden bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50" style={{ marginTop: '-44px' }}>
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-3">
               <div>
@@ -1458,9 +1458,9 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
             <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">Dashboard</div>
           </div>
-          <ActivityFeedBanner context="commanddeck" />
+          <div data-deck-tour="activity"><ActivityFeedBanner context="commanddeck" /></div>
           {/* Hero Metrics */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 md:gap-3 mb-6">
+          <div data-deck-tour="metrics" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 md:gap-3 mb-6">
             {/* Gold Price Ticker - GGG = 1 gram gold */}
             <GoldPriceTicker />
             <GGGBalanceCard walletAvailable={walletAvailable} />
@@ -1565,7 +1565,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         </div>
 
         {/* Mode Cards Grid */}
-        <div className="px-0 md:px-6 mb-6">
+        <div data-deck-tour="shortcuts" className="px-0 md:px-6 mb-6">
           <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-1 md:gap-4">
             <ModeCard mode="earn" title="Earn" icon={DollarSign} stats="Marketplace" onClick={() => window.location.href = createPageUrl('Marketplace')} />
             <ModeCard mode="learn" title="Learn" icon={TrendingUp} stats="Guide" onClick={() => window.location.href = createPageUrl('Learn')} />
@@ -1576,7 +1576,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           </div>
         </div>
 
-        <ControlsDeck colCOrder={colCOrder} setCardsForceOpen={setCardsForceOpen} setHiddenCards={setHiddenCards} setStoredCards={setStoredCards} setColCOrder={setColCOrder} storeAllCards={storeAllCards} restoreAllCards={restoreAllCards} theme={theme} onThemeToggle={onThemeToggle} profile={profile} visibleCards={visibleCards} setCustomCards={setCustomCards} setDeckViewMode={setDeckViewMode} setHiddenCardsFromSuggestions={setHiddenCards} />
+        <div data-deck-tour="controls"><ControlsDeck colCOrder={colCOrder} setCardsForceOpen={setCardsForceOpen} setHiddenCards={setHiddenCards} setStoredCards={setStoredCards} setColCOrder={setColCOrder} storeAllCards={storeAllCards} restoreAllCards={restoreAllCards} theme={theme} onThemeToggle={onThemeToggle} profile={profile} visibleCards={visibleCards} setCustomCards={setCustomCards} setDeckViewMode={setDeckViewMode} setHiddenCardsFromSuggestions={setHiddenCards} /></div>
 
         {/* Main Grid - Collapsible Cards */}
         <div className="px-0 md:px-6 relative min-h-[1200px] w-full max-w-full overflow-x-hidden">

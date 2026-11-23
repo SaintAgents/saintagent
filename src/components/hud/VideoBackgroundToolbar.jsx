@@ -195,6 +195,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
   if (collapsed) {
     return (
       <button
+        data-deck-tour="appearance"
         onClick={() => setCollapsed(false)}
         className="fixed z-50 right-0 top-1/2 -translate-y-1/2 p-1.5 rounded-l-lg shadow-lg border border-r-0"
         style={{ background: bgColor, borderColor }}
@@ -216,6 +217,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
       {/* Main Toolbar Bar */}
       <div
         ref={toolbarRef}
+        data-deck-tour="appearance"
         data-toolbar-panel="true"
         className="fixed z-50 flex items-center gap-1 px-3 py-1.5 rounded-full shadow-2xl border"
         style={{

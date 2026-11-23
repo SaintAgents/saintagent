@@ -26,7 +26,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
         onCloseAutoFocus={(event) => { event.preventDefault(); returnFocus(); }}>
         {day === 0 && step === 0 && <CommandDeckTourHighlight />}
         <div className="space-y-2 pr-6">
-          <DialogTitle>Day {day + 1}: {tour.title}</DialogTitle>
+          <DialogTitle>Tour {day + 1}: {tour.title}</DialogTitle>
           <DialogDescription>Section {step + 1} of {tour.sections.length}</DialogDescription>
         </div>
         <progress className="h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />

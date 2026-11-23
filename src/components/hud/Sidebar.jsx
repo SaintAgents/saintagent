@@ -160,6 +160,8 @@ const NAV_GROUPS = [
   { key: 'intelligence', label: 'Intelligence', icon: Orbit, items: ['synchronicity', 'matches', 'celestial'] },
 ];
 
+export { ALL_NAV_ITEMS, NAV_GROUPS };
+
 // Build flat NAV_ITEMS from groups for backward compatibility (popup nav, etc.)
 const NAV_ITEMS = [
   ALL_NAV_ITEMS.command,
@@ -510,6 +512,7 @@ export default function Sidebar({
                     <Tooltip key={group.key}>
                       <TooltipTrigger asChild>
                         <button
+                          data-tour-nav-group={group.key}
                           onClick={() => setExpandedGroups(prev => ({ ...prev, [group.key]: !prev[group.key] }))}
                           className={cn(
                             "w-full flex items-center justify-center p-2 rounded-lg transition-colors relative",
@@ -532,6 +535,7 @@ export default function Sidebar({
                     {/* Treasury gets a visual divider */}
                     {group.isTreasury && <div className="mx-2 mb-1.5 border-t border-amber-200" />}
                     <button
+                      data-tour-nav-group={group.key}
                       onClick={() => setExpandedGroups(prev => ({ ...prev, [group.key]: !prev[group.key] }))}
                       className={cn(
                         "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors text-left",

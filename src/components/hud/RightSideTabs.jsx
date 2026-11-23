@@ -449,7 +449,7 @@ export default function RightSideTabs() {
       <BusinessCardDialog open={businessCardOpen} onOpenChange={setBusinessCardOpen} profile={myProfile} />
       
       {/* Help Tab */}
-      <div 
+      <div data-deck-tour="help"
         className={cn(
           "fixed right-0 z-[60] transition-all duration-300 ease-out",
           // On mobile, only show if panel is open (triggered from menu)
