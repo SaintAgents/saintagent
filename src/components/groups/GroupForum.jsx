@@ -28,6 +28,8 @@ import {
   Send
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import ForumFilePicker from '@/components/groups/ForumFilePicker';
+import ForumPostAttachments from '@/components/groups/ForumPostAttachments';
 
 const POST_TYPE_CONFIG = {
   discussion: { icon: MessageSquare, color: 'bg-blue-100 text-blue-700', label: 'Discussion' },
@@ -43,6 +45,7 @@ export default function GroupForum({ circle, user }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [newPost, setNewPost] = useState({ title: '', content: '', post_type: 'discussion' });
+  const [files, setFiles] = useState([]);
   const [replyContent, setReplyContent] = useState('');
   const queryClient = useQueryClient();
 
@@ -59,18 +62,27 @@ export default function GroupForum({ circle, user }) {
   });
 
   const createPostMutation = useMutation({
-    mutationFn: (data) => base44.entities.GroupPost.create({
-      circle_id: circle.id,
-      author_id: user.email,
-      author_name: user.full_name,
-      ...data
-    }),
+    mutationFn: async ({ draft, attachments }) => {
+      if (attachments.length) {
+        const fields = Object.fromEntries(attachments.map((file, index) => [`file${index}`, file]));
+        const { data } = await base44.functions.invoke('circleForumAttachments', { action: 'publish', circleId: circle.id, ...draft, ...fields });
+        return data;
+      }
+      return base44.entities.GroupPost.create({ circle_id: circle.id, author_id: user.email, author_name: user.full_name, ...draft });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['groupPosts', circle.id] });
       setCreateOpen(false);
+      setFiles([]);
       setNewPost({ title: '', content: '', post_type: 'discussion' });
     }
   });
+  const closeComposer = () => {
+    if (createPostMutation.isPending) return;
+    setCreateOpen(false);
+    setFiles([]);
+    createPostMutation.reset();
+  };
 
   const createReplyMutation = useMutation({
     mutationFn: (data) => base44.entities.GroupPostReply.create({
@@ -167,8 +179,8 @@ export default function GroupForum({ circle, user }) {
       )}
 
       {/* Create Post Dialog */}
-      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="max-w-lg">
+      <Dialog open={createOpen} onOpenChange={(open) => open ? setCreateOpen(true) : closeComposer()}>
+        <DialogContent className="max-w-lg max-h-[90dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create New Post</DialogTitle>
           </DialogHeader>
@@ -204,14 +216,16 @@ export default function GroupForum({ circle, user }) {
               onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
               rows={5}
             />
+            <ForumFilePicker files={files} onChange={setFiles} disabled={createPostMutation.isPending} />
+            {createPostMutation.isError && <p role="alert" className="text-sm text-destructive">{createPostMutation.error?.response?.data?.error || 'Couldn’t publish the post. Please try again.'}</p>}
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-              <Button 
-                onClick={() => createPostMutation.mutate(newPost)}
-                disabled={!newPost.content.trim() || createPostMutation.isPending}
+              <Button variant="outline" onClick={closeComposer} disabled={createPostMutation.isPending}>Cancel</Button>
+              <Button
+                onClick={() => createPostMutation.mutate({ draft: newPost, attachments: files })}
+                disabled={(!newPost.content.trim() && !files.length) || createPostMutation.isPending}
                 className="bg-violet-600 hover:bg-violet-700"
               >
-                Post
+                {createPostMutation.isPending ? (files.length ? 'Uploading and posting…' : 'Posting…') : 'Post'}
               </Button>
             </div>
           </div>
@@ -248,6 +262,7 @@ export default function GroupForum({ circle, user }) {
 
               <div className="py-4 border-b">
                 <p className="text-slate-700 whitespace-pre-wrap">{selectedPost.content}</p>
+                <ForumPostAttachments key={selectedPost.id} postId={selectedPost.id} userId={user.id} />
               </div>
 
               {/* Replies */}
@@ -330,7 +345,7 @@ function PostCard({ post, onClick }) {
             )}
           </div>
           <h4 className="font-medium text-slate-900 mb-1 line-clamp-1">
-            {post.title || post.content.slice(0, 60)}
+            {post.title || post.content?.slice(0, 60) || 'Attachments'}
           </h4>
           <p className="text-sm text-slate-500 line-clamp-2">{post.content}</p>
           <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">

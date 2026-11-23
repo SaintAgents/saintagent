@@ -1,0 +1,72 @@
+{
+  "name": "CircleForumAttachmentSet",
+  "type": "object",
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "circle_id": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "uri": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "document",
+              "video",
+              "audio"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "uri",
+          "kind"
+        ]
+      }
+    }
+  },
+  "required": [
+    "post_id",
+    "circle_id",
+    "files"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
