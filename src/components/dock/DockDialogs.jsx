@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { icons, links, widgetLibrary } from '@/components/dock/dockCatalog';
+import { icons, links, widgetLabel, widgetLibrary } from '@/components/dock/dockCatalog';
 
 export default function DockDialogs({ modal, close, prefs, deck, cards, actions }) {
   const [duplicate, setDuplicate] = useState('');
@@ -14,12 +14,12 @@ export default function DockDialogs({ modal, close, prefs, deck, cards, actions 
     {modal === 'library' && <div className="grid gap-2">{Object.entries(widgetLibrary).map(([type, description]) => {
       const elsewhere = cards.some(c => c.type === type && c.deck !== deck.id && c.place !== 'drawer');
       return <div key={type} className="flex items-start justify-between gap-3 rounded-md border p-2 text-sm">
-        <div><strong>{type}</strong><p>{description}</p>{elsewhere && <p>Already on another deck.</p>}</div>
+        <div><strong>{widgetLabel(type)}</strong><p>{description}</p>{elsewhere && <p>Already on another deck.</p>}</div>
         <Button size="sm" onClick={() => { if (elsewhere && duplicate !== type) { setDuplicate(type); return; } actions.add(type); close(); }}>{duplicate === type ? 'Add anyway' : 'Add'}</Button>
       </div>;
     })}</div>}
     {modal === 'drawer' && <div className="grid gap-2">{cards.filter(c => c.place === 'drawer').length === 0 && <p>The Drawer is empty.</p>}{cards.filter(c => c.place === 'drawer').map(c => <div className="flex flex-wrap items-center gap-2 border-b pb-2 text-sm" key={c.id}>
-      <strong className="mr-auto">{c.settings.title || c.type}</strong><Button size="sm" onClick={() => actions.restore(c.id, deck.id)}>Restore</Button>
+      <strong className="mr-auto">{c.settings.title || widgetLabel(c.type)}</strong><Button size="sm" onClick={() => actions.restore(c.id, deck.id)}>Restore</Button>
       <select aria-label={`Move ${c.type} to deck`} value="" onChange={e => { if(e.target.value) actions.restore(c.id, e.target.value); }}><option value="">Move to…</option>{prefs.decks.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}</select>
       <Button size="sm" variant="outline" onClick={() => { if (window.confirm(`Permanently delete ${c.settings.title || c.type}?`)) actions.remove(c.id); }}>Delete</Button>
     </div>)}</div>}

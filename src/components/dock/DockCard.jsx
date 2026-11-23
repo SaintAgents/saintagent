@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Archive, GripVertical, Link2, Maximize2, MoreHorizontal, MoveUpRight, Newspaper, PanelsTopLeft, X } from 'lucide-react';
 import DockWidget from '@/components/dock/DockWidget';
+import { widgetLabel } from '@/components/dock/dockCatalog';
 
 export default function DockCard({ card, floating, visible, patch, dragStart, dragEnd, reorder, drag, remove, columnWidth, ...widgetProps }) {
   const host = useRef(null), gesture = useRef(null);
@@ -21,7 +22,7 @@ export default function DockCard({ card, floating, visible, patch, dragStart, dr
     <div className="dock-card-header">
       {!floating && <button type="button" draggable onDragStart={e => dragStart(e,card.id)} onDragEnd={dragEnd} title="Drag to rearrange, or press Enter for options" aria-label={`Arrange ${type}`} onClick={() => setMenu(!menu)}><GripVertical size={14} /></button>}
       {floating && <button type="button" aria-label="Move widget" title="Drag to move" className="dock-move" {...move('move')}><GripVertical size={14} /></button>}
-      {!frameless && <strong className="dock-card-title"><WidgetIcon size={14} aria-hidden="true" /><span className="truncate">{settings.title || type}</span></strong>}
+      {!frameless && <strong className="dock-card-title"><WidgetIcon size={14} aria-hidden="true" /><span className="truncate">{settings.title || widgetLabel(type)}</span></strong>}
       {!floating && <><button aria-label="Pop out widget" title="Pop out widget" onClick={() => patch({place:'float'})}><MoveUpRight size={15} /></button><button aria-label="Archive widget" title="Archive widget" onClick={() => patch({place:'drawer'})}><Archive size={15} /></button></>}
       {floating && <><button aria-label="Widget options" title="Widget options" aria-expanded={menu} onClick={() => setMenu(!menu)}><MoreHorizontal size={16} /></button>{!frameless && <button aria-label="Close floating widget" title="Close floating widget" onClick={() => patch({place:'drawer'})}><X size={15} /></button>}</>}
     </div>
