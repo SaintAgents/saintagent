@@ -18,7 +18,7 @@ export default function VaultLibrary({ user, project }) {
   const scope = project ? {project_id:project.id} : view === 'mine' ? mine : {$nor:[mine]};
   const scopeKey = [user.id,project?.id || view];
   const counts = useQuery({queryKey:['vault',...scopeKey,'folders'],queryFn:()=>entity.aggregate({query:scope,groupBy:'folder'})});
-  const query = {...scope,...(folder ? {folder:folder === 'Other' ? {$in:['Other','',null]} : folder} : {}),...(search ? {title:titlePattern(search)} : {})};
+  const query = {...scope,...(folder ? {folder:folder === 'Other' ? {$nin:folders.filter(name=>name !== 'Other')} : folder} : {}),...(search ? {title:titlePattern(search)} : {})};
   const documents = useInfiniteQuery({queryKey:['vault',...scopeKey,folder,search],initialPageParam:undefined,
     queryFn:({pageParam})=>entity.filter(query,{sort:'-created_date',limit:24,cursor:pageParam}),getNextPageParam:page=>page.next_cursor || undefined});
   const rows = counts.data?.rows || [], tally = Object.fromEntries(rows.map(row=>[folders.includes(row.folder) ? row.folder : 'Other', 0]));

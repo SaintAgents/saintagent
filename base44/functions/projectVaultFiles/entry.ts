@@ -9,8 +9,8 @@ export default async function(req: Request): Promise<Response> {
     if (typeof projectId !== 'string' || !projectId || projectId.length > 160 || !['list','attach'].includes(action)) return Response.json({error:'Invalid request'},{status:400});
     const project = await client.entities.Project.get(projectId).catch(e=>e.status===404 ? null : Promise.reject(e));
     if (!project) return Response.json({error:'Project not found'},{status:404});
-    // Project owner/claim fields are editable and cannot authorize private files.
-    const authorized = user.role === 'admin' || (project.created_by_id ? project.created_by_id === user.id : !!user.email && project.created_by === user.email);
+    // Require a recorded submitter. Editable project owner/claim fields cannot authorize private files.
+    const authorized = project.created_by_id && (user.role === 'admin' || project.created_by_id === user.id);
     if (!authorized) return Response.json({error:'Not authorized'},{status:403});
     const attachments = client.asServiceRole.entities.ProjectAttachment;
     if (action === 'attach') {
