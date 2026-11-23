@@ -5,8 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { Sparkles, Eye, EyeOff } from 'lucide-react';
+import { safeReturnTo } from '@/lib/authReturnTo';
 
 export default function Login() {
+  const returnTo = safeReturnTo();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +21,7 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
-      window.location.href = '/';
+      window.location.href = returnTo;
     } catch (err) {
       setError(err?.message || 'Invalid email or password');
     } finally {
@@ -28,7 +30,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    base44.auth.loginWithProvider('google', window.location.origin + '/');
+    base44.auth.loginWithProvider('google', new URL(returnTo, window.location.origin).href);
   };
 
   return (

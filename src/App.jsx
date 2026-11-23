@@ -104,9 +104,10 @@ const AuthenticatedApp = () => {
     }
 
     if (!user) {
-      window.location.replace('/');
+      const sharedCircle = /^\/circles\/?$/i.test(location.pathname) && new URLSearchParams(location.search).has('group');
+      window.location.replace(sharedCircle ? `/login?${new URLSearchParams({ returnTo: location.pathname + location.search })}` : '/');
     }
-  }, [isPublic, isLoadingAuth, user]);
+  }, [isPublic, isLoadingAuth, user, location.pathname, location.search]);
 
   // Public pages render immediately
   if (isPublic) {

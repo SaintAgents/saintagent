@@ -26,9 +26,26 @@ import CircleChatPanel from '@/components/community/CircleChatPanel';
 import CircleCover from '@/components/circles/CircleCover';
 import CircleManageModal from '@/components/circles/CircleManageModal';
 import VideoCallRoom from '@/components/video/VideoCallRoom';
+import { useSearchParams } from 'react-router-dom';
+import CircleShareLink from '@/components/groups/CircleShareLink';
+
+const SHAREABLE_TABS = ['forum', 'members', 'events', 'meetings'];
 
 export default function GroupDetailPage({ circle, user, onBack }) {
-  const [activeTab, setActiveTab] = useState('forum');
+  const [localTab, setLocalTab] = useState('forum');
+  const [params, setParams] = useSearchParams();
+  const routed = params.get('group') === circle?.id;
+  const linkedPost = routed ? params.get('post') : null;
+  const requestedTab = routed ? params.get('tab') : localTab;
+  const canOpenTab = SHAREABLE_TABS.includes(requestedTab) || (requestedTab === 'settings' && !!user?.email && circle?.owner_id === user.email);
+  const activeTab = !linkedPost && canOpenTab ? requestedTab : 'forum';
+  const setActiveTab = (value) => {
+    if (!routed) return setLocalTab(value);
+    const next = new URLSearchParams(params);
+    next.set('tab', value);
+    next.delete('post');
+    setParams(next, { replace: true });
+  };
   const [showChat, setShowChat] = useState(false);
   const [showVideoCall, setShowVideoCall] = useState(false);
   const [videoFullscreen, setVideoFullscreen] = useState(false);
@@ -131,7 +148,8 @@ export default function GroupDetailPage({ circle, user, onBack }) {
 
       {/* Stats Bar */}
       <div className="bg-white border-b px-6 py-3">
-        <div className="max-w-6xl mx-auto flex items-center gap-6 text-sm">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-3 text-sm">
+          {isMember && <CircleShareLink circleId={circle.id} />}
           <span className="flex items-center gap-1.5 text-slate-600">
             <Users className="w-4 h-4" />
             {circle.member_count || 0} members
@@ -154,7 +172,8 @@ export default function GroupDetailPage({ circle, user, onBack }) {
       <div className="max-w-6xl mx-auto p-6">
         {isMember ? (
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6 bg-white border">
+            <div className="mb-6 flex flex-wrap items-center gap-2">
+            <TabsList className="bg-white border">
               <TabsTrigger value="forum" className="gap-2">
                 <MessageSquare className="w-4 h-4" />
                 Forum
@@ -178,9 +197,11 @@ export default function GroupDetailPage({ circle, user, onBack }) {
                 </TabsTrigger>
               )}
             </TabsList>
+            {SHAREABLE_TABS.includes(activeTab) && <CircleShareLink circleId={circle.id} section={activeTab} label={`Copy ${activeTab} link`} />}
+            </div>
 
             <TabsContent value="forum">
-              <GroupForum circle={circle} user={user} />
+              <GroupForum circle={circle} user={user} linkedPostId={linkedPost} onDismissLinkedPost={() => setActiveTab('forum')} />
             </TabsContent>
 
             <TabsContent value="members">

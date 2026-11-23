@@ -33,12 +33,14 @@ export default function GroupShortcutDetail() {
   const close = () => {
     const next = new URLSearchParams(params);
     next.delete('group');
+    next.delete('tab');
+    next.delete('post');
     setParams(next, { replace: true });
   };
   if (group.data) return <GroupDetailPage key={id} circle={group.data} user={user} onBack={close} />;
   return <div className="grid min-h-[50vh] place-items-center bg-background p-4 text-foreground">
     <div className="space-y-3 text-center">
-      <p role="status">{notFound ? 'This group is no longer in My Groups.' : group.isError ? 'Couldn’t open this group.' : 'Opening group…'}</p>
+      <p role="status">{notFound ? 'This Circle is unavailable or you don’t have access.' : group.isError ? 'Couldn’t open this group.' : 'Opening group…'}</p>
       {group.isError && <Button variant="ghost" onClick={() => group.refetch()}>Retry</Button>}
       <Button variant="outline" onClick={close}>Back to Groups</Button>
     </div>

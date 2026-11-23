@@ -31,6 +31,7 @@ import { format, parseISO } from "date-fns";
 import ForumFilePicker from '@/components/groups/ForumFilePicker';
 import ForumPostAttachments from '@/components/groups/ForumPostAttachments';
 import ForumLinkedText from '@/components/groups/ForumLinkedText';
+import CircleShareLink from '@/components/groups/CircleShareLink';
 
 const POST_TYPE_CONFIG = {
   discussion: { icon: MessageSquare, color: 'bg-blue-100 text-blue-700', label: 'Discussion' },
@@ -40,9 +41,9 @@ const POST_TYPE_CONFIG = {
   poll: { icon: BarChart3, color: 'bg-purple-100 text-purple-700', label: 'Poll' }
 };
 
-export default function GroupForum({ circle, user }) {
+export default function GroupForum({ circle, user, linkedPostId, onDismissLinkedPost }) {
   const [createOpen, setCreateOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [localPost, setSelectedPost] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [newPost, setNewPost] = useState({ title: '', content: '', post_type: 'discussion' });
@@ -56,6 +57,19 @@ export default function GroupForum({ circle, user }) {
     enabled: !!circle.id
   });
 
+  const linkedPost = useQuery({
+    queryKey: ['groupPostLink', user?.id, circle.id, linkedPostId],
+    enabled: !!linkedPostId,
+    queryFn: async () => {
+      const { items } = await base44.entities.GroupPost.filter({ id: linkedPostId, circle_id: circle.id }, { limit: 1 });
+      return items[0] ?? null;
+    },
+  });
+  const selectedPost = linkedPostId ? linkedPost.data : localPost;
+  const closePost = () => {
+    setSelectedPost(null);
+    if (linkedPostId) onDismissLinkedPost();
+  };
   const { data: replies = [] } = useQuery({
     queryKey: ['groupPostReplies', selectedPost?.id],
     queryFn: () => base44.entities.GroupPostReply.filter({ post_id: selectedPost.id }, 'created_date', 100),
@@ -234,8 +248,13 @@ export default function GroupForum({ circle, user }) {
       </Dialog>
 
       {/* Post Detail Dialog */}
-      <Dialog open={!!selectedPost} onOpenChange={(o) => !o && setSelectedPost(null)}>
+      <Dialog open={!!selectedPost || !!linkedPostId} onOpenChange={(open) => !open && closePost()}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          {!selectedPost && linkedPostId && <DialogHeader>
+            <DialogTitle>Shared forum post</DialogTitle>
+            <p role="status" className="text-sm text-muted-foreground">{linkedPost.isPending ? 'Opening post…' : linkedPost.isError ? 'Couldn’t load this post.' : 'This post is unavailable in this Circle.'}</p>
+            {linkedPost.isError && <Button variant="outline" size="sm" onClick={() => linkedPost.refetch()}>Retry</Button>}
+          </DialogHeader>}
           {selectedPost && (
             <>
               <DialogHeader>
@@ -249,7 +268,10 @@ export default function GroupForum({ circle, user }) {
                     </Badge>
                   )}
                 </div>
-                <DialogTitle>{selectedPost.title || 'Discussion'}</DialogTitle>
+                <div className="flex flex-wrap items-center justify-between gap-2 pr-6">
+                  <DialogTitle>{selectedPost.title || 'Discussion'}</DialogTitle>
+                  <CircleShareLink circleId={circle.id} section="forum" postId={selectedPost.id} label="Copy post link" />
+                </div>
                 <div className="flex items-center gap-2 text-sm text-slate-500">
                   <Avatar className="w-6 h-6">
                     <AvatarImage src={selectedPost.author_avatar} />
