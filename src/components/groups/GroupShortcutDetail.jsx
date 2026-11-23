@@ -35,10 +35,8 @@ export default function GroupShortcutDetail() {
     next.delete('group');
     setParams(next, { replace: true });
   };
-  if (group.data) return <div className="fixed inset-0 z-50 overflow-y-auto bg-background">
-    <GroupDetailPage key={id} circle={group.data} user={user} onBack={close} />
-  </div>;
-  return <div className="fixed inset-0 z-50 grid place-items-center bg-background p-4 text-foreground">
+  if (group.data) return <GroupDetailPage key={id} circle={group.data} user={user} onBack={close} />;
+  return <div className="grid min-h-[50vh] place-items-center bg-background p-4 text-foreground">
     <div className="space-y-3 text-center">
       <p role="status">{notFound ? 'This group is no longer in My Groups.' : group.isError ? 'Couldn’t open this group.' : 'Opening group…'}</p>
       {group.isError && <Button variant="ghost" onClick={() => group.refetch()}>Retry</Button>}

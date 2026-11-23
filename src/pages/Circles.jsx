@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
@@ -28,6 +29,12 @@ export default function Circles() {
   const [tab, setTab] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [searchParams] = useSearchParams();
+  const shortcutGroupId = searchParams.get('group');
+  const detailId = shortcutGroupId || selectedGroup;
+  useEffect(() => {
+    if (detailId) window.scrollTo(0, 0);
+  }, [detailId]);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'map'
   const queryClient = useQueryClient();
 
@@ -112,6 +119,9 @@ export default function Circles() {
     activism: 'bg-rose-100 text-rose-700',
     other: 'bg-slate-100 text-slate-700'
   };
+
+  if (shortcutGroupId) return <GroupShortcutDetail />;
+  if (selectedCircle) return <GroupDetailPage key={selectedCircle.id} circle={selectedCircle} user={user} onBack={() => setSelectedGroup(null)} />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:bg-transparent dark:bg-none dark:from-transparent dark:via-transparent dark:to-transparent">
@@ -326,13 +336,11 @@ export default function Circles() {
                     {isOwner && <Button variant="outline" onClick={() => setManageCircle(circle.id)} className="flex-1 rounded-xl">Manage</Button>}
                     {isMember || isOwner ?
                     <>
-                        <Button
-                        variant="outline"
-                        onClick={() => setSelectedGroup(circle.id)}
-                        className="flex-1 rounded-xl gap-1">
-
-                          <ArrowRight className="w-4 h-4" />
-                          Enter
+                        <Button asChild variant="outline" className="flex-1 rounded-xl gap-1">
+                          <Link to={{ search: `?${new URLSearchParams([...searchParams, ['group', circle.id]])}` }}>
+                            <ArrowRight className="w-4 h-4" />
+                            Enter
+                          </Link>
                         </Button>
                         {circle.chat_enabled &&
                       <Button
@@ -404,18 +412,7 @@ export default function Circles() {
         </div>
       }
 
-      {/* Group Detail View */}
-      {selectedCircle &&
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-50">
-          <GroupDetailPage
-          key={selectedCircle.id}
-          circle={selectedCircle}
-          user={user}
-          onBack={() => setSelectedGroup(null)} />
-
-          </div>
-          }
-          <GroupShortcutDetail />
-          </div>);
+    </div>
+  );
 
 }
