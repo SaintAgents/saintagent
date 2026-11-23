@@ -19,7 +19,7 @@ export default function WorkspaceReferenceList({ owner, kind, recordId }) {
   const rows = query.data?.pages.flatMap(page => page.items) || [];
   if (query.isPending) return <p role="status">Loading…</p>;
   if (query.isError && !rows.length) return <p role="alert">Could not load items. <button className="underline" onClick={() => query.refetch()}>Retry</button></p>;
-  if (!rows.length) return <p className="text-muted-foreground">{recordId ? 'This research card is no longer available.' : 'Nothing here yet. Choose Save To… on a record to add it.'}</p>;
+  if (!rows.length) return <p className="text-muted-foreground">{recordId ? 'This item is no longer available.' : 'Nothing here yet. Choose Save To… on a record to add it.'}</p>;
   return <div className="space-y-3">{rows.map(row => <section key={row.id} id={`reference-${row.id}`} data-readable-surface className="scroll-mt-32 rounded-lg border p-3">
     <div className="flex items-start justify-between gap-2"><h3 className="break-words font-semibold">{row.title}{kind === 'plan' && <span className="ml-2 text-xs font-normal">Draft</span>}</h3><Button type="button" variant="outline" size="sm" disabled={removal.isPending} aria-label={`Remove ${row.title}`} onClick={() => {if(window.confirm(`Remove “${row.title}”? The original record will not change.`)) removal.mutate(row.id);}}>Remove</Button></div>
     {row.note && <p className="whitespace-pre-wrap break-words text-sm">{row.note}</p>}

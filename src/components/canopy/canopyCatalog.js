@@ -1,5 +1,5 @@
 export const tabs = [
-  ['Home','/CommandDeck'], ['Deep Dive','deep-dive'], ['Research','/ResourceHub'], ['Projects','/MyDashboard'], ['People','/Profiles'], ['Opportunities','/Marketplace'], ['Quests','/Quests'], ['Treasury','/GaiaGlobalTreasury'], ['Files','/Profile'], ['Calendar','/Schedule'], ['Notes','/Notes'], ['Actions','actions'],
+  ['Home','/CommandDeck'], ['Deep Dive','deep-dive'], ['Research','/ResourceHub'], ['Projects','/MyDashboard'], ['People','/Profiles'], ['Opportunities','/Marketplace'], ['Quests','/Quests'], ['Treasury','/GaiaGlobalTreasury'], ['Files','knowledge'], ['Calendar','/Schedule'], ['Notes','/Notes'], ['Actions','actions'],
 ];
 export const actions = [
   ['Take Action','create'], ['Explore Opportunities','/Marketplace'], ['Deep Dive Research','deep-dive'], ['Join Projects','/Projects'], ['Connect People','/FindCollaborators'], ['Organizations & Ventures','/BusinessEntities'], ['Build a Brighter Tomorrow','/Missions'],
@@ -25,7 +25,7 @@ export const links = {
   'Video Conference':[['Open a video call from Messages','/Messages'],['Open meetings','/Meetings']],
   'Who’s Online':[['See online members','online']],
   'Member Profiles':[['Browse member profiles','/Profiles']],
-  'Files & Knowledge':[['My files','/Profile'],['Browse resources','/ResourceHub']],
+  'Files & Knowledge':[['Search files & knowledge','knowledge']],
   'AI Assistant':[['Open My Assistant','my-assistant'],['Open SaintAgent concierge','assistant']],
   'Daily Planner':[['Plan my day','/DailyPlanner'],['Open Daily Ops','/DailyOps']],
   'Business Plans':[['Build a business plan','/BusinessPlanBuilder'],['Browse business entities','/BusinessEntities']],
@@ -53,6 +53,7 @@ export const links = {
 };
 export const widgets = [...new Set([...Object.values(presets).flat(), ...Object.keys(links)])].sort();
 export const descriptions = {
+  'Files & Knowledge':'Search your files, vault documents, investigations, saved work, Wisdom Cards, and resources.',
   'Quick Notes':'Capture a thought in your private Canopy scratchpad.', 'Quick Links':'Jump to common SaintAgent pages.',
   'AI Assistant':'Ask a question in Canopy or open My Assistant for ongoing work.', Tours:'Play or replay a guided SaintAgent tour.',
   Stopwatch:'Start, pause, and reset a timer.', 'World Clock':'Check the current time in another city.', Time:'See your local time and session duration.',

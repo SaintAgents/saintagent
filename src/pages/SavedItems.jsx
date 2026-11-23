@@ -7,11 +7,13 @@ export default function SavedItems() {
   const { user } = useAuth();
   const [params,setParams] = useSearchParams();
   const tab = params.get('tab') === 'research' ? 'research' : 'saved';
-  const researchId = tab === 'research' ? params.get('id') : null;
+  const recordId = params.get('id');
+  const researchId = tab === 'research' ? recordId : null;
+  const clearItem = () => setParams(tab === 'research' ? {tab} : {});
   return <section className="mx-auto max-w-5xl space-y-4 px-4 py-6 pb-24 text-foreground">
     <div className="flex flex-wrap items-center justify-between gap-2"><h1 className="text-2xl font-bold">{tab === 'research' ? 'My Research' : 'Saved Items'}</h1><Link className="text-sm font-semibold underline" to="/Intelligence">Open Saint Intelligence</Link></div>
     <Tabs value={tab} onValueChange={value => setParams(value === 'research' ? {tab:value} : {})}><TabsList><TabsTrigger value="saved">Saved Items</TabsTrigger><TabsTrigger value="research">My Research</TabsTrigger></TabsList>
-      <TabsContent value="saved"><WorkspaceReferenceList owner={user.id} kind="saved" /></TabsContent><TabsContent value="research">{researchId && <button type="button" className="mb-3 text-sm underline" onClick={() => setParams({tab:'research'})}>All research cards</button>}<WorkspaceReferenceList owner={user.id} kind="research" recordId={researchId} /></TabsContent>
+      <TabsContent value="saved">{recordId && <button type="button" className="mb-3 text-sm underline" onClick={clearItem}>All saved items</button>}<WorkspaceReferenceList owner={user.id} kind="saved" recordId={recordId} /></TabsContent><TabsContent value="research">{researchId && <button type="button" className="mb-3 text-sm underline" onClick={() => setParams({tab:'research'})}>All research cards</button>}<WorkspaceReferenceList owner={user.id} kind="research" recordId={researchId} /></TabsContent>
     </Tabs>
   </section>;
 }

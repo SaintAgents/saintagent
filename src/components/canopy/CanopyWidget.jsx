@@ -9,6 +9,7 @@ import DockTools from '@/components/dock/DockTools';
 import QuickNotes from '@/components/dock/QuickNotes';
 import WorldClocks from '@/components/dock/WorldClocks';
 import TimeTool from '@/components/dock/TimeTool';
+import CanopyKnowledge from '@/components/canopy/CanopyKnowledge';
 
 export default function CanopyWidget({ id, user, profile, settings, commit, notifications, recent, open }) {
   if (id === 'Quick Notes') return <QuickNotes value={settings.scratch} save={scratch => commit({scratch})} open={open} />;
@@ -19,6 +20,7 @@ export default function CanopyWidget({ id, user, profile, settings, commit, noti
   if (id === 'Tours') return <DailyToursCard userId={user.id} embedded />;
   if (id === 'AI Assistant') return <div className="canopy-links"><DockTools type="AI Assistant" settings={settings} save={commit} /><button onClick={() => open('my-assistant')}>Open My Assistant</button><button onClick={() => open('assistant')}>Open Concierge</button></div>;
   if (id === 'Notifications') return <Notifications {...{user, notifications, open}} />;
+  if (id === 'Files & Knowledge') return <CanopyKnowledge {...{user,open}} />;
   if (id === 'Recent') return <div className="canopy-links">{recent.length ? recent.map(path => <button key={path} onClick={() => open(path)}>{tabs.find(([,route]) => route === path)?.[0] || path.split('/').filter(Boolean)[0]?.replace(/([a-z])([A-Z])/g, '$1 $2') || 'Home'}</button>) : <p>No recent destinations yet.</p>}</div>;
   return <div className={id === 'Actions' ? 'canopy-action-grid' : 'canopy-links'}>{(id === 'Actions' ? actions : links[id] || []).map(([label,to]) => <button key={label} onClick={() => open(to)}>{label}</button>)}</div>;
 }

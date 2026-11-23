@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { BookOpen, Plus } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -19,13 +19,19 @@ export default function WisdomExchange() {
   const { user } = useAuth();
   const client = useQueryClient();
   const { filters,setFilters,cards,stats } = useWisdomLibrary(user);
-  const [selection,setSelection] = useState(null);
+  const [params,setParams] = useSearchParams();
+  const linkedCard = params.get('card');
+  const [localSelection,setSelection] = useState(null);
+  const selection = localSelection || (/^[\w-]{1,100}$/.test(linkedCard || '') ? {mode:'detail',id:linkedCard} : null);
   const [checking,setChecking] = useState(null);
   const [error,setError] = useState(null);
   const detailKey = id => [...queryKey,'detail',user.id,id];
-  const { data:card, isError:detailError } = useQuery({ queryKey:detailKey(selection?.id), enabled:!!selection?.id, queryFn:() => base44.entities.WisdomCard.get(selection.id) });
+  const { data:card, isLoading:detailLoading, isError:detailError } = useQuery({ queryKey:detailKey(selection?.id), enabled:!!selection?.id, queryFn:() => base44.entities.WisdomCard.get(selection.id) });
   const refresh = () => client.invalidateQueries({ queryKey });
-  const close = () => setSelection(null);
+  const close = () => {
+    setSelection(null);
+    if (linkedCard) setParams(previous => { const next = new URLSearchParams(previous); next.delete('card'); return next; }, {replace:true});
+  };
   const create = () => setSelection({ mode:'form' });
   const mode = (value,id = card.id) => setSelection({ mode:value,id });
   const check = async record => {
@@ -46,7 +52,8 @@ export default function WisdomExchange() {
     <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">{labels.map((label,i) => <div key={label} className="rounded-xl border bg-card p-4 text-card-foreground"><dt className="text-xs font-medium">{label}</dt><dd className="mt-1 text-2xl font-semibold tabular-nums">{stats.data?.[i] ?? '—'}</dd></div>)}</dl>
     <WisdomLibraryFilters {...{ filters,setFilters }} />
     {cards.isPending ? <p role="status">Loading Wisdom Cards…</p> : cards.isError && !rows.length ? <p role="alert">Couldn’t load Wisdom Cards. <Button variant="outline" onClick={() => cards.refetch()}>Retry</Button></p> : rows.length ? <><div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{rows.map(record => <WisdomCardTile key={record.id} card={record} {...{ user,open }} busy={checking === record.id} />)}</div>{cards.hasNextPage && <Button variant="outline" disabled={cards.isFetchingNextPage} onClick={() => cards.fetchNextPage()}>{cards.isFetchingNextPage ? 'Loading…' : cards.isFetchNextPageError ? 'Retry loading more' : 'Load more'}</Button>}</> : <section data-readable-surface className="space-y-3 rounded-xl border p-6 text-center"><h2 className="font-semibold">{stats.data?.[0] === 0 ? 'Be the first to share some wisdom' : 'No cards match these filters'}</h2>{stats.data?.[0] === 0 ? <Button onClick={create}>Make the first Wisdom Card</Button> : <p className="text-sm">Try changing the search or filters.</p>}</section>}
-    {selection?.id && detailError && <p role="alert" className="text-sm text-destructive">Could not refresh the selected card.</p>}
+    {selection?.id && detailLoading && <p role="status" className="text-sm">Opening Wisdom Card…</p>}
+    {selection?.id && detailError && <p role="alert" className="text-sm text-destructive">Could not open the selected card. <button type="button" className="underline" onClick={close}>Dismiss</button></p>}
     {selection?.mode === 'form' && (!selection.id || card) && <WisdomCardForm key={selection.id || 'new'} card={selection.id ? card : undefined} {...{ close,save }} />}
     {selection?.mode === 'detail' && card && <WisdomCardDetail key={card.id} {...{ card,user,close }} edit={() => mode('form')} quiz={() => mode('quiz')} check={() => { if (!checking) check(card); }} remove={async () => { await base44.entities.WisdomCard.delete(card.id); close(); refresh(); }} checking={checking === card.id} error={error?.id === card.id ? error.message : ''} />}
     {selection?.mode === 'quiz' && card && <WisdomQuiz key={card.id} {...{ card,refresh }} close={() => mode('detail')} />}
