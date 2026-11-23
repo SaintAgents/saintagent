@@ -5,22 +5,39 @@
   --intel-gold: hsl(42 74% 72%);
   --intel-text: hsl(40 22% 94%);
   --intel-border: hsl(40 16% 33%);
+  --intel-hero-glow: hsl(41 37% 21%);
+  --intel-placeholder: hsl(38 12% 72%);
+  --intel-action: var(--intel-gold);
+  --intel-action-text: var(--intel-obsidian);
   background: var(--intel-obsidian) !important;
   color: var(--intel-text) !important;
   isolation: isolate;
   min-height: 70vh;
 }
+html[data-theme='light'] #saint-intelligence {
+  color-scheme: light;
+  --intel-obsidian: hsl(var(--background));
+  --intel-panel: hsl(var(--card));
+  --intel-control: hsl(var(--muted));
+  --intel-gold: hsl(34 79% 29%);
+  --intel-text: hsl(var(--foreground));
+  --intel-border: hsl(var(--border));
+  --intel-hero-glow: hsl(43 84% 92%);
+  --intel-placeholder: hsl(var(--muted-foreground));
+  --intel-action: hsl(43 79% 81%);
+  --intel-action-text: var(--intel-text);
+}
 #saint-intelligence [data-intel-hero] {
-  background: radial-gradient(ellipse at 84% 1%, hsl(41 37% 21%), transparent 58%), var(--intel-panel) !important;
+  background: radial-gradient(ellipse at 84% 1%, var(--intel-hero-glow), transparent 58%), var(--intel-panel) !important;
 }
 #saint-intelligence [data-intel-panel] { background: var(--intel-panel) !important; }
 #saint-intelligence :is([data-intel-panel], [data-intel-hero], input, select, button, li) { border-color: var(--intel-border) !important; }
 #saint-intelligence :is(h1, h2, h3, p, span, label, li, button, input, select, option, svg) { color: var(--intel-text) !important; text-shadow: none !important; }
 #saint-intelligence :is(h1, a, [data-intel-kicker]) { color: var(--intel-gold) !important; }
 #saint-intelligence :is(input, select, option, button) { background: var(--intel-control) !important; }
-#saint-intelligence input::placeholder { color: hsl(38 12% 72%) !important; }
+#saint-intelligence input::placeholder { color: var(--intel-placeholder) !important; }
 #saint-intelligence input[type='checkbox'] { accent-color: var(--intel-gold); }
-#saint-intelligence button[data-intel-primary] { background: var(--intel-gold) !important; }
-#saint-intelligence button[data-intel-primary], #saint-intelligence button[data-intel-primary] svg { color: var(--intel-obsidian) !important; stroke: currentColor !important; }
+#saint-intelligence button[data-intel-primary] { background: var(--intel-action) !important; }
+#saint-intelligence button[data-intel-primary], #saint-intelligence button[data-intel-primary] svg { color: var(--intel-action-text) !important; stroke: currentColor !important; }
 #saint-intelligence :is(a, input, select, button):focus-visible { outline: 2px solid var(--intel-gold) !important; outline-offset: 3px; }
 #saint-intelligence a[aria-current='page'] { font-weight: 700; }
