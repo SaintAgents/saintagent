@@ -11,7 +11,7 @@ import GlobalGoalsProgress from '@/components/impact/GlobalGoalsProgress';
 import ImpactBreakdownChart from '@/components/impact/ImpactBreakdownChart';
 import GGGEarningsChart from '@/components/impact/GGGEarningsChart';
 
-export default function ImpactDashboard({ embedded = false }) {
+export default function ImpactDashboard({ embedded = false, afterStats }) {
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -162,6 +162,8 @@ export default function ImpactDashboard({ embedded = false }) {
           <ImpactStatCard icon={MessageSquare} label="Posts" value={userPosts.length} color="cyan" />
           <ImpactStatCard icon={Users} label="Referrals" value={userReferrals.length} subtitle={`${userReferrals.filter(r => r.status === 'activated').length} activated`} color="rose" />
         </div>
+
+        {afterStats}
 
         {/* Charts Row 1: Timeline + GGG Breakdown */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">

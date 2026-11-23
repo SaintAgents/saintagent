@@ -1,6 +1,7 @@
 import { lazy, Suspense, useSyncExternalStore } from 'react';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ImpactOpportunities from '@/components/globalimpact/ImpactOpportunities';
+import ImpactTimeline from '@/components/globalimpact/ImpactTimeline';
 
 function subscribeTheme(onChange) {
   const observer = new MutationObserver(onChange);
@@ -34,7 +35,7 @@ export default function ImpactWorkspace({ active, select, demo }) {
       {Page ? <div key={active} className="impact-surface impact-embedded-shell">
         <header className="impact-workspace-heading"><p className="impact-kicker">Global Impact / Workspace</p><h2 className="text-2xl font-bold">{title}</h2></header>
         <div className={`impact-embedded${dark ? ' dark' : ''}`} data-impact-module={active} tabIndex={active === 'overview' ? undefined : 0} role="region" aria-label={`${title} content`}>
-          <ErrorBoundary><Suspense fallback={<p role="status" className="p-4">Loading {title}…</p>}><Page embedded /></Suspense></ErrorBoundary>
+          <ErrorBoundary><Suspense fallback={<p role="status" className="p-4">Loading {title}…</p>}><Page embedded {...(active === 'overview' && { afterStats: <ImpactTimeline key={demo ? 'demo' : 'live'} demo={demo} /> })} /></Suspense></ErrorBoundary>
         </div>
       </div> : <ImpactOpportunities key={demo ? 'demo' : 'live'} demo={demo} />}
     </section>
