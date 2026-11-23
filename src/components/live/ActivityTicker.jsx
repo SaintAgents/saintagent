@@ -37,7 +37,7 @@ export default function ActivityTicker({ placement }) {
   return <section data-readable-surface className={`live-ticker-row ${bottom ? 'live-ticker-bottom' : ''}`} aria-label={activity.demo ? 'Demo Global Activity' : 'Live Global Activity'} ref={row}>
     <Radio className="mx-1 size-4 shrink-0" aria-hidden="true" />
     {!bottom && activity.demo && <span className="shrink-0 text-xs font-semibold">Demo</span>}
-    <div className="live-ticker-window">{events.length ? <div key={activity.demo ? 'demo' : 'live'} className="live-ticker-marquee" style={{ '--ticker-loop': `${Math.max(18, events.length * factor)}s` }}>
+    <div className="live-ticker-window">{events.length ? <div key={activity.demo ? 'demo' : 'live'} className="live-ticker-marquee" style={{ '--ticker-loop': `${Math.max(4.5, events.length) * factor}s` }}>
       {[false, true].map(copy => <div className="live-ticker-segment" key={String(copy)} aria-hidden={copy || undefined}>{events.map(event => { const [label, Icon] = categoryInfo(event); return <button type="button" key={event.id} tabIndex={copy ? -1 : undefined} onClick={() => activity.open(event)} className="inline-flex items-center gap-1 px-2 text-xs" title={label}><Icon size={13} />{event.headline}</button>; })}</div>)}
     </div> : <p className="truncate text-xs">{activity.events.isPending ? 'Loading live activity…' : 'No live activity yet'}</p>}</div>
     <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => activity.setDialog('all')}>All</Button>
