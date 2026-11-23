@@ -39,7 +39,7 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
   function open(to, value) {
     if (to.startsWith('/')) { setFocus(''); setMode('split'); navigate(to); return; }
     if (to === 'actions' || to === 'notes' || to === 'notifications') { setFocus(to); if (mode === 'closed' || (to === 'actions' && mode === 'peek')) setMode(to === 'actions' ? 'full' : 'peek'); return; }
-    if (to === 'knowledge') { setFocus(to); if (mode === 'closed' || mode === 'peek') setMode('full'); return; }
+    if (to === 'knowledge' || to === 'online') { setFocus(to); if (mode === 'closed' || mode === 'peek') setMode('full'); return; }
     setMode('closed');
     if (to === 'search') onSearch(value);
     else if (to === 'create') onCreate();

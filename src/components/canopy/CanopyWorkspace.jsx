@@ -12,12 +12,12 @@ export default function CanopyWorkspace(props) {
   const dragging = useRef(null);
   const editable = mode !== 'peek';
   const allowed = id => id !== 'Contact Card' || !!profile;
-  const special = focus === 'notes' ? 'Quick Notes' : focus === 'notifications' ? 'Notifications' : focus === 'knowledge' ? 'Files & Knowledge' : null;
-  const knowledgeFocus = useRef(null);
+  const special = { notes:'Quick Notes', notifications:'Notifications', knowledge:'Files & Knowledge', online:'Who’s Online' }[focus];
+  const widgetFocus = useRef(null);
   useEffect(() => {
-    if (focus !== 'knowledge') return;
-    knowledgeFocus.current?.scrollIntoView({block:'nearest'});
-    knowledgeFocus.current?.querySelector('input[type="search"]')?.focus({preventScroll:true});
+    if (focus !== 'knowledge' && focus !== 'online') return;
+    widgetFocus.current?.scrollIntoView({block:'nearest'});
+    widgetFocus.current?.querySelector(focus === 'online' ? 'button' : 'input[type="search"]')?.focus({preventScroll:true});
   }, [focus]);
   const visible = ids.filter(id => allowed(id) && id !== special);
   const tile = id => <CanopyWidget id={id} {...props} />;
@@ -34,7 +34,7 @@ export default function CanopyWorkspace(props) {
       {library && <CanopyCustomizer {...{settings,commit,allowed,scale,setScale,move,dragHandle,dropTarget}} />}</>}
     {error && <p role="status" className="canopy-status">Saved on this device; account sync failed. <button onClick={() => commit({})}>Retry sync</button></p>}
     {focus === 'actions' && <div className="canopy-action-grid">{actions.map(([label,target]) => <button key={label} onClick={() => open(target)}>{label}</button>)}</div>}
-    {special && <div className="canopy-focus" key={special} ref={focus === 'knowledge' ? knowledgeFocus : undefined}><h3>{special}</h3>{tile(special)}</div>}
+    {special && <div className="canopy-focus" key={special} ref={widgetFocus}><h3>{special}</h3>{tile(special)}</div>}
     <div className="canopy-grid" style={{'--widget-scale':(scale ?? settings.scale)/100}}>
       {!visible.length && !special && <p>No widgets yet. Add one from Customize.</p>}
       {visible.map(id => <article className="canopy-card" key={id} {...(editable ? dropTarget(id) : {})} style={{'--card-height':`${sizes[id] ?? settings.sizes[id] ?? (id === 'Files & Knowledge' ? 320 : 156)}px`}}>
