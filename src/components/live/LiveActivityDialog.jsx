@@ -18,7 +18,7 @@ function Setup({ prefs, preferences, close }) {
     <Button type="submit" disabled={preferences.isPending}>{preferences.isPending ? 'Saving…' : 'Save ticker setup'}</Button>
   </form>;
 }
-export default function LiveActivityDialog({ state, dialog, close, preferences }) {
+export default function LiveActivityDialog({ state, dialog, close, preferences, sampleImage }) {
   const setup = dialog === 'setup';
   const list = dialog === 'all';
   const title = setup ? 'Ticker setup' : list ? 'Live Activity Notification Center' : dialog.category === 'signals' ? 'GGT Signal' : 'Event details';
@@ -26,6 +26,6 @@ export default function LiveActivityDialog({ state, dialog, close, preferences }
     <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>{setup ? 'Choose where live activity appears and which events to see.' : list ? 'Recent live events. Dismissing a toast doesn’t remove it here.' : dialog.headline}</DialogDescription></DialogHeader>
     {setup ? <Setup {...{ prefs:state.prefs, preferences, close }} /> : list ? <div className="space-y-2">
       {state.events.isPending ? <p>Loading activity…</p> : state.events.isError ? <Button onClick={() => state.events.refetch()}>Retry loading activity</Button> : !state.history.length ? <p>No matching activity yet.</p> : state.history.map(event => <Button key={event.id} variant="outline" className="h-auto w-full justify-between gap-2 whitespace-normal text-left" onClick={() => { close(); state.open(event); }}><span>{event.headline}</span><span className="shrink-0 text-xs">{formatTime(event.created_date)}</span></Button>)}
-    </div> : <div className="space-y-2"><p className="whitespace-pre-wrap">{dialog.description}</p><p className="text-xs">{[formatTime(dialog.created_date), dialog.metric, dialog.country].filter(Boolean).join(' · ')}</p>{safePath(dialog.action_path) && <Link to={dialog.action_path} onClick={close}>Open related record</Link>}</div>}
+    </div> : <div className="space-y-2">{sampleImage && <><img className="aspect-video w-full object-cover" src={sampleImage} alt="" /><p className="text-xs font-semibold">Fictional demo event</p></>}<p className="whitespace-pre-wrap">{dialog.description}</p><p className="text-xs">{[formatTime(dialog.created_date), dialog.metric, dialog.country].filter(Boolean).join(' · ')}</p>{safePath(dialog.action_path) && <Link to={dialog.action_path} onClick={close}>{sampleImage ? 'Open sample research' : 'Open related record'}</Link>}</div>}
   </DialogContent></Dialog>;
 }

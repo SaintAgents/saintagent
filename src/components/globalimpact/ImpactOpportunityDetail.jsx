@@ -5,10 +5,11 @@ import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { shareUrl } from '@/components/publicprofile/publicLinks';
 import { matchReasons, openGuide, opportunityPath, researchPath, titleCase } from '@/components/globalimpact/impactDiscovery';
 
-export default function ImpactOpportunityDetail({ row, tags }) {
+export default function ImpactOpportunityDetail({ row, tags, demo }) {
   const [panel, setPanel] = useState('Overview');
   const [share, setShare] = useState('');
   const path = opportunityPath(row.id);
+  const sampleResearch = `/Intelligence?demo=${row.id}`;
   const reasons = matchReasons(row, tags);
   const requirements = row.skills_required?.length ? row.skills_required : [];
   return <aside aria-label="Opportunity details" className="impact-detail min-w-0">
@@ -22,12 +23,14 @@ export default function ImpactOpportunityDetail({ row, tags }) {
         {panel === 'Overview' && <p className="whitespace-pre-wrap">{row.description || 'The organizer has not provided an overview.'}</p>}
         {panel === 'Details' && <dl className="space-y-1"><div>Format: {titleCase(row.delivery_mode) || 'Not listed'}</div><div>Location: {row.region || 'Not listed'}</div><div>Commitment: {row.duration_minutes ? `${row.duration_minutes} minutes per session` : 'Not listed'}</div></dl>}
         {panel === 'Requirements' && <p>{requirements.length ? requirements.join(', ') : 'No formal requirements have been listed.'}</p>}
-        {panel === 'AI Intelligence' && <div className="space-y-2"><p>{reasons.length ? `Matches your profile interests or offered skills: ${reasons.join(', ')}.` : 'No exact match to your profile interests or offered skills was found.'}</p><Link className="impact-text-link" to={researchPath(`Research this SaintAgent opportunity, similar listings, and what participation might require: ${row.title}`)}>Open in Research Hub</Link></div>}
+        {panel === 'AI Intelligence' && <div className="space-y-2"><p>{reasons.length ? `Matches your profile interests or offered skills: ${reasons.join(', ')}.` : 'No exact match to your profile interests or offered skills was found.'}</p><Link className="impact-text-link" to={demo ? sampleResearch : researchPath(`Research this SaintAgent opportunity, similar listings, and what participation might require: ${row.title}`)}>{demo ? 'Open sample research' : 'Open in Research Hub'}</Link></div>}
       </div>
-      <Link className="impact-control impact-primary flex items-center justify-between" to={path}>View opportunity <ArrowRight size={16} /></Link>
-      <div className="flex flex-wrap gap-2"><button type="button" className="impact-control inline-flex items-center gap-1" onClick={() => openGuide(`Help me evaluate this SaintAgent opportunity: ${row.title}. What should I check before taking the next step?`)}><Sparkles size={14} /> Ask My Guide</button><button type="button" className="impact-control" onClick={async () => { try { await navigator.clipboard.writeText(shareUrl(path)); setShare('Link copied'); } catch { setShare('Could not copy the link'); } }}>Share</button></div>
-      {share && <p role="status" className="impact-muted text-xs">{share}</p>}
-      <RecordKeepActions type="listing" id={row.id} title={row.title} subtitle={row.entity_name || row.owner_name} />
+      {demo ? <Link className="impact-control impact-primary flex items-center justify-between" to={sampleResearch}>Open sample research <ArrowRight size={16} /></Link> : <>
+        <Link className="impact-control impact-primary flex items-center justify-between" to={path}>View opportunity <ArrowRight size={16} /></Link>
+        <div className="flex flex-wrap gap-2"><button type="button" className="impact-control inline-flex items-center gap-1" onClick={() => openGuide(`Help me evaluate this SaintAgent opportunity: ${row.title}. What should I check before taking the next step?`)}><Sparkles size={14} /> Ask My Guide</button><button type="button" className="impact-control" onClick={async () => { try { await navigator.clipboard.writeText(shareUrl(path)); setShare('Link copied'); } catch { setShare('Could not copy the link'); } }}>Share</button></div>
+        {share && <p role="status" className="impact-muted text-xs">{share}</p>}
+        <RecordKeepActions type="listing" id={row.id} title={row.title} subtitle={row.entity_name || row.owner_name} />
+      </>}
     </div>
   </aside>;
 }
