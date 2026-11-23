@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
+import CommandDeckTourHighlight from '@/components/tour/CommandDeckTourHighlight';
 
 export default function DailyTourDialog({ day, step, busy, error, onClose, onBack, onAdvance, returnFocus }) {
   const tour = DAILY_TOURS[day];
@@ -15,6 +16,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
     <Dialog open onOpenChange={(open) => { if (!open && !busy) onClose(); }}>
       <DialogContent data-readable-surface className="max-h-[85dvh] w-[calc(100%-2rem)] overflow-y-auto text-foreground" hideCloseButton={busy}
         onCloseAutoFocus={(event) => { event.preventDefault(); returnFocus(); }}>
+        {day === 0 && step === 0 && <CommandDeckTourHighlight />}
         <div className="space-y-2 pr-6">
           <DialogTitle>Day {day + 1}: {tour.title}</DialogTitle>
           <DialogDescription>Section {step + 1} of {tour.sections.length}</DialogDescription>

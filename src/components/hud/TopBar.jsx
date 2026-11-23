@@ -387,6 +387,7 @@ export default function TopBar({
               size="icon"
               className="w-7 h-7 rounded-lg hover:bg-slate-200/60"
               title="Command Deck"
+              data-tour-command-icon
             >
               <LayoutDashboard className="w-4 h-4 text-slate-600" />
             </Button>
@@ -454,6 +455,7 @@ export default function TopBar({
                     : "hover:bg-white/50"
                 )}
                 title={tab.label}
+                data-tour-command-icon={tab.id === 'command' ? '' : undefined}
               >
                 <img 
                   src={iconUrl} 
