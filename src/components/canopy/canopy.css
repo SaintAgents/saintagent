@@ -22,6 +22,7 @@ html:is([data-theme='light'],[data-theme='custom']) .sa-canopy { color-scheme:li
 .sa-canopy .canopy-card-body { overflow:auto; height:calc((var(--card-height,156px) - 46px) * var(--widget-scale,1)); padding-right:.15rem; }
 .sa-canopy .canopy-links,.sa-canopy .canopy-scratch { display:grid; gap:.28rem; align-content:start; }
 .sa-canopy .canopy-links > button { justify-content:space-between; text-align:left; }
+html .sa-canopy [data-canopy-online] > button { display:block; }
 .sa-canopy .canopy-clock { font-variant-numeric:tabular-nums; font-size:1.2em; color:hsl(var(--canopy-cyan)) !important; }
 .sa-canopy .canopy-action-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr)); gap:.35rem; }
 .sa-canopy .canopy-status { font-size:.8rem; margin:.35rem 0; }

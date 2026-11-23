@@ -22,7 +22,7 @@ async function getOnlineMembers() {
   return { count, members: ids.map(id => ({ id, profile: profiles.find(profile => profile.user_id === id) })) };
 }
 
-export default function DockOnlineMembers({ visible, userId }) {
+export default function DockOnlineMembers({ visible, userId, aboveCanopy = false }) {
   const [open, setOpen] = useState(false);
   const { data, isError } = useQuery({
     queryKey: ['dock-online-members', userId], queryFn: getOnlineMembers,
@@ -44,6 +44,6 @@ export default function DockOnlineMembers({ visible, userId }) {
         {more > 0 && <span aria-hidden="true" className="text-xs">+{more}</span>}
       </span>}
     </button>
-    {open && <OnlineUsersModal open onClose={() => setOpen(false)} />}
+    {open && <OnlineUsersModal open aboveCanopy={aboveCanopy} onClose={() => setOpen(false)} />}
   </>;
 }

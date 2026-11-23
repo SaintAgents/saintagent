@@ -31,7 +31,7 @@ import {
 import { cn } from "@/lib/utils";
 import { getRPRank } from '@/components/reputation/rpUtils';
 
-export default function OnlineUsersModal({ open, onClose }) {
+export default function OnlineUsersModal({ open, onClose, aboveCanopy = false }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [regionFilter, setRegionFilter] = useState('all');
   const [rankFilter, setRankFilter] = useState('all');
@@ -114,7 +114,7 @@ export default function OnlineUsersModal({ open, onClose }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col p-0">
+      <DialogContent overlayClassName={aboveCanopy ? 'z-[10999]' : undefined} className={cn('max-w-4xl max-h-[90vh] overflow-hidden flex flex-col p-0', aboveCanopy && 'z-[11000]')}>
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Users className="w-5 h-5 text-emerald-600" />
