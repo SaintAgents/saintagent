@@ -43,18 +43,18 @@ export default function DailyToursCard({ userId, embedded = false }) {
   };
 
   return (
-    <section id={embedded ? undefined : 'daily-tours'} ref={card} tabIndex={-1} data-readable-surface className="relative scroll-mt-40 space-y-4 p-4 text-card-foreground" aria-label="Tour library">
+    <section id={embedded ? undefined : 'daily-tours'} ref={card} tabIndex={-1} data-readable-surface className="daily-tours-library relative scroll-mt-40 space-y-4 p-4 text-card-foreground" aria-label="Tour library">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <p className="text-sm text-muted-foreground">Start with the full-screen overview or choose any topic tour. Read or listen at your own pace.</p>
         {record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}
       </div>
       <Button ref={overviewTrigger} type="button" variant="outline" className="h-auto min-h-10 whitespace-normal" onClick={() => setOverviewOpen(true)}><LayoutDashboard aria-hidden="true" /> Command Deck Overview · Full screen</Button>
       {query.isPending ? <p role="status" className="text-sm">Loading tours…</p> : query.isError ? <div className="flex items-center gap-3"><p role="alert" className="text-sm">Tours couldn’t be loaded.</p><Button type="button" size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></div> : (
-        <ol className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        <ol className="daily-tours-grid grid grid-cols-1 gap-2">
           {DAILY_TOURS.map((tour, index) => {
             const done = sections[index] === tour.sections.length;
-            return <li key={tour.title}><Button type="button" variant="outline" className="h-auto min-h-10 w-full justify-start whitespace-normal px-3 text-left" disabled={save.isPending} onClick={(event) => open(index, event)}>
-              {done ? <CheckCircle aria-label="Completed; select to replay" /> : <BookOpen aria-hidden="true" />}<span>Tour {index + 1}: {tour.title}{!done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
+            return <li key={tour.title} className="min-w-0"><Button type="button" variant="outline" className="h-full min-h-10 w-full justify-start whitespace-normal px-3 text-left" disabled={save.isPending} onClick={(event) => open(index, event)}>
+              {done ? <CheckCircle aria-label="Completed; select to replay" /> : <BookOpen aria-hidden="true" />}<span className="min-w-0 break-words">Tour {index + 1}: {tour.title}{!done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
             </Button></li>;
           })}
         </ol>

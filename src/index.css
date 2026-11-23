@@ -712,6 +712,15 @@ html:root [data-readable-surface][data-testimonial-card] textarea {
   opacity: 1 !important;
 }
 
+/* Size tour columns to the card, including in narrow docks on wide screens. */
+.daily-tours-library { container: daily-tours / inline-size; }
+@container daily-tours (min-width: 24rem) {
+  .daily-tours-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container daily-tours (min-width: 36rem) {
+  .daily-tours-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 /* Keep the dashboard tour copy legible even with global text effects enabled. */
 #daily-tours[data-readable-surface] :is(p, button, button span, button svg) {
   color: var(--readable-text) !important;
