@@ -42,7 +42,6 @@ export default function SidebarLeaderboard({
   currentUserEmail 
 }) {
   const [leaderboardOpen, setLeaderboardOpen] = useState(true);
-  const [leaderboardFullyCollapsed, setLeaderboardFullyCollapsed] = useState(false);
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
   const [leaderboardHidden, setLeaderboardHidden] = useState(() => {
     try { return localStorage.getItem('sidebarLeaderboardHidden') === 'true'; } catch { return false; }
@@ -255,18 +254,6 @@ export default function SidebarLeaderboard({
           );
         })}
       </TooltipProvider>
-      {showExpanded && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setLeaderboardFullyCollapsed(true);
-          }}
-          className="w-full flex items-center justify-center py-1 mt-1 rounded hover:bg-slate-100 transition-colors"
-          title="Collapse to title only"
-        >
-          <ChevronDown className="w-4 h-4 text-slate-400" />
-        </button>
-      )}
     </div>
   );
 
@@ -340,8 +327,8 @@ export default function SidebarLeaderboard({
     </div>
   );
 
-  // If hidden OR fully collapsed, show nothing when isCollapsed - don't even show the toggle
-  if ((leaderboardHidden || leaderboardFullyCollapsed) && !inPopup && isCollapsed) {
+  // Keep hidden Leaders out of the collapsed sidebar.
+  if (leaderboardHidden && !inPopup && isCollapsed) {
     return null;
   }
 
@@ -389,23 +376,15 @@ export default function SidebarLeaderboard({
                   variant="ghost" 
                   size="icon"
                   className="h-6 w-6"
-                  onClick={() => {
-                    if (leaderboardFullyCollapsed) {
-                      setLeaderboardFullyCollapsed(false);
-                      setLeaderboardOpen(false);
-                    } else if (!leaderboardOpen) {
-                      setLeaderboardOpen(true);
-                    } else {
-                      setLeaderboardOpen(false);
-                    }
-                  }}
+                  onClick={() => setLeaderboardOpen(open => !open)}
+                  aria-expanded={leaderboardOpen}
+                  aria-label={leaderboardOpen ? 'Collapse leaders' : 'Expand leaders'}
+                  title={leaderboardOpen ? 'Collapse leaders' : 'Expand leaders'}
                 >
-                  {leaderboardFullyCollapsed ? (
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
-                  ) : leaderboardOpen ? (
+                  {leaderboardOpen ? (
                     <ChevronUp className="w-4 h-4 text-slate-500" />
                   ) : (
-                    <ChevronUp className="w-4 h-4 text-slate-500" />
+                    <ChevronDown className="w-4 h-4 text-slate-500" />
                   )}
                 </Button>
                 <Button 
@@ -423,7 +402,7 @@ export default function SidebarLeaderboard({
         </div>
 
         {/* Collapsed: show avatars only */}
-        {(!leaderboardOpen || (isCollapsed && !inPopup)) && !leaderboardFullyCollapsed && renderCollapsedView()}
+        {(!leaderboardOpen || !showExpanded) && renderCollapsedView()}
 
         {/* Expanded: show full list */}
         <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen && showExpanded ? "max-h-72 opacity-100" : "max-h-0 opacity-0")}>
