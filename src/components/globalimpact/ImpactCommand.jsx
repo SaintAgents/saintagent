@@ -1,4 +1,3 @@
-import { Sparkles } from 'lucide-react';
 import AnimatedBrandLogo from '@/components/hud/AnimatedBrandLogo';
 import { openGuide } from '@/components/globalimpact/impactDiscovery';
 
@@ -23,6 +22,9 @@ export default function ImpactCommand({ active, select }) {
         <img alt="" src={`${artwork}${image}_generated_image.png`} /><span>{name}</span>
       </button>)}
     </nav>
-    <button type="button" className="impact-control impact-guide inline-flex items-center justify-center gap-2" onClick={() => openGuide()}><Sparkles size={16} /> My Guide</button>
+    <button type="button" className="impact-guide-tile" onClick={() => openGuide()}>
+      <img src={`${artwork}6c80615230009d4020195b9535d88852_generated_image.png`} alt="" width={52} height={52} />
+      <span>My Guide</span>
+    </button>
   </header>;
 }
