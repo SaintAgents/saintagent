@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import useToolbarDrag from '@/components/hud/useToolbarDrag';
 import { base44 } from '@/api/base44Client';
 import {
   HelpCircle, Eye, Sun, Moon, Terminal, Sparkles, Layers, PanelLeft,
@@ -71,48 +72,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
   const panelRef = useRef(null);
   const toolbarRef = useRef(null);
 
-  // Drag state
-  const [dragPos, setDragPos] = useState(() => {
-    try { const s = localStorage.getItem('toolbarDragPos'); if (s) return JSON.parse(s); } catch {}
-    return null; // null = default centered position
-  });
-  const dragState = useRef({ dragging: false, startX: 0, startY: 0, startLeft: 0, startTop: 0, moved: false });
-
-  const onDragStart = useCallback((clientX, clientY) => {
-    const el = toolbarRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    dragState.current = { dragging: true, startX: clientX, startY: clientY, startLeft: rect.left, startTop: rect.top, moved: false };
-  }, []);
-
-  const onDragMove = useCallback((clientX, clientY) => {
-    if (!dragState.current.dragging) return;
-    const dx = clientX - dragState.current.startX;
-    const dy = clientY - dragState.current.startY;
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragState.current.moved = true;
-    if (!dragState.current.moved) return;
-    const newLeft = Math.max(0, Math.min(window.innerWidth - 100, dragState.current.startLeft + dx));
-    const newTop = Math.max(0, Math.min(window.innerHeight - 40, dragState.current.startTop + dy));
-    setDragPos({ left: newLeft, top: newTop });
-  }, []);
-
-  const onDragEnd = useCallback(() => {
-    dragState.current.dragging = false;
-    // persist position
-    setDragPos(prev => { if (prev) try { localStorage.setItem('toolbarDragPos', JSON.stringify(prev)); } catch {} return prev; });
-  }, []);
-
-  useEffect(() => {
-    const onMouseMove = (e) => onDragMove(e.clientX, e.clientY);
-    const onMouseUp = () => onDragEnd();
-    const onTouchMove = (e) => { if (dragState.current.dragging) { e.preventDefault(); onDragMove(e.touches[0].clientX, e.touches[0].clientY); } };
-    const onTouchEnd = () => onDragEnd();
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    window.addEventListener('touchmove', onTouchMove, { passive: false });
-    window.addEventListener('touchend', onTouchEnd);
-    return () => { window.removeEventListener('mousemove', onMouseMove); window.removeEventListener('mouseup', onMouseUp); window.removeEventListener('touchmove', onTouchMove); window.removeEventListener('touchend', onTouchEnd); };
-  }, [onDragMove, onDragEnd]);
+  const { position: dragPos, handleProps } = useToolbarDrag(toolbarRef, collapsed, panelRef, activePanel);
 
   const surfaceConfig = hackerMode ? getHackerVideoConfig(videoSettings) : videoSettings[activeSurface] || {
     videoUrl: '', enabled: false, opacity: 0.3, speed: 1, blur: 0, themeFilter: 'both', muted: true,
@@ -208,7 +168,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
       <button
         data-deck-tour="appearance"
         onClick={() => setCollapsed(false)}
-        className="fixed z-50 right-0 top-1/2 -translate-y-1/2 p-1.5 rounded-l-lg shadow-lg border border-r-0"
+        className="fixed z-[10003] right-0 top-1/2 -translate-y-1/2 p-1.5 rounded-l-lg shadow-lg border border-r-0"
         style={{ background: bgColor, borderColor }}
       >
         <PanelRightOpen className="w-4 h-4" style={{ color: accentColor }} />
@@ -230,7 +190,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
         ref={toolbarRef}
         data-deck-tour="appearance"
         data-toolbar-panel="true"
-        className="fixed z-50 flex items-center gap-1 px-3 py-1.5 rounded-full shadow-2xl border"
+        className="fixed z-[10003] flex w-max max-w-full flex-wrap items-center gap-1 px-3 py-1.5 rounded-full shadow-2xl border"
         style={{
           '--tb-bg': bgColor,
           '--tb-border': borderColor,
@@ -246,11 +206,9 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
       >
         {/* Drag Handle */}
         <div
-          className="cursor-grab active:cursor-grabbing p-1 rounded-lg select-none"
+          className="cursor-grab active:cursor-grabbing touch-none p-1 rounded-lg select-none"
           style={{ color: textMuted }}
-          onMouseDown={(e) => { e.preventDefault(); onDragStart(e.clientX, e.clientY); }}
-          onTouchStart={(e) => { onDragStart(e.touches[0].clientX, e.touches[0].clientY); }}
-          onDoubleClick={() => { setDragPos(null); try { localStorage.removeItem('toolbarDragPos'); } catch {} }}
+          {...handleProps}
           title="Drag to move · Double-click to reset"
         >
           <GripHorizontal className="w-4 h-4" />
@@ -384,7 +342,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
 
       {/* Help Overlay */}
       {helpOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40" onClick={() => setHelpOpen(false)}>
+        <div className="fixed inset-0 z-[10004] flex items-center justify-center bg-black/40" onClick={() => setHelpOpen(false)}>
           <div data-toolbar-panel="true" className="rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto text-sm space-y-3 shadow-2xl border" style={{ '--tb-bg': isLight ? '#ffffff' : '#0f172a', '--tb-border': isLight ? '#e2e8f0' : '#334155', '--tb-color': isLight ? '#475569' : '#cbd5e1', background: isLight ? '#ffffff' : '#0f172a', borderColor: isLight ? '#e2e8f0' : '#334155', color: isLight ? '#475569' : '#cbd5e1' }} onClick={e => e.stopPropagation()}>
             <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: textColor }}><HelpCircle className="w-5 h-5" style={{ color: accentColor }} /> Toolbar Guide</h2>
             <div className="space-y-2">
@@ -405,7 +363,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
         <div
           ref={panelRef}
           data-toolbar-panel="true"
-          className="fixed z-50 rounded-xl shadow-2xl border overflow-hidden"
+          className="fixed z-[10003] max-w-full rounded-xl shadow-2xl border overflow-y-auto"
           style={{
             '--tb-bg': bgColor,
             '--tb-border': borderColor,
@@ -417,11 +375,11 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
             borderColor,
             backdropFilter: 'blur(16px)',
             ...(dragPos
-              ? { left: dragPos.left, bottom: `calc(100vh - ${dragPos.top}px + 8px)` }
+              ? { left: 'var(--drag-panel-left)', top: 'var(--drag-panel-top)', bottom: 'var(--drag-panel-bottom)', maxHeight: 'var(--drag-panel-height)' }
               : { bottom: 64, left: '50%', transform: 'translateX(-50%)' }),
           }}
         >
-          <div className="overflow-y-auto max-h-[calc(100vh-100px)]">
+          <div>
             {/* HERO / VIDEO PANEL */}
             {activePanel === 'hero' && (
               <div className="p-3 space-y-3">
