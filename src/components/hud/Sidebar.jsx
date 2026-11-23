@@ -1114,9 +1114,9 @@ export default function Sidebar({
       "hidden md:flex" // Hide sidebar on mobile
     )} data-sidebar>
       {/* Logo */}
-      <div className="flex items-center justify-between px-2 py-2 border-b border-slate-100">
+      <div className={cn("flex items-center justify-between px-2 py-2 border-b border-slate-100", isCollapsed && "px-1")}>
         <div
-          className={cn("flex items-center gap-2 cursor-pointer", isCollapsed && "justify-center w-full")}
+          className="flex items-center gap-2 cursor-pointer"
           onClick={() => {
             if (isCollapsed) {
               onToggle?.();
@@ -1126,10 +1126,7 @@ export default function Sidebar({
           }}
           title={isCollapsed ? "Expand sidebar" : "Go to top"}
         >
-          <div className={cn(
-            "rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none",
-            isCollapsed ? "w-10 h-10" : "w-8 h-8"
-          )}>
+          <div className="w-8 h-8 shrink-0 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
               alt="SaintAgent Logo"
@@ -1152,13 +1149,17 @@ export default function Sidebar({
               <Maximize2 className="w-4 h-4 text-slate-400" />
             </Button>
           )}
-          <Button 
-            variant="ghost" 
+          <Button
+            type="button"
+            variant="ghost"
             size="icon"
-            className={cn("shrink-0", isCollapsed && "hidden")}
+            className={cn("shrink-0", isCollapsed && "h-8 w-5")}
             onClick={onToggle}
+            aria-expanded={!isCollapsed}
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <ChevronLeft className="w-4 h-4" />
+            {isCollapsed ? <ChevronRight aria-hidden="true" /> : <ChevronLeft aria-hidden="true" />}
           </Button>
         </div>
       </div>
