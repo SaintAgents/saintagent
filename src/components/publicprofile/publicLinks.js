@@ -1,5 +1,6 @@
 const origin = 'https://saintagent.world';
 export const contactPath = id => `/v/${encodeURIComponent(id)}`;
+export const contactShareUrl = id => new URL(contactPath(id), 'https://saint-agent-1122.base44.app').href;
 export const treePath = (id, business = false) => business ? `/LinkTree?p=${encodeURIComponent(id)}` : `/LinkTree/${encodeURIComponent(id)}`;
 export const shareUrl = path => new URL(path, origin).href;
 export const qrImage = (url, size) => `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&qzone=4&data=${encodeURIComponent(url)}`;

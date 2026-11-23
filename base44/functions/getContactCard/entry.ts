@@ -41,12 +41,14 @@ export default async function(req) {
     const tree = profile.user_id && await first(entities.LinkTree, { business_id: '', created_by: profile.user_id });
     const contactId = profile.sa_number || profile.id;
     if (kind === 'tree') return tree?.published === true ? Response.json({ ...treeData(tree), contact_id: contactId, tree_id: profile.id }) : missing();
+    const art = profile.user_id && await first(entities.ProfileDigitalArt, { profile_id: profile.id, created_by: profile.user_id });
     const website = profile.social_links?.website?.trim();
     const phone = tree?.share_phone === true && /^[+\d(). -]{5,40}$/.test(tree.contact_phone || '') ? tree.contact_phone : '';
     return Response.json({
       display_name: profile.display_name, handle: profile.handle, bio: profile.bio,
       location: profile.location || profile.region, avatar_url: webUrl(profile.avatar_url), trust_score: profile.trust_score,
       sa_number: profile.sa_number, contact_id: contactId, tree_id: tree?.published === true ? profile.id : '',
+      digital_art_url: webUrl(art?.digital_art_url),
       website: website && webUrl(/^[\w-]+(?:\.[\w-]+)+(?:[/:?#]|$)/.test(website) ? `https://${website}` : website),
       title: tree?.contact_title, organization: tree?.contact_org,
       email: tree?.share_email === true ? tree.created_by : '', phone,

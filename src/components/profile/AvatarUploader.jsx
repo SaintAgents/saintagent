@@ -3,86 +3,42 @@ import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, Camera, X, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Upload, X, Loader2 } from "lucide-react";
+import AvatarCropDialog from '@/components/profile/AvatarCropDialog';
 
 export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpdate }) {
   const [uploading, setUploading] = useState(false);
-  const [preview, setPreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [error, setError] = useState('');
   const fileInputRef = useRef(null);
 
-  // Resize and crop image to square
-  const resizeImage = (file, size = 256) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      
-      img.onload = () => {
-        canvas.width = size;
-        canvas.height = size;
-        
-        // Calculate crop to make it square (center crop)
-        const minDim = Math.min(img.width, img.height);
-        const sx = (img.width - minDim) / 2;
-        const sy = (img.height - minDim) / 2;
-        
-        // Draw cropped and resized image
-        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
-        
-        canvas.toBlob((blob) => {
-          resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-        }, 'image/jpeg', 0.9);
-      };
-      
-      img.src = URL.createObjectURL(file);
-    });
-  };
-
-  const handleFileSelect = async (e) => {
-    const file = e.target.files?.[0];
+  function handleFileSelect(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
     if (!file) return;
+    setError('');
+    if (file.size > 5 * 1024 * 1024) return setError('File size must be less than 5MB.');
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return setError('Only JPG, PNG, and WEBP files are allowed.');
+    setSelectedFile(file);
+  }
 
-    // Validate file
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-
-    if (file.size > maxSize) {
-      alert('File size must be less than 5MB');
-      return;
-    }
-
-    if (!allowedTypes.includes(file.type)) {
-      alert('Only JPG, PNG, and WEBP files are allowed');
-      return;
-    }
-
-    setUploading(true);
+  async function savePhoto(file) {
+    setUploading(true); setError('');
     try {
-      // Resize image to 256x256 square
-      const resizedFile = await resizeImage(file, 256);
-      
-      // Show preview of resized image
-      const reader = new FileReader();
-      reader.onload = (e) => setPreview(e.target.result);
-      reader.readAsDataURL(resizedFile);
+      const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+      if (!file_url) throw new Error('Upload did not return a photo.');
+      await onAvatarUpdate(file_url);
+      setSelectedFile(null);
+    } catch { setError('Could not finish saving your photo. Please try again.'); }
+    finally { setUploading(false); }
+  }
 
-      // Upload resized file
-      const result = await base44.integrations.Core.UploadFile({ file: resizedFile });
-      await onAvatarUpdate(result.file_url);
-      setPreview(null);
-    } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Upload failed. Please try again.');
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleRemove = async () => {
-    setPreview(null);
-    await onAvatarUpdate(null);
-  };
+  async function handleRemove() {
+    setUploading(true); setError('');
+    try { await onAvatarUpdate(null); }
+    catch { setError('Could not finish removing your photo. Please try again.'); }
+    finally { setUploading(false); }
+  }
 
   return (
     <Card>
@@ -90,13 +46,15 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <Avatar className="w-32 h-32 ring-4 ring-slate-100">
-              <AvatarImage src={preview || currentAvatar} />
+              <AvatarImage src={currentAvatar} />
               <AvatarFallback className="text-3xl bg-gradient-to-br from-violet-500 to-purple-600 text-white">
                 {displayName?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
-            {(currentAvatar || preview) && !uploading &&
+            {currentAvatar && !uploading &&
             <button
+              type="button"
+              aria-label="Remove profile photo"
               onClick={handleRemove}
               className="absolute -top-2 -right-2 p-1.5 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
 
@@ -113,7 +71,7 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
           <div className="text-center">
             <p className="text-sm font-medium text-slate-900 mb-1">Profile Photo</p>
             <p className="text-xs text-slate-500 mb-3">
-              JPG, PNG, or WEBP • Max 5MB • Square recommended
+              JPG, PNG, or WEBP • Max 5MB • Crop and rotate before saving
             </p>
             
             <input
@@ -136,6 +94,8 @@ export default function AvatarUploader({ currentAvatar, displayName, onAvatarUpd
             </Button>
           </div>
         </div>
+        {!selectedFile && error && <p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}
+        {selectedFile && <AvatarCropDialog file={selectedFile} busy={uploading} errorMessage={error} onClose={() => setSelectedFile(null)} onSave={savePhoto} />}
       </CardContent>
     </Card>);
 

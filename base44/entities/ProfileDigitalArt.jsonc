@@ -1,0 +1,59 @@
+{
+  "name": "ProfileDigitalArt",
+  "type": "object",
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "digital_art_url": {
+      "type": "string",
+      "maxLength": 2500
+    }
+  },
+  "required": [
+    "profile_id",
+    "digital_art_url"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -8,9 +8,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Download, X, Mail, ShieldCheck, Globe, MapPin, Link2, Copy, Phone } from "lucide-react";
 import ProfileQRCode from "./ProfileQRCode";
 import SharePublicProfile from '@/components/publicprofile/SharePublicProfile';
-import { contactPath, shareUrl } from '@/components/publicprofile/publicLinks';
+import { contactPath, contactShareUrl } from '@/components/publicprofile/publicLinks';
 
-export default function BusinessCardDialog({ open, onOpenChange, profile, inline = false }) {
+export default function BusinessCardDialog({ open, onOpenChange, profile, inline = false, artworkUrl }) {
   const active = open || inline;
   const { toast } = useToast();
   const [downloading, setDownloading] = useState(false);
@@ -25,7 +25,8 @@ export default function BusinessCardDialog({ open, onOpenChange, profile, inline
   const phoneNumber = publicContact?.phone || '';
   const region = profile?.region || "";
   const trustScore = profile?.trust_score || 0;
-  const avatarUrl = profile?.avatar_url;
+  const avatarUrl = artworkUrl || publicContact?.digital_art_url || profile?.avatar_url;
+  const hasArtwork = !!(artworkUrl || publicContact?.digital_art_url);
   const website = profile?.social_links?.website || "";
 
   // Fetch affiliate code for this user
@@ -99,8 +100,8 @@ export default function BusinessCardDialog({ open, onOpenChange, profile, inline
               {/* Avatar */}
               <div className="shrink-0">
                 {avatarUrl ? (
-                  <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-violet-500/40 shadow-lg">
-                    <img src={avatarUrl} alt={name} className="w-full h-full object-cover" crossOrigin="anonymous" />
+                  <div className={hasArtwork ? 'size-20 overflow-hidden' : 'w-20 h-20 rounded-full overflow-hidden border-2 border-violet-500/40 shadow-lg'}>
+                    <img src={avatarUrl} alt={hasArtwork ? 'Contact card emblem' : name} className="w-full h-full object-cover" crossOrigin="anonymous" />
                   </div>
                 ) : (
                   <div className="w-20 h-20 rounded-full border-2 border-violet-500/30 bg-violet-100 flex items-center justify-center text-violet-600 text-2xl font-bold">
@@ -174,7 +175,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile, inline
             </div>
           </div>
 
-          {publicContact?.contact_id && <div className="w-full space-y-2 rounded-lg border bg-card p-3 text-card-foreground"><a href={contactPath(publicContact.contact_id)} target="_blank" rel="noreferrer" className="block text-center text-sm underline">Open public contact card</a><SharePublicProfile url={shareUrl(contactPath(publicContact.contact_id))} label="Digital Contact Card" /></div>}
+          {publicContact?.contact_id && <div className="w-full space-y-2 rounded-lg border bg-card p-3 text-card-foreground"><a href={contactPath(publicContact.contact_id)} target="_blank" rel="noreferrer" className="block text-center text-sm underline">Open public contact card</a><SharePublicProfile url={contactShareUrl(publicContact.contact_id)} label="Digital Contact Card" /></div>}
           {/* Join Link & Affiliate Code */}
           <div className="w-full max-w-[420px] space-y-2 pb-2">
             <div

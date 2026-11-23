@@ -5,6 +5,11 @@
     "user_id": {
       "type": "string"
     },
+    "avatar_url": {
+      "type": "string",
+      "maxLength": 2500,
+      "description": "Most recently saved profile avatar"
+    },
     "status": {
       "type": "string",
       "enum": [

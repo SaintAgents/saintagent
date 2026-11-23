@@ -6,7 +6,7 @@ import { buildVCard } from '@/components/profile/ProfileQRCode';
 import PublicProfileState from '@/components/publicprofile/PublicProfileState';
 import SharePublicProfile from '@/components/publicprofile/SharePublicProfile';
 import { Button } from '@/components/ui/button';
-import { contactPath, downloadBlob, shareUrl, treePath } from '@/components/publicprofile/publicLinks';
+import { contactPath, contactShareUrl, downloadBlob, treePath } from '@/components/publicprofile/publicLinks';
 
 export default function VCardLanding() {
   const { saNumber } = useParams();
@@ -19,7 +19,7 @@ export default function VCardLanding() {
   if (!profile) return <PublicProfileState label="Contact card" loading={query.isPending} missing={[400, 404].includes(query.error?.status || query.error?.response?.status)} />;
   if (profile.contact_id && saNumber !== profile.contact_id) return <Navigate replace to={contactPath(profile.contact_id)} />;
   const name = profile.display_name || 'SaintAgent member';
-  const contactUrl = shareUrl(contactPath(profile.contact_id));
+  const contactUrl = contactShareUrl(profile.contact_id);
   const contact = [
     { Icon: Mail, text: profile.email, href: profile.email && `mailto:${encodeURIComponent(profile.email).replace('%40', '@')}` },
     { Icon: Phone, text: profile.phone, href: profile.phone && `tel:${profile.phone.replace(/[^+\d]/g, '')}` },
@@ -31,6 +31,7 @@ export default function VCardLanding() {
     <header className="space-y-2 text-center">
       <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">SaintAgent · Digital Contact Card</p>
       {profile.avatar_url ? <img src={profile.avatar_url} alt="" className="mx-auto size-24 rounded-full object-cover" /> : <div aria-hidden="true" className="mx-auto grid size-24 place-items-center rounded-full bg-muted text-3xl font-bold">{name[0]}</div>}
+      {profile.digital_art_url && <img src={profile.digital_art_url} alt="Digital contact card emblem" className="mx-auto aspect-square w-36 rounded-lg object-cover" />}
       <h1 className="break-words text-2xl font-bold">{name}</h1>
       {(profile.title || profile.organization) && <p>{[profile.title, profile.organization].filter(Boolean).join(' · ')}</p>}
       <div className="flex flex-wrap justify-center gap-3 text-sm text-muted-foreground">

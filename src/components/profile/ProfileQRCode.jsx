@@ -1,4 +1,4 @@
-import { contactPath, qrImage, shareUrl } from '@/components/publicprofile/publicLinks';
+import { contactShareUrl, qrImage } from '@/components/publicprofile/publicLinks';
 
 const escapeVCard = value => String(value || '').replace(/\\/g, '\\\\').replace(/\r\n|\r|\n/g, '\\n').replace(/[;,]/g, '\\$&');
 export function buildVCard(profile) {
@@ -14,5 +14,5 @@ export function buildVCard(profile) {
 export default function ProfileQRCode({ profile, size = 100, className = '', crossOrigin }) {
   const id = profile?.sa_number || profile?.id;
   if (!id) return null;
-  return <img src={qrImage(shareUrl(contactPath(id)), Math.max(size * 4, 400))} alt="Scan to view the Digital Contact Card" width={size} height={size} className={className} crossOrigin={crossOrigin} />;
+  return <img src={qrImage(contactShareUrl(id), Math.max(size * 4, 400))} alt="Scan to view the Digital Contact Card" width={size} height={size} className={className} crossOrigin={crossOrigin} />;
 }

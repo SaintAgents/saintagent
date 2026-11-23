@@ -7,6 +7,8 @@ import SkillsPicker from '@/components/SkillsPicker';
 import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor';
 import MysticalProfileEditor from '@/components/profile/MysticalProfileEditor';
 import AvatarUploader from '@/components/profile/AvatarUploader';
+import DigitalCardArtworkTab from '@/components/profile/DigitalCardArtworkTab';
+import ProfileArtworkGenerator from '@/components/profile/ProfileArtworkGenerator';
 import OnboardingDataEditor from '@/components/profile/OnboardingDataEditor';
 import ConnectionPreferencesEditor from '@/components/profile/ConnectionPreferencesEditor';
 import AscensionLadderPopover from '@/components/profile/AscensionLadderPopover';
@@ -368,6 +370,15 @@ export default function Profile() {
 
   const handleAvatarUpdate = async (avatarUrl) => {
     await updateMutation.mutateAsync({ avatar_url: avatarUrl });
+    const queries = ['profiles', 'currentUserProfile', 'dock-online-members', 'allLiveStatuses', 'public-contact'];
+    try {
+      const presence = base44.entities.LiveStatus;
+      const [record] = await presence.filter({ user_id: currentUser.email }, '-updated_date', 1);
+      if (record) await presence.update(record.id, { avatar_url: avatarUrl || '' });
+      else await presence.create({ user_id: currentUser.email, avatar_url: avatarUrl || '', status: 'offline' });
+    } finally {
+      await Promise.all(queries.map(key => queryClient.invalidateQueries({ queryKey: [key] })));
+    }
   };
 
   const handleSpiritualProfileSave = async (spiritualData) => {
@@ -826,6 +837,7 @@ export default function Profile() {
                   currentAvatar={profile?.avatar_url}
                   displayName={profile?.display_name}
                   onAvatarUpdate={handleAvatarUpdate} />
+                  {rawProfile?.id && <div className="mt-4"><ProfileArtworkGenerator kind="avatar" currentAvatar={profile.avatar_url} onSave={handleAvatarUpdate} /></div>}
                 </div>
               }
 
@@ -1410,7 +1422,7 @@ export default function Profile() {
               {linkTreeVisited && <LinkTreeEditorPanel embedded />}
             </TabsContent>
             <TabsContent value="digital-card">
-              <BusinessCardDialog inline profile={profile} />
+              {rawProfile?.id && currentUser?.id ? <DigitalCardArtworkTab key={rawProfile.id} profile={rawProfile} userId={currentUser.id} onAvatarUpdate={handleAvatarUpdate} /> : <p>Set up your profile to create a Digital Contact Card.</p>}
             </TabsContent>
           </>}
 
