@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import DockDeckIcon from '@/components/dock/DockDeckIcon';
 import { Button } from '@/components/ui/button';
 import CanopyResize from '@/components/canopy/CanopyResize';
 import { VIDEO_LIBRARY } from '@/components/hud/videoLibrary';
-import { links } from '@/components/dock/dockCatalog';
+import DockFooter from '@/components/dock/DockFooter';
 import DockHeader from '@/components/dock/DockHeader';
 import DockFolders from '@/components/dock/DockFolders';
 import DockDialogs from '@/components/dock/DockDialogs';
@@ -34,7 +34,7 @@ export default function DockDeck({user, disabled}) {
     dragStart:(e,id)=>{if(!wide){e.preventDefault();return;}e.dataTransfer.setData('text/plain',id);e.dataTransfer.effectAllowed='move';dragId.current=id;setDrag(id);},dragEnd:()=>{dragId.current=null;setDrag(null);},reorder:(e,target)=>drop(e,id=>actions.reorder(id,target))});
   return <div className="dock-root" hidden={disabled} data-dock-open={shown}>
     {!shown && <Button ref={launcher} className="dock-launcher" variant="outline" onClick={() => setOpen(true)} aria-label="Open Dock Deck" aria-controls="dock-deck" aria-expanded={false}><DockDeckIcon />{prefs.label && 'Dock Deck'}</Button>}
-    <aside ref={panel} id="dock-deck" aria-label="Dock Deck" aria-hidden={!shown} {...(!shown ? {inert:''} : {})} className="dock-panel" style={{width,'--dock-opacity':prefs.opacity/100}}>
+    <aside ref={panel} id="dock-deck" aria-label="Dock Deck" aria-hidden={!shown} {...(!shown ? {inert:''} : {})} className="dock-panel" style={{width,'--dock-video-opacity':prefs.opacity/100}}>
       {wide && <><CanopyResize label="Resize Dock Deck" className="dock-resize" direction="left" value={width} min={320} max={max} onChange={resize} /><button type="button" className="dock-edge" aria-label="Collapse Dock Deck" title="Collapse Dock Deck" onClick={close}><ChevronRight size={16} /></button></>}
       {shown && prefs.video && <video className="dock-video" aria-hidden="true" src={VIDEO_LIBRARY[0].url} autoPlay muted loop playsInline />}
       <DockHeader {...{prefs,deck,commit,close,openModal}} />
@@ -42,11 +42,9 @@ export default function DockDeck({user, disabled}) {
         <DockFolders {...{prefs,commit,openModal,drag}} drop={(e,target)=>drop(e,id=>{if(target!==prefs.active)actions.restore(id,target);})} />
         <div className="dock-grid" style={{'--dock-columns':columns}}>{deckCards.filter(card=>visited.current.has(card.deck)).map(card=><DockCard key={card.id} visible={card.deck===deck.id} {...cardProps(card)} />)}{deckCards.every(c=>c.deck!==deck.id) && <p className="p-3">This deck is empty. Use Add Widget to get started.</p>}</div>
       </div>
-      <footer className="dock-footer"><DockWidgetShortcuts {...{prefs,openModal}} /><p>{deckCards.filter(c=>c.deck===deck.id).length} active · {prefs.cards.filter(c=>c.place==='drawer').length} archived · Rearrange or resize cards</p>{error && <p role="alert">Could not sync to your account. Your browser copy was kept.</p>}</footer>
+      <DockFooter {...{prefs,openModal,error}} archived={prefs.cards.filter(c=>c.place==='drawer').length} />
     </aside>
     {prefs.cards.filter(c=>c.place==='float').map(card=><DockCard key={card.id} floating visible={!disabled} {...cardProps(card)} />)}
     {shown && modal && <DockDialogs key={modal} {...{modal,prefs,deck,actions}} cards={prefs.cards} close={()=>setModal(null)} />}
   </div>;
 }
-
-function DockWidgetShortcuts({prefs,openModal}) {return <nav aria-label="Dock Quick Access" className="flex flex-wrap items-center gap-2">{prefs.shortcuts.map(label=><Link key={label} to={links[label]}>{label}</Link>)}<button onClick={()=>openModal('shortcuts')}>Edit Quick Access</button></nav>; }

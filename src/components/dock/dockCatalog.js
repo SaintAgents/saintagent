@@ -14,4 +14,4 @@ export const widgetLibrary = {
 export const icons = ['▦','★','◈','☀','✦','◉','◇','◆'];
 export const safePath = value => typeof value === 'string' && /^\/(?![\\/])[^\\\r\n]*$/.test(value);
 export const widget = (type, settings = {}) => ({ id:crypto.randomUUID(), type, settings, deck:'main', place:'deck' });
-export const initial = () => ({ active:'main', decks:[{id:'main',name:'My Dock',icon:icons[0]}], cards:[widget('Quick Access'),widget('Quick Notes')], width:622, label:true, beside:false, folders:true, video:false, opacity:100, shortcuts:defaultShortcuts });
+export const initial = () => ({ active:'main', decks:[{id:'main',name:'My Dock',icon:icons[0]}], cards:[widget('Quick Access'),widget('Quick Notes')], width:1120, label:true, beside:false, folders:true, video:false, opacity:100, shortcuts:defaultShortcuts });

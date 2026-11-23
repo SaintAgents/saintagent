@@ -80,13 +80,13 @@ export default function SurfaceOpacityController() {
     }` : ''}
 
     /* ========== SIDEBAR ========== */
-    aside, [data-sidebar], nav.sidebar {
+    aside:not(.dock-panel), [data-sidebar], nav.sidebar {
       opacity: ${sidebar.sidebarOpacity / 100} !important;
     }
-    aside > div:first-child, [data-sidebar] > div:first-child {
+    aside:not(.dock-panel) > div:first-child, [data-sidebar] > div:first-child {
       background-color: rgba(var(--sidebar-bg-rgb, 15,23,42), ${sidebar.sidebarBg / 100}) !important;
     }
-    aside a, aside span, aside p, [data-sidebar] a, [data-sidebar] span, [data-sidebar] p {
+    aside:not(.dock-panel) :is(a, span, p), [data-sidebar] a, [data-sidebar] span, [data-sidebar] p {
       filter: brightness(${sidebar.fontBrightness / 100}) !important;
     }
 
