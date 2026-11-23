@@ -1,4 +1,5 @@
 import React from 'react';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MapPin, Users, Star, Shield, Globe, ArrowRight, Eye } from 'lucide-react';
@@ -32,6 +33,7 @@ export default function BusinessEntityCard({ entity, featured = false }) {
 
   return (
     <div
+      {...deepDiveTarget('organization', entity.id, entity.name)}
       className={`group cursor-pointer rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
         featured ? 'border-amber-300 shadow-lg shadow-amber-100/50' : 'border-slate-200'
       }`}

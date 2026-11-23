@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ResourceForm from '@/components/resources/ResourceForm';
@@ -10,6 +11,7 @@ import { Plus } from 'lucide-react';
 
 export default function ResourceHub() {
   const qc = useQueryClient();
+  const { hash } = useLocation();
   const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me() });
 
   const { data: all = [] } = useQuery({
@@ -38,6 +40,11 @@ export default function ResourceHub() {
     const matchesCat = category === 'all' || (r.categories || []).includes(category);
     return matchesQuery && matchesType && matchesCat;
   });
+
+  React.useEffect(() => {
+    if (!hash.startsWith('#resource-')) return;
+    document.getElementById(hash.slice(1))?.scrollIntoView({block:'nearest'});
+  }, [hash, all]);
 
   const addRes = useMutation({
     mutationFn: async (payload) => {

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { BookOpen } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -15,7 +16,7 @@ export default function IntelligenceLibrary({ owner, current, samples, demoHref,
     {query.isPending && <p role="status">Loading research…</p>}
     {query.isError && <p role="alert">Could not load research. <Button size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></p>}
     {query.isSuccess && !rows.length && <p className="text-sm">Your saved Deep Dives and branches will appear here.</p>}
-    <ul className="space-y-3">{rows.map(row => <li key={row.id} className="border-t pt-3 text-sm">{onSelect ? <button type="button" className="block break-words text-left underline" onClick={() => onSelect(row)} aria-current={current === row.id ? 'true' : undefined}>{row.objective}</button> : <Link className="block break-words underline" to={studyHref(row.id)} aria-current={current === row.id ? 'page' : undefined}>{row.objective}</Link>}<p className="text-xs">{row.parent_id ? 'Branch' : 'Investigation'} · {new Date(row.created_date).toLocaleDateString()}</p></li>)}</ul>
+    <ul className="space-y-3">{rows.map(row => <li key={row.id} {...deepDiveTarget('library', row.id, row.objective)} className="border-t pt-3 text-sm">{onSelect ? <button type="button" className="block break-words text-left underline" onClick={() => onSelect(row)} aria-current={current === row.id ? 'true' : undefined}>{row.objective}</button> : <Link className="block break-words underline" to={studyHref(row.id)} aria-current={current === row.id ? 'page' : undefined}>{row.objective}</Link>}<p className="text-xs">{row.parent_id ? 'Branch' : 'Investigation'} · {new Date(row.created_date).toLocaleDateString()}</p></li>)}</ul>
     {query.hasNextPage && <Button type="button" variant="outline" size="sm" disabled={query.isFetching} onClick={() => query.fetchNextPage()}>{query.isFetchingNextPage ? 'Loading…' : 'Load more'}</Button>}
     <Link className="inline-block text-sm underline" to="/SavedItems?tab=research">Open saved research cards</Link>
     </>}

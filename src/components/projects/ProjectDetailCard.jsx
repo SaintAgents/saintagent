@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -99,7 +100,7 @@ export default function ProjectDetailCard({ project: initialProject }) {
   };
 
   return (
-    <div className="space-y-6 bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 rounded-xl">
+    <div {...deepDiveTarget('project', project.id, project.title)} className="space-y-6 bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 rounded-xl">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">

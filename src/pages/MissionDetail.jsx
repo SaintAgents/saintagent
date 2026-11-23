@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { cn } from "@/lib/utils";
@@ -132,7 +133,7 @@ export default function MissionDetail() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
       {/* Hero Header with Mission Image */}
-      <div className="relative border-b border-slate-200 overflow-hidden">
+      <div {...deepDiveTarget('mission', mission.id, mission.title)} className="relative border-b border-slate-200 overflow-hidden">
         {/* Background Image at 50% opacity */}
         <div 
           className="absolute inset-0 bg-cover bg-center"

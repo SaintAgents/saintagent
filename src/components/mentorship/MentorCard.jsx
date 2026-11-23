@@ -1,4 +1,5 @@
 import React from 'react';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -7,7 +8,7 @@ export default function MentorCard({ profile, userProfile, score, onRequest, act
   const initials = (userProfile?.display_name || 'U').slice(0,1).toUpperCase();
   const skills = (profile.skills_offering || []).slice(0,6);
   return (
-    <Card className="hover:shadow-md transition">
+    <Card {...(userProfile?.profile_visibility === 'public' && deepDiveTarget('mentor', profile.id, userProfile.display_name))} className="hover:shadow-md transition">
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           <Avatar className="w-12 h-12">

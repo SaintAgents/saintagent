@@ -1,4 +1,5 @@
 import React from 'react';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -31,7 +32,7 @@ export default function ResourceCard({ resource, isAdmin, onModerate }) {
   const embed = resource.type === 'video' ? toYouTubeEmbed(resource.content_url) : null;
 
   return (
-    <Card className="overflow-hidden">
+    <Card id={`resource-${resource.id}`} {...(resource.status === 'approved' && deepDiveTarget('resource', resource.id, resource.title))} className="scroll-mt-36 overflow-hidden">
       <CardContent className="p-4 space-y-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2">

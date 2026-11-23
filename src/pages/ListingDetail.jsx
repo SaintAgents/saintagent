@@ -1,6 +1,7 @@
 import React from 'react';
 import { base44 } from '@/api/base44Client';
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -121,7 +122,7 @@ export default function ListingDetail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
-      <div className="bg-white border-b border-slate-200">
+      <div {...deepDiveTarget('listing', listing.id, listing.title)} className="bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-6 py-4">
           <Breadcrumb items={[
             { label: 'Marketplace', page: 'Marketplace' },

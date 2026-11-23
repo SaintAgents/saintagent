@@ -77,7 +77,7 @@ export default function EventCard({ event, user, onViewDetails }) {
   };
 
   return (
-    <div className={cn(
+    <div data-deep-dive-kind="event" data-deep-dive-title={event.title?.trim().slice(0,400) || undefined} className={cn(
       "bg-white rounded-xl border overflow-hidden hover:shadow-lg transition-all",
       isLive && "ring-2 ring-red-500",
       isEventPast && "opacity-60"

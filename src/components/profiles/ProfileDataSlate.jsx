@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -85,6 +86,7 @@ export default function ProfileDataSlate({ profile, recentMissions = [], onTagCl
 
   return (
     <div
+      {...(profile.profile_visibility === 'public' && deepDiveTarget('person', profile.id, profile.display_name))}
       onClick={handleClick}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}

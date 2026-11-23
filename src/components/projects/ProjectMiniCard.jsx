@@ -1,4 +1,5 @@
 import React from "react";
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,7 @@ export default function ProjectMiniCard({ project, onClick }) {
     : null;
 
   return (
-    <button onClick={onClick} className="text-left w-full">
+    <button {...deepDiveTarget('project', project.id, project.title)} onClick={onClick} className="text-left w-full">
       <Card className="hover:shadow-md transition-shadow border-slate-200">
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">

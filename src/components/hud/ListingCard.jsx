@@ -1,4 +1,5 @@
 import React from 'react';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -72,6 +73,7 @@ export default function ListingCard({ listing, onAction, isOwner = false }) {
 
   return (
     <div
+      {...deepDiveTarget('listing', listing.id, listing.title)}
       className="bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200/60 dark:border-[rgba(0,255,136,0.2)] overflow-hidden hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(0,255,136,0.15)] transition-all duration-300 cursor-pointer"
       onClick={() => window.location.href = createPageUrl('ListingDetail') + '?id=' + listing.id}
     >

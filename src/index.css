@@ -658,6 +658,11 @@ html[data-theme='light'] [data-resource-hub] {
   z-index: 1;
 }
 
+[data-deep-dive-hover] {
+  outline: 3px solid hsl(var(--primary)) !important;
+  outline-offset: 2px;
+}
+
 /* Opt-in readable surfaces keep their contrast over video, canvas and glass effects. */
 [data-readable-surface] {
   --readable-bg: hsl(var(--background));

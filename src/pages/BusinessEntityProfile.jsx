@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -134,7 +135,7 @@ export default function BusinessEntityProfile() {
   return (
     <div className="min-h-screen pb-32">
       {/* Hero Cover */}
-      <div className="page-hero relative h-72 md:h-96 overflow-hidden">
+      <div {...deepDiveTarget('organization', entity.id, entity.name)} className="page-hero relative h-72 md:h-96 overflow-hidden">
         <img
           src={entity.cover_image_url || HERO_FALLBACK}
           alt={entity.name}

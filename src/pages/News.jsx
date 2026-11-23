@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -36,7 +37,8 @@ function NewsCard({ article, onClick }) {
   const Icon = TYPE_ICONS[article.type] || Newspaper;
   
   return (
-    <Card 
+    <Card
+      {...(article.is_published && deepDiveTarget('news', article.id, article.title))}
       className="cursor-pointer hover:shadow-lg transition-all dark:bg-[rgba(0,0,0,0.75)] dark:border-[rgba(0,255,136,0.2)] dark:hover:border-[rgba(0,255,136,0.4)] h-full flex flex-col"
       onClick={onClick}
     >

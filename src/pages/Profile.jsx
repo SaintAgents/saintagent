@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import ProfileHeroLogo from '@/components/profile/ProfileHeroLogo';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SkillsPicker from '@/components/SkillsPicker';
@@ -482,7 +483,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30 p-3 md:p-6">
-      <div className="max-w-4xl mx-auto">
+      <div {...(rawProfile?.profile_visibility === 'public' && deepDiveTarget('person', rawProfile.id, rawProfile.display_name))} className="max-w-4xl mx-auto">
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
           <div className="relative h-40 md:h-64 bg-gradient-to-r from-violet-500 to-purple-600 group">

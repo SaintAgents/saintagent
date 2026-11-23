@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
@@ -356,7 +357,7 @@ function CourseCard({ course, progress, onEnroll, enrolling, showProgress }) {
   const isCompleted = progress?.status === 'completed';
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-all group">
+    <Card {...deepDiveTarget('course', course.id, course.title)} className="overflow-hidden hover:shadow-lg transition-all group">
       <div className="relative h-32 bg-gradient-to-br from-violet-100 to-indigo-100">
         {course.image_url ? (
           <img src={course.image_url} alt={course.title} className="w-full h-full object-cover" />

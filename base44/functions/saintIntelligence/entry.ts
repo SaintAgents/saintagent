@@ -9,6 +9,7 @@ const sources = {
   project: { entity:'Project', scope:user => ({owner_id:{$in:[user.id,user.email].filter(Boolean)}}), fields:['title','description'] },
 };
 const deepSources = {
+  resource: { entity:'Resource', scope:() => ({status:'approved'}), fields:['title','description'] },
   library: { entity:'IntelligenceStudy', scope:user => ({created_by_id:user.id}), fields:['objective','summary'] },
   person: { entity:'UserProfile', scope:() => ({profile_visibility:'public'}), fields:['display_name','handle'] },
   mentor: { entity:'MentorshipProfile', scope:() => ({status:'active',role:{$in:['mentor','both']}}), fields:['category','bio','skills_offering'] },
@@ -52,7 +53,7 @@ export default async function(req: Request): Promise<Response> {
     const registry = deep ? {...sources,...deepSources} : sources;
     const purposes = ['explore','connect','develop','plan'];
     if (deep && (!purposes.includes(purpose) || (angle !== undefined && (typeof angle !== 'string' || angle.length > 250)))) return Response.json({error:'Choose a research purpose and keep the angle under 250 characters.'},{status:400});
-    if (typeof objective !== 'string' || objective.trim().length < 3 || objective.length > 400 || !['search','research','deep'].includes(mode) || typeof source !== 'string' || (source !== 'all' && !(deep && source === 'authorized') && !own(registry,source)) || !['keywords','exact','related'].includes(matching) || (seed && (typeof seed.kind !== 'string' || !own(sources,seed.kind) || !validId(seed.id))) || (parentId && !validId(parentId))) return Response.json({error:'Enter a research question of 3 to 400 characters and select a valid source.'},{status:400});
+    if (typeof objective !== 'string' || objective.trim().length < 3 || objective.length > 400 || !['search','research','deep'].includes(mode) || typeof source !== 'string' || (source !== 'all' && !(deep && source === 'authorized') && !own(registry,source)) || !['keywords','exact','related'].includes(matching) || (seed && (typeof seed.kind !== 'string' || !own(registry,seed.kind) || !validId(seed.id))) || (parentId && !validId(parentId))) return Response.json({error:'Enter a research question of 3 to 400 characters and select a valid source.'},{status:400});
     const query = objective.trim();
     const words = [...new Set(query.toLowerCase().match(/[\p{L}\p{N}-]{3,}/gu) || [])].filter(word => !stop.has(word)).slice(0,10);
     let parent;
@@ -72,9 +73,9 @@ export default async function(req: Request): Promise<Response> {
     for (let i = 0; i < kinds.length; i += 6) groups.push(...await Promise.all(kinds.slice(i,i+6).map(kind => retrieve(api,user,kind,terms,query))));
     const matches = groups.flat().sort((a,b) => b.score-a.score).slice(0,20);
     if (mode === 'search') return Response.json({matches,relatedTerms});
-    const prior = [...(seed ? [seed] : []),...(parent?.sources || [])].filter(ref => own(registry,ref.kind) && validId(ref.id) && (!deep || kinds.includes(ref.kind)));
+    const prior = [...(seed ? [seed] : []),...(parent?.sources || []).filter(ref => !deep || kinds.includes(ref.kind))].filter(ref => own(registry,ref.kind) && validId(ref.id));
     const carried = [];
-    const carryKinds = (deep ? kinds : Object.keys(sources)).filter(kind => prior.some(ref => ref.kind === kind));
+    const carryKinds = Object.keys(registry).filter(kind => prior.some(ref => ref.kind === kind));
     for (let i = 0; i < carryKinds.length; i += 6) carried.push(...await Promise.all(carryKinds.slice(i,i+6).map(kind => retrieve(api,user,kind,terms,query,[...new Set(prior.filter(ref => ref.kind === kind).map(ref => ref.id))].slice(0,20)))));
     if (seed && !carried.flat().some(row => row.kind === seed.kind && row.id === seed.id)) return Response.json({error:'That source is no longer available for research.'},{status:404});
     // Keep a selected source first, then prioritize new matches before earlier evidence.

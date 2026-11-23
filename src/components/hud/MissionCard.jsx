@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,6 +53,7 @@ export default function MissionCard({ mission, onAction, variant = "default", on
   if (variant === "compact") {
     return (
       <div
+        {...deepDiveTarget('mission', mission.id, mission.title)}
         className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100 hover:border-violet-200 cursor-pointer transition-all"
         onClick={() => window.location.href = createPageUrl('MissionDetail') + '?id=' + mission.id}>
 
@@ -76,6 +78,7 @@ export default function MissionCard({ mission, onAction, variant = "default", on
   return (
     <>
     <div 
+      {...deepDiveTarget('mission', mission.id, mission.title)}
       className="mission-card bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200/60 dark:border-[rgba(0,255,136,0.3)] overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
       onClick={() => onClickOverride ? onClickOverride() : setDetailOpen(true)}
     >
