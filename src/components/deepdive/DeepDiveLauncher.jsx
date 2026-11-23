@@ -9,13 +9,16 @@ export default function DeepDiveLauncher() {
   const [open, setOpen] = useState(false);
   const [request,setRequest] = useState({});
   const returnFocus = useRef(null);
-  const hidden = isTourPreview() || (window.parent !== window && new URLSearchParams(window.location.search).get('observationPreview') === '1');
+  const preview = isTourPreview();
+  const params = new URLSearchParams(window.location.search);
+  const hidden = preview || (window.parent !== window && params.get('observationPreview') === '1');
   useEffect(() => {
     if (hidden) return;
     const launch = event => { returnFocus.current = document.activeElement; setRequest(event.detail || {}); setOpen(true); };
     document.addEventListener('openDeepDive', launch);
     return () => document.removeEventListener('openDeepDive', launch);
   }, [hidden]);
+  if (preview && params.get('tourView') === 'deep-dive') return <DeepDiveDragTrigger onOpen={() => {}} />;
   if (hidden) return null;
   return <Dialog open={open} onOpenChange={setOpen}>
     <DeepDiveDragTrigger onOpen={(detail, trigger) => { returnFocus.current = trigger; setRequest(detail); setOpen(true); }} />

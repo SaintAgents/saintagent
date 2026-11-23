@@ -17,15 +17,15 @@ import useDockPanel from '@/components/dock/useDockPanel';
 import useDockHistory from '@/components/dock/useDockHistory';
 import '@/components/dock/dock.css';
 
-export default function DockDeck({user, disabled, children}) {
+export default function DockDeck({user, disabled, preview = false, children}) {
   const location=useLocation(), navigate=useNavigate();
-  const {prefs,commit,error}=useDockPreferences(user);
+  const {prefs,commit,error}=useDockPreferences(user, preview);
   const actions=useDockActions(commit,prefs.active);
   const [modal,setModal]=useState(null), [drag,setDrag]=useState(null);
   const visited = useRef(new Set());
   const dragId=useRef(null), panel=useRef(null), launcher=useRef(null), grid=useRef(null), floatingTools=useRef(null);
   const {shown, setOpen, wide, width, max, resize} = useDockPanel({prefs,commit,disabled,panel,actions,dragId,setDrag,setModal});
-  const history = useDockHistory(user.id, location.pathname, disabled);
+  const history = useDockHistory(user.id, location.pathname, disabled || preview);
   const countedOpening = useRef(false);
   const compactLauncher = (prefs.launcherUses ?? 0) >= 3;
   useEffect(() => {

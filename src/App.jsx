@@ -139,8 +139,10 @@ const AuthenticatedApp = () => {
   }
 
   const embedded = window.parent !== window && new URLSearchParams(location.search).get('observationPreview') === '1';
-  const dockDisabled = embedded || isTourPreview() || /^\/(g3dex|gggcrypto)\/?$/i.test(location.pathname);
-  return <DockDeck key={user.id} user={user} disabled={dockDisabled}><AppRoutes /></DockDeck>;
+  const tourPreview = isTourPreview();
+  const dockPreview = tourPreview && new URLSearchParams(location.search).get('tourView') === 'dock';
+  const dockDisabled = embedded || (tourPreview && !dockPreview) || /^\/(g3dex|gggcrypto)\/?$/i.test(location.pathname);
+  return <DockDeck key={user.id} user={user} disabled={dockDisabled} preview={dockPreview}><AppRoutes /></DockDeck>;
 };
 
 // Separated routes so both public and authenticated paths use the same route tree

@@ -4,7 +4,7 @@ import useTourFrameTarget from '@/components/tour/useTourFrameTarget';
 export default function TourScreenPreview({ targets }) {
   const [index, setIndex] = useState(0);
   const target = targets[index] || targets[0];
-  const frameKey = `${target.path}-${target.view ?? ''}-${JSON.stringify(target.setup ?? null)}`;
+  const frameKey = JSON.stringify(target);
   return <aside aria-label="Lesson screen" className="flex min-h-0 min-w-0 flex-col border-b bg-muted md:border-b-0 md:border-r">
     <div className="shrink-0 space-y-2 border-b px-4 py-3">
       <p className="text-sm font-semibold">On this screen: {target.label}</p>
@@ -36,9 +36,10 @@ function TourPreviewFrame({ target }) {
     observer.observe(host.current);
     return () => observer.disconnect();
   }, [target.path]);
+  const params = new URLSearchParams({ ...target.params, tourPreview: '1', ...(target.view && { tourView: target.view }) });
   return <div ref={host} className="relative min-h-0 min-w-0 flex-1 overflow-hidden bg-background">
     {size && <iframe title={`${target.label} lesson preview`} className={`absolute left-0 top-0 origin-top-left border-0 ${doc ? '' : 'pointer-events-none'}`} tabIndex={-1}
-      src={`${target.path}?tourPreview=1${target.view ? `&tourView=${encodeURIComponent(target.view)}` : ''}`} style={{ width: size.width, height: size.height, transform: `scale(${size.scale})` }}
+      src={`${target.path}?${params}`} style={{ width: size.width, height: size.height, transform: `scale(${size.scale})` }}
       onLoad={e => { const frameDoc = e.currentTarget.contentDocument; setDoc(frameDoc?.location?.pathname?.toLowerCase() === target.path.toLowerCase() ? frameDoc : null); }} />}
     {state !== 'ready' && <p role="status" className="pointer-events-none absolute inset-x-3 bottom-3 z-10 rounded-md border bg-popover p-2 text-xs">
       {state === 'missing' ? 'This section isn’t visible in the preview.' : timedOut && !doc ? 'The preview couldn’t open.' : 'Locating the lesson on this screen…'}

@@ -11,8 +11,8 @@ function load(user) {
   const saved = local && (local.revision || 0) >= (remote?.revision || 0) ? local : remote;
   return { ...initial(), ...saved };
 }
-export default function useDockPreferences(user) {
-  const [prefs, setPrefs] = useState(() => load(user));
+export default function useDockPreferences(user, preview = false) {
+  const [prefs, setPrefs] = useState(() => preview ? initial() : load(user));
   const [error, setError] = useState(false);
   const latest = useRef(prefs), queue = useRef(Promise.resolve());
   useEffect(() => {
@@ -26,6 +26,7 @@ export default function useDockPreferences(user) {
     const next = { ...prev, ...(typeof change === 'function' ? change(prev) : change), revision:Math.max(Date.now(), (prev.revision || 0) + 1) };
     latest.current = next;
     setPrefs(next);
+    if (preview) return;
     try { localStorage.setItem(dockStorageKey(user.id), JSON.stringify(next)); } catch { /* account copy still saves */ }
     setError(false);
     queue.current = queue.current.catch(() => {}).then(() => base44.auth.updateMe({ dock_preferences:next }));

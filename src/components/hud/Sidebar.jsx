@@ -107,7 +107,7 @@ const ALL_NAV_ITEMS = {
   observation: { id: 'observation', label: 'Observation Deck', Icon: Eye, page: 'ObservationDeck', hint: 'Monitor saved pages across six decks' },
   watchlist: { id: 'watchlist', label: 'Watchlist', Icon: Eye, page: 'Watchlist', hint: 'See updates on watched records' },
   saveditems: { id: 'saveditems', label: 'Saved Items', Icon: Folder, page: 'SavedItems', hint: 'Open saved references and research' },
-  intelligence: { id: 'intelligence', label: 'Saint Intelligence', Icon: BookOpen, page: 'Intelligence', hint: 'Search sources and save cited investigations' },
+  intelligence: { id: 'intelligence', label: 'Saint Intelligence', Icon: BookOpen, page: 'Intelligence', aliases: ['research', 'research hub', 'deep dive'], hint: 'Search sources and save cited investigations' },
   conferences: { id: 'conferences', label: 'Conference Portal', Icon: Mic, page: 'ConferencePortal', hint: 'Private audio calls and invitations' },
   news: { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
   gallery: { id: 'gallery', label: 'Hero Gallery', Icon: Eye, page: 'CommandDeck', hint: 'View and explore the hero image gallery', action: 'openGallery' },

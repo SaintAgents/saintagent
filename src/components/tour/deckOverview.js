@@ -70,7 +70,7 @@ export const WELCOME_OVERVIEW = [
     overviewStop('Projects'),
   ] },
   { area: 'Keep exploring', stops: [
-    stop('Help and more tours', 'The Getting Started Tours card has the full overview and topic tours, including the Command Canopy walkthrough. They stay available after this welcome walkthrough.', 'Choose The Basics to practice, or open My Assistant and select Saint Support when you have a specific question.', card('dailyTours') + ' .collapsible-card-header'),
+    stop('Help and more tours', 'The Getting Started Tours card has the full overview and topic tours, including the What’s New Walkthrough. They stay available after this welcome walkthrough.', 'Choose The Basics to practice, or open My Assistant and select Saint Support when you have a specific question.', card('dailyTours') + ' .collapsible-card-header'),
   ] },
 ];
 export const WELCOME_STOPS = WELCOME_OVERVIEW.flatMap(({ area, stops }) => stops.map(item => ({ ...item, area })));

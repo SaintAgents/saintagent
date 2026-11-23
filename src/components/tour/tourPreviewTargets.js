@@ -21,6 +21,13 @@ const special = {
   '7-0': [deck('Canopy button', '#app-topbar [aria-label="Open Command Canopy"]'), deck('Canopy view controls', '#canopy-workspace .canopy-heading', { click: '#app-topbar [aria-label="Open Command Canopy"]' })],
   '7-1': [deck('Canopy command bar', '#canopy-workspace .canopy-command-bar', { click: '#app-topbar [aria-label="Open Command Canopy"]' })],
   '7-2': [deck('Canopy widget library', '#canopy-library', { click: '#app-topbar [aria-label="Open Command Canopy"]', then: '#canopy-workspace .canopy-tools button[aria-expanded="false"]' })],
+  '7-3': [{ ...deck('Deep Dive microscope', '#app-topbar [aria-label="Open Deep Dive Intelligence"]'), view: 'deep-dive' }],
+  '7-4': [deck('Sidebar page search', '[data-sidebar] input[aria-label="Search pages"]'), { label: 'Research Hub', path: '/Intelligence', anchor: '[data-intel-hero]' }, { label: 'My Research', path: '/Intelligence', anchor: '[aria-label="My Research"]', params: { demo: 'garden' } }, { label: 'Sample report', path: '/Intelligence', anchor: '[data-intel-panel] h2', params: { demo: 'garden' } }],
+  '7-5': [{ label: 'Turn a finding into a plan', path: '/MyGuide', anchor: '[aria-label="The Weaver"]' }],
+  '7-6': [{ label: 'Opportunities', path: '/GlobalImpactDashboard', anchor: '#impact-workspace', params: { workspace: 'opportunities', impactDemo: '1' } }, { label: 'World Pulse', path: '/GlobalImpactDashboard', anchor: '[aria-label="World Pulse"]', params: { impactDemo: '1' } }, { label: 'My Impact', path: '/GlobalImpactDashboard', anchor: '[data-impact-module="overview"]' }],
+  '7-7': [{ ...deck('Dock Deck launcher', '.dock-launcher'), view: 'dock' }, { ...deck('Pop out Quick Notes', '#dock-deck [aria-label="Float Quick Notes"]', { click: '.dock-launcher' }), view: 'dock' }, { ...deck('Return to Dock Deck', '[aria-label="Return to Dock Deck"]', { click: '.dock-launcher', then: '#dock-deck [aria-label="Float Quick Notes"]' }), view: 'dock' }],
+  '7-8': [{ label: 'Watchlist', path: '/Watchlist', anchor: 'main h1' }, { label: 'Saved Items', path: '/SavedItems', anchor: 'main [role="tablist"]' }, { ...deck('Dock Deck launcher', '.dock-launcher'), view: 'dock' }],
+  '7-9': [{ label: 'LinkTree & Contact Card editor', path: '/LinkTreeEditor', anchor: 'main h1' }, { label: 'Digital Contact Card settings', path: '/LinkTreeEditor', anchor: '[data-tour-contact-card]' }],
 };
 const pageAnchors = {
   '/CommunityFeed': '[placeholder^="Search posts"]', '/Forum': '[placeholder^="Search discussions"]',

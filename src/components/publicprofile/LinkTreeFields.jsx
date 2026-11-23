@@ -15,7 +15,7 @@ export default function LinkTreeFields({ draft, patch, business, email }) {
       {input('showcase_title', 'Section name', 100)}
       {Array.from({ length: 4 }, (_, i) => <label key={i} className="block text-sm">Showcase image {i + 1} URL<Input type="url" maxLength={1500} value={draft.showcase[i] || ''} onChange={e => { const showcase = [...draft.showcase]; showcase[i] = e.target.value; patch({ showcase }); }} /></label>)}
     </fieldset>
-    {!business && <fieldset className="space-y-2 rounded-lg border p-3"><legend className="font-semibold">Digital Contact Card</legend>
+    {!business && <fieldset data-tour-contact-card className="space-y-2 rounded-lg border p-3"><legend className="font-semibold">Digital Contact Card</legend>
       <p className="text-sm text-muted-foreground">These settings apply to your contact card, even if LinkTree is unpublished. Email and phone stay off the public card and downloaded contact file unless you opt in.</p>
       {input('contact_title', 'Professional title', 100)}{input('contact_org', 'Organization', 120)}
       {check('share_email', `Share my email (${email})`)}{check('share_phone', 'Share a phone number')}

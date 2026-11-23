@@ -8,8 +8,8 @@ export default function SidebarPageSearch({ pages, collapsed, onExpand, children
   const [focusOnExpand, setFocusOnExpand] = useState(false);
   const navigate = useNavigate();
   const term = query.trim().toLowerCase();
-  const results = term ? pages.filter(({ label, page }) =>
-    label.toLowerCase().includes(term) || page.toLowerCase().includes(term)) : [];
+  const results = term ? pages.filter(({ label, page, aliases = [] }) =>
+    [label, page, ...aliases].some(value => value.toLowerCase().includes(term))) : [];
 
   if (collapsed) return <>
     <button type="button" aria-label="Search pages" title="Search pages" className="flex w-full justify-center rounded-md p-2 text-slate-600 hover:bg-accent" onClick={() => { setQuery(''); setFocusOnExpand(true); onExpand(); }}>

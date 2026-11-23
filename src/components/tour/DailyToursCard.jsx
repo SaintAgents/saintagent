@@ -54,7 +54,7 @@ export default function DailyToursCard({ userId, embedded = false }) {
           {DAILY_TOURS.map((tour, index) => {
             const done = sections[index] === tour.sections.length;
             return <li key={tour.title} className="min-w-0"><Button type="button" variant="outline" className="h-full min-h-10 w-full justify-start whitespace-normal px-3 text-left" disabled={save.isPending} onClick={(event) => open(index, event)}>
-              {done ? <CheckCircle aria-label="Completed; select to replay" /> : <BookOpen aria-hidden="true" />}<span className="min-w-0 break-words">{tour.title === 'Command Canopy Walkthrough' ? `${done ? 'Replay' : sections[index] ? 'Resume' : 'Start'} Canopy Walkthrough` : `Tour ${index + 1}: ${tour.title}`}{!done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
+              {done ? <CheckCircle aria-label="Completed; select to replay" /> : <BookOpen aria-hidden="true" />}<span className="min-w-0 break-words">{tour.actionLabel ? `${done ? 'Replay' : sections[index] ? 'Resume' : 'Start'} ${tour.actionLabel}` : `Tour ${index + 1}: ${tour.title}`}{!done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
             </Button></li>;
           })}
         </ol>
