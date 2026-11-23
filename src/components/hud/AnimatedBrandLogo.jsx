@@ -13,10 +13,10 @@ function reducedMotion() {
   return window.matchMedia(motionQuery).matches;
 }
 
-export default function AnimatedBrandLogo({ className, fallback }) {
+export default function AnimatedBrandLogo({ className, fallback, src = videoUrl }) {
   const reduce = useSyncExternalStore(subscribe, reducedMotion, () => true);
   const [failed, setFailed] = useState(false);
   if (reduce || failed) return <img className={className} src={fallback} alt="SaintAgent logo" />;
 
-  return <video className={className} src={videoUrl} poster={fallback} role="img" aria-label="SaintAgent logo" autoPlay muted loop playsInline onError={() => setFailed(true)} />;
+  return <video className={className} src={src} poster={fallback} role="img" aria-label="SaintAgent logo" autoPlay muted loop playsInline onError={() => setFailed(true)} />;
 }

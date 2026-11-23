@@ -14,7 +14,7 @@ export default function DockHeader({ prefs, deck, commit, close, openModal, comp
   return <header className="dock-header">
     <div className="dock-header-group dock-header-primary">
       <button type="button" className="dock-icon-button" aria-label="Collapse Dock Deck" title="Collapse Dock Deck" onClick={close}><ChevronRight size={16} /></button>
-      <AnimatedBrandLogo className="dock-emblem" fallback={logo} />
+      <span className="dock-emblem"><AnimatedBrandLogo fallback={logo} /></span>
       <button type="button" className="dock-icon-button" aria-label="Add Widget" title="Add Widget" onClick={() => openModal('library')}><Plus size={16} /></button>
       <h2 className="dock-current-deck" title={deck.name}>{(!deck.icon || deck.icon === '▦') ? <FolderClosed size={15} className="dock-folder-icon" aria-hidden="true" /> : <span className="dock-folder-mark" aria-hidden="true">{deck.icon}</span>}<span className="truncate">{deck.name}</span></h2>
     </div>

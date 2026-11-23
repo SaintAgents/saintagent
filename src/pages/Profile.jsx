@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
+import ProfileHeroLogo from '@/components/profile/ProfileHeroLogo';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SkillsPicker from '@/components/SkillsPicker';
 import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor';
@@ -53,7 +54,6 @@ import {
   Compass,
   BadgeCheck,
   MessageSquare,
-  Shield,
   Award,
   Medal,
   ChevronDown,
@@ -489,15 +489,7 @@ export default function Profile() {
               <RankBadge code={profile?.rp_rank_code || profile?.rank_code || 'seeker'} size={typeof window !== 'undefined' && window.innerWidth < 640 ? 72 : 144} className="drop-shadow-lg" />
             </div>
             
-            {/* SA# Badge - Top Right */}
-            {profile?.sa_number && (
-              <div className="absolute top-3 right-3 z-10">
-                <div className="bg-gradient-to-br from-amber-400 to-amber-600 text-white px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5 font-bold text-sm">
-                  <Shield className="w-4 h-4" />
-                  SA#{profile.sa_number}
-                </div>
-              </div>
-            )}
+            <ProfileHeroLogo saNumber={profile?.sa_number} />
             
             {/* Recent & Current Badges - Large Display at Bottom of Hero */}
             <div className="absolute bottom-0 left-0 right-0 px-2 pb-2 md:px-4 md:pb-4 z-10">
