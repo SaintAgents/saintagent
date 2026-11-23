@@ -651,6 +651,7 @@ export default function Profile() {
                   <CreditCard className="w-4 h-4" />
                   <span className="hidden sm:inline">Card</span>
                 </Button>
+                <Button asChild size="sm" variant="outline"><a href="/LinkTreeEditor">Edit LinkTree</a></Button>
                                           <Button
                   variant="outline"
                   className="rounded-xl gap-2"

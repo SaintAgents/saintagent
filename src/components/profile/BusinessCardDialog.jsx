@@ -7,6 +7,8 @@ import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Download, X, Mail, ShieldCheck, Globe, MapPin, Link2, Copy, Phone } from "lucide-react";
 import ProfileQRCode from "./ProfileQRCode";
+import SharePublicProfile from '@/components/publicprofile/SharePublicProfile';
+import { contactPath, shareUrl } from '@/components/publicprofile/publicLinks';
 
 export default function BusinessCardDialog({ open, onOpenChange, profile }) {
   const { toast } = useToast();
@@ -16,8 +18,10 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
   const name = profile?.display_name || "Unknown";
   const handle = profile?.handle ? `@${profile.handle}` : "";
   const saNumber = profile?.sa_number ? `SA#${profile.sa_number}` : "";
-  const email = profile?.user_id || "";
-  const phoneNumber = profile?.phone_number || "";
+  const id = profile?.sa_number || profile?.id;
+  const { data: publicContact } = useQuery({ queryKey: ['public-contact', id], enabled: !!id && open, retry: false, queryFn: async () => (await base44.functions.invoke('getContactCard', { id })).data });
+  const email = publicContact?.email || '';
+  const phoneNumber = publicContact?.phone || '';
   const region = profile?.region || "";
   const trustScore = profile?.trust_score || 0;
   const avatarUrl = profile?.avatar_url;
@@ -171,6 +175,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
             </div>
           </div>
 
+          {publicContact?.contact_id && <div className="w-full space-y-2 rounded-lg border bg-card p-3 text-card-foreground"><a href={contactPath(publicContact.contact_id)} target="_blank" rel="noreferrer" className="block text-center text-sm underline">Open public contact card</a><SharePublicProfile url={shareUrl(contactPath(publicContact.contact_id))} label="Digital Contact Card" /></div>}
           {/* Join Link & Affiliate Code */}
           <div className="w-full max-w-[420px] space-y-2 pb-2">
             <div

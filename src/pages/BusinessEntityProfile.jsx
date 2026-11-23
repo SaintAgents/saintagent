@@ -155,6 +155,7 @@ export default function BusinessEntityProfile() {
             <Button size="sm" variant="outline" className="bg-black/30 border-white/30 text-white hover:bg-black/50 rounded-xl gap-1" onClick={() => setEditOpen(true)}>
               <Edit className="w-3.5 h-3.5" /> Edit
             </Button>
+            {entity.created_by_id === currentUser?.id && <Button asChild size="sm" variant="outline"><a href={`/LinkTreeEditor?p=${encodeURIComponent(entity.id)}`}>Edit LinkTree</a></Button>}
             <Button size="sm" variant="outline" className="bg-black/30 border-white/30 text-white hover:bg-black/50 rounded-xl gap-1" onClick={() => setAddMemberOpen(true)}>
               <UserPlus className="w-3.5 h-3.5" /> Add Member
             </Button>

@@ -32,6 +32,8 @@ import Learn from './pages/Learn';
 import ReviewerWorkflow from './pages/ReviewerWorkflow';
 import ReviewManagerDashboard from './pages/ReviewManagerDashboard';
 import VCardLanding from './pages/VCardLanding';
+import PublicLinkTree from '@/pages/PublicLinkTree';
+import LinkTreeEditor from '@/pages/LinkTreeEditor';
 import CelestialInsights from './pages/CelestialInsights';
 import BusinessPlanBuilder from './pages/BusinessPlanBuilder';
 import Login from './pages/Login';
@@ -67,7 +69,7 @@ const PUBLIC_PATHS = new Set([
 ]);
 
 const isPublicPath = (pathname) => {
-  return PUBLIC_PATHS.has(pathname.toLowerCase());
+  return PUBLIC_PATHS.has(pathname.toLowerCase()) || /^\/(?:linktree(?:\/[^/]+)?|(?:v|vcard)\/[^/]+)\/?$/i.test(pathname);
 };
 
 // Loading spinner component
@@ -180,6 +182,10 @@ const AppRoutes = () => (
     <Route path="/CelestialInsights" element={<LayoutWrapper currentPageName="CelestialInsights"><CelestialInsights /></LayoutWrapper>} />
     <Route path="/BusinessPlanBuilder" element={<LayoutWrapper currentPageName="BusinessPlanBuilder"><BusinessPlanBuilder /></LayoutWrapper>} />
     <Route path="/vcard/:saNumber" element={<VCardLanding />} />
+    <Route path="/v/:saNumber" element={<VCardLanding />} />
+    <Route path="/LinkTree" element={<PublicLinkTree />} />
+    <Route path="/LinkTree/:userId" element={<PublicLinkTree />} />
+    <Route path="/LinkTreeEditor" element={<LayoutWrapper currentPageName="LinkTreeEditor"><LinkTreeEditor /></LayoutWrapper>} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />

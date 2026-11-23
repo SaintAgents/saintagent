@@ -1,144 +1,47 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
-import { buildVCard } from "@/components/profile/ProfileQRCode";
-import { Loader2, Mail, Globe, Download, ShieldCheck, MapPin, Sparkles, User } from "lucide-react";
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { Download, Globe, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { buildVCard } from '@/components/profile/ProfileQRCode';
+import PublicProfileState from '@/components/publicprofile/PublicProfileState';
+import SharePublicProfile from '@/components/publicprofile/SharePublicProfile';
+import { Button } from '@/components/ui/button';
+import { contactPath, downloadBlob, shareUrl, treePath } from '@/components/publicprofile/publicLinks';
 
 export default function VCardLanding() {
   const { saNumber } = useParams();
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    if (!saNumber) return;
-    base44.functions.invoke("getContactCard", { sa_number: saNumber })
-      .then((res) => setProfile(res.data))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, [saNumber]);
-
-  const handleSaveContact = () => {
-    if (!profile) return;
-    const vcard = buildVCard(profile);
-    const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${(profile.display_name || "contact").replace(/\s+/g, "_")}.vcf`;
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => {
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }, 100);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-black">
-        <Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
+  const legacy = useLocation().pathname.toLowerCase().startsWith('/vcard/');
+  const query = useQuery({ queryKey: ['public-contact', saNumber], enabled: !legacy, retry: false,
+    queryFn: async () => (await base44.functions.invoke('getContactCard', { id: saNumber })).data,
+  });
+  if (legacy) return <Navigate replace to={contactPath(saNumber)} />;
+  const profile = query.data;
+  if (!profile) return <PublicProfileState label="Contact card" loading={query.isPending} missing={[400, 404].includes(query.error?.status || query.error?.response?.status)} />;
+  if (profile.contact_id && saNumber !== profile.contact_id) return <Navigate replace to={contactPath(profile.contact_id)} />;
+  const name = profile.display_name || 'SaintAgent member';
+  const contactUrl = shareUrl(contactPath(profile.contact_id));
+  const contact = [
+    { Icon: Mail, text: profile.email, href: profile.email && `mailto:${encodeURIComponent(profile.email).replace('%40', '@')}` },
+    { Icon: Phone, text: profile.phone, href: profile.phone && `tel:${profile.phone.replace(/[^+\d]/g, '')}` },
+    { Icon: MapPin, text: profile.location },
+    { Icon: Globe, text: profile.website, href: profile.website, external: true },
+  ];
+  const save = () => downloadBlob(new Blob([buildVCard(profile)], { type: 'text/vcard;charset=utf-8' }), `${name.replace(/[^\p{L}\p{N}]+/gu, '_')}.vcf`);
+  return <main className="min-h-screen bg-background px-4 py-10 text-foreground"><article className="mx-auto max-w-sm space-y-5 rounded-2xl border bg-card p-6 text-card-foreground shadow-sm">
+    <header className="space-y-2 text-center">
+      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">SaintAgent · Digital Contact Card</p>
+      {profile.avatar_url ? <img src={profile.avatar_url} alt="" className="mx-auto size-24 rounded-full object-cover" /> : <div aria-hidden="true" className="mx-auto grid size-24 place-items-center rounded-full bg-muted text-3xl font-bold">{name[0]}</div>}
+      <h1 className="break-words text-2xl font-bold">{name}</h1>
+      {(profile.title || profile.organization) && <p>{[profile.title, profile.organization].filter(Boolean).join(' · ')}</p>}
+      <div className="flex flex-wrap justify-center gap-3 text-sm text-muted-foreground">
+        {profile.sa_number && <span>SA#{profile.sa_number}</span>}
+        {profile.trust_score != null && <span className="inline-flex items-center gap-1"><ShieldCheck size={15} /> {profile.trust_score}/100 Trust</span>}
       </div>
-    );
-  }
-
-  if (error || !profile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-black px-6">
-        <div className="text-center space-y-4">
-          <User className="w-12 h-12 text-violet-500/40 mx-auto" />
-          <h1 className="text-xl font-semibold text-violet-50">Contact Not Found</h1>
-          <p className="text-sm text-slate-400">This contact link may be invalid or expired.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const name = profile.display_name || "Unknown";
-  const handle = profile.handle ? `@${profile.handle}` : "";
-  const saNum = profile.sa_number ? `SA#${profile.sa_number}` : "";
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black flex flex-col items-center px-4 py-8">
-      <div className="w-full max-w-sm space-y-5">
-        <div className="flex items-center justify-center gap-1.5 pt-2">
-          <Sparkles className="w-3.5 h-3.5 text-violet-500/60" />
-          <span className="text-[11px] uppercase tracking-widest text-violet-500/60 font-medium">Saint Agents World</span>
-          <Sparkles className="w-3.5 h-3.5 text-violet-500/60" />
-        </div>
-
-        <div className="relative overflow-hidden rounded-2xl border border-violet-500/20 bg-gradient-to-br from-slate-900 to-slate-950 shadow-2xl">
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-violet-500/40 rounded-tl-2xl" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-violet-500/40 rounded-br-2xl" />
-
-          <div className="p-6 space-y-5">
-            <div className="flex justify-center">
-              {profile.avatar_url ? (
-                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-violet-500/40 shadow-lg">
-                  <img src={profile.avatar_url} alt={name} className="w-full h-full object-cover" />
-                </div>
-              ) : (
-                <div className="w-24 h-24 rounded-full border-2 border-violet-500/30 bg-violet-900/50 flex items-center justify-center text-violet-300 text-3xl font-bold">
-                  {name[0]?.toUpperCase()}
-                </div>
-              )}
-            </div>
-
-            <div className="text-center space-y-1">
-              <h1 className="text-xl font-bold text-violet-50">{name}</h1>
-              {handle && <p className="text-sm text-violet-400">{handle}</p>}
-            </div>
-
-            <div className="flex items-center justify-center gap-4">
-              {profile.trust_score > 0 && (
-                <div className="flex items-center gap-1 text-emerald-500/70">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span className="text-xs font-medium">{profile.trust_score}/100 Trust</span>
-                </div>
-              )}
-              {saNum && (
-                <div className="text-xs font-mono text-violet-500/50 tracking-wide">{saNum}</div>
-              )}
-            </div>
-
-            <div className="space-y-2 pt-2 border-t border-violet-500/10">
-              {profile.user_id && (
-                <a href={`mailto:${profile.user_id}`} className="flex items-center gap-2.5 p-2.5 rounded-lg hover:bg-violet-500/5 transition-colors group">
-                  <Mail className="w-4 h-4 text-violet-600/60 shrink-0" />
-                  <span className="text-sm text-slate-300 group-hover:text-violet-50 transition-colors truncate">{profile.user_id}</span>
-                </a>
-              )}
-              {profile.region && (
-                <div className="flex items-center gap-2.5 p-2.5">
-                  <MapPin className="w-4 h-4 text-violet-600/60 shrink-0" />
-                  <span className="text-sm text-slate-400">{profile.region}</span>
-                </div>
-              )}
-              {profile.social_links?.website && (
-                <a href={profile.social_links.website.startsWith("http") ? profile.social_links.website : `https://${profile.social_links.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 p-2.5 rounded-lg hover:bg-violet-500/5 transition-colors group">
-                  <Globe className="w-4 h-4 text-violet-600/60 shrink-0" />
-                  <span className="text-sm text-slate-300 group-hover:text-violet-50 transition-colors truncate">{profile.social_links.website.replace(/^https?:\/\//, "")}</span>
-                </a>
-              )}
-            </div>
-
-            <button
-              onClick={handleSaveContact}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-colors shadow-lg shadow-violet-600/20"
-            >
-              <Download className="w-4 h-4" />
-              Save to Contacts
-            </button>
-          </div>
-        </div>
-
-        {profile.bio && (
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
-            <p className="text-xs text-slate-400 leading-relaxed">{profile.bio}</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+    </header>
+    <ul className="space-y-2">{contact.filter(item => item.text).map(({ Icon, text, href, external }) => <li key={text} className="flex items-center gap-2 break-all text-sm"><Icon size={16} className="shrink-0" />{href ? <a className="underline" href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>{text}</a> : text}</li>)}</ul>
+    {profile.bio && <p className="whitespace-pre-line break-words text-sm text-muted-foreground">{profile.bio}</p>}
+    <Button className="w-full" onClick={save}><Download />Save to Contacts</Button>
+    {profile.tree_id && <Link to={treePath(profile.tree_id)} className="block text-center underline">View LinkTree</Link>}
+    <SharePublicProfile key={contactUrl} url={contactUrl} label="Digital Contact Card" initialOpen />
+  </article></main>;
 }

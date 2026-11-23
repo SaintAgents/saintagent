@@ -1,0 +1,151 @@
+{
+  "name": "LinkTree",
+  "type": "object",
+  "properties": {
+    "business_id": {
+      "type": "string",
+      "default": ""
+    },
+    "published": {
+      "type": "boolean",
+      "default": false
+    },
+    "headline": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "tagline": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "bio": {
+      "type": "string",
+      "maxLength": 1200
+    },
+    "avatar": {
+      "type": "string",
+      "maxLength": 1500
+    },
+    "banner": {
+      "type": "string",
+      "maxLength": 1500
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "amber",
+        "blue",
+        "green",
+        "purple",
+        "dark"
+      ],
+      "default": "amber"
+    },
+    "links": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 1500
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "image": {
+            "type": "string",
+            "maxLength": 1500
+          }
+        },
+        "required": [
+          "title",
+          "url"
+        ]
+      }
+    },
+    "showcase_title": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "showcase": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "string",
+        "maxLength": 1500
+      }
+    },
+    "contact_title": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "contact_org": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "share_email": {
+      "type": "boolean",
+      "default": false
+    },
+    "share_phone": {
+      "type": "boolean",
+      "default": false
+    },
+    "contact_phone": {
+      "type": "string",
+      "maxLength": 40
+    }
+  },
+  "required": [
+    "business_id",
+    "published"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
