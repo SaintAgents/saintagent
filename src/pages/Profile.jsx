@@ -116,6 +116,7 @@ import AvailabilitySettings from '@/components/booking/AvailabilitySettings';
 import MilestoneProgressTracker from '@/components/profile/MilestoneProgressTracker';
 import ProfileActionButtons from '@/components/profile/ProfileActionButtons';
 import BusinessCardDialog from '@/components/profile/BusinessCardDialog';
+import LinkTreeEditorPanel from '@/components/publicprofile/LinkTreeEditorPanel';
 import {
   Tooltip,
   TooltipContent,
@@ -137,6 +138,7 @@ export default function Profile() {
   const [newIntention, setNewIntention] = useState('');
   const [badgeGlossaryOpen, setBadgeGlossaryOpen] = useState(false);
   const [businessCardOpen, setBusinessCardOpen] = useState(false);
+  const [linkTreeVisited, setLinkTreeVisited] = useState(false);
   const [mbtiRetakeOpen, setMbtiRetakeOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -672,7 +674,7 @@ export default function Profile() {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="basic" className="space-y-6">
+        <Tabs defaultValue="basic" className="space-y-6" onValueChange={value => { if (value === 'linktree') setLinkTreeVisited(true); }}>
           <div className="flex flex-col gap-1 w-full max-w-4xl overflow-x-hidden">
             {/* Row 1 */}
             <TabsList className="flex overflow-x-auto scrollbar-hide justify-start w-full gap-1 h-auto p-1 flex-nowrap md:flex-wrap">
@@ -704,6 +706,10 @@ export default function Profile() {
                 <span className="hidden sm:inline">Stats</span>
                 <Target className="sm:hidden w-4 h-4" />
               </TabsTrigger>
+              {isOwnProfile && <>
+                <TabsTrigger value="linktree" className="text-xs sm:text-sm px-2 sm:px-3">LinkTree</TabsTrigger>
+                <TabsTrigger value="digital-card" className="text-xs sm:text-sm px-2 sm:px-3">Digital Card</TabsTrigger>
+              </>}
             </TabsList>
             {/* Row 2 */}
             <TabsList className="flex overflow-x-auto scrollbar-hide justify-start w-full gap-1 h-auto p-1 flex-nowrap md:flex-wrap">
@@ -1398,6 +1404,15 @@ export default function Profile() {
                   </div>
                   </div>
                   </TabsContent>
+
+          {isOwnProfile && <>
+            <TabsContent value="linktree" forceMount className="data-[state=inactive]:hidden">
+              {linkTreeVisited && <LinkTreeEditorPanel embedded />}
+            </TabsContent>
+            <TabsContent value="digital-card">
+              <BusinessCardDialog inline profile={profile} />
+            </TabsContent>
+          </>}
 
                   {/* Showcase Tab */}
                   <TabsContent value="showcase" className="space-y-6">

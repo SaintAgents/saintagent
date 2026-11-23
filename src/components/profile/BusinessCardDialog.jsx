@@ -10,7 +10,8 @@ import ProfileQRCode from "./ProfileQRCode";
 import SharePublicProfile from '@/components/publicprofile/SharePublicProfile';
 import { contactPath, shareUrl } from '@/components/publicprofile/publicLinks';
 
-export default function BusinessCardDialog({ open, onOpenChange, profile }) {
+export default function BusinessCardDialog({ open, onOpenChange, profile, inline = false }) {
+  const active = open || inline;
   const { toast } = useToast();
   const [downloading, setDownloading] = useState(false);
   const cardRef = useRef(null);
@@ -19,7 +20,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
   const handle = profile?.handle ? `@${profile.handle}` : "";
   const saNumber = profile?.sa_number ? `SA#${profile.sa_number}` : "";
   const id = profile?.sa_number || profile?.id;
-  const { data: publicContact } = useQuery({ queryKey: ['public-contact', id], enabled: !!id && open, retry: false, queryFn: async () => (await base44.functions.invoke('getContactCard', { id })).data });
+  const { data: publicContact } = useQuery({ queryKey: ['public-contact', id], enabled: !!id && active, retry: false, queryFn: async () => (await base44.functions.invoke('getContactCard', { id })).data });
   const email = publicContact?.email || '';
   const phoneNumber = publicContact?.phone || '';
   const region = profile?.region || "";
@@ -31,7 +32,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
   const { data: affiliateCodes = [] } = useQuery({
     queryKey: ['affiliateCode', profile?.user_id],
     queryFn: () => base44.entities.AffiliateCode.filter({ user_id: profile.user_id }),
-    enabled: !!profile?.user_id && open,
+    enabled: !!profile?.user_id && active,
     staleTime: 300000,
   });
   const affiliateCode = affiliateCodes[0]?.code || "";
@@ -63,30 +64,28 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
     }
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg p-0 bg-transparent border-none shadow-none">
-        <DialogTitle className="sr-only">Business Card — {name}</DialogTitle>
-
+  const card = <>
         <button
+          type="button"
+          aria-label="Download digital card"
           onClick={handleDownload}
           disabled={downloading}
-          className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-white border border-violet-400 text-violet-600 flex items-center justify-center hover:bg-violet-50 z-10 disabled:opacity-50"
+          className={`${inline ? 'absolute top-3 right-3' : 'absolute -top-3 -left-3'} w-8 h-8 rounded-full bg-white border border-violet-400 text-violet-600 flex items-center justify-center hover:bg-violet-50 z-10 disabled:opacity-50`}
           title="Download"
         >
           {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
         </button>
-        <DialogClose asChild>
+        {!inline && <DialogClose asChild>
           <button className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white border border-violet-400 text-violet-600 flex items-center justify-center hover:bg-violet-50 z-20">
             <X className="w-4 h-4" />
           </button>
-        </DialogClose>
+        </DialogClose>}
 
         <div className="flex flex-col items-center gap-4 pt-2">
           <div
             ref={cardRef}
             className="relative overflow-hidden shadow-2xl"
-            style={{ width: "420px", height: "240px" }}
+            style={{ width: inline ? 'min(100%, 420px)' : '420px', height: '240px' }}
           >
             {/* White background */}
             <div className="absolute inset-0 bg-white" />
@@ -196,7 +195,18 @@ export default function BusinessCardDialog({ open, onOpenChange, profile }) {
             )}
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
-  );
+  </>;
+
+  if (inline) return <section className="relative max-w-lg rounded-xl border bg-card p-4 text-card-foreground">
+    <h2 className="pr-10 text-lg font-semibold">Digital Contact Card</h2>
+    <p className="mb-3 text-sm text-muted-foreground">Edit your public contact details in the LinkTree tab.</p>
+    {card}
+  </section>;
+
+  return <Dialog open={open} onOpenChange={onOpenChange}>
+    <DialogContent className="max-w-lg p-0 bg-transparent border-none shadow-none">
+      <DialogTitle className="sr-only">Business Card — {name}</DialogTitle>
+      {card}
+    </DialogContent>
+  </Dialog>;
 }
