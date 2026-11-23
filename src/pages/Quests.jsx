@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -155,6 +156,10 @@ export default function Quests() {
       <div className="max-w-7xl mx-auto px-4 pb-12">
         {activeTab === 'overview' && (
           <>
+            <section data-readable-surface className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card p-4 text-card-foreground">
+              <div><h2 className="font-heading font-semibold">Site Skills Quest</h2><p className="text-sm text-muted-foreground">Finish five lessons to earn a one-time reward of 0.77 GGG.</p></div>
+              <Button asChild variant="outline"><Link to="/CommandDeck#daily-tours">Open lessons</Link></Button>
+            </section>
             {/* Advanced Mode Quest - Guided Pathway */}
             <div className="mb-6">
               <AdvancedModeQuest userId={currentUser?.email} profile={profile} />

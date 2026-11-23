@@ -4,14 +4,14 @@ import { categories } from '@/components/live/activity';
 
 const tickerSpeeds = ['slow', 'normal', 'fast'];
 
-export default function LiveActivityPreferences({ prefs, preferences, onSaved }) {
+export default function LiveActivityPreferences({ prefs, preferences, onSaved, preview = false }) {
   const [draft, set] = useState(prefs);
   const speedIndex = tickerSpeeds.includes(draft.speed) ? tickerSpeeds.indexOf(draft.speed) : 1;
   const update = (key, value) => set(current => ({ ...current, [key]: value }));
   const check = (label, key, invert = false, disabled = false) => <label className="flex items-start gap-2"><input type="checkbox" className="mt-1" checked={invert ? !draft[key] : !!draft[key]} onChange={e => update(key, invert ? !e.target.checked : e.target.checked)} disabled={disabled} />{label}</label>;
   return <form className="space-y-4 text-sm" onSubmit={e => {
     e.preventDefault();
-    preferences.mutate({ ...draft, revision: Date.now() }, { onSuccess: onSaved });
+    if (!preview) preferences.mutate({ ...draft, revision: Date.now() }, { onSuccess: onSaved });
   }}>
     <fieldset disabled={preferences.isPending} className="space-y-2">
       <legend className="mb-2 font-semibold">Toasts</legend>
@@ -36,6 +36,6 @@ export default function LiveActivityPreferences({ prefs, preferences, onSaved })
       <fieldset className="grid gap-2 sm:grid-cols-2"><legend className="mb-2">Activity categories (none selected means all)</legend>{Object.entries(categories).filter(([id]) => id !== 'sign_ins').map(([id, [label]]) => <label key={id} className="flex items-center gap-2"><input type="checkbox" checked={draft.categories.includes(id)} onChange={e => update('categories', e.target.checked ? [...draft.categories, id] : draft.categories.filter(category => category !== id))} />{label}</label>)}</fieldset>
     </fieldset>
     {preferences.isError && <p role="alert" className="text-destructive">Couldn’t save activity preferences. Try again.</p>}
-    <Button type="submit" disabled={preferences.isPending}>{preferences.isPending ? 'Saving…' : 'Save activity preferences'}</Button>
+    <Button type="submit" disabled={preview || preferences.isPending}>{preferences.isPending ? 'Saving…' : 'Save activity preferences'}</Button>
   </form>;
 }

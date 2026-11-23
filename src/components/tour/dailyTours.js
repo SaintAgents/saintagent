@@ -77,4 +77,5 @@ export const DAILY_TOURS = [
     ['Watch, save, and pin records', 'On a supported record, choose Watch for updates, Save To to keep it as a reference, or Pin to Dock Deck for a shortcut. Open Watchlist for updates, Saved Items for saved references, or Dock Deck to reopen a pinned item.', '/Watchlist'],
     ['Share your LinkTree and Digital Contact Card', 'Open the LinkTree & Contact Card editor. Add links to your LinkTree and choose which contact details to share. Check Publish LinkTree when you’re ready and save your changes. Share LinkTree from the editor, or open the Digital Contact Card on your profile to copy its link or show its QR code.', '/LinkTreeEditor'],
   ] },
+  siteSkillsTour,
 ];

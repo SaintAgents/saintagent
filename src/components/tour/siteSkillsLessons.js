@@ -9,6 +9,6 @@ export const siteSkillsLessons = [
 ];
 
 export const siteSkillsTour = {
-  title: 'Site Skills Quest', actionLabel: 'Site Skills Quest · 5 lessons',
+  title: 'Site Skills Quest', actionLabel: 'Site Skills Quest · 5 lessons · 0.77 GGG', reward: 0.77,
   sections: siteSkillsLessons.map(({ title, instructions, path }) => [title, instructions, path]),
 };

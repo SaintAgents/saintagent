@@ -79,4 +79,5 @@ export const TOUR_PRACTICE = [
     ['Watch, save, and pin', scene('Watch a project', 'Follow future updates in Watchlist', {Example: 'Follow the Community Garden Pilot.'}), scene('Save a reference', 'Keep a record for later', {Example: 'Save the pilot to Saved Items.'}), scene('Pin a project', 'Put a shortcut in Dock Deck', {Example: 'Reopen the pilot from a pinned shortcut.'})],
     ['LinkTree and contact card', scene('Add a sample link', 'Choose what visitors can open from your LinkTree', {Example: 'Add a link to a community project.'}), scene('Share a sample contact card', 'Choose which details to share before copying a link or QR code', {Example: 'Share a name and organization; leave the phone number private.'})],
   ],
+  siteSkillsLessons.map(({ practice }) => practice),
 ];

@@ -30,6 +30,7 @@ const special = {
   '7-9': [{ label: 'LinkTree & Contact Card editor', path: '/LinkTreeEditor', anchor: 'main h1' }, { label: 'Digital Contact Card settings', path: '/LinkTreeEditor', anchor: '[data-tour-contact-card]' }],
 };
 const pageAnchors = {
+  '/Settings': '[aria-label="Ticker speed"]', '/DocumentVault': '[aria-label="Vault view"]',
   '/CommunityFeed': '[placeholder^="Search posts"]', '/Forum': '[placeholder^="Search discussions"]',
   '/Advice': '[placeholder^="Search questions"]', '/Events': '[placeholder^="Search events"]',
   '/Profiles': '[placeholder^="Search by name"]', '/Messages': '[placeholder^="Search messages"]',
@@ -39,7 +40,7 @@ const pageAnchors = {
   '/Missions': 'main [role="tablist"]',
 };
 export function dailyPreviewTargets(day, step, title, path) {
-  return special[`${day}-${step}`] ?? [{ label: title, path, anchor: pageAnchors[path] }];
+  return special[`${day}-${step}`] ?? [{ label: title, path, anchor: pageAnchors[path], ...(path === '/Settings' && { setup: { tab: 'live-activity' } }) }];
 }
 export function overviewPreviewTarget(label, anchor) {
   return deck(label, anchor, anchor.startsWith('[data-tour-nav-group=') ? { group: anchor } : undefined);

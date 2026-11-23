@@ -26,7 +26,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
       <DialogContent data-dock-full-tour data-readable-surface data-hacker-draggable="true" className="inset-0 z-[10010] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:rounded-none" hideCloseButton={busy}
         onCloseAutoFocus={(event) => { event.preventDefault(); returnFocus(); }}>
         <header className="shrink-0 space-y-2 border-b px-4 py-3 pr-12 sm:px-8">
-          <DialogTitle>Tour {day + 1}: {tour.title}</DialogTitle>
+          <DialogTitle>{tour.reward ? tour.title : `Tour ${day + 1}: ${tour.title}`}</DialogTitle>
           <DialogDescription>Section {step + 1} of {tour.sections.length}</DialogDescription>
           <progress className="block h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />
         </header>

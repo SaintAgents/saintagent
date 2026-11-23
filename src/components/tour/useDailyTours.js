@@ -16,11 +16,15 @@ export default function useDailyTours(userId, enabled = true) {
   });
   const record = query.data;
   const stored = record?.sections_completed ?? EMPTY_PROGRESS;
-  const sections = DAILY_TOURS.map((tour, index) => Math.min(stored[index] ?? 0, tour.sections.length));
+  const sections = DAILY_TOURS.map((tour, index) => Math.min((tour.reward ? record?.site_skills_completed : stored[index]) ?? 0, tour.sections.length));
 
   const save = useMutation({
     mutationFn: async ({ day, count } = {}) => {
       if (!record) return base44.entities.DailyTourProgress.create({ sections_completed: EMPTY_PROGRESS });
+      if (DAILY_TOURS[day]?.reward) {
+        const { data } = await base44.functions.invoke('completeSiteSkills', { count });
+        return data.record;
+      }
       const next = Array.from({ length: Math.max(stored.length, sections.length) }, (_, index) => {
         const saved = stored[index] ?? 0;
         return index === day ? Math.max(count, saved) : saved;
@@ -29,6 +33,12 @@ export default function useDailyTours(userId, enabled = true) {
     },
     onSuccess: (saved) => {
       queryClient.setQueryData(queryKey, saved);
+      if (saved.site_skills_reward === 'claimed' && record?.site_skills_reward !== 'claimed') {
+        for (const key of ['wallet', 'walletTx', 'myProfile', 'userProfileSelf', 'impactProfile', 'impactGGG']) queryClient.invalidateQueries({ queryKey: [key] });
+      }
+    },
+    onError: (_, variables) => {
+      if (DAILY_TOURS[variables?.day]?.reward) queryClient.invalidateQueries({ queryKey });
     },
   });
   return { query, record, sections, save };

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import DailyTourDialog from '@/components/tour/DailyTourDialog';
 import useDailyTours from '@/components/tour/useDailyTours';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 
 export default function DailyToursCard({ userId, embedded = false }) {
   const [day, setDay] = useState(null);
@@ -24,22 +25,29 @@ export default function DailyToursCard({ userId, embedded = false }) {
     });
     return () => cancelAnimationFrame(frame);
   }, [embedded, hash, key, userId]);
-  const { query, record, sections, save } = useDailyTours(userId, !embedded);
+  const readOnly = embedded || isTourPreview();
+  const { query, record, sections, save } = useDailyTours(userId, !readOnly);
   const completed = sections.filter((count, index) => count === DAILY_TOURS[index].sections.length).length;
   if (!userId) return null;
 
   const open = (index, event) => {
     trigger.current = event.currentTarget;
-    if (embedded) { setStep(0); setDay(index); return; }
+    if (readOnly) { setStep(0); setDay(index); return; }
     save.reset();
-    const show = () => { setStep(sections[index] === DAILY_TOURS[index].sections.length ? 0 : sections[index]); setDay(index); };
+    const show = () => {
+      const tour = DAILY_TOURS[index];
+      const finished = sections[index] === tour.sections.length;
+      setStep(finished ? tour.reward && !record?.site_skills_reward ? tour.sections.length - 1 : 0 : sections[index]);
+      setDay(index);
+    };
     if (record) show();
     else save.mutate(undefined, { onSuccess: show });
   };
   const advance = () => {
     const count = step + 1;
     const proceed = () => count === DAILY_TOURS[day].sections.length ? setDay(null) : setStep(count);
-    if (embedded || sections[day] >= count) proceed();
+    const needsReward = DAILY_TOURS[day].reward && count === DAILY_TOURS[day].sections.length && !record?.site_skills_reward;
+    if (readOnly || (sections[day] >= count && !needsReward)) proceed();
     else save.mutate({ day, count }, { onSuccess: proceed });
   };
 
@@ -50,7 +58,7 @@ export default function DailyToursCard({ userId, embedded = false }) {
         {!embedded && record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}
       </div>
       <Button ref={overviewTrigger} type="button" variant="outline" className="h-auto min-h-10 whitespace-normal" onClick={() => setOverviewOpen(true)}><LayoutDashboard aria-hidden="true" /> Command Deck Overview · Full screen</Button>
-      {!embedded && query.isPending ? <p role="status" className="text-sm">Loading tours…</p> : !embedded && query.isError ? <div className="flex items-center gap-3"><p role="alert" className="text-sm">Tours couldn’t be loaded.</p><Button type="button" size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></div> : (
+      {!readOnly && query.isPending ? <p role="status" className="text-sm">Loading tours…</p> : !readOnly && query.isError ? <div className="flex items-center gap-3"><p role="alert" className="text-sm">Tours couldn’t be loaded.</p><Button type="button" size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></div> : (
         <ol className="daily-tours-grid grid grid-cols-1 gap-2">
           {DAILY_TOURS.map((tour, index) => {
             const done = !embedded && sections[index] === tour.sections.length;
@@ -67,6 +75,7 @@ export default function DailyToursCard({ userId, embedded = false }) {
         const outline = { outline: '3px dashed currentColor', outlineOffset: '-3px' };
         target.animate?.([outline, outline], { duration: 5000 });
       }} />}
+      {!embedded && record?.site_skills_reward && <p role="status" className="text-sm">{record.site_skills_reward === 'claimed' ? 'Site Skills Quest: 0.77 GGG added to your wallet.' : 'Site Skills Quest: reward not yet confirmed.'}</p>}
       {save.isPending && !record && <p role="status" className="text-sm">Starting your tour…</p>}
       {day === null && save.isError && <p role="alert" className="text-sm text-destructive">Your tour couldn’t start. Please try again.</p>}
       {day !== null && <DailyTourDialog day={day} step={step} busy={save.isPending} error={save.isError} onClose={() => { save.reset(); setDay(null); }} onBack={() => { save.reset(); setStep(step - 1); }} onAdvance={advance} returnFocus={() => trigger.current?.focus()} />}
