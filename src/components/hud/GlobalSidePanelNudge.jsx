@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from "@/lib/utils";
-import { PanelRightOpen, Sparkles, PanelRight } from "lucide-react";
+import { PanelRightOpen } from "lucide-react";
 
 /**
  * A globally visible nudge handle that appears on the right edge of the viewport
@@ -69,7 +69,15 @@ export default function GlobalSidePanelNudge() {
         dockSide === 'right' ? "right-0" : "left-0"
       )}
       style={{ top: 'calc(50% + 100px)', transform: 'translateY(-50%)' }}
-      title="Open Side Panel"
+      role="button"
+      tabIndex={0}
+      aria-label="Open Side Panel"
+      onKeyDown={event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleClick();
+        }
+      }}
       data-side-panel-handle
     >
       {/* Main handle - compact 32px height */}
@@ -92,19 +100,7 @@ export default function GlobalSidePanelNudge() {
         )} />
       </div>
       
-      {/* Tooltip on hover */}
-      <div 
-        className={cn(
-          "absolute top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none",
-          "bg-slate-900 text-white text-xs py-1.5 px-3 rounded-lg whitespace-nowrap shadow-lg",
-          dockSide === 'right' ? "right-10" : "left-10"
-        )}
-      >
-        <div className="flex items-center gap-1.5">
-          <Sparkles className="w-3 h-3 text-amber-400" />
-          Open Panel
-        </div>
-      </div>
+
     </div>
   );
 }
