@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/AuthContext';
 import Sidebar from '@/components/hud/Sidebar';
 import TopBar from '@/components/hud/TopBar';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
+import CommandCanopy from '@/components/canopy/CommandCanopy';
 import ProfileDrawer from '@/components/ProfileDrawer';
 import SearchModal from '@/components/SearchModal';
 import FloatingChatWidget from '@/components/FloatingChatWidget';
@@ -621,6 +622,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
+      {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={() => setSearchOpen(true)} onCreate={() => setQuickCreateOpen(true)} />}
       <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
       <VideoBackgroundLayer currentPageName={currentPageName} theme={theme} />
@@ -1859,6 +1861,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
               (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
                 ? "pt-0"
                 : (topbarCollapsed ? "pt-8" : "pt-28"),
+              "canopy-page",
           currentPageName === 'CommandDeck' && cmdViewMode === 'compact' ? "cmd-compact" : "",
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
         )}>

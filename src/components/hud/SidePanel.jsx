@@ -980,14 +980,15 @@ export default function SidePanel({
     <>
       {/* Nudge handle when collapsed - only show if NOT on CommandDeck (GlobalSidePanelNudge handles it there) */}
       <div
+        data-canopy-dock={isOpen ? dockSide : undefined}
         className={cn(
           "fixed h-screen bg-white dark:bg-[#050505] border-slate-200 dark:border-[rgba(0,255,136,0.2)] shadow-xl z-[55] transition-all duration-300 flex flex-col",
           dockSide === 'left' ? "border-r" : "border-l",
           isOpen ? "" : "w-0 overflow-hidden"
         )}
         style={{ 
-          top: '64px',
-          height: `calc(100vh - 64px)`, 
+          top: 'calc(64px + var(--canopy-offset, 0px))',
+          height: 'calc(100vh - 64px - var(--canopy-offset, 0px))', 
           right: dockSide === 'right' ? 0 : 'auto', 
           left: dockSide === 'left' ? 0 : 'auto',
           width: isOpen ? `${panelWidth}px` : '0'

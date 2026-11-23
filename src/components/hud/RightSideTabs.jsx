@@ -411,7 +411,8 @@ export default function RightSideTabs() {
       setHelpHovered(true);
     };
     const handleOpenRightSideTab = (e) => {
-      if (e.detail?.tab === 'help') {
+      if (e.detail?.tab === 'help' || e.detail?.tab === 'concierge') {
+        if (e.detail.tab === 'concierge') setConciergeMode(true);
         setHelpOpen(true);
         setHelpHovered(true);
       }

@@ -10,6 +10,10 @@
         "user"
       ],
       "default": "user"
+    },
+    "canopy_preferences": {
+      "type": "object",
+      "description": "Personal Command Canopy layout and scratchpad"
     }
   }
 }
