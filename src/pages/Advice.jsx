@@ -206,7 +206,7 @@ export default function AdvicePage() {
       <div className="page-hero relative text-white overflow-hidden" style={{ minHeight: 340 }}>
         <img 
           src="https://media.base44.com/images/public/694f3e0401b05e6e8a042002/936b6c1f4_universal_upscale_0_92ae3995-95f3-40a4-a02c-bd88966c75a5_0.jpg" 
-          alt="Wisdom Exchange" 
+          alt="Community Guidance" 
           className="absolute inset-0 w-full h-full object-cover hero-image"
           data-no-filter="true"
         />

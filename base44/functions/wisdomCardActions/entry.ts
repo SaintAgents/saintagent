@@ -29,7 +29,7 @@ export default async function(req) {
       const check = await factCheck(app.integrations.Core,card);
       const status = ['Verified','Disputed'].includes(check.verdict) ? check.verdict : 'Needs Review';
       const result = await cards.updateMany({ id, updated_date:card.updated_date },{ $set:{ fact_check:check,fact_checked_at:check.checked_at,status } });
-      if (result.matched_count === 0) return fail('This card changed during the check. Please try again.',409);
+      if (result.updated === 0) return fail('This card changed during the check. Please try again.',409);
       return Response.json({ check });
     }
     // Members can update quiz-specific fields only, after a user-scoped read and access check.
@@ -39,7 +39,7 @@ export default async function(req) {
       const quiz = await makeQuiz(app.integrations.Core,card,count);
       const version = new Date().toISOString();
       const result = await quizCards.updateMany({ ...quizScope(card,user), title:card.title, insight:card.insight, quiz_ready:{ $ne:true } },{ $set:{ quiz,quiz_generated_at:version,quiz_ready:true } });
-      if (result.matched_count === 0) {
+      if (result.updated === 0) {
         const latest = await cards.get(id).catch(invisible);
         if (latest?.quiz_ready && latest.quiz?.length) return Response.json({ quiz:latest.quiz,version:latest.quiz_generated_at });
         return fail('The card changed while generating. Please try again.',409);
@@ -52,7 +52,7 @@ export default async function(req) {
     const score = Math.round(100 * card.quiz.filter((q,i) => q.correct_index === answers[i]).length / card.quiz.length);
     // Atomic increment and max: simultaneous attempts cannot overwrite each other.
     const result = await quizCards.updateMany({ ...quizScope(card,user),quiz_ready:true },{ $inc:{ quiz_attempts:1 },$max:{ quiz_best_score:score } });
-    if (result.matched_count === 0) return fail('The quiz changed before the score could be saved.',409);
+    if (result.updated === 0) return fail('The quiz changed before the score could be saved.',409);
     return Response.json({ score });
   } catch (error) {
     console.warn('Wisdom card action failed',error?.status || error?.name);

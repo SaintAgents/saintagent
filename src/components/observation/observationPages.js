@@ -1,6 +1,6 @@
 const groups = {
   Discover: [['News','News & Updates'],['Insights'],['Videos','SaintTube'],['Testimonials'],['Glossary'],['CelestialInsights'],['LearningHub'],['ResourceHub'],['Learn'],['UserGuide']],
-  Community: [['ActivityFeed'],['CommunityFeed'],['Circles'],['Events'],['Forum'],['Advice','Wisdom Exchange'],['Mentorship'],['Profiles'],['FindCollaborators'],['Teams','Teams & Guilds'],['LeaderChannel','Leader Channel','leader']],
+  Community: [['ActivityFeed'],['CommunityFeed'],['Circles'],['Events'],['Forum'],['Advice','Community Guidance'],['Mentorship'],['Profiles'],['FindCollaborators'],['Teams','Teams & Guilds'],['LeaderChannel','Leader Channel','leader']],
   Work: [['Projects'],['ProjectTrack'],['Missions'],['MissionGrid'],['MissionTimeline'],['MissionGantt'],['Planner'],['ImpactDashboard'],['Meetings'],['Schedule','Global Schedule'],['MyDashboard'],['DailyOps'],['DailyPlanner'],['Notes'],['Milestones'],['BusinessPlanBuilder'],['BusinessEntities'],['Marketplace'],['Deals','Deal Tracking'],['CRM','Contact Network'],['ReviewerWorkflow','Review Queue']],
   Personal: [['CommandDeck'],['Profile'],['Messages'],['Matches'],['MatchSettings'],['Settings'],['Quests'],['Gamification'],['Leaderboards'],['SynchronicityEngine'],['AffiliateCenter'],['AffiliateDashboard'],['Initiations'],['DatingMatches']],
   Media: [['Broadcast'],['Studio','Creator Studio'],['ContentStudio'],['SpiritTube']],

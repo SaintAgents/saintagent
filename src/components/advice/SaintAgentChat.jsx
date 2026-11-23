@@ -80,7 +80,7 @@ export default function SaintAgentChat({ question }) {
   // Build context from question + AI response
   const buildSystemContext = () => {
     const aiResponse = question?.ai_response;
-    let context = `You are SaintAgent AI, a wise, balanced, and insightful advisor in the Wisdom Exchange community. You are having an interactive dialogue with a user about their question.
+    let context = `You are SaintAgent AI, a wise, balanced, and insightful advisor in the Community Guidance section. You are having an interactive dialogue with a user about their question.
 
 **Question:** ${question.title}
 **Category:** ${question.category}

@@ -14,7 +14,7 @@ export const errorText = (error, fallback) => error?.response?.data?.error || fa
 export function safeUrl(value) {
   try { const url = new URL(value); return ['https:','http:'].includes(url.protocol) && !url.username && !url.password ? url.href : ''; } catch { return ''; }
 }
-export const dateLabel = value => value ? new Intl.DateTimeFormat(undefined,{ dateStyle:'medium', timeStyle:'short' }).format(new Date(value)) : '';
+export const dateLabel = value => value && Number.isFinite(Date.parse(value)) ? new Intl.DateTimeFormat(undefined,{ dateStyle:'medium', timeStyle:'short' }).format(new Date(value)) : '';
 export const visibility = user => ({ $or:[{ is_public:true },{ created_by_id:user.id }] });
 export function libraryFilter(user, {search,category,status,mine}) {
   const clauses = [mine ? { $or:[{ owner_user_id:user.id },{ created_by_id:user.id }] } : visibility(user)];

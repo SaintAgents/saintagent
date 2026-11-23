@@ -22,7 +22,7 @@ export default function WisdomExchange() {
   const [checking,setChecking] = useState(null);
   const [error,setError] = useState(null);
   const detailKey = id => [...queryKey,'detail',user.id,id];
-  const { data:card } = useQuery({ queryKey:detailKey(selection?.id), enabled:!!selection?.id, queryFn:() => base44.entities.WisdomCard.get(selection.id) });
+  const { data:card, isError:detailError } = useQuery({ queryKey:detailKey(selection?.id), enabled:!!selection?.id, queryFn:() => base44.entities.WisdomCard.get(selection.id) });
   const refresh = () => client.invalidateQueries({ queryKey });
   const close = () => setSelection(null);
   const create = () => setSelection({ mode:'form' });
@@ -44,6 +44,7 @@ export default function WisdomExchange() {
     <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">{labels.map((label,i) => <div key={label} className="rounded-xl border bg-card p-4 text-card-foreground"><dt className="text-xs font-medium">{label}</dt><dd className="mt-1 text-2xl font-semibold tabular-nums">{stats.data?.[i] ?? '—'}</dd></div>)}</dl>
     <WisdomLibraryFilters {...{ filters,setFilters }} />
     {cards.isPending ? <p role="status">Loading Wisdom Cards…</p> : cards.isError && !rows.length ? <p role="alert">Couldn’t load Wisdom Cards. <Button variant="outline" onClick={() => cards.refetch()}>Retry</Button></p> : rows.length ? <><div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{rows.map(record => <WisdomCardTile key={record.id} card={record} {...{ user,open }} busy={checking === record.id} />)}</div>{cards.hasNextPage && <Button variant="outline" disabled={cards.isFetchingNextPage} onClick={() => cards.fetchNextPage()}>{cards.isFetchingNextPage ? 'Loading…' : cards.isFetchNextPageError ? 'Retry loading more' : 'Load more'}</Button>}</> : <section data-readable-surface className="space-y-3 rounded-xl border p-6 text-center"><h2 className="font-semibold">{stats.data?.[0] === 0 ? 'Be the first to share some wisdom' : 'No cards match these filters'}</h2>{stats.data?.[0] === 0 ? <Button onClick={create}>Make the first Wisdom Card</Button> : <p className="text-sm">Try changing the search or filters.</p>}</section>}
+    {selection?.id && detailError && <p role="alert" className="text-sm text-destructive">Could not refresh the selected card.</p>}
     {selection?.mode === 'form' && (!selection.id || card) && <WisdomCardForm key={selection.id || 'new'} card={selection.id ? card : undefined} {...{ close,save }} />}
     {selection?.mode === 'detail' && card && <WisdomCardDetail key={card.id} {...{ card,user,close }} edit={() => mode('form')} quiz={() => mode('quiz')} check={() => { if (!checking) check(card); }} remove={async () => { await base44.entities.WisdomCard.delete(card.id); close(); refresh(); }} checking={checking === card.id} error={error?.id === card.id ? error.message : ''} />}
     {selection?.mode === 'quiz' && card && <WisdomQuiz key={card.id} {...{ card,refresh }} close={() => mode('detail')} />}
