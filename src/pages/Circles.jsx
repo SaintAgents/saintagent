@@ -12,6 +12,7 @@ import CircleManageModal from "@/components/circles/CircleManageModal";
 import CreateCircleModal from "@/components/community/CreateCircleModal";
 import CircleChatPanel from "@/components/community/CircleChatPanel";
 import GroupDetailPage from "@/components/groups/GroupDetailPage";
+import GroupShortcutDetail from '@/components/groups/GroupShortcutDetail';
 import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
@@ -414,8 +415,9 @@ export default function Circles() {
           user={user}
           onBack={() => setSelectedGroup(null)} />
 
-        </div>
-      }
-    </div>);
+          </div>
+          }
+          <GroupShortcutDetail />
+          </div>);
 
 }
