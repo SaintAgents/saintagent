@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
@@ -213,7 +214,7 @@ export default function AdvicePage() {
         <div className="relative max-w-6xl mx-auto px-4 py-20 md:py-24">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 drop-shadow-lg">
-              Wisdom Exchange
+              Community Guidance
             </h1>
             <p className="text-xl text-white/80 mb-8 drop-shadow">
               Seek guidance. Share wisdom. Rise together.
@@ -226,6 +227,7 @@ export default function AdvicePage() {
               <MessageSquarePlus className="w-5 h-5 mr-2" />
               Ask for Guidance
             </Button>
+            <Button asChild size="lg" variant="secondary" className="ml-2 mt-2"><Link to="/WisdomExchange">Browse Wisdom Cards</Link></Button>
           </div>
         </div>
       </div>

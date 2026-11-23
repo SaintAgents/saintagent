@@ -1,0 +1,234 @@
+{
+  "name": "WisdomCard",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "insight": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Global Impact",
+        "Capital & Funding",
+        "Climate & Environment",
+        "Health & Wellbeing",
+        "Education & Skills",
+        "Food & Water",
+        "Governance & Rights",
+        "Technology & AI",
+        "Community & Culture",
+        "Other"
+      ],
+      "default": "Global Impact"
+    },
+    "region": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "tags": {
+      "type": "string",
+      "maxLength": 350
+    },
+    "source_links": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "string",
+        "maxLength": 1200
+      }
+    },
+    "learned_from": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "linked_record_type": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "linked_record_id": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "linked_record_name": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Checking",
+        "Verified",
+        "Needs Review",
+        "Disputed"
+      ],
+      "enumColors": [
+        "gray",
+        "blue",
+        "green",
+        "yellow",
+        "red"
+      ],
+      "default": "Draft"
+    },
+    "fact_check": {
+      "type": "object"
+    },
+    "fact_checked_at": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "quiz": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "options": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "string",
+              "maxLength": 300
+            }
+          },
+          "correct_index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "explanation": {
+            "type": "string",
+            "maxLength": 600
+          }
+        },
+        "required": [
+          "question",
+          "options",
+          "correct_index",
+          "explanation"
+        ]
+      }
+    },
+    "quiz_generated_at": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "quiz_ready": {
+      "type": "boolean",
+      "default": false
+    },
+    "quiz_attempts": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "quiz_best_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true
+    },
+    "owner_user_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "owner_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    }
+  },
+  "required": [
+    "title",
+    "insight",
+    "owner_user_id",
+    "owner_name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "data.is_public": true
+            },
+            {
+              "$or": [
+                {
+                  "user_condition": {
+                    "role": "user"
+                  }
+                },
+                {
+                  "user_condition": {
+                    "role": "coordinator"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "create": {
+      "$and": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.owner_user_id": "{{user.id}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

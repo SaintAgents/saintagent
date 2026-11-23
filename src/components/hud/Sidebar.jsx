@@ -128,7 +128,8 @@ const ALL_NAV_ITEMS = {
   lottery: { id: 'lottery', label: 'GGG Lottery', Icon: Ticket, page: 'Lottery', hint: 'Monthly lottery with GGG jackpot - $1.11 per ticket' },
   topgggmission: { id: 'topgggmission', label: 'Top GGG Mission', Icon: Globe, page: 'TopGGGMission', hint: 'The Ultranet Era - Sovereign Digital Infrastructure' },
   forum: { id: 'forum', label: 'Community Forum', Icon: MessageCircle, page: 'Forum', hint: 'Discuss, share, and connect with the community' },
-  advice: { id: 'advice', label: 'Wisdom Exchange', Icon: IterationCcw, page: 'Advice', hint: 'Seek guidance, share wisdom, AI-powered insights' },
+  advice: { id: 'advice', label: 'Community Guidance', Icon: IterationCcw, page: 'Advice', hint: 'Seek guidance, share wisdom, AI-powered insights' },
+  wisdom: { id: 'wisdom', label: 'Wisdom Exchange', Icon: BookOpen, page: 'WisdomExchange', hint: 'Browse, fact-check, and learn from Wisdom Cards' },
   mentorship: { id: 'mentorship', label: 'Mentorship', Icon: Users, page: 'Mentorship', hint: 'Find mentors or become one' },
   meetings: { id: 'meetings', label: 'Meetings', Icon: Calendar, page: 'Meetings', hint: 'Schedule and manage your meetings' },
   teams: { id: 'teams', label: 'Teams & Guilds', Icon: Shield, page: 'Teams', hint: 'Form teams for collaborative missions' },
@@ -166,7 +167,7 @@ const ALL_NAV_ITEMS = {
 const NAV_GROUPS = [
   { key: 'discover', label: 'Discover', icon: Newspaper, items: ['news', 'gallery', 'insights', 'videos', 'testimonials', 'glossary', 'celestial'] },
   { key: 'participate', label: 'Participate', icon: Trophy, items: ['initiations', 'quests', 'missions', 'matches', 'gamification', 'leaderboards', 'lottery', 'topgggmission'] },
-  { key: 'connect', label: 'Connect', icon: Users, items: ['forum', 'advice', 'mentorship', 'meetings', 'conferences', 'teams', 'profiles', 'crm', 'activity', 'messages', 'circles', 'events', 'communityfeed'] },
+  { key: 'connect', label: 'Connect', icon: Users, items: ['forum', 'wisdom', 'advice', 'mentorship', 'meetings', 'conferences', 'teams', 'profiles', 'crm', 'activity', 'messages', 'circles', 'events', 'communityfeed'] },
   { key: 'build', label: 'Build & Manage', icon: Folder, items: ['observation', 'intelligence', 'watchlist', 'saveditems', 'projects', 'deals', 'reviewworkflow', 'reviewmanager', 'business5d', 'betafeedback', 'marketplace', 'broadcast', 'schedule', 'leader', 'studio', 'contentstudio', 'affiliate', 'collaborators'] },
   { key: 'treasury', label: 'Treasury & Exchange', icon: Coins, isTreasury: true, items: ['ggt', 'g3dex', 'gggcrypto', 'drx', 'authority144', 'sovereignalliance'] },
   { key: 'intelligence', label: 'Intelligence', icon: Orbit, items: ['synchronicity', 'matches', 'celestial'] },

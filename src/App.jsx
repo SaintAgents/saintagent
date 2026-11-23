@@ -37,6 +37,7 @@ import LinkTreeEditor from '@/pages/LinkTreeEditor';
 import Watchlist from '@/pages/Watchlist';
 import SavedItems from '@/pages/SavedItems';
 import Intelligence from '@/pages/Intelligence';
+import WisdomExchange from '@/pages/WisdomExchange';
 import GlobalImpactDashboard from '@/pages/GlobalImpactDashboard';
 import ConferencePortal from '@/pages/ConferencePortal';
 import MyGuide from '@/pages/MyGuide';
@@ -204,6 +205,7 @@ const AppRoutes = () => (
       <Route path="/Watchlist" element={<LayoutWrapper currentPageName="Watchlist"><Watchlist /></LayoutWrapper>} />
       <Route path="/SavedItems" element={<LayoutWrapper currentPageName="SavedItems"><SavedItems /></LayoutWrapper>} />
       <Route path="/Intelligence" element={<LayoutWrapper currentPageName="Intelligence"><Intelligence /></LayoutWrapper>} />
+      <Route path="/WisdomExchange" element={<LayoutWrapper currentPageName="WisdomExchange"><WisdomExchange /></LayoutWrapper>} />
       <Route path="/ConferencePortal" element={<LayoutWrapper currentPageName="ConferencePortal"><ConferencePortal /></LayoutWrapper>} />
       <Route path="/MyGuide" element={<LayoutWrapper currentPageName="MyGuide"><MyGuide /></LayoutWrapper>} />
       <Route path="/GlobalImpactDashboard" element={<LayoutWrapper currentPageName="GlobalImpactDashboard"><GlobalImpactDashboard /></LayoutWrapper>} />
