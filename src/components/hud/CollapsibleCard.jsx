@@ -22,6 +22,8 @@ export default function CollapsibleCard({
   icon: Icon,
   children,
   defaultOpen = true,
+  unboundedContent = false,
+  openRequest,
   badge,
   badgeColor = "slate",
   badgeImage, // Optional badge image URL
@@ -46,6 +48,10 @@ export default function CollapsibleCard({
   React.useEffect(() => {
     if (typeof forceOpen === 'boolean') setIsOpen(forceOpen);
   }, [forceOpen]);
+
+  React.useEffect(() => {
+    if (openRequest) setIsOpen(true);
+  }, [openRequest]);
 
   const badgeColors = {
     slate: "bg-slate-100 text-slate-700",
@@ -256,9 +262,9 @@ export default function CollapsibleCard({
       </div>
       <div className={cn(
         "relative overflow-hidden transition-all duration-300",
-        isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+        isOpen ? (unboundedContent ? "max-h-none opacity-100" : "max-h-[2000px] opacity-100") : "max-h-0 opacity-0"
       )}>
-        <div className="px-5 pb-5">
+        <div className="px-5 pb-5" inert={unboundedContent && !isOpen ? '' : undefined}>
           {children}
         </div>
       </div>

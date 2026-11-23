@@ -43,9 +43,9 @@ export default function DailyToursCard({ userId }) {
   };
 
   return (
-    <section id="daily-tours" ref={card} tabIndex={-1} data-readable-surface className="relative z-[1] mx-0 mb-6 scroll-mt-32 space-y-4 rounded-[var(--radius)] border bg-card p-4 text-card-foreground md:mx-6 md:p-5" aria-labelledby="daily-tours-title">
+    <section id="daily-tours" ref={card} tabIndex={-1} data-readable-surface className="relative scroll-mt-40 space-y-4 p-4 text-card-foreground" aria-label="Tour library">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div><h2 id="daily-tours-title" className="flex items-center gap-2 font-heading text-lg font-semibold"><BookOpen size={18} aria-hidden="true" /> Getting Started Tours</h2><p className="mt-1 text-sm text-muted-foreground">Start with the full-screen overview or play any of the seven topic tours in any order. Read or listen at your own pace.</p></div>
+        <p className="text-sm text-muted-foreground">Start with the full-screen overview or choose any topic tour. Read or listen at your own pace.</p>
         {record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}
       </div>
       <Button ref={overviewTrigger} type="button" variant="outline" className="h-auto min-h-10 whitespace-normal" onClick={() => setOverviewOpen(true)}><LayoutDashboard aria-hidden="true" /> Command Deck Overview · Full screen</Button>

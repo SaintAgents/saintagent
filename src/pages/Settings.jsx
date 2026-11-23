@@ -97,6 +97,7 @@ export default function Settings() {
   const allCards = VIEW_MODE_CONFIG.advanced.cards;
   
   const cardLabels = {
+    dailyTours: 'Getting Started Tours',
     quickActions: 'Quick Actions',
     quickStart: 'Quick Start Checklist',
     challenges: 'Challenges & Rewards',

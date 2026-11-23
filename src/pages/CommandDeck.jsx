@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isMobileDevice, DATA_LIMITS } from '@/components/services/dataService';
@@ -15,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List, Trophy, Eye, EyeOff, AlertCircle, RefreshCw, Play, HelpCircle } from "lucide-react";
+import { Coins, TrendingUp, Users, Calendar, Target, DollarSign, CheckCircle, Sparkles, Plus, ArrowRight, Zap, ShoppingBag, Radio, Flame, BarChart3, List, Trophy, Eye, EyeOff, AlertCircle, RefreshCw, Play, HelpCircle, BookOpen } from "lucide-react";
 import InteractiveOnboardingTour from '@/components/onboarding/InteractiveOnboardingTour';
 import BasicsWalkthrough from '@/components/walkthrough/BasicsWalkthrough';
 import FloatingPanel from '@/components/hud/FloatingPanel';
@@ -86,8 +87,12 @@ import ActivityFeedBanner from '@/components/activity/ActivityFeedBanner';
 import CommandDeckCards from '@/components/hud/CommandDeckCards';
 export default function CommandDeck({ theme, onThemeToggle }) {
   const queryClient = useQueryClient();
+  const { hash, key: locationKey } = useLocation();
+  const tourOpenRequest = hash === '#daily-tours' ? locationKey : null;
+  const sampleStoredTour = isTourPreview() && new URLSearchParams(window.location.search).get('tourView') === 'stored-tours';
   
   const [sidePanelOpen, setSidePanelOpen] = useState(() => {
+    if (sampleStoredTour) return true;
     // On mobile, side panel starts closed
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       return false;
@@ -114,6 +119,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Persist sidePanelOpen state and notify GlobalSidePanelNudge
   useEffect(() => {
+    if (isTourPreview()) return;
     try {
       localStorage.setItem('sidePanelOpen', String(sidePanelOpen));
     } catch {}
@@ -259,7 +265,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Store all cards to side panel
   const storeAllCards = () => {
-    const allCardIds = ['quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube', 'globalSchedule', 'deepDisclosure', 'drx', 'broadcast', 'events'];
+    const allCardIds = ['dailyTours', 'quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube', 'globalSchedule', 'deepDisclosure', 'drx', 'broadcast', 'events'];
     // Create fresh array with all cards (icons will be resolved when rendering)
     const newStoredCards = allCardIds.map(id => ({ id, title: getCardTitle(id) }));
     console.log('Stowing all cards:', newStoredCards);
@@ -278,6 +284,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   // Helper to get card title by id
   const getCardTitle = (id) => {
     const titles = {
+      dailyTours: 'Getting Started Tours',
       quickActions: 'Quick Actions',
       quickStart: 'Quick Start Checklist',
       challenges: 'Challenges & Rewards',
@@ -368,6 +375,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       return newSet;
     });
   };
+
+  useEffect(() => {
+    if (!tourOpenRequest) return;
+    setHiddenCards(prev => prev.has('dailyTours') ? new Set([...prev].filter(id => id !== 'dailyTours')) : prev);
+    setStoredCards(prev => prev.some(card => card.id === 'dailyTours') ? prev.filter(card => card.id !== 'dailyTours') : prev);
+    setCustomCards(prev => prev.includes('dailyTours') ? prev : [...prev, 'dailyTours']);
+  }, [tourOpenRequest]);
 
   // Remove card from storage (without restoring)
   const handleRemoveStoredCard = (cardId) => {
@@ -1571,7 +1585,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           </div>
         </div>
 
-        <DailyToursCard key={currentUser.id} userId={currentUser.id} />
+        {(isTourPreview() || isCardVisible('dailyTours')) && <CollapsibleCard title="Getting Started Tours" cardId="dailyTours" icon={BookOpen}
+          className="relative z-[1] mx-0 mb-6 scroll-mt-32 md:mx-6" forceOpen={cardsForceOpen} openRequest={tourOpenRequest} unboundedContent
+          onToggleHide={() => toggleCardVisibility('dailyTours')} onTossToSidePanel={handleTossToSidePanel}>
+          <DailyToursCard key={currentUser.id} userId={currentUser.id} />
+        </CollapsibleCard>}
 
         {/* Activity Cards Header */}
         <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
@@ -1940,7 +1958,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           onToggle={() => setSidePanelOpen(!sidePanelOpen)}
           onMatchAction={handleMatchAction}
           onMeetingAction={handleMeetingAction}
-          storedCards={storedCards}
+          storedCards={sampleStoredTour ? [{ id: 'dailyTours', title: 'Getting Started Tours' }] : storedCards}
+          forceStoredCardsOpen={sampleStoredTour}
           onRestoreCard={handleRestoreCard}
           onRemoveStoredCard={handleRemoveStoredCard} />
 

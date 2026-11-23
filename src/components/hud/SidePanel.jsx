@@ -13,6 +13,7 @@ import {
   ChevronRight,
   ChevronDown,
   Sparkles,
+  BookOpen,
   Calendar,
   Zap,
   Coins,
@@ -56,6 +57,7 @@ import {
 
 // Card icon mapping - must be defined here to resolve icons from stored card data
 const CARD_ICONS = {
+  dailyTours: BookOpen,
   quickActions: Zap,
   quickStart: CheckCircle,
   challenges: Trophy,
@@ -125,6 +127,7 @@ export default function SidePanel({
   onMatchAction,
   onMeetingAction,
   storedCards = [], // Cards tossed from main deck
+  forceStoredCardsOpen = false,
   onRestoreCard, // Callback to restore a card to main deck
   onRemoveStoredCard // Callback to remove from storage
 }) {
@@ -175,6 +178,7 @@ export default function SidePanel({
   };
 
   const [storedCardsCollapsed, setStoredCardsCollapsed] = useState(() => {
+    if (forceStoredCardsOpen) return false;
     try { return localStorage.getItem('storedCardsCollapsed') === 'true'; } catch { return false; }
   });
 
@@ -631,6 +635,7 @@ export default function SidePanel({
                       return (
                         <div
                           key={card.id}
+                          data-tour-stored-card={card.id}
                           className="flex items-center justify-between p-2 rounded-lg bg-white border border-slate-200 hover:border-violet-300 transition-colors group"
                         >
                           <div className="flex items-center gap-2 min-w-0">
@@ -1075,6 +1080,7 @@ export default function SidePanel({
                   return (
                     <div
                       key={card.id}
+                      data-tour-stored-card={card.id}
                       className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-[#050505] border border-slate-200 dark:border-[rgba(0,255,136,0.2)] hover:border-violet-300 dark:hover:border-[rgba(0,255,136,0.4)] transition-colors group"
                     >
                       <div className="flex items-center gap-2 min-w-0">

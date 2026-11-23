@@ -8,7 +8,7 @@ export const VIEW_MODE_CONFIG = {
   simple: {
     label: 'Simple',
     description: 'Top 5 essential features',
-    cards: ['quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials', 'communityFeed', 'spiritTube', 'deepDisclosure', 'globalSchedule', 'broadcast', 'events'],
+    cards: ['dailyTours', 'quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials', 'communityFeed', 'spiritTube', 'deepDisclosure', 'globalSchedule', 'broadcast', 'events'],
     // Nav items that correspond to simple mode (used by Sidebar and MobileMenu) - excludes insights
     navIds: ['command', 'observation', 'activity', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'spirittube', 'gggcrypto', 'g3dex', 'broadcast', 'deals', 'projecttrack', 'glossary', 'settings']
   },
@@ -20,7 +20,7 @@ export const VIEW_MODE_CONFIG = {
       'communityFeed', 'circles', 'leaderboard', 'affirmations', 'leaderPathway',
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
       'market', 'influence', 'leader', 'dailyops', 'news', 'insights', 'videos', 'testimonials', 'heroGallery', 'deepDisclosure',
-      'spiritTube', 'globalSchedule', 'drx', 'broadcast', 'events'
+      'spiritTube', 'globalSchedule', 'drx', 'broadcast', 'events', 'dailyTours'
     ],
     navIds: null // null means show all nav items (includes authority144, topgggmission, videos, broadcast)
   },
@@ -48,8 +48,8 @@ export const isNavItemVisible = (navId, viewMode) => {
 
 // Get default custom cards (half of all)
 export const getDefaultCustomCards = () => {
-  const allCards = VIEW_MODE_CONFIG.advanced.cards;
-  return allCards.slice(0, Math.ceil(allCards.length / 2));
+  const allCards = VIEW_MODE_CONFIG.advanced.cards.filter(id => id !== 'dailyTours');
+  return ['dailyTours', ...allCards.slice(0, Math.ceil(allCards.length / 2))];
 };
 
 export default function DeckViewModeSelector({ viewMode, onViewModeChange, className = '' }) {

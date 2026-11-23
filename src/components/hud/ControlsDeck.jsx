@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AIDashboardCustomizer from '@/components/ai/AIDashboardCustomizer';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 
 export default function ControlsDeck({
   colCOrder,
@@ -24,6 +25,7 @@ export default function ControlsDeck({
   });
 
   useEffect(() => {
+    if (isTourPreview()) return;
     try { localStorage.setItem('controlsDeckOpen', String(isOpen)); } catch {}
   }, [isOpen]);
 
@@ -35,6 +37,8 @@ export default function ControlsDeck({
           {/* Header with toggle */}
           <button
             type="button"
+            data-tour-controls-toggle
+            aria-expanded={isOpen}
             onClick={() => setIsOpen(!isOpen)}
             className="w-full flex items-center justify-between mb-2 cursor-pointer hover:opacity-80 transition-opacity"
           >
@@ -86,7 +90,7 @@ export default function ControlsDeck({
                     <div className="text-xs text-violet-600 dark:text-violet-400">Send all to panel</div>
                   </div>
                 </button>
-                <button type="button" onClick={restoreAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-emerald-900/30 dark:bg-emerald-900/30 border border-emerald-500/30 dark:border-emerald-700 hover:bg-emerald-900/40 hover:dark:bg-emerald-800/40 hover:border-emerald-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
+                <button type="button" data-tour-unstow-all onClick={restoreAllCards} className="group relative z-20 flex items-center gap-3 p-3 rounded-xl bg-emerald-900/30 dark:bg-emerald-900/30 border border-emerald-500/30 dark:border-emerald-700 hover:bg-emerald-900/40 hover:dark:bg-emerald-800/40 hover:border-emerald-400 shadow-sm hover:shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5">
                   <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center">
                     <EyeOff className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                   </div>

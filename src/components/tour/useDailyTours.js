@@ -15,13 +15,16 @@ export default function useDailyTours(userId) {
     },
   });
   const record = query.data;
-  const sections = record?.sections_completed ?? EMPTY_PROGRESS;
-
+  const stored = record?.sections_completed ?? EMPTY_PROGRESS;
+  const sections = DAILY_TOURS.map((tour, index) => Math.min(stored[index] ?? 0, tour.sections.length));
 
   const save = useMutation({
     mutationFn: async ({ day, count } = {}) => {
       if (!record) return base44.entities.DailyTourProgress.create({ sections_completed: EMPTY_PROGRESS });
-      const next = sections.map((saved, index) => index === day ? Math.max(count, saved) : saved);
+      const next = Array.from({ length: Math.max(stored.length, sections.length) }, (_, index) => {
+        const saved = stored[index] ?? 0;
+        return index === day ? Math.max(count, saved) : saved;
+      });
       return base44.entities.DailyTourProgress.update(record.id, { sections_completed: next });
     },
     onSuccess: (saved) => {

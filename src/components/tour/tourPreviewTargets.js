@@ -11,6 +11,7 @@ const special = {
   '0-4': [deck('Notification bell', '[data-tour-notifications]'), settings('Notification settings', 'notifications')],
   '0-5': [deck('Quick Create button', '[data-deck-tour="header"] [title="Quick Create"]'), deck('Choose Post', '[data-tour-quick-option="post"]', { click: '[data-deck-tour="header"] [title="Quick Create"]' }), deck('Create Post form', '[data-tour-quick-form="post"]', { click: '[data-deck-tour="header"] [title="Quick Create"]', then: '[data-tour-quick-option="post"]' })],
   '0-6': [deck('Help and chat tabs', deckTarget('help')), { label: 'Learn', path: '/Learn' }],
+  '0-7': [deck('Collapse or expand', '[data-tour-card="dailyTours"] .collapsible-card-header'), deck('Hide card', '[data-tour-card="dailyTours"] [title="Hide card"]'), deck('Send to side panel', '[data-tour-card="dailyTours"] [title="Send to side panel"]'), { ...deck('Restore to deck', '[data-tour-stored-card="dailyTours"] [title="Restore to deck"]'), view: 'stored-tours' }, deck('Unstow All', '[data-tour-unstow-all]', { click: '[data-tour-controls-toggle][aria-expanded="false"]' })],
   '1-0': [{ label: 'News & Updates', path: '/News', anchor: 'main [role="tablist"]' }],
   '1-5': [{ label: 'SpiritTube', path: '/SpiritTube' }, { label: 'Broadcast', path: '/Broadcast' }],
   '4-3': [{ label: 'Projects in GGT Command', path: '/ProjectTrack', anchor: '[data-tour-tracking-projects]', setup: { click: '[data-tour-tracking-projects]' } }],
