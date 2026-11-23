@@ -1,0 +1,115 @@
+{
+  "name": "HubDocument",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "folder": {
+      "type": "string",
+      "enum": [
+        "Agreements",
+        "Contracts",
+        "Banking",
+        "Technology",
+        "SOPs",
+        "Legal",
+        "Financial Models",
+        "Marketing",
+        "Images",
+        "Videos",
+        "Other"
+      ],
+      "default": "Other"
+    },
+    "file_url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "file_type": {
+      "type": "string",
+      "maxLength": 150
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2500
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+    },
+    "tags": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "shared_with_names": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "assigned_to_type": {
+      "type": "string",
+      "enum": [
+        "Site-wide",
+        "User",
+        "Project",
+        "Mission",
+        "Circle",
+        "Need"
+      ]
+    },
+    "assigned_to_id": {
+      "type": "string"
+    },
+    "assigned_to_name": {
+      "type": "string"
+    },
+    "assigned_user_id": {
+      "type": "string"
+    },
+    "created_by_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "file_url"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

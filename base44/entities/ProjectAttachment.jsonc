@@ -12,7 +12,11 @@
     },
     "file_url": {
       "type": "string",
-      "description": "URL of the uploaded file"
+      "description": "Legacy URL of the uploaded file"
+    },
+    "file_uri": {
+      "type": "string",
+      "description": "Private storage URI for a project file"
     },
     "file_name": {
       "type": "string",
@@ -35,7 +39,89 @@
   },
   "required": [
     "project_id",
-    "file_url",
     "file_name"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "data.task_id": {
+                "$exists": true,
+                "$nin": [
+                  "",
+                  null
+                ]
+              }
+            },
+            {
+              "$or": [
+                {
+                  "user_condition": {
+                    "role": "user"
+                  }
+                },
+                {
+                  "user_condition": {
+                    "role": "coordinator"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "created_by_id": "{{user.id}}"
+            },
+            {
+              "data.task_id": {
+                "$ne": ""
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        }
+      ]
+    }
+  }
 }

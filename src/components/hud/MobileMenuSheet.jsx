@@ -60,6 +60,7 @@ const menuItems = [
   { id: 'leaderboards', label: 'Leaderboards', icon: Award, page: 'Leaderboards' },
   { id: 'learninghub', label: 'Learning Hub', icon: BookOpen, page: 'LearningHub' },
   { id: 'resourcehub', label: 'Resources', icon: Library, page: 'ResourceHub' },
+  { id: 'documentvault', label: 'Document Vault', icon: Library, page: 'DocumentVault' },
   { id: 'advice', label: 'Advice', icon: CircleHelp, page: 'Advice' },
   { id: 'datingmatches', label: 'Dating', icon: Heart, page: 'DatingMatches' },
   { id: 'schedule', label: 'Schedule', icon: CalendarDays, page: 'Schedule' },

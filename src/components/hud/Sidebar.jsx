@@ -109,6 +109,7 @@ const ALL_NAV_ITEMS = {
   command: { id: 'command', label: 'Command Deck', Icon: LayoutDashboard, page: 'CommandDeck', hint: 'Your main dashboard and overview' },
   observation: { id: 'observation', label: 'Observation Deck', Icon: Eye, page: 'ObservationDeck', hint: 'Monitor saved pages across six decks' },
   watchlist: { id: 'watchlist', label: 'Watchlist', Icon: Eye, page: 'Watchlist', hint: 'See updates on watched records' },
+  documentvault: { id: 'documentvault', label: 'Document Vault', Icon: Folder, page: 'DocumentVault', hint: 'Browse and organize shared documents' },
   saveditems: { id: 'saveditems', label: 'Saved Items', Icon: Folder, page: 'SavedItems', hint: 'Open saved references and research' },
   intelligence: { id: 'intelligence', label: 'Saint Intelligence', Icon: BookOpen, page: 'Intelligence', aliases: ['research', 'research hub', 'deep dive'], hint: 'Search sources and save cited investigations' },
   conferences: { id: 'conferences', label: 'Conference Portal', Icon: Mic, page: 'ConferencePortal', hint: 'Private audio calls and invitations' },
@@ -168,7 +169,7 @@ const NAV_GROUPS = [
   { key: 'discover', label: 'Discover', icon: Newspaper, items: ['news', 'gallery', 'insights', 'videos', 'testimonials', 'glossary', 'celestial'] },
   { key: 'participate', label: 'Participate', icon: Trophy, items: ['initiations', 'quests', 'missions', 'matches', 'gamification', 'leaderboards', 'lottery', 'topgggmission'] },
   { key: 'connect', label: 'Connect', icon: Users, items: ['forum', 'wisdom', 'advice', 'mentorship', 'meetings', 'conferences', 'teams', 'profiles', 'crm', 'activity', 'messages', 'circles', 'events', 'communityfeed'] },
-  { key: 'build', label: 'Build & Manage', icon: Folder, items: ['observation', 'intelligence', 'watchlist', 'saveditems', 'projects', 'deals', 'reviewworkflow', 'reviewmanager', 'business5d', 'betafeedback', 'marketplace', 'broadcast', 'schedule', 'leader', 'studio', 'contentstudio', 'affiliate', 'collaborators'] },
+  { key: 'build', label: 'Build & Manage', icon: Folder, items: ['observation', 'intelligence', 'watchlist', 'saveditems', 'documentvault', 'projects', 'deals', 'reviewworkflow', 'reviewmanager', 'business5d', 'betafeedback', 'marketplace', 'broadcast', 'schedule', 'leader', 'studio', 'contentstudio', 'affiliate', 'collaborators'] },
   { key: 'treasury', label: 'Treasury & Exchange', icon: Coins, isTreasury: true, items: ['ggt', 'g3dex', 'gggcrypto', 'drx', 'authority144', 'sovereignalliance'] },
   { key: 'intelligence', label: 'Intelligence', icon: Orbit, items: ['synchronicity', 'matches', 'celestial'] },
 ];
