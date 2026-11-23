@@ -1,12 +1,8 @@
 import React from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Badge } from "@/components/ui/badge";
-import {
-  Target, Compass, Coins, Users, MessageSquare, Star, Award, TrendingUp, ArrowLeft
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
+import { Target, Compass, Coins, Users, MessageSquare, Award } from 'lucide-react';
+import ImpactDashboardHero from '@/components/impact/ImpactDashboardHero';
 
 import { getRPRank } from '@/components/reputation/rpUtils';
 import ImpactStatCard from '@/components/impact/ImpactStatCard';
@@ -15,7 +11,7 @@ import GlobalGoalsProgress from '@/components/impact/GlobalGoalsProgress';
 import ImpactBreakdownChart from '@/components/impact/ImpactBreakdownChart';
 import GGGEarningsChart from '@/components/impact/GGGEarningsChart';
 
-export default function ImpactDashboard() {
+export default function ImpactDashboard({ embedded = false }) {
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -154,39 +150,11 @@ export default function ImpactDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
-      {/* Header */}
-      <div className="page-hero relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.15),transparent_60%)]" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 pt-8 pb-12">
-          <div className="flex items-center gap-3 mb-2">
-            <Link to="/CommandDeck">
-              <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10">
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-            </Link>
-            <TrendingUp className="w-8 h-8 text-white drop-shadow-lg" />
-            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
-              Impact Dashboard
-            </h1>
-          </div>
-          <p className="text-white/80 text-lg max-w-2xl drop-shadow">
-            Your contributions, progress, and impact on the global mission
-          </p>
-          <div className="flex items-center gap-2 mt-3">
-            <Badge variant="outline" className="text-sm px-3 py-1 bg-white/20 border-white/40 text-white backdrop-blur-sm">
-              {profile?.display_name || currentUser?.full_name || 'Agent'}
-            </Badge>
-            <Badge variant="outline" className="text-sm px-3 py-1 bg-amber-400/20 border-amber-300/40 text-amber-100 backdrop-blur-sm capitalize">
-              {profile?.rp_rank_code || profile?.rank_code || getRPRank(rankPoints).title}
-            </Badge>
-          </div>
-        </div>
-      </div>
+      <ImpactDashboardHero embedded={embedded} name={profile?.display_name || currentUser?.full_name || 'Agent'} rank={profile?.rp_rank_code || profile?.rank_code || getRPRank(rankPoints).title} />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 pb-12 -mt-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 py-6 md:px-6 md:pb-12">
         {/* Stat Cards Row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+        <div className="personal-impact-stats mb-6 gap-3">
           <ImpactStatCard icon={Coins} label="GGG Earned" value={totalGGGEarned.toFixed(2)} color="amber" trend={gggTrend} />
           <ImpactStatCard icon={Target} label="Missions" value={userMissions.length} subtitle={`${completedMissions.length} completed`} color="violet" />
           <ImpactStatCard icon={Compass} label="Quests" value={allQuests.length} subtitle={`${completedQuests.length} completed`} color="emerald" />
