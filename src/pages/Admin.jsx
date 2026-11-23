@@ -27,6 +27,7 @@ import InsightsAdminPanel from '@/components/admin/InsightsAdminPanel';
 import ProjectClaimsManager from '@/components/admin/ProjectClaimsManager';
 import OnboardingRewardsManager from '@/components/admin/OnboardingRewardsManager';
 import HeroImageManager from '@/components/admin/HeroImageManager';
+import InspirationImagesAdmin from '@/components/admin/InspirationImagesAdmin';
 import EmailNewsletterManager from '@/components/admin/EmailNewsletterManager';
 import NewsletterAnalyticsDashboard from '@/components/admin/NewsletterAnalyticsDashboard';
 import AdminAuditLog from '@/components/admin/AdminAuditLog';
@@ -71,7 +72,7 @@ export default function Admin() {
 
   // Tabs that coordinators cannot access (financial/GGG control)
   const COORDINATOR_RESTRICTED_TABS = new Set([
-    'ggg', 'ggg-totals', 'affiliate-payouts', 'affiliate', 'settings'
+    'ggg', 'ggg-totals', 'affiliate-payouts', 'affiliate', 'settings', 'inspiration-images'
   ]);
 
   const canAccessTab = (tabValue) => {
@@ -162,6 +163,7 @@ export default function Admin() {
               { value: 'insights', icon: BookOpen, label: 'Insights' },
               { value: 'onboarding', icon: Gift, label: 'Onboarding' },
               { value: 'hero-images', icon: Image, label: 'Hero Images' },
+              { value: 'inspiration-images', icon: Image, label: 'Inspiration Images' },
               { value: 'newsletter', icon: Mail, label: 'Newsletter' },
               { value: 'audit', icon: Activity, label: 'Audit Log' },
               { value: 'master-log', icon: Eye, label: 'Master Log' },
@@ -287,6 +289,10 @@ export default function Admin() {
           <TabsContent value="hero-images">
             <HeroImageManager />
           </TabsContent>
+
+          {isAdmin && <TabsContent value="inspiration-images">
+            <InspirationImagesAdmin />
+          </TabsContent>}
 
           <TabsContent value="newsletter">
             <Tabs defaultValue="compose" className="w-full">

@@ -1,0 +1,67 @@
+{
+  "name": "InspirationImage",
+  "type": "object",
+  "properties": {
+    "file_uri": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "alt_text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "caption": {
+      "type": "string",
+      "maxLength": 240
+    },
+    "display_order": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9999,
+      "default": 1
+    }
+  },
+  "required": [
+    "file_uri",
+    "alt_text",
+    "display_order"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "coordinator"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -4,15 +4,14 @@ import SaintBrowser from '@/components/browser/SaintBrowser';
 import AdvancedSearchModal from '@/components/search/AdvancedSearchModal';
 import { links } from '@/components/dock/dockCatalog';
 import TimeTool from '@/components/dock/TimeTool';
-
-const prompts = ['What is one small action you can take today?', 'Who could help you see this differently?', 'What would you try if the first step were easy?'];
+import DockInspiration from '@/components/dock/DockInspiration';
 const paths = {profile:['/Profile','user_id'], listing:['/ListingDetail','id'], mission:['/MissionDetail','id'], circle:['/Circles','id'], event:['/EventDetail','id'], post:['/CommunityFeed','id']};
 export default function DockTools({type, settings, save, navigate, visible}) {
-  const [open, setOpen] = useState(false), [text, setText] = useState(''), [index,setIndex] = useState(0);
+  const [open, setOpen] = useState(false), [text, setText] = useState('');
   if (type === 'AI Assistant') return <DockAssistantChat history={settings.assistantHistory} onSave={assistantHistory => save({ assistantHistory })} />;
   if (type === 'Music Player') return <Music compact={settings.compact} />;
   if (type === 'Stopwatch' || type === 'Moon Phase') return <TimeTool type={type} visible={visible} />;
-  if (type === 'Inspiration') return <div className="grid gap-2"><p>{prompts[index]}</p><button onClick={() => setIndex((index+1)%prompts.length)}>Next reflection</button></div>;
+  if (type === 'Inspiration') return <DockInspiration visible={visible} />;
   if (type === 'InSite Browser') return <><button onClick={() => setOpen(true)}>Open SaintAgent Browser</button>{open && <SaintBrowser open onClose={() => setOpen(false)} />}</>;
   if (type === 'Global Search') return <div className="grid gap-2"><input aria-label="Find a page" placeholder="Find a page…" value={text} onChange={e => setText(e.target.value)} />{text.trim() && Object.entries(links).filter(([name]) => name.toLowerCase().includes(text.trim().toLowerCase())).map(([name,path]) => <button key={name} onClick={() => navigate(path)}>{name}</button>)}<button onClick={() => setOpen(true)}>Search platform records</button>{open && <AdvancedSearchModal open initialQuery={text} onClose={() => setOpen(false)} onSelect={(kind,item) => {
     if (kind === 'project') document.dispatchEvent(new CustomEvent('openProjectDetail', {detail:{project:item}}));
