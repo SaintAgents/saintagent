@@ -56,7 +56,7 @@ html .dock-root .dock-launcher:has(.dock-launcher-grid) {background:hsl(var(--si
 #dock-deck .dock-quick-link:hover {background:hsl(var(--d-muted))!important;border-color:hsl(var(--d-selected))!important;}
 #dock-deck .dock-drawer-button {display:flex;align-items:center;gap:.42rem;width:100%;padding:.38rem .75rem;background:hsl(var(--d-chrome))!important;color:hsl(var(--d-text))!important;border:0!important;border-top:1px solid hsl(var(--d-line))!important;text-align:left;font-weight:600;box-shadow:none!important;}
 #dock-deck .dock-drawer-button:hover {background:hsl(var(--d-muted))!important;}
-#dock-deck :is(.dock-header,.dock-folders,.dock-footer) svg {filter:none!important;stroke:currentColor!important;}
+#dock-deck :is(.dock-header,.dock-folders,.dock-footer,.dock-card-header) svg {color:inherit!important;filter:none!important;stroke:currentColor!important;}
 #dock-deck :is(.dock-header,.dock-folders,.dock-footer) svg :is(path,circle,rect,line,polyline) {stroke:currentColor!important;}
 #dock-deck :is(.dock-current-deck,.dock-folder-name) .truncate {color:inherit!important;}
 #dock-deck .dock-folder-mark {flex:none;color:hsl(var(--d-gold))!important;}
