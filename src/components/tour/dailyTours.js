@@ -48,7 +48,7 @@ export const DAILY_TOURS = [
     ['Explore the Marketplace', 'Listings can be offers or requests. Open one to check what is included, the delivery format, and any listed price before contacting the provider.', '/Marketplace'],
     ['Publish an offer or request', 'Use the marketplace listing form to describe the outcome, timing, and terms. Review the details before publishing so people know what to expect.', '/Marketplace'],
     ['Review booking details', 'Before requesting a booking, confirm the time, duration, and terms of the listing. Check Meetings for scheduled calls and requests.', '/Meetings'],
-    ['Create in Studio', 'Use Studio to explore the available creator tools. Decide whether you are preparing a video, learning material, or another piece of content before you begin.', '/Studio'],
+    ['Manage your work in Studio', 'Studio brings your creator activity together. Open Offers to review what you’ve listed, then open Bookings to see the status of sessions connected to your work. Use Overview to look for patterns without assuming that views or interest are confirmed bookings.', '/Studio'],
     ['Browse the Learning Hub', 'Look through courses and open one to review its lessons. Pick a course that supports a specific goal you have this week.', '/LearningHub'],
     ['Set up a business presence', 'A business entity gives your organization a page separate from your personal profile. Review your business name, description, and services before sharing it.', '/BusinessEntities'],
     ['Share an affiliate invite', 'Find your personal referral link in Affiliate Center and share it with someone who would genuinely benefit. Check the criteria before expecting a reward.', '/AffiliateCenter'],
@@ -60,6 +60,6 @@ export const DAILY_TOURS = [
     ['Read Insights', 'Use Insights to explore patterns in your activity. Compare what the app surfaces with actions you remember taking before drawing conclusions.', '/Insights'],
     ['Tune your recommendations', 'In Match Settings, review the preferences behind your recommendations. Adjust one preference at a time so you can see what changes.', '/MatchSettings'],
     ['Explore leadership', 'Read the Leader Channel to learn what participation involves and which opportunities match your experience.', '/LeaderChannel'],
-    ['Make a plan for next week', 'Choose one meaningful next action: complete a profile detail, meet a collaborator, join a mission, or draft a project. Use the Command Deck to return to it.'],
+    ['Make a plan for next week', 'Choose one meaningful next action: complete a profile detail, meet a collaborator, join a mission, or draft a project. Pick a time and define what done looks like, then use the Command Deck to find the right page.', '/CommandDeck'],
   ] },
 ];

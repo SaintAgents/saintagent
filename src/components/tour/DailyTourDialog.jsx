@@ -1,20 +1,28 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import CommandDeckTourHighlight from '@/components/tour/CommandDeckTourHighlight';
+import TourPractice from '@/components/tour/TourPractice';
+import TourNarration from '@/components/tour/TourNarration';
+import { TOUR_PRACTICE } from '@/components/tour/tourPracticeData';
 
 export default function DailyTourDialog({ day, step, busy, error, onClose, onBack, onAdvance, returnFocus }) {
+  const scrollArea = useRef(null);
+  useEffect(() => { if (scrollArea.current) scrollArea.current.scrollTop = 0; }, [day, step]);
   const tour = DAILY_TOURS[day];
   if (!tour) return null;
   const [title, description, path] = tour.sections[step];
   const lastStep = step === tour.sections.length - 1;
+  const practice = TOUR_PRACTICE[day][step];
+  const lessonKey = `${day}-${step}`;
+  const script = `${title}. ${description}\n\nTry the ${practice[0]} practice. ${practice.slice(1).map(([action, result, fields]) => `Select ${action}. ${result}. ${fields.map(([label, value]) => `${label}: ${value.replace(/[.!?]$/, '')}.`).join(' ')}`).join(' ')}`;
 
   return (
     <Dialog open onOpenChange={(open) => { if (!open && !busy) onClose(); }}>
-      <DialogContent data-readable-surface className="max-h-[85dvh] w-[calc(100%-2rem)] overflow-y-auto text-foreground" hideCloseButton={busy}
+      <DialogContent ref={scrollArea} data-readable-surface className="max-h-[85dvh] w-[calc(100%-2rem)] overflow-y-auto text-foreground sm:max-w-2xl" hideCloseButton={busy}
         onCloseAutoFocus={(event) => { event.preventDefault(); returnFocus(); }}>
         {day === 0 && step === 0 && <CommandDeckTourHighlight />}
         <div className="space-y-2 pr-6">
@@ -24,9 +32,11 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
         <progress className="h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />
         <div className="space-y-3" aria-live="polite">
           <h3 className="font-heading text-lg font-semibold">{title}</h3>
-          <p className="whitespace-pre-line text-sm leading-relaxed">{description}</p>
         </div>
-        {path && <Link className="inline-flex w-fit items-center gap-2 text-sm font-medium text-primary underline underline-offset-4" to={path} target="_blank" rel="noopener noreferrer">Explore in a new tab <ArrowRight size={14} aria-hidden="true" /></Link>}
+        <TourNarration key={`voice-${lessonKey}`} text={script} />
+        <p className="whitespace-pre-line text-sm leading-relaxed">{description}</p>
+        <TourPractice key={`practice-${lessonKey}`} practice={practice} />
+        {path && <Link className="inline-flex w-fit items-center gap-2 text-sm font-medium text-primary underline underline-offset-4" to={path} target="_blank" rel="noopener noreferrer">Open the live page in a new tab <ArrowRight size={14} aria-hidden="true" /></Link>}
         {error && <p role="alert" className="text-sm text-destructive">Progress couldn’t be saved. Please try again.</p>}
         <div className="flex flex-wrap justify-between gap-2 border-t pt-4">
           <Button type="button" variant="outline" disabled={step === 0 || busy} onClick={onBack}>Back</Button>
