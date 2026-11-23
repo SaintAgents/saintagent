@@ -36,7 +36,8 @@ export default function useAssistantConversation(userId, enabled) {
         conversation.current = data; setId(data.id);
         try { localStorage.setItem(key, data.id); } catch {}
       }
-      await base44.agents.addMessage(conversation.current, { role: 'user', content: `[SaintAgent page: ${page}]\n${text}` });
+      const sent = await base44.agents.addMessage(conversation.current, { role: 'user', content: `[SaintAgent page: ${page}]\n${text}` });
+      if (sent?.id) setMessages(previous => previous.some(message => message.id === sent.id) ? previous : [...previous, sent]);
       return true;
     } catch { setError('Could not send your message.'); return false; }
     finally { busy.current = false; setSending(false); }

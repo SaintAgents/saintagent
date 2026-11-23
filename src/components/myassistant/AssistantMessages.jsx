@@ -6,7 +6,7 @@ export default function AssistantMessages({ chat, greeting, onPrompt, voice }) {
   const scroll = useRef(null);
   const follow = useRef(true);
   useEffect(() => { if (follow.current && scroll.current) scroll.current.scrollTop = scroll.current.scrollHeight; }, [chat.messages]);
-  const messages = chat.messages.filter(message => ['assistant', 'user'].includes(message.role) && message.content?.trim());
+  const messages = chat.messages.filter(message => !message.hidden && ['assistant', 'user'].includes(message.role) && typeof message.content === 'string' && message.content.trim());
   return <div ref={scroll} onScroll={e => { const el = e.currentTarget; follow.current = el.scrollHeight - el.scrollTop - el.clientHeight < 48; }} className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4 text-sm">
     {chat.loading && <p role="status">Opening your conversation…</p>}
     {!chat.loading && !messages.length && <div className="space-y-3">

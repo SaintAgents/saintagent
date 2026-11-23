@@ -23,7 +23,7 @@ export default function useAssistantVoice(open, voiceName, messages) {
     reply.voice = voices.find(voice => voice.name === voiceName) || null;
     synth.speak(reply);
   }
-  const index = messages.findLastIndex(message => message.role === 'assistant' && message.content?.trim());
+  const index = messages.findLastIndex(message => message.role === 'assistant' && !message.hidden && typeof message.content === 'string' && message.content.trim());
   const latest = messages[index]?.content;
   useEffect(() => {
     if (!open || listening || voiceTurn === null || index < voiceTurn || !latest) return;
@@ -42,5 +42,5 @@ export default function useAssistantVoice(open, voiceName, messages) {
     try { recognition.start(); setListening(true); }
     catch { session.current = null; setVoiceError('Could not start the microphone.'); }
   }
-  return { canListen: !!Recognition, canSpeak: !!synth, listening, voiceError, voices, listen, speak, stop: () => synth?.cancel(), setVoiceTurn };
+  return { canListen: !!Recognition, canSpeak: !!synth, listening, voiceError, voices, listen, speak, stop: () => { setVoiceTurn(null); synth?.cancel(); }, setVoiceTurn };
 }
