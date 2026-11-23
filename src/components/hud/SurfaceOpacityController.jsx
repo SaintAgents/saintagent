@@ -98,8 +98,7 @@ export default function SurfaceOpacityController() {
     }` : ''}
 
     ${(surface.fontLighter ?? 100) !== 100 ? `
-    main p, main span, main h1, main h2, main h3, main h4, main h5, main h6,
-    main a, main label, main li {
+    main :is(p, span, h1, h2, h3, h4, h5, h6, a, label, li):not(:where([data-readable-surface] *)) {
       filter: brightness(${surface.fontLighter / 100}) !important;
     }` : ''}
 

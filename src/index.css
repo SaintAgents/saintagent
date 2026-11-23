@@ -701,7 +701,17 @@ html:root [data-readable-surface] button:not(:disabled):hover {
 html:root [data-readable-surface] button:disabled {
   opacity: 1 !important;
 }
-html:root [data-readable-surface] button:disabled span {
+html:root [data-readable-surface] button:disabled :is(span, svg) {
+  color: var(--readable-muted) !important;
+}
+
+/* Keep the dashboard tour copy legible even with global text effects enabled. */
+#daily-tours[data-readable-surface] :is(p, button, button span, button svg) {
+  color: var(--readable-text) !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+#daily-tours[data-readable-surface] :is(p.text-muted-foreground, button:disabled :is(span, svg)) {
   color: var(--readable-muted) !important;
 }
 
