@@ -1,3 +1,4 @@
+import DeepDiveLauncher from '@/components/deepdive/DeepDiveLauncher';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -502,6 +503,7 @@ export default function TopBar({
         <Link to="/GlobalImpactDashboard" aria-current={currentPageName === 'GlobalImpactDashboard' ? 'page' : undefined}><LayoutDashboard aria-hidden="true" /></Link>
       </Button>
 
+      <DeepDiveLauncher />
       {/* Search - hidden when collapsed */}
       <div ref={searchRef} className={cn(
         "flex-1 max-w-sm min-w-[9rem] relative transition-all duration-300 hidden sm:block mx-2",

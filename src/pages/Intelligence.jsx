@@ -6,6 +6,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import IntelligenceForm from '@/components/intelligence/IntelligenceForm';
+import { Microscope } from 'lucide-react';
+import { openDeepDive } from '@/components/deepdive/deepDive';
 import IntelligenceResults from '@/components/intelligence/IntelligenceResults';
 import IntelligenceReport from '@/components/intelligence/IntelligenceReport';
 import IntelligenceLibrary from '@/components/intelligence/IntelligenceLibrary';
@@ -57,6 +59,7 @@ export default function Intelligence({ embedded = false }) {
   return <section id="saint-intelligence" className="px-4 pb-24 pt-6 sm:px-7"><div className="mx-auto max-w-6xl space-y-6">
     <section data-intel-hero className="space-y-5 rounded-lg border p-4 sm:p-8"><div><p data-intel-kicker className="text-xs font-semibold uppercase tracking-widest">Research · Discovery · Development</p><h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight sm:text-5xl">SAINT INTELLIGENCE</h1><p className="mt-2">Discover Everything. Connect the Knowledge. Develop the Possibilities.</p></div>
       {sample ? <p role="status" className="text-sm">Demo mode: open a sample in My Research to explore findings, citations, and a research branch without saving anything.</p> : <IntelligenceForm {...{objective,setObjective,source,setSource,matching,setMatching,seed,setSeed,parent,setParent,busy,run,inputRef}} />}
+      {!sample && <Button type="button" size="sm" variant="outline" title="Investigate a topic and inspect its cited sources" onClick={() => openDeepDive(id ? {id} : {objective})}><Microscope /> Open floating Deep Dive</Button>}
       {!sample && error && <p role="alert" className="text-sm font-semibold">{error}</p>}
     </section>
     <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(15rem,20rem)]"><div ref={resultRef} tabIndex={-1} className="min-w-0 scroll-mt-36 space-y-4">

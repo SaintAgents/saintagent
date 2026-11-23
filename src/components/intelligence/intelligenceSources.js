@@ -5,8 +5,15 @@ export const sourceTypes = {
   course: ['Courses', '/CourseDetail'],
   organization: ['Organizations', '/BusinessEntityProfile'],
   project: ['My Projects', '/Projects'],
+  person: ['Saint Agents', '/Profile'],
+  mentor: ['Mentors', '/Mentorship'],
+  library: ['My Research', '/Intelligence'],
 };
 export function sourceHref(ref) {
   if (!Object.hasOwn(sourceTypes, ref.kind) || typeof ref.id !== 'string' || !/^[\w-]{1,100}$/.test(ref.id)) return undefined;
-  return `${sourceTypes[ref.kind][1]}?id=${encodeURIComponent(ref.id)}`;
+  if (ref.kind === 'mentor' || ref.kind === 'person') {
+    if (typeof ref.profile_number === 'string' && /^\d{1,20}$/.test(ref.profile_number)) return `/Profile?id=${encodeURIComponent(ref.profile_number)}`;
+    return ref.kind === 'mentor' ? '/Mentorship' : '/Profiles';
+  }
+  return `${sourceTypes[ref.kind][1]}?${ref.kind === 'library' ? 'study' : 'id'}=${encodeURIComponent(ref.id)}`;
 }

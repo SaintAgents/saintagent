@@ -10,7 +10,7 @@ export default function IntelligenceForm({ objective, setObjective, source, setS
     <Input ref={inputRef} id="intelligence-question" required minLength={3} maxLength={400} value={objective} onChange={e => setObjective(e.target.value)} placeholder="e.g., What do we know about regenerative agriculture?" disabled={!!busy} />
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div className="flex flex-wrap items-center gap-3 text-sm">
-        <select aria-label="Filter by source" value={source} onChange={e => setSource(e.target.value)} disabled={!!busy} className="rounded-md border px-2 py-2"><option value="all">All supported sources</option>{Object.entries(sourceTypes).map(([key,[label]]) => <option value={key} key={key}>{label}</option>)}</select>
+        <select aria-label="Filter by source" value={source} onChange={e => setSource(e.target.value)} disabled={!!busy} className="rounded-md border px-2 py-2"><option value="all">All supported sources</option>{Object.entries(sourceTypes).filter(([key]) => !['person','mentor','library'].includes(key)).map(([key,[label]]) => <option value={key} key={key}>{label}</option>)}</select>
         <select aria-label="Search match type" value={matching} onChange={e => setMatching(e.target.value)} disabled={!!busy} className="rounded-md border px-2 py-2"><option value="keywords">Keywords</option><option value="exact">Exact phrase</option><option value="related">AI related terms</option></select>
       </div>
       <div className="flex flex-wrap gap-2">
