@@ -648,6 +648,63 @@ html[data-theme='hacker'] #topbar-profile-menu {
   background: #000 !important;
 }
 
+/* Opt-in readable surfaces keep their contrast over video, canvas and glass effects. */
+[data-readable-surface] {
+  --readable-bg: hsl(var(--background));
+  --readable-text: hsl(var(--foreground));
+  --readable-muted: hsl(var(--muted-foreground));
+  --readable-control: hsl(var(--muted));
+  --readable-hover: hsl(var(--accent));
+  --readable-border: hsl(var(--border));
+  --readable-link: hsl(239 65% 42%);
+}
+html[data-theme='dark'] [data-readable-surface] {
+  --readable-bg: hsl(220 23% 10%);
+  --readable-text: hsl(210 40% 98%);
+  --readable-muted: hsl(215 20% 74%);
+  --readable-control: hsl(220 20% 16%);
+  --readable-hover: hsl(220 20% 23%);
+  --readable-border: hsl(215 18% 38%);
+  --readable-link: hsl(173 75% 66%);
+}
+html[data-theme='hacker'] [data-readable-surface] {
+  --readable-bg: hsl(0 0% 0%);
+  --readable-text: hsl(120 100% 66%);
+  --readable-muted: hsl(120 60% 72%);
+  --readable-control: hsl(120 43% 8%);
+  --readable-hover: hsl(120 43% 14%);
+  --readable-border: hsl(120 55% 35%);
+  --readable-link: hsl(120 100% 72%);
+}
+html:root [data-readable-surface]:is(section, [role='dialog']) {
+  background: var(--readable-bg) !important;
+  color: var(--readable-text) !important;
+  opacity: 1 !important;
+}
+html:root [data-readable-surface] :is(h2, h3, p, button, button span, a) {
+  color: var(--readable-text) !important;
+  text-shadow: none !important;
+}
+html:root [data-readable-surface] :is(.text-muted-foreground, p[id]) {
+  color: var(--readable-muted) !important;
+}
+html:root [data-readable-surface] a:any-link {
+  color: var(--readable-link) !important;
+}
+html:root [data-readable-surface] button {
+  background: var(--readable-control) !important;
+  border-color: var(--readable-border) !important;
+}
+html:root [data-readable-surface] button:not(:disabled):hover {
+  background: var(--readable-hover) !important;
+}
+html:root [data-readable-surface] button:disabled {
+  opacity: 1 !important;
+}
+html:root [data-readable-surface] button:disabled span {
+  color: var(--readable-muted) !important;
+}
+
 /* Utility: hide scrollbar but keep scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;

@@ -13,7 +13,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
 
   return (
     <Dialog open onOpenChange={(open) => { if (!open && !busy) onClose(); }}>
-      <DialogContent className="max-h-[85dvh] w-[calc(100%-2rem)] overflow-y-auto text-foreground" hideCloseButton={busy}
+      <DialogContent data-readable-surface className="max-h-[85dvh] w-[calc(100%-2rem)] overflow-y-auto text-foreground" hideCloseButton={busy}
         onCloseAutoFocus={(event) => { event.preventDefault(); returnFocus(); }}>
         <div className="space-y-2 pr-6">
           <DialogTitle>Day {day + 1}: {tour.title}</DialogTitle>

@@ -52,10 +52,8 @@ export default function SurfaceOpacityController() {
     }
 
     /* ========== CARD OPACITY ========== */
-    /* Exclude hero children and images from card opacity */
-    main .rounded-xl:not(img):not([data-no-filter]):not(.page-hero *),
-    main .rounded-lg:not(img):not([data-no-filter]):not(.page-hero *),
-    main .rounded-2xl:not(img):not([data-no-filter]):not(.page-hero *) {
+    /* Exclude hero children, images, and readable surfaces from card opacity */
+    main :is(.rounded-xl, .rounded-lg, .rounded-2xl):not(img):not([data-no-filter]):not(.page-hero *):not([data-readable-surface], [data-readable-surface] *) {
       opacity: ${cardOp};
     }
 
@@ -141,9 +139,7 @@ export default function SurfaceOpacityController() {
     }` : ''}
 
     /* ========== COMMAND DECK CARDS ========== */
-    main[data-page='CommandDeck'] .rounded-xl:not(img):not([data-no-filter]),
-    main[data-page='CommandDeck'] .rounded-lg:not(img):not([data-no-filter]),
-    main[data-page='CommandDeck'] .rounded-2xl:not(img):not([data-no-filter]) {
+    main[data-page='CommandDeck'] :is(.rounded-xl, .rounded-lg, .rounded-2xl):not(img):not([data-no-filter]):not([data-readable-surface], [data-readable-surface] *) {
       opacity: ${(surface.cmdCards ?? 100) / 100} !important;
     }
   `;
