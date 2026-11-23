@@ -350,8 +350,8 @@ export default function TopBar({
   return (
     <header id="app-topbar" className={cn(
       "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 flex items-center gap-2 md:gap-3 px-2 md:px-4 transition-all duration-300 scrollbar-hide",
-      "left-0",
-      sidebarCollapsed ? "md:left-16" : "md:left-64",
+      "nav-width-aware left-0",
+      sidebarCollapsed ? "md:left-16" : "md:left-64 lg:left-[var(--expanded-nav-width)]",
       isCollapsed ? "h-10" : "h-14"
     )} style={{ zIndex: 9999, overflowX: 'auto', overflowY: 'visible' }}>
       {/* Collapse/Expand Toggle */}

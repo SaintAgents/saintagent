@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/lib/AuthContext';
 import Sidebar from '@/components/hud/Sidebar';
+import { clampSidebarWidth, DEFAULT_SIDEBAR_WIDTH } from '@/components/hud/SidebarResizeHandle';
 import TopBar from '@/components/hud/TopBar';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import CommandCanopy from '@/components/canopy/CommandCanopy';
@@ -176,6 +177,16 @@ function AuthenticatedLayout({ children, currentPageName }) {
       return false;
     });
     const setSidebarCollapsed = (v) => { const val = typeof v === 'function' ? v(sidebarCollapsed) : v; _setSC(val); try { localStorage.setItem('sidebarCollapsed', String(val)); } catch {} };
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    if (tourPreview) return DEFAULT_SIDEBAR_WIDTH;
+    try { return clampSidebarWidth(Math.round(Number(localStorage.getItem('expandedNavWidth'))) || DEFAULT_SIDEBAR_WIDTH); }
+    catch { return DEFAULT_SIDEBAR_WIDTH; }
+  });
+  const [sidebarResizing, setSidebarResizing] = useState(false);
+  useEffect(() => {
+    if (tourPreview || sidebarResizing) return;
+    try { localStorage.setItem('expandedNavWidth', String(sidebarWidth)); } catch {}
+  }, [sidebarWidth, sidebarResizing, tourPreview]);
   const [topbarCollapsed, setTopbarCollapsed] = useState(false);
   const [canopyControl, setCanopyControl] = useState(null);
   const [mode, setMode] = useState('command');
@@ -626,8 +637,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const rankCode = profile?.rp_rank_code || 'seeker';
 
   return (
-    <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
-      {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={() => setSearchOpen(true)} onCreate={() => setQuickCreateOpen(true)} onToolbarControlChange={setCanopyControl} />}
+    <div className="min-h-screen bg-slate-50 [&[data-nav-resizing]_.nav-width-aware]:duration-0" data-bg-effect={bgEffect}
+      data-nav-resizing={sidebarResizing ? '' : undefined} style={{ '--expanded-nav-width': `${sidebarWidth}px` }}>
+      {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} sidebarWidth={sidebarWidth} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={() => setSearchOpen(true)} onCreate={() => setQuickCreateOpen(true)} onToolbarControlChange={setCanopyControl} />}
       <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
       <VideoBackgroundLayer currentPageName={currentPageName} theme={theme} />
@@ -1810,6 +1822,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
         {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && (
         <Sidebar 
           isCollapsed={sidebarCollapsed}
+          width={sidebarWidth}
+          onResize={setSidebarWidth}
+          onResizeDraggingChange={setSidebarResizing}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
           currentPage={getPageId(currentPageName)}
           profile={profile}
@@ -1859,10 +1874,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
           data-page={currentPageName}
           data-cmd-view={cmdViewMode || 'standard'}
           className={cn(
-              "min-h-screen transition-all duration-300",
+              "nav-width-aware min-h-screen transition-all duration-300",
               (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
                 ? "pl-0"
-                : sidebarCollapsed ? "pl-0 md:pl-16" : "pl-0 md:pl-16 lg:pl-64",
+                : sidebarCollapsed ? "pl-0 md:pl-16" : "pl-0 md:pl-16 lg:pl-[var(--expanded-nav-width)]",
               "pr-0",
               (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
                 ? "pt-0"

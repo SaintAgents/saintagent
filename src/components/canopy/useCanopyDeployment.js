@@ -5,7 +5,7 @@ const stepDown = { split:'peek', full:'peek', peek:'closed', closed:'closed' };
 const stepUp = { closed:'peek', peek:'full', full:'peek', split:'full' };
 const isSimple = () => localStorage.getItem('deckViewMode') === 'simple';
 
-export default function useCanopyDeployment(userId, pathname, settings, sidebarCollapsed, topbarCollapsed) {
+export default function useCanopyDeployment(userId, pathname, settings, sidebarCollapsed, sidebarWidth, topbarCollapsed) {
   const session = sessions.get(userId) || { mode:'closed', recent:[] };
   sessions.set(userId, session);
   const [mode, setCurrent] = useState(session.mode);
@@ -15,7 +15,7 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
   const [draft, setDraft] = useState({});
   const root = useRef(null), gesture = useRef(null), suppressClick = useRef(false);
   const enabled = viewport >= 768 && !simple;
-  const sidebar = sidebarCollapsed ? 64 : 256;
+  const sidebar = sidebarCollapsed ? 64 : viewport >= 1024 ? sidebarWidth : 256;
   const available = viewport - Math.max(sidebar, dock.left) - dock.right;
   const split = draft.split ?? settings.split;
   const splitWidth = Math.max(0, Math.min(split, available - (available > 580 ? 320 : 220)));

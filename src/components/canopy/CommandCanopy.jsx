@@ -9,12 +9,12 @@ import CanopyWorkspace from '@/components/canopy/CanopyWorkspace';
 import CanopyOverlays from '@/components/canopy/CanopyOverlays';
 import '@/components/canopy/canopy.css';
 
-export default function CommandCanopy({ user, profile, sidebarCollapsed, topbarCollapsed, notifications, onSearch, onCreate, onToolbarControlChange }) {
+export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebarWidth, topbarCollapsed, notifications, onSearch, onCreate, onToolbarControlChange }) {
   const { settings, commit, error } = useCanopySettings(user);
   const location = useLocation(), navigate = useNavigate();
   const [overlay, setOverlay] = useState(null);
   const [focus, setFocus] = useState('');
-  const hud = useCanopyDeployment(user.id, location.pathname, settings, sidebarCollapsed, topbarCollapsed);
+  const hud = useCanopyDeployment(user.id, location.pathname, settings, sidebarCollapsed, sidebarWidth, topbarCollapsed);
   const { mode, setMode, enabled, root, style, recent, handle } = hud;
   const focusFromToolbar = useRef(false);
   useEffect(() => {

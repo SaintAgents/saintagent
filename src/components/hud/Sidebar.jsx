@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SidebarResizeHandle from '@/components/hud/SidebarResizeHandle';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
@@ -184,8 +185,11 @@ const DM_POLICY_OPTIONS = [
 ];
 
 export default function Sidebar({ 
-  isCollapsed, 
-  onToggle, 
+  isCollapsed,
+  width,
+  onResize,
+  onResizeDraggingChange,
+  onToggle,
   currentPage,
   profile,
   onStatusChange,
@@ -1111,13 +1115,14 @@ export default function Sidebar({
 
   return (
     <div className={cn(
-      "fixed left-0 top-0 h-screen border-r z-50 flex flex-col transition-all duration-300",
+      "nav-width-aware fixed left-0 top-0 h-screen border-r z-50 flex flex-col transition-all duration-300",
       "bg-white border-slate-200",
       "dark:bg-[#050505] dark:border-[rgba(0,255,136,0.2)]",
       "[data-theme='hacker']_&:bg-black [data-theme='hacker']_&:border-[#00ff00]",
-      isCollapsed ? "w-16" : "w-64",
+      isCollapsed ? "w-16" : "w-64 lg:w-[var(--expanded-nav-width)]",
       "hidden md:flex" // Hide sidebar on mobile
     )} data-sidebar>
+      {!isCollapsed && onResize && <SidebarResizeHandle width={width} onResize={onResize} onDraggingChange={onResizeDraggingChange} />}
       {/* Logo */}
       <div className={cn("flex items-center justify-between px-2 py-2 border-b border-slate-100", isCollapsed && "px-1")}>
         <div
