@@ -4,7 +4,7 @@ import { CalendarDays, ChevronRight, Droplet, FolderClosed, Plus, Settings2, Use
 
 const logo = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8c39339ab_logo.png';
 
-export default function DockHeader({ prefs, deck, commit, close, openModal }) {
+export default function DockHeader({ prefs, deck, commit, close, openModal, compactLauncher }) {
   const VideoIcon = prefs.video ? Video : VideoOff;
   const saveIntensity = e => {
     const opacity = Number(e.currentTarget.value);
@@ -27,7 +27,7 @@ export default function DockHeader({ prefs, deck, commit, close, openModal }) {
         <summary className="dock-icon-button" aria-label="Dock settings" title="Dock settings"><Settings2 size={15} /></summary>
         <div className="dock-settings-menu">
           <label><input type="checkbox" checked={prefs.beside} onChange={e => commit({beside:e.target.checked})} /> Show page beside deck</label>
-          <label><input type="checkbox" checked={prefs.label} onChange={e => commit({label:e.target.checked})} /> Launcher label</label>
+          {!compactLauncher && <label><input type="checkbox" checked={prefs.label} onChange={e => commit({label:e.target.checked})} /> Launcher label</label>}
         </div>
       </details>
     </nav>
