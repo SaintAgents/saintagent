@@ -72,7 +72,7 @@ export default function Testimonials() {
   const myGiven = allTestimonials.filter(t => t.from_user_id === currentUser?.email);
 
   const renderTestimonialCard = (t, showActions = false) => (
-    <Card key={t.id} className="mb-3">
+    <Card key={t.id} data-readable-surface data-testimonial-card className="mb-3">
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           <Avatar 
@@ -100,8 +100,9 @@ export default function Testimonials() {
                 <textarea
                   value={editingTestimonial.text}
                   onChange={(e) => setEditingTestimonial({ ...editingTestimonial, text: e.target.value })}
-                  className="w-full text-sm p-2 border rounded-lg"
-                  rows={3}
+                  aria-label="Testimonial text"
+                  className="w-full resize-y rounded-lg border p-2 text-sm leading-relaxed"
+                  rows={6}
                 />
                 <div className="flex gap-2 mt-2">
                   <Button 

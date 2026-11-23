@@ -676,7 +676,7 @@ html[data-theme='hacker'] [data-readable-surface] {
   --readable-border: hsl(120 55% 35%);
   --readable-link: hsl(120 100% 72%);
 }
-html:root [data-readable-surface]:is(section, [role='dialog']) {
+html:root [data-readable-surface]:is(section, [role='dialog'], [data-testimonial-card]) {
   background: var(--readable-bg) !important;
   color: var(--readable-text) !important;
   opacity: 1 !important;
@@ -703,6 +703,13 @@ html:root [data-readable-surface] button:disabled {
 }
 html:root [data-readable-surface] button:disabled :is(span, svg) {
   color: var(--readable-muted) !important;
+}
+
+html:root [data-readable-surface][data-testimonial-card] textarea {
+  background: var(--readable-control) !important;
+  color: var(--readable-text) !important;
+  border-color: var(--readable-border) !important;
+  opacity: 1 !important;
 }
 
 /* Keep the dashboard tour copy legible even with global text effects enabled. */
