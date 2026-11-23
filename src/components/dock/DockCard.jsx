@@ -6,7 +6,7 @@ export default function DockCard({ card, floating, visible, patch, dragStart, dr
   const host = useRef(null), gesture = useRef(null);
   const [menu,setMenu] = useState(false), [preview,setPreview] = useState(null);
   const {type, settings} = card;
-  const WidgetIcon = ['Community Feed', 'News'].includes(type) ? Newspaper : ['Quick Links', 'Quick Access', 'Pinned Item'].includes(type) ? Link2 : PanelsTopLeft;
+  const WidgetIcon = ['Community Feed', 'News'].includes(type) ? Newspaper : ['Quick Links', 'Quick Access', 'Pinned Item', 'pinned_item'].includes(type) ? Link2 : PanelsTopLeft;
   const frameless = floating && (settings.frameless || type === 'Inspiration' || settings.compact);
   const move = mode => ({
     onPointerDown:e => { if(e.button !== 0) return; const r=host.current.getBoundingClientRect(); gesture.current={mode,x:e.clientX,y:e.clientY,left:r.left,top:r.top,w:r.width,h:r.height}; e.currentTarget.setPointerCapture(e.pointerId); },

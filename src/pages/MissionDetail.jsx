@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { cn } from "@/lib/utils";
@@ -174,6 +175,7 @@ export default function MissionDetail() {
                 )}
               </div>
               <h1 className="text-3xl font-bold text-slate-900 mb-2 drop-shadow-sm">{mission.title}</h1>
+              <RecordKeepActions type="mission" id={mission.id} title={mission.title} />
               <p className="text-slate-700 max-w-2xl drop-shadow-sm">{mission.objective}</p>
             </div>
 

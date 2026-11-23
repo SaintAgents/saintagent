@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -179,6 +180,7 @@ export default function BusinessEntityProfile() {
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-start gap-3 mb-2">
                 <h1 className="text-2xl md:text-3xl font-bold text-slate-900">{entity.name}</h1>
+                <RecordKeepActions type="organization" id={entity.id} title={entity.name} />
                 <div className="flex items-center gap-2">
                   {entity.verification_level !== 'unverified' && (
                     <Badge className={`${ver.bg} ${ver.color} gap-1`}>

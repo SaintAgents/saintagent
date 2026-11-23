@@ -11,16 +11,18 @@ import {
   Video, Play, Award, GraduationCap, Library, CircleHelp,
   CalendarDays, ClipboardList, StickyNote, Shield, Coins, BarChart3,
   Ticket, Crown, Flame, User, Wrench, Headphones, MessageCircle,
-  Handshake, Kanban, Pencil, Link2, UsersRound
+  Handshake, Kanban, Pencil, Link2, UsersRound, Eye
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { getStoredViewMode, VIEW_MODE_CONFIG } from './DeckViewModeSelector';
+import SidePanelBookmarks from '@/components/hud/SidePanelBookmarks';
 
 // Full menu items with nav IDs for filtering - MUST MATCH Sidebar.jsx NAV_ITEMS
 const menuItems = [
   { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck' },
   { id: 'observation', label: 'Observation Deck', icon: LayoutDashboard, page: 'ObservationDeck' },
+  { id: 'watchlist', label: 'Watchlist', icon: Eye, page: 'Watchlist' },
   { id: 'betafeedback', label: 'Beta Feedback', icon: MessageCircle, page: 'BetaFeedback' },
   { id: 'forum', label: 'Forum', icon: MessagesSquare, page: 'Forum' },
   { id: 'initiations', label: 'Initiations', icon: Flame, page: 'Initiations' },
@@ -255,6 +257,7 @@ export default function MobileMenuSheet({ open, onOpenChange }) {
                 );
               })}
             </div>
+            <SidePanelBookmarks onNavigate={() => onOpenChange(false)} />
           </div>
         </SheetContent>
       </Sheet>

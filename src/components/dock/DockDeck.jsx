@@ -10,12 +10,13 @@ import DockHeader from '@/components/dock/DockHeader';
 import DockFolders from '@/components/dock/DockFolders';
 import DockDialogs from '@/components/dock/DockDialogs';
 import DockCard from '@/components/dock/DockCard';
+import DockPinProvider from '@/components/dock/DockPinContext';
 import useDockPreferences from '@/components/dock/useDockPreferences';
 import useDockActions from '@/components/dock/useDockActions';
 import useDockPanel from '@/components/dock/useDockPanel';
 import '@/components/dock/dock.css';
 
-export default function DockDeck({user, disabled}) {
+export default function DockDeck({user, disabled, children}) {
   const location=useLocation(), navigate=useNavigate();
   const {prefs,commit,error}=useDockPreferences(user);
   const actions=useDockActions(commit,prefs.active);
@@ -40,7 +41,7 @@ export default function DockDeck({user, disabled}) {
   const columns=width>=930 ? 3 : width>=535 ? 2 : 1;
   const cardProps=card => ({card,user,navigate,openModal,shortcuts:prefs.shortcuts,recent,drag,columnWidth:(width-12*(columns+1))/columns,patch:update=>actions.patch(card.id,update),remove:()=>actions.remove(card.id),shift:dir=>actions.shift(card.id,dir),
     dragStart:(e,id)=>{if(!wide){e.preventDefault();return;}e.dataTransfer.setData('text/plain',id);e.dataTransfer.effectAllowed='move';dragId.current=id;setDrag(id);},dragEnd:()=>{dragId.current=null;setDrag(null);},reorder:(e,target)=>drop(e,id=>actions.reorder(id,target))});
-  return <div className="dock-root" hidden={disabled} data-dock-open={shown}>
+  return <DockPinProvider {...{prefs, commit, disabled}}>{children}<div className="dock-root" hidden={disabled} data-dock-open={shown}>
     {!shown && <Button ref={launcher} className="dock-launcher" data-dock-handle={compactLauncher ? '' : undefined} variant="outline" onClick={() => setOpen(true)} aria-label="Open Dock Deck" title="Open Dock Deck" aria-controls="dock-deck" aria-expanded={false}><DockDeckIcon />{!compactLauncher && prefs.label && 'Dock Deck'}</Button>}
     <aside ref={panel} id="dock-deck" aria-label="Dock Deck" aria-hidden={!shown} {...(!shown ? {inert:''} : {})} className="dock-panel" style={{width,'--dock-video-opacity':prefs.opacity/100}}>
       {wide && <><CanopyResize label="Resize Dock Deck" className="dock-resize" direction="left" value={width} min={320} max={max} onChange={resize} /><button type="button" className="dock-edge" aria-label="Collapse Dock Deck" title="Collapse Dock Deck" onClick={close}><ChevronRight size={16} /></button></>}
@@ -54,5 +55,5 @@ export default function DockDeck({user, disabled}) {
     </aside>
     {prefs.cards.filter(c=>c.place==='float').map(card=><DockCard key={card.id} floating visible={!disabled} {...cardProps(card)} />)}
     {shown && modal && <DockDialogs key={modal} {...{modal,prefs,deck,actions}} cards={prefs.cards} close={()=>setModal(null)} />}
-  </div>;
+  </div></DockPinProvider>;
 }

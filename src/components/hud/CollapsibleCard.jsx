@@ -23,6 +23,7 @@ export default function CollapsibleCard({
   children,
   defaultOpen = true,
   unboundedContent = false,
+  mountWhenOpen = false,
   openRequest,
   badge,
   badgeColor = "slate",
@@ -265,7 +266,7 @@ export default function CollapsibleCard({
         isOpen ? (unboundedContent ? "max-h-none opacity-100" : "max-h-[2000px] opacity-100") : "max-h-0 opacity-0"
       )}>
         <div className="px-5 pb-5" inert={unboundedContent && !isOpen ? '' : undefined}>
-          {children}
+          {(!mountWhenOpen || isOpen) && children}
         </div>
       </div>
     </div>);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { base44 } from '@/api/base44Client';
+import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -136,6 +137,7 @@ export default function ListingDetail() {
                 {listing.is_free && <Badge className="bg-emerald-100 text-emerald-700">Free</Badge>}
               </div>
               <h1 className="text-3xl font-bold text-slate-900">{listing.title}</h1>
+              <RecordKeepActions type="listing" id={listing.id} title={listing.title} />
               <p className="text-slate-600 mt-2 max-w-2xl">{listing.description}</p>
               <div className="flex items-center gap-3 mt-3 text-sm text-slate-600">
                 <Clock className="w-4 h-4" /> {listing.duration_minutes} min

@@ -23,8 +23,8 @@ function BookmarkSections({ user, onNavigate }) {
   };
   return <section data-readable-surface aria-label="Personal bookmark sections" className="mt-2 space-y-1 rounded-xl border p-2">
     <div className="flex items-center justify-between gap-1">
-      <h3 className="text-xs font-semibold">My Bookmarks</h3>
-      <Button size="sm" variant="outline" className="h-7 px-2" disabled={busy || sections.length >= sectionLimit} aria-expanded={adding} onClick={() => setAdding(!adding)}><Plus /> New section</Button>
+      <h3 className="text-xs font-semibold">My Bookmark Groups</h3>
+      <Button size="sm" variant="outline" className="h-7 px-2" disabled={busy || sections.length >= sectionLimit} aria-expanded={adding} onClick={() => setAdding(!adding)}><Plus /> New group</Button>
     </div>
     {adding && <form className="flex gap-1 py-1" onSubmit={create}>
       <Input className="h-8 min-w-0 flex-1 text-xs" aria-label="Section name" placeholder="Section name" maxLength={45} required autoFocus value={name} onChange={event => setName(event.target.value)} />

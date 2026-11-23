@@ -34,6 +34,7 @@ import ReviewManagerDashboard from './pages/ReviewManagerDashboard';
 import VCardLanding from './pages/VCardLanding';
 import PublicLinkTree from '@/pages/PublicLinkTree';
 import LinkTreeEditor from '@/pages/LinkTreeEditor';
+import Watchlist from '@/pages/Watchlist';
 import CelestialInsights from './pages/CelestialInsights';
 import BusinessPlanBuilder from './pages/BusinessPlanBuilder';
 import Login from './pages/Login';
@@ -134,7 +135,7 @@ const AuthenticatedApp = () => {
 
   const embedded = window.parent !== window && new URLSearchParams(location.search).get('observationPreview') === '1';
   const dockDisabled = embedded || isTourPreview() || /^\/(g3dex|gggcrypto)\/?$/i.test(location.pathname);
-  return <><AppRoutes /><DockDeck key={user.id} user={user} disabled={dockDisabled} /></>;
+  return <DockDeck key={user.id} user={user} disabled={dockDisabled}><AppRoutes /></DockDeck>;
 };
 
 // Separated routes so both public and authenticated paths use the same route tree
@@ -193,6 +194,7 @@ const AppRoutes = () => (
     <Route path="/mfa" element={<Mfa />} />
     <Route element={<ProtectedRoute unauthenticatedElement={<a href="/login">Sign in to continue</a>} />}>
       <Route path="/ObservationDeck" element={<LayoutWrapper currentPageName="ObservationDeck"><ObservationDeck /></LayoutWrapper>} />
+      <Route path="/Watchlist" element={<LayoutWrapper currentPageName="Watchlist"><Watchlist /></LayoutWrapper>} />
     </Route>
     <Route path="*" element={<PageNotFound />} />
   </Routes>

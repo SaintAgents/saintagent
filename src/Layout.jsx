@@ -317,6 +317,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
     const pageMap = {
       'CommandDeck': 'command',
       'ObservationDeck': 'observation',
+      'Watchlist': 'watchlist',
       'Matches': 'matches',
       'Meetings': 'meetings',
       'Missions': 'missions',

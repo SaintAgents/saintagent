@@ -265,7 +265,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Store all cards to side panel
   const storeAllCards = () => {
-    const allCardIds = ['dailyTours', 'quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube', 'globalSchedule', 'deepDisclosure', 'drx', 'broadcast', 'events'];
+    const allCardIds = ['dailyTours', 'watchlist', 'quickActions', 'quickStart', 'challenges', 'inbox', 'collaborators', 'circles', 'leaderPathway', 'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects', 'market', 'influence', 'leader', 'dailyops', 'communityFeed', 'leaderboard', 'affirmations', 'heroGallery', 'testimonials', 'videos', 'news', 'spiritTube', 'globalSchedule', 'deepDisclosure', 'drx', 'broadcast', 'events'];
     // Create fresh array with all cards (icons will be resolved when rendering)
     const newStoredCards = allCardIds.map(id => ({ id, title: getCardTitle(id) }));
     console.log('Stowing all cards:', newStoredCards);
@@ -285,6 +285,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const getCardTitle = (id) => {
     const titles = {
       dailyTours: 'Getting Started Tours',
+      watchlist: 'Watchlist',
       quickActions: 'Quick Actions',
       quickStart: 'Quick Start Checklist',
       challenges: 'Challenges & Rewards',

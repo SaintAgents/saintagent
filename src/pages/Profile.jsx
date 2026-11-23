@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SkillsPicker from '@/components/SkillsPicker';
 import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor';
@@ -579,6 +580,7 @@ export default function Profile() {
                     </button>
                   )}
                   <h1 className="text-slate-900 dark:text-white text-xl sm:text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
+                  {!isOwnProfile && rawProfile && (!rawProfile.profile_visibility || rawProfile.profile_visibility === 'public') && <RecordKeepActions type="person" id={rawProfile.id} title={rawProfile.display_name} route={rawProfile.sa_number ? `/Profile?id=${encodeURIComponent(rawProfile.sa_number)}` : undefined} />}
                   {profile?.tagline &&
                   <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
                   }

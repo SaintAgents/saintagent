@@ -98,6 +98,7 @@ export default function Settings() {
   
   const cardLabels = {
     dailyTours: 'Getting Started Tours',
+    watchlist: 'Watchlist',
     quickActions: 'Quick Actions',
     quickStart: 'Quick Start Checklist',
     challenges: 'Challenges & Rewards',

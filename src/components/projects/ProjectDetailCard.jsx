@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -127,6 +128,7 @@ export default function ProjectDetailCard({ project: initialProject }) {
             )}
           </div>
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">{project.title}</h2>
+          <RecordKeepActions type="project" id={project.id} title={project.title} />
           {/* Edit button for owner/creator */}
           {currentUser && (project.claimed_by === currentUser.email || project.created_by_id === currentUser.id) && (
             <Button size="sm" variant="outline" className="mt-2 gap-1.5" onClick={() => setEditOpen(true)}>

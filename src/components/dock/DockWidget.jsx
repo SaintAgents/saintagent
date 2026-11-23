@@ -9,6 +9,7 @@ import NewsViewerModal from '@/components/news/NewsViewerModal';
 import CommunityFeedCard from '@/components/community/CommunityFeedCard';
 import DockTools from '@/components/dock/DockTools';
 import DockSharing from '@/components/dock/DockSharing';
+import WatchlistWidget from '@/components/watch/WatchlistWidget';
 import { links, safePath } from '@/components/dock/dockCatalog';
 
 export default function DockWidget({ card, user, save, navigate, shortcuts, recent, openModal, visible }) {
@@ -22,6 +23,8 @@ export default function DockWidget({ card, user, save, navigate, shortcuts, rece
   if (type === 'Tours') return <DailyToursCard userId={user.id} embedded />;
   if (type === 'Community Feed') return <CommunityFeedCard maxHeight="22rem" />;
   if (type === 'Contact Card' || type === 'Invites') return <DockSharing {...{type,user,visible}} />;
+  if (type === 'Watchlist') return <WatchlistWidget {...{user, visible}} />;
+  if (type === 'pinned_item') return <div className="dock-links">{safePath(settings.path) ? <a href={settings.path}>{settings.title}</a> : <p>{settings.title}</p>}{settings.subtitle && <p>{settings.subtitle}</p>}</div>;
   if (type === 'Quick Notes') return <Scratch value={settings.note || ''} save={note => save({note})} />;
   if (type === 'Quick Access' || type === 'Quick Links') return <div className="dock-links">{(type === 'Quick Access' ? shortcuts : Object.keys(links)).map(label => <Link key={label} to={links[label]}>{label}</Link>)}{type === 'Quick Access' && <button onClick={() => openModal('shortcuts')}>Edit Quick Access</button>}</div>;
   if (type === 'Pinned Item') return settings.path ? <Link to={settings.path}>{settings.title || settings.path}</Link> : <form onSubmit={e => { e.preventDefault(); const path = new FormData(e.currentTarget).get('path').trim(); if (safePath(path)) save({path, title:path}); else { e.currentTarget.elements.path.setCustomValidity('Enter a SaintAgent path beginning with one slash.'); e.currentTarget.elements.path.reportValidity(); } }}><label>SaintAgent path <input name="path" required maxLength={500} onInput={e => e.currentTarget.setCustomValidity('')} placeholder="/Projects" /></label><button>Pin</button></form>;

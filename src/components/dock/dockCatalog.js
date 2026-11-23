@@ -1,4 +1,4 @@
-export const links = { Profile:'/Profile', Members:'/Profiles', Calendar:'/Schedule', Messages:'/Messages', Quests:'/Quests', Tours:'/CommandDeck#daily-tours', News:'/News', Community:'/CommunityFeed', Projects:'/Projects', Invites:'/AffiliateCenter' };
+export const links = { Profile:'/Profile', Members:'/Profiles', Calendar:'/Schedule', Messages:'/Messages', Quests:'/Quests', Tours:'/CommandDeck#daily-tours', News:'/News', Community:'/CommunityFeed', Projects:'/Projects', Watchlist:'/Watchlist', Invites:'/AffiliateCenter' };
 export const defaultShortcuts = ['Profile', 'Tours', 'Messages', 'Quests', 'Calendar'];
 export const widgetLibrary = {
   'AI Assistant':'Ask a question in a lightweight, session-only chat.', 'Global Search':'Find pages or open Advanced Search for platform records.',
@@ -9,6 +9,7 @@ export const widgetLibrary = {
   'Quick Links':'Open commonly used SaintAgent pages.', 'Community Feed':'Read and compose community posts.', News:'See the newest published headlines and open News.',
   Notifications:'Read your recent alerts and open their destinations.', 'Who Is Online':'Open the live member list.',
   'InSite Browser':'Launch the existing SaintAgent browser.', Inspiration:'Cycle through short reflection prompts in a frameless card.',
+  Watchlist:'See up to 30 watched records and open your full Watchlist.',
   'Pinned Item':'Keep a shortcut to a SaintAgent page or record.'
 };
 export const icons = ['▦','★','◈','☀','✦','◉','◇','◆'];

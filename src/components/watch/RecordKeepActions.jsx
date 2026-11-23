@@ -1,0 +1,20 @@
+import { Pin, PinOff } from 'lucide-react';
+import { useAuth } from '@/lib/AuthContext';
+import { Button } from '@/components/ui/button';
+import { useDockPins } from '@/components/dock/DockPinContext';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
+import WatchButton from '@/components/watch/WatchButton';
+import { itemPath } from '@/components/watch/watchItems';
+
+export default function RecordKeepActions({ type, id, title, subtitle, route }) {
+  const { user } = useAuth();
+  const pins = useDockPins();
+  if (!user?.id || !id || !title || !pins || isTourPreview()) return null;
+  const watch = { item_type: type, record_id: id, display_name: title, ...(route ? { route } : {}) };
+  const pin = { item_type: type, record_id: id, title, subtitle, path: itemPath(watch) };
+  const pinned = pins.has(pin);
+  return <div className="mt-2 flex flex-wrap gap-2">
+    <WatchButton user={user} item={watch} />
+    <Button type="button" size="sm" variant={pinned ? 'secondary' : 'outline'} aria-pressed={pinned} onClick={() => pins.set(pin, !pinned)}>{pinned ? <PinOff /> : <Pin />}{pinned ? 'Unpin from Dock Deck' : 'Pin to Dock Deck'}</Button>
+  </div>;
+}

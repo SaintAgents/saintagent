@@ -1,5 +1,8 @@
 import React from 'react';
-import { Key, Radio, CircleDot, Calendar } from 'lucide-react';
+import { Key, Radio, CircleDot, Calendar, Eye } from 'lucide-react';
+import { useAuth } from '@/lib/AuthContext';
+import WatchlistWidget from '@/components/watch/WatchlistWidget';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 import { createPageUrl } from '@/utils';
 import CollapsibleCard from '@/components/hud/CollapsibleCard';
 import DRXCard from '@/components/hud/DRXCard';
@@ -14,8 +17,10 @@ export default function CommandDeckCards({
   handleTossToSidePanel,
   forceOpen
 }) {
+  const { user } = useAuth();
   return (
     <>
+      {user && !isTourPreview() && isCardVisible('watchlist') && <CollapsibleCard title="Watchlist" cardId="watchlist" icon={Eye} defaultOpen={false} mountWhenOpen forceOpen={forceOpen} isHidden={hiddenCards.has('watchlist')} onToggleHide={() => toggleCardVisibility('watchlist')} onTossToSidePanel={handleTossToSidePanel} onPopout={() => { window.location.href = '/Watchlist'; }}><WatchlistWidget user={user} visible /></CollapsibleCard>}
       {isCardVisible('drx') && (
         <CollapsibleCard 
           title="Digital Rights Exchange" 

@@ -8,9 +8,9 @@ export const VIEW_MODE_CONFIG = {
   simple: {
     label: 'Simple',
     description: 'Top 5 essential features',
-    cards: ['dailyTours', 'quickActions', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials', 'communityFeed', 'spiritTube', 'deepDisclosure', 'globalSchedule', 'broadcast', 'events'],
+    cards: ['dailyTours', 'quickActions', 'watchlist', 'inbox', 'meetings', 'syncEngine', 'missions', 'circles', 'news', 'testimonials', 'communityFeed', 'spiritTube', 'deepDisclosure', 'globalSchedule', 'broadcast', 'events'],
     // Nav items that correspond to simple mode (used by Sidebar and MobileMenu) - excludes insights
-    navIds: ['command', 'observation', 'activity', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'spirittube', 'gggcrypto', 'g3dex', 'broadcast', 'deals', 'projecttrack', 'glossary', 'settings']
+    navIds: ['command', 'observation', 'watchlist', 'activity', 'synchronicity', 'messages', 'meetings', 'missions', 'circles', 'communityfeed', 'marketplace', 'news', 'spirittube', 'gggcrypto', 'g3dex', 'broadcast', 'deals', 'projecttrack', 'glossary', 'settings']
   },
   advanced: {
     label: 'Advanced',
@@ -20,7 +20,7 @@ export const VIEW_MODE_CONFIG = {
       'communityFeed', 'circles', 'leaderboard', 'affirmations', 'leaderPathway',
       'aiDiscover', 'syncEngine', 'meetings', 'missions', 'projects',
       'market', 'influence', 'leader', 'dailyops', 'news', 'insights', 'videos', 'testimonials', 'heroGallery', 'deepDisclosure',
-      'spiritTube', 'globalSchedule', 'drx', 'broadcast', 'events', 'dailyTours'
+      'spiritTube', 'globalSchedule', 'drx', 'broadcast', 'events', 'dailyTours', 'watchlist'
     ],
     navIds: null // null means show all nav items (includes authority144, topgggmission, videos, broadcast)
   },
