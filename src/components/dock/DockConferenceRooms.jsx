@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -10,6 +10,11 @@ export default function DockConferenceRooms({user, visible, invite}) {
   const client = useQueryClient();
   const [call,setCall] = useState(null), [create,setCreate] = useState(Boolean(invite)), [busy,setBusy] = useState(false), [notice,setNotice] = useState('');
   const preview = isTourPreview();
+  const finish = useCallback(message => {setCall(null); setNotice(message || 'Left the call.'); client.invalidateQueries({queryKey:['conferences',user.id]});}, [client,user.id]);
+  useEffect(() => {
+    if (!visible || preview || invite) return;
+    return base44.entities.ConferenceRoom.subscribe(() => client.invalidateQueries({queryKey:['conferences',user.id]}));
+  }, [client,invite,preview,user.id,visible]);
   async function open(code, join = false) {
     const [room] = await base44.entities.ConferenceRoom.filter({ code, member_ids:user.id, status:'active' }, '-created_date', 1);
     if (!room) throw new Error('This private call is not available to you.');
@@ -32,7 +37,7 @@ export default function DockConferenceRooms({user, visible, invite}) {
     <Link to="/ConferencePortal">Open Conference Portal</Link>
     {notice && <p role="status">{notice}</p>}
     {call && <div className="grid gap-2"><button onClick={() => run(async () => { await navigator.clipboard.writeText(new URL(`/ConferencePortal?call=${encodeURIComponent(call.code)}`, location.origin).href); setNotice('Link copied. Only invited members can join.'); })}>Copy member invite link</button>
-      {call.joined ? <ConferenceAudioPanel key={call.code} call={call} host={call.host_id === user.id} onEnd={message => {setCall(null); setNotice(message || 'Left the call.'); client.invalidateQueries({queryKey:['conferences',user.id]});}} /> : <><strong>{call.title}</strong><button disabled={preview || busy} onClick={() => setCall({...call,joined:true})}>Join audio</button><button onClick={() => setCall(null)}>Back</button></>}
+      {call.joined ? <ConferenceAudioPanel key={call.code} call={call} host={call.host_id === user.id} onEnd={finish} /> : <><strong>{call.title}</strong><button disabled={preview || busy} onClick={() => setCall({...call,joined:true})}>Join audio</button><button onClick={() => setCall(null)}>Back</button></>}
     </div>}
     {!call && (create ? <form className="grid gap-2" onSubmit={start}>
       <label>Room name <input name="title" required maxLength={100} defaultValue={invite ? `Call with ${invite.name}`.slice(0,100) : ''} /></label>

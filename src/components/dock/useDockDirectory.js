@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { escapeRegex } from '@/components/globalimpact/impactDiscovery';
 
-const fields = ['display_name','handle','title','role','organization','company','location','region','skills','bio'];
+const fields = ['display_name','handle','title','role','organization','company','location','region','member_type','skills','bio'];
 export const matchText = (value, keys) => ({ $or: keys.map(key => ({ [key]: { $regex: escapeRegex(value), $options: 'i' } })) });
 export function useDockDirectory(user, visible, contacts = false) {
   const [search, setSearch] = useState('');

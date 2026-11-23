@@ -22,9 +22,9 @@ export default function DockInbox({user, visible}) {
       setDetail(null);setNotice('Removed from your mailbox.');
     });
   }
-  if (preview) return <p>Open Dock Deck outside the tour to use your Inbox.</p>;
-  const peer = detail && messagePeer(detail,email);
-  const direct = peer && peer.id !== email;
+  const group = useQuery({queryKey:['dock-mail',email,'group',detail?.conversation_id],enabled:visible && !!detail?.conversation_id,queryFn:async () => (await base44.entities.Conversation.filter({id:detail.conversation_id,participant_ids:email,type:'group'},'-updated_date',1))[0] || null});
+  const peer = detail && (group.data ? {id:group.data.id,name:group.data.name || 'Group chat',conversation:group.data.id,group:true} : messagePeer(detail,email));
+  const direct = peer && peer.id !== email && (!detail.conversation_id || group.isSuccess);
   return <div className="grid gap-2">
     <div className="flex flex-wrap gap-1"><Link to="/Messages">Full Messages</Link><button disabled={busy || compose} onClick={() => {setDetail(null);setCompose(true);}}>Compose</button><button disabled={query.isFetching} onClick={refresh}>Refresh</button></div>
     {notice && <p role="status">{notice}</p>}

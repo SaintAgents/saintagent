@@ -29,6 +29,6 @@ export default function DockWatchedCountries({user, visible}) {
     {error && <p role="alert">{error}</p>}
     {!watched.length && <p>No countries watched yet.</p>}
     <ul>{watched.map(code => <li key={code} className="flex flex-wrap justify-between gap-1"><button aria-pressed={selected === code} onClick={() => setSelected(code)}>{names.of(code)}</button><button aria-label={`Stop watching ${names.of(code)}`} onClick={() => {save(watched.filter(item => item !== code)); if (selected === code) setSelected('');}}>Remove</button></li>)}</ul>
-    {name && <section className="grid gap-1 border-t pt-2"><h3 className="font-semibold">Country Stats: {name}</h3><p>Country code: {selected}</p>{!preview && (stats.isPending ? <p role="status">Loading listings…</p> : stats.isError ? <button onClick={() => stats.refetch()}>Retry loading listings</button> : <p>{stats.data} active SaintAgent listings tagged {name}</p>)}<a href={`https://data.worldbank.org/country/${selected}`} target="_blank" rel="noreferrer">Open World Bank country data</a></section>}
+    {name && <section className="grid gap-1 border-t pt-2"><h3 className="font-semibold">Country Stats: {name}</h3><p>Country code: {selected}</p>{!preview && (stats.isPending ? <p role="status">Loading listings…</p> : stats.isError ? <button onClick={() => stats.refetch()}>Retry loading listings</button> : <p>{stats.data} active SaintAgent listings tagged {name}</p>)}</section>}
   </div>;
 }

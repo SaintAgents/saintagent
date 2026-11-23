@@ -16,7 +16,7 @@ export default function DockDirectory({user, visible, contacts = false, action})
       return <li key={row.id} className="flex items-center gap-2 border-b pb-2">
         {!contacts && row.avatar_url && <img src={row.avatar_url} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" loading="lazy" />}
         <div className="min-w-0 flex-1 break-words">{contacts ? <strong>{name}</strong> : <button type="button" onClick={() => openMember(row.user_id)}>{name}</button>}
-          <p className="text-xs">{[row.title || row.role, row.organization || row.company, row.location, contacts ? '' : 'Member'].filter(Boolean).join(' · ')}</p></div>
+          <p className="text-xs">{[row.title || row.role, row.organization || row.company, row.location || row.region, contacts ? '' : row.member_type === 'organization' ? 'Organization' : 'Member'].filter(Boolean).join(' · ')}</p></div>
         {action?.(row, name)}
       </li>;
     })}</ul>

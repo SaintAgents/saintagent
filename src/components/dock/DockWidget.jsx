@@ -22,16 +22,13 @@ import DockLinkTree from '@/components/dock/DockLinkTree';
 import WatchlistWidget from '@/components/watch/WatchlistWidget';
 import { links, safePath } from '@/components/dock/dockCatalog';
 
+const addedWidgets = { Members:DockDirectory, 'Quick Call':DockQuickCall, 'Conference Rooms':DockConferenceRooms, 'Watched Countries':DockWatchedCountries, Macro:DockMacro, Inbox:DockInbox, Messages:DockMessages };
+
 export default function DockWidget({ card, user, save, navigate, shortcuts, history, openModal, visible, panelOpen }) {
   const {type, settings} = card;
-  const active = visible && panelOpen && !isTourPreview();
-  if (type === 'Members') return <DockDirectory user={user} visible={active} />;
-  if (type === 'Quick Call') return <DockQuickCall {...{user,settings,save}} visible={active} />;
-  if (type === 'Conference Rooms') return <DockConferenceRooms user={user} visible={active} />;
-  if (type === 'Watched Countries') return <DockWatchedCountries user={user} visible={active} />;
-  if (type === 'Macro') return <DockMacro {...{settings,save}} />;
-  if (type === 'Inbox') return <DockInbox user={user} visible={active} />;
-  if (type === 'Messages') return <DockMessages user={user} visible={active} />;
+  const active = visible && panelOpen;
+  const AddedWidget = addedWidgets[type];
+  if (AddedWidget) return <div className="dock-added-widget">{isTourPreview() ? <p>Open the Dock outside the tour to use this widget.</p> : <AddedWidget {...{user,settings,save}} visible={active} />}</div>;
   if (type === 'News') return <DockNews visible={visible} />;
   if (type === 'Recent') return <DockHistory history={history} />;
   if (type === 'Notifications') return <DockNotifications {...{user, visible, settings, save}} open={navigate} />;
