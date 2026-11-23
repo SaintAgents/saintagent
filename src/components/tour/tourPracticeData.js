@@ -1,3 +1,5 @@
+import { siteSkillsLessons } from '@/components/tour/siteSkillsLessons';
+
 // Each lesson pairs safe example controls with the resulting sample screen.
 const scene = (action, heading, fields) => [action, heading, Object.entries(fields)];
 export const TOUR_PRACTICE = [

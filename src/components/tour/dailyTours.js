@@ -1,3 +1,5 @@
+import { siteSkillsTour } from '@/components/tour/siteSkillsLessons';
+
 export const DAILY_TOURS = [
   { title: 'The Basics', sections: [
     ['Start at the Command Deck', 'The Command Deck is your home base. The first preview highlights its icon in the top toolbar. Use that icon to return from another page.\n\nSelect Activity Cards above the preview to see the shortcuts below Getting Started Tours: Earn opens the Marketplace, Build opens Missions, and Teach opens Studio. You don’t need to choose one yet; first, learn how to find a page and get back.', '/CommandDeck'],
