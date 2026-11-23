@@ -52,6 +52,7 @@ import AIDiscoverMatches from '@/components/ai/AIDiscoverMatches';
 import ActivityBasedMatcher from '@/components/ai/ActivityBasedMatcher';
 import LeaderPathway from '@/components/leader/LeaderPathway';
 import QuickStartChecklist from '@/components/onboarding/QuickStartChecklist';
+import DailyToursCard from '@/components/tour/DailyToursCard';
 import HelpHint from '@/components/hud/HelpHint';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
@@ -1555,6 +1556,8 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             </div>
           </div>
         </div>
+
+        <DailyToursCard key={currentUser.id} userId={currentUser.id} />
 
         {/* Activity Cards Header */}
         <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
