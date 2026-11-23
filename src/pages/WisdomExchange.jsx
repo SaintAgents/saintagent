@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
 import useWisdomLibrary from '@/components/wisdom/useWisdomLibrary';
 import WisdomLibraryFilters from '@/components/wisdom/WisdomLibraryFilters';
+import WisdomHero from '@/components/wisdom/WisdomHero';
 import WisdomCardTile from '@/components/wisdom/WisdomCardTile';
 import WisdomCardDetail from '@/components/wisdom/WisdomCardDetail';
 import WisdomCardForm from '@/components/wisdom/WisdomCardForm';
@@ -40,6 +41,7 @@ export default function WisdomExchange() {
   };
   const rows = cards.data?.pages.flatMap(page => page.items) || [];
   return <div className="mx-auto max-w-7xl space-y-5 px-4 py-7 sm:px-6">
+    <WisdomHero />
     <header className="flex flex-wrap items-end justify-between gap-4"><div><div className="mb-2 flex items-center gap-2 text-sm font-semibold text-primary"><BookOpen className="size-4" /> Member library</div><h1 className="font-heading text-3xl font-bold sm:text-4xl">Wisdom Exchange</h1><p className="mt-2 max-w-xl text-sm">Turn research and experience into shareable knowledge cards, check the evidence, and learn with short quizzes.</p></div><div className="flex flex-wrap gap-2"><Button asChild variant="outline"><Link to="/Advice">Community Guidance</Link></Button><Button onClick={create}><Plus /> Make a Wisdom Card</Button></div></header>
     <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">{labels.map((label,i) => <div key={label} className="rounded-xl border bg-card p-4 text-card-foreground"><dt className="text-xs font-medium">{label}</dt><dd className="mt-1 text-2xl font-semibold tabular-nums">{stats.data?.[i] ?? '—'}</dd></div>)}</dl>
     <WisdomLibraryFilters {...{ filters,setFilters }} />
