@@ -11,7 +11,7 @@ import IntelligenceReport from '@/components/intelligence/IntelligenceReport';
 import IntelligenceLibrary from '@/components/intelligence/IntelligenceLibrary';
 import '@/components/intelligence/intelligence.css';
 
-export default function Intelligence() {
+export default function Intelligence({ embedded = false }) {
   const {user} = useAuth(), [params,setParams] = useSearchParams(), client = useQueryClient();
   const [objective,setObjective] = useState(() => (params.get('objective') || '').trim().slice(0, 400)), [source,setSource] = useState('all'), [matching,setMatching] = useState('keywords');
   const [seed,setSeed] = useState(null), [parent,setParent] = useState(null), [busy,setBusy] = useState(''), [error,setError] = useState(''), [search,setSearch] = useState(null);
@@ -25,6 +25,16 @@ export default function Intelligence() {
     return next;
   };
   const demoHref = id => `?${demoParams(id).toString()}`;
+  function studyParams(id) {
+    const next = new URLSearchParams();
+    if (embedded) {
+      next.set('workspace', 'research');
+      if (params.get('impactDemo') === '1') next.set('impactDemo', '1');
+    }
+    if (id) next.set('study', id);
+    return next;
+  }
+  const studyHref = id => `${embedded ? '' : '/Intelligence'}?${studyParams(id).toString()}`;
   const incomingObjective = params.get('objective');
   useEffect(() => {
     if (!incomingObjective) return;
@@ -35,8 +45,8 @@ export default function Intelligence() {
     running.current = true; setBusy(mode); setError('');
     try {
       const {data} = await base44.functions.invoke('saintIntelligence',{objective:objective.trim(),source,matching,mode,...(mode === 'research' && {seed:seed ? {kind:seed.kind,id:seed.id} : null,parentId:parent?.id})});
-      if (mode === 'search') {setSearch({objective:objective.trim(), matches:data.matches, relatedTerms:data.relatedTerms}); setParams({});}
-      else {setSeed(null); setParent(null); setSearch(null); setParams({study:data.id}); client.invalidateQueries({queryKey:['intelligence-library',user.id]});}
+      if (mode === 'search') {setSearch({objective:objective.trim(), matches:data.matches, relatedTerms:data.relatedTerms}); setParams(studyParams());}
+      else {setSeed(null); setParent(null); setSearch(null); setParams(studyParams(data.id)); client.invalidateQueries({queryKey:['intelligence-library',user.id]});}
       requestAnimationFrame(() => resultRef.current?.focus());
     } catch (e) {setError(e.response?.data?.error || 'Could not complete this request. Please try again.');}
     finally {running.current = false; setBusy('');}
@@ -50,8 +60,8 @@ export default function Intelligence() {
       {!sample && error && <p role="alert" className="text-sm font-semibold">{error}</p>}
     </section>
     <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(15rem,20rem)]"><div ref={resultRef} tabIndex={-1} className="min-w-0 scroll-mt-36 space-y-4">
-      {sample ? <IntelligenceReport key={`sample-${sample.id}`} id={sample.id} owner={user.id} sample={sample} sampleBranch={sampleBranch} demoHref={demoHref} /> : id ? <IntelligenceReport key={id} id={id} owner={user.id} busy={busy} onBranch={report => begin(null,report)} /> : <IntelligenceResults search={search} busy={busy} onExpand={ref => begin(ref,null)} />}
+      {sample ? <IntelligenceReport key={`sample-${sample.id}`} id={sample.id} owner={user.id} sample={sample} sampleBranch={sampleBranch} demoHref={demoHref} /> : id ? <IntelligenceReport key={id} id={id} owner={user.id} studyHref={studyHref} busy={busy} onBranch={report => begin(null,report)} /> : <IntelligenceResults search={search} busy={busy} onExpand={ref => begin(ref,null)} />}
       {!sample && !id && !search && <section data-intel-panel className="space-y-2 rounded-lg border p-5"><h2 className="font-heading text-xl font-semibold">From discovery to investigation</h2><p>Explore published news and courses, discover missions, listings and organizations, or search your own projects. Deep Dive turns accessible excerpts into a cited brief you can reopen and expand.</p></section>}
-    </div><IntelligenceLibrary owner={user.id} current={sample?.id || id} samples={sample ? demoStudies : null} demoHref={demoHref} demoButton={<Button type="button" size="sm" variant="outline" disabled={!!busy} onClick={() => setParams(demoParams(sample ? null : demoStudies[0].id), { preventScrollReset:true })} aria-pressed={!!sample}>{sample ? 'Exit Demo' : 'Demo'}</Button>} /></div>
+    </div><IntelligenceLibrary owner={user.id} current={sample?.id || id} samples={sample ? demoStudies : null} demoHref={demoHref} studyHref={studyHref} demoButton={<Button type="button" size="sm" variant="outline" disabled={!!busy} onClick={() => setParams(demoParams(sample ? null : demoStudies[0].id), { preventScrollReset:true })} aria-pressed={!!sample}>{sample ? 'Exit Demo' : 'Demo'}</Button>} /></div>
   </div></section>;
 }

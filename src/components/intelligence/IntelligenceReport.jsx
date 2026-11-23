@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { sourceHref, sourceTypes } from '@/components/intelligence/intelligenceSources';
 
 const labels = {evidence:'Source evidence', interpretation:'Interpretation', hypothesis:'Hypothesis', unresolved:'Unresolved'};
-export default function IntelligenceReport({ id, owner, onBranch, busy, sample, sampleBranch, demoHref }) {
+export default function IntelligenceReport({ id, owner, onBranch, busy, sample, sampleBranch, demoHref, studyHref }) {
   const query = useQuery({queryKey:['intelligence-study',owner,id],enabled:!sample,retry:false,queryFn:async () => (await base44.entities.IntelligenceStudy.filter({id,created_by_id:owner},'-created_date',1))[0] || null});
   if (!sample && query.isPending) return <p role="status">Loading investigation…</p>;
   if (!sample && query.isError) return <p role="alert">Could not open this investigation. <Button variant="outline" size="sm" onClick={() => query.refetch()}>Retry</Button></p>;
@@ -16,7 +16,7 @@ export default function IntelligenceReport({ id, owner, onBranch, busy, sample, 
     <header className="space-y-2">
       <p className="text-xs uppercase tracking-widest">{sample ? 'Demo research brief' : 'Saved research brief'} · {new Date(report.created_date).toLocaleDateString()}</p>
       <h2 className="break-words font-heading text-2xl font-semibold">{report.objective}</h2>
-      {report.parent_id && <Link className="text-sm underline" to={sample ? demoHref(report.parent_id) : `/Intelligence?study=${encodeURIComponent(report.parent_id)}`}>Open original investigation</Link>}
+      {report.parent_id && <Link className="text-sm underline" to={sample ? demoHref(report.parent_id) : studyHref(report.parent_id)}>Open original investigation</Link>}
       <p className="whitespace-pre-line break-words">{report.summary}</p>
       <p className="text-xs">{sample ? 'This brief and its cited sources are fictional examples.' : 'AI-generated from accessible excerpts. Citations show what was consulted, not independent verification.'}</p>
     </header>

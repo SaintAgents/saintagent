@@ -13,15 +13,78 @@
   isolation: isolate;
   font-family: var(--font-body);
 }
-#global-impact :is(h1,h2,h3,p,strong,label,a,button,input,select,span,div) {color: inherit !important; text-shadow: none !important;}
-#global-impact :is(h1,h2,h3) {color: hsl(var(--impact-ink)) !important;}
+#global-impact :is(h1,h2,h3,p,strong,label,a,button,input,select,span,div):not(.impact-embedded *) {color: inherit !important; text-shadow: none !important;}
+#global-impact :is(h1,h2,h3):not(.impact-embedded *) {color: hsl(var(--impact-ink)) !important;}
 #global-impact .impact-intro h1 {text-shadow: 0 2px 20px hsl(var(--impact-night)) !important;}
 #global-impact .impact-kicker {color: hsl(var(--impact-cyan)) !important; font-size: .69rem; font-weight: 750; letter-spacing: .13em;}
 #global-impact .impact-muted {color: hsl(var(--impact-muted)) !important;}
 #global-impact .impact-brand, #global-impact .impact-guide {color: hsl(var(--impact-gold)) !important;}
 #global-impact .impact-globe {color: hsl(var(--impact-cyan)) !important; filter: drop-shadow(0 0 8px hsl(var(--impact-cyan) / .35));}
 #global-impact .impact-surface {color: hsl(var(--impact-ink)) !important; border: 1px solid hsl(var(--impact-line)) !important; border-radius: .85rem !important; background: hsl(var(--impact-panel) / .97) !important; box-shadow: 0 0 18px hsl(var(--impact-blue) / .25) !important;}
-#global-impact .impact-command {background: hsl(var(--impact-night) / .94) !important;}
+#global-impact .impact-command {
+  --tile-size: 3.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .75rem;
+  padding: .4rem 1rem;
+  background: hsl(var(--impact-night) / .97) !important;
+}
+#global-impact .impact-brand {
+  display: flex; align-items: center; justify-self: start; gap: .6rem;
+  font-size: .8rem; font-weight: 800; letter-spacing: .13em;
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+#global-impact .impact-brand-logo {width: calc(2 * var(--tile-size)); height: calc(2 * var(--tile-size)); object-fit: cover; border-radius: 50%; filter: none !important;}
+#global-impact .impact-shortcuts {
+  grid-column: 1 / -1; grid-row: 2; display: flex; align-items: center; justify-content: flex-start;
+  width: 100%; min-width: 0; overflow-x: auto; gap: .45rem; padding: .4rem .25rem;
+  background: transparent !important;
+}
+#global-impact .impact-shortcut {
+  display: grid; grid-template-rows: var(--tile-size) auto; flex: 0 0 var(--tile-size);
+  isolation: isolate; overflow: hidden; border-radius: .55rem !important;
+  border: 1px solid hsl(var(--tile-tone) / .48) !important; background: hsl(var(--impact-night)) !important;
+  box-shadow: 0 0 .65rem hsl(var(--tile-tone) / .25) !important;
+}
+#global-impact .impact-shortcut img {width: 100%; height: 100%; object-fit: cover; filter: none !important;}
+#global-impact .impact-shortcut span {color: hsl(var(--tile-tone)) !important; font-size: .56rem; line-height: 1.25; font-weight: 800; padding: .32rem .08rem; text-transform: uppercase;}
+#global-impact .impact-shortcut:is(:hover,[aria-pressed='true']) {border-color: hsl(var(--tile-tone)) !important; box-shadow: 0 0 .85rem hsl(var(--tile-tone) / .65) !important;}
+#global-impact :is(.impact-brand,.impact-shortcut,.impact-embedded):focus-visible {outline: 2px solid hsl(var(--impact-cyan)); outline-offset: 2px;}
+@media (min-width: 1024px) {
+  #global-impact .impact-command {grid-template-columns: 1fr auto 1fr; min-height: 8rem;}
+  #global-impact .impact-shortcuts {grid-column: auto; grid-row: auto; gap: .7rem;}
+  #global-impact .impact-command > .impact-guide {justify-self: end;}
+}
+
+#global-impact .impact-module-stack {display: grid; gap: .7rem;}
+#global-impact .impact-embedded-shell {overflow: hidden;}
+#global-impact .impact-workspace-heading {padding: .7rem 1rem; border-bottom: 1px solid hsl(var(--impact-line)); background: hsl(var(--impact-night)) !important;}
+#global-impact .impact-embedded {
+  --background: var(--impact-night); --foreground: var(--impact-ink);
+  --card: var(--impact-panel); --card-foreground: var(--impact-ink);
+  --popover: var(--impact-panel); --popover-foreground: var(--impact-ink);
+  --muted: var(--impact-panel); --muted-foreground: var(--impact-muted);
+  --border: var(--impact-line); --input: var(--impact-line); --ring: var(--impact-cyan);
+  max-height: min(60dvh, 48rem); min-height: min(22rem, 52dvh); overflow: auto;
+  scrollbar-color: hsl(var(--impact-line)) hsl(var(--impact-night)); color-scheme: dark;
+  color: hsl(var(--impact-ink)); background: hsl(var(--impact-night)) !important;
+}
+#global-impact .impact-embedded > :is(div,section) {min-height: 0; background: transparent !important;}
+#global-impact .impact-embedded > div > .page-hero {display: none;}
+#global-impact .impact-embedded > div > .page-hero + div {max-width: none; margin-top: 0; padding-inline: clamp(.75rem, 2vw, 1.5rem);}
+#global-impact .impact-embedded :is([class~='bg-white'],[class~='bg-slate-50'],[class~='bg-gray-50'],[class~='bg-slate-100'],[class~='bg-background'],[class~='bg-card']) {background: hsl(var(--impact-panel)) !important; border-color: hsl(var(--impact-line)) !important;}
+#global-impact .impact-embedded :is([class~='text-slate-900'],[class~='text-slate-800'],[class~='text-slate-700'],[class~='text-gray-900'],[class~='text-gray-800'],[class~='text-gray-700']) {color: hsl(var(--impact-ink)) !important;}
+#global-impact .impact-embedded :is([class~='text-slate-600'],[class~='text-slate-500'],[class~='text-gray-600'],[class~='text-gray-500']) {color: hsl(var(--impact-muted)) !important;}
+#global-impact .impact-embedded :is(input:not([type='checkbox'],[type='radio']),textarea,select) {background: hsl(var(--impact-panel)) !important; border-color: hsl(var(--impact-line)) !important; color: hsl(var(--impact-ink)) !important;}
+#global-impact .impact-embedded #saint-intelligence {
+  --intel-obsidian: hsl(var(--impact-night)); --intel-panel: hsl(var(--impact-panel));
+  --intel-control: hsl(var(--impact-night)); --intel-text: hsl(var(--impact-ink));
+  --intel-gold: hsl(var(--impact-cyan)); --intel-border: hsl(var(--impact-line));
+  --intel-placeholder: hsl(var(--impact-muted)); --intel-hero-glow: hsl(var(--impact-blue) / .26);
+  --intel-action: hsl(var(--impact-cyan)); --intel-action-text: hsl(var(--impact-night));
+  padding: .85rem;
+}
 #global-impact .impact-opportunities {container: impact-workspace / inline-size;}
 #global-impact .impact-control {background: hsl(var(--impact-panel)) !important; color: hsl(var(--impact-ink)) !important; border: 1px solid hsl(var(--impact-line)) !important; border-radius: .42rem !important; padding: .42rem .65rem; min-height: 2rem; font-size: .75rem; font-weight: 650; line-height: 1.2; text-decoration: none;}
 #global-impact .impact-control:is(:hover,:focus-visible) {border-color: hsl(var(--impact-cyan)) !important;}
