@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CircleDot, Plus, Users, Search, MessageCircle, Heart, Sparkles, ArrowRight, Globe, Map, List } from "lucide-react";
 import CircleManageModal from "@/components/circles/CircleManageModal";
 import CreateCircleModal from "@/components/community/CreateCircleModal";
+import CircleCover from '@/components/circles/CircleCover';
 import CircleChatPanel from "@/components/community/CircleChatPanel";
 import GroupDetailPage from "@/components/groups/GroupDetailPage";
 import GroupShortcutDetail from '@/components/groups/GroupShortcutDetail';
@@ -257,15 +258,8 @@ export default function Circles() {
             return (
               <div key={circle.id} className="bg-white dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00] rounded-xl border overflow-hidden hover:shadow-lg dark:hover:shadow-violet-500/20 transition-all">
                 {/* Header gradient */}
-                <div className={cn(
-                  "h-24 relative",
-                  circle.image_url ?
-                  "" :
-                  "bg-gradient-to-r from-blue-500 to-indigo-600"
-                )}>
-                  {circle.image_url &&
-                  <img src={circle.image_url} alt={circle.name} className="w-full h-full object-cover" />
-                  }
+                <div className="h-24 relative bg-gradient-to-r from-blue-500 to-indigo-600">
+                  <CircleCover circle={circle} user={user} />
                   {circle.is_featured &&
                   <Badge className="absolute top-2 left-2 bg-amber-500 text-white gap-1">
                       <Sparkles className="w-3 h-3" /> Featured

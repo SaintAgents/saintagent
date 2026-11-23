@@ -23,6 +23,7 @@ import GroupMemberDirectory from './GroupMemberDirectory';
 import GroupEvents from './GroupEvents';
 import GroupMeetings from './GroupMeetings';
 import CircleChatPanel from '@/components/community/CircleChatPanel';
+import CircleCover from '@/components/circles/CircleCover';
 import VideoCallRoom from '@/components/video/VideoCallRoom';
 
 export default function GroupDetailPage({ circle, user, onBack }) {
@@ -63,13 +64,8 @@ export default function GroupDetailPage({ circle, user, onBack }) {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
       {/* Header */}
       <div className="relative">
-        <div className={cn(
-          "h-48",
-          circle.image_url ? "" : "bg-gradient-to-r from-violet-500 to-indigo-600"
-        )}>
-          {circle.image_url && (
-            <img src={circle.image_url} alt={circle.name} className="w-full h-full object-cover" />
-          )}
+        <div className="relative h-48 bg-gradient-to-r from-violet-500 to-indigo-600">
+          <CircleCover circle={circle} user={user} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         </div>
         

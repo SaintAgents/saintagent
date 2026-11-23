@@ -14,6 +14,10 @@
     "image_url": {
       "type": "string"
     },
+    "image_uri": {
+      "type": "string",
+      "description": "Private storage reference for the circle cover image"
+    },
     "owner_id": {
       "type": "string"
     },

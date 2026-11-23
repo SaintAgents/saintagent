@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+import CircleImageInput from '@/components/circles/CircleImageInput';
 
 const CATEGORIES = [
   { value: 'spiritual', label: 'Spiritual' },
@@ -45,11 +46,22 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
     chat_enabled: true
   });
   const [tagInput, setTagInput] = useState('');
+  const [image, setImage] = useState(null);
+  const [imageError, setImageError] = useState('');
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Circle.create(data),
+    mutationFn: async ({ data, image }) => {
+      if (image) {
+        const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file: image });
+        if (!file_uri) throw new Error('Image upload did not return a file.');
+        return base44.entities.Circle.create({ ...data, image_uri: file_uri });
+      }
+      return base44.entities.Circle.create(data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['circles'] });
+      setImage(null);
+      setImageError('');
       onOpenChange(false);
       setFormData({
         name: '', description: '', purpose: '', category: 'social',
@@ -60,13 +72,32 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
   });
 
   const handleCreate = () => {
-    createMutation.mutate({
+    if (!user?.email || imageError || createMutation.isPending) return;
+    createMutation.mutate({ image, data: {
       ...formData,
       owner_id: user.email,
       owner_name: user.full_name,
       member_ids: [user.email],
       member_count: 1
-    });
+    } });
+  };
+
+  const handleImageChange = (file) => {
+    const validType = !file || ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type);
+    const error = !validType ? 'Choose a JPG, PNG, WebP, or GIF image.' : file?.size > 10 * 1024 * 1024 ? 'Choose an image no larger than 10 MB.' : '';
+    setImageError(error);
+    setImage(error ? null : file);
+    if (createMutation.isError) createMutation.reset();
+  };
+
+  const handleOpenChange = (nextOpen) => {
+    if (createMutation.isPending) return;
+    if (!nextOpen) {
+      setImage(null);
+      setImageError('');
+      createMutation.reset();
+    }
+    onOpenChange(nextOpen);
   };
 
   const addTag = () => {
@@ -91,7 +122,7 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create a Circle</DialogTitle>
@@ -106,6 +137,8 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
               className="mt-2"
             />
           </div>
+
+          <CircleImageInput file={image} error={imageError} onChange={handleImageChange} disabled={createMutation.isPending} />
 
           <div>
             <Label>Category</Label>
@@ -239,13 +272,14 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
             />
           </div>
 
+          {createMutation.isError && <p role="alert" className="text-sm text-destructive">Couldn’t create the circle. Please try again.</p>}
           <div className="flex gap-3 pt-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1 rounded-xl">
+            <Button variant="outline" disabled={createMutation.isPending} onClick={() => handleOpenChange(false)} className="flex-1 rounded-xl">
               Cancel
             </Button>
             <Button
               onClick={handleCreate}
-              disabled={!formData.name.trim() || createMutation.isPending}
+              disabled={!user?.email || !formData.name.trim() || !!imageError || createMutation.isPending}
               className="flex-1 rounded-xl bg-violet-600 hover:bg-violet-700"
             >
               {createMutation.isPending ? 'Creating...' : 'Create Circle'}
