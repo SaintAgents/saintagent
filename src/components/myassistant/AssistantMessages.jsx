@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 
-export default function AssistantMessages({ chat, greeting, onPrompt, voice }) {
+export default function AssistantMessages({ chat, greeting, onPrompt, voice, onSupport }) {
   const scroll = useRef(null);
   const follow = useRef(true);
   useEffect(() => { if (follow.current && scroll.current) scroll.current.scrollTop = scroll.current.scrollHeight; }, [chat.messages]);
@@ -11,7 +11,7 @@ export default function AssistantMessages({ chat, greeting, onPrompt, voice }) {
     {chat.loading && <p role="status">Opening your conversation…</p>}
     {!chat.loading && !messages.length && <div className="space-y-3">
       <p>{greeting || 'What would you like to accomplish?'}</p>
-      <div className="flex flex-wrap gap-2">{[['Plan my priorities', 'Help me plan my priorities today.'], ['Get page help', 'What can I do on this page?'], ['Draft a message', 'Help me draft a message.']].map(([label, prompt]) => <Button size="sm" key={label} onClick={() => onPrompt(prompt)}>{label}</Button>)}</div>
+      <div className="flex flex-wrap gap-2"><Button size="sm" onClick={() => onPrompt('Help me plan my priorities today.')}>Plan my priorities</Button><Button size="sm" onClick={onSupport}>Get page help</Button><Button size="sm" onClick={() => onPrompt('Help me draft a message.')}>Draft a message</Button></div>
     </div>}
     {!chat.loading && !messages.length && <details><summary className="cursor-pointer">More ways to get help</summary><div className="mt-2 flex flex-wrap gap-2">{[['Planning', 'Help me break an objective into actionable steps.'], ['Research', 'Help me plan research for a project.'], ['Navigation', 'Which SaintAgent pages should I use to find projects and collaborators?']].map(([label, prompt]) => <Button size="sm" key={label} onClick={() => onPrompt(prompt)}>{label}</Button>)}</div></details>}
     {messages.map((message, index) => <article key={message.id || index} className={`max-w-full space-y-1 break-words border-l-2 pl-3 ${message.role === 'user' ? 'border-primary' : 'border-border'}`}>

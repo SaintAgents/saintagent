@@ -15,7 +15,6 @@ import FloatingChatWidget from '@/components/FloatingChatWidget';
 import MyAssistant from '@/components/myassistant/MyAssistant';
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import ProjectDetailCard from '@/components/projects/ProjectDetailCard';
-import RightSideTabs from '@/components/hud/RightSideTabs';
 import DatingMatchesPopup from '@/components/hud/DatingMatchesPopup';
 import GlobalSidePanelNudge from '@/components/hud/GlobalSidePanelNudge';
 import SidePanel from '@/components/hud/SidePanel';
@@ -1938,9 +1937,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
         </FloatingPanel>
       )}
 
-      {/* Right Side Tabs (Help + Chat) */}
-      <RightSideTabs previewOnly={tourPreview} />
-      {!tourPreview && currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <MyAssistant key={currentUser.id} userId={currentUser.id} currentPage={currentPageName} />}
+      <MyAssistant key={currentUser.id} userId={currentUser.id} currentPage={currentPageName} previewOnly={tourPreview} supportOnly={tourPreview || currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto'} />
 
       {/* Global Side Panel Nudge */}
       {!tourPreview && <GlobalSidePanelNudge />}

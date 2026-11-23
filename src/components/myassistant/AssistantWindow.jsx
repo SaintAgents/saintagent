@@ -3,13 +3,13 @@ import { createPortal } from 'react-dom';
 import { Maximize2, Minimize2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function AssistantWindow({ title, icon: Icon, accent, onClose, children }) {
+export default function AssistantWindow({ title, icon: Icon, accent, open, onClose, children }) {
   const [full, setFull] = useState(false);
   const [position, setPosition] = useState(null);
   const panel = useRef(null);
   const drag = useRef(null);
-  return createPortal(<section ref={panel} role="dialog" aria-label={title} data-readable-surface
-    className={`fixed z-[180] flex min-h-0 flex-col overflow-hidden border shadow-2xl ${full ? 'inset-0' : 'inset-x-3 bottom-36 h-[min(35rem,calc(100dvh-10rem))] rounded-xl md:inset-x-auto md:bottom-20 md:right-16 md:h-[min(36rem,calc(100dvh-6rem))] md:min-h-72 md:w-[27rem] md:min-w-80 md:max-w-[calc(100vw-4rem)] md:max-h-[calc(100dvh-5rem)] md:resize'}`}
+  return createPortal(<section id="sa-assistant-panel" ref={panel} role="dialog" aria-label={title} data-readable-surface
+    className={`fixed z-[180] ${open ? 'flex' : 'hidden'} min-h-0 flex-col overflow-hidden border shadow-2xl ${full ? 'inset-0' : 'inset-x-3 bottom-24 h-[min(35rem,calc(100dvh-9rem))] rounded-xl md:inset-x-auto md:bottom-20 md:right-16 md:h-[min(36rem,calc(100dvh-6rem))] md:min-h-72 md:w-[27rem] md:min-w-80 md:max-w-[calc(100vw-4rem)] md:max-h-[calc(100dvh-5rem)] md:resize'}`}
     style={!full && position && window.innerWidth >= 768 ? { left: position.x, top: position.y, right: 'auto', bottom: 'auto' } : undefined}>
     <header className={`flex shrink-0 items-center gap-2 border-t-4 border-b px-3 py-2 ${accent}`}>
       <div className={`flex min-w-0 flex-1 items-center gap-2 ${!full ? 'md:cursor-move md:touch-none' : ''}`}

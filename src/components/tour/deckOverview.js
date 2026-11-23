@@ -51,7 +51,7 @@ export const DECK_OVERVIEW = [
   ] },
   { area: 'Right side of the screen', stops: [
     stop('Right side panel', 'The side panel keeps shortcuts and selected dashboard information nearby. It can also hold cards you’ve moved off the main deck.', 'Open it using the edge handle when you want quick access or need to find a stored card.', '[data-side-panel-handle]'),
-    stop('Help and chat', 'Help is for questions about how to use the current page. Chat is for conversations, not a substitute for the help guide.', 'Use the question-mark tab and ask about the exact action you’re trying to take, such as finding a stored card.', landmark('help')),
+    stop('Help and chat', 'Help is for questions about how to use the current page. Chat is for conversations, not a substitute for the help guide.', 'Open My Assistant, select Saint Support, and ask about the exact action you’re trying to take, such as finding a stored card.', landmark('help')),
     stop('Appearance toolbar', 'This floating toolbar is separate from the top navigation bar. It changes the look of the app and includes shortcuts for help, alerts, and signing out.', 'Try the example icons below to learn what each control opens without changing your preferences.', landmark('appearance')),
   ] },
 ];
