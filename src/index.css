@@ -652,6 +652,12 @@ html[data-theme='hacker'] #topbar-profile-menu {
   background: #000 !important;
 }
 
+/* Keep Resource Hub content above the page's Light mode background overlays. */
+html[data-theme='light'] [data-resource-hub] {
+  position: relative;
+  z-index: 1;
+}
+
 /* Opt-in readable surfaces keep their contrast over video, canvas and glass effects. */
 [data-readable-surface] {
   --readable-bg: hsl(var(--background));

@@ -58,7 +58,7 @@ export default function ResourceHub() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div data-resource-hub className="max-w-6xl mx-auto p-6">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Resource Hub</h1>
       </div>
