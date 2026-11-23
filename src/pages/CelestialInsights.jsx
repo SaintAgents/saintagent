@@ -98,12 +98,15 @@ CRITICAL GUIDELINES:
 export default function CelestialInsights() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [readingType, setReadingType] = useState('horoscope');
+  const [readingType, setReadingType] = useState(() => {
+    const type = new URLSearchParams(window.location.search).get('type');
+    return Object.hasOwn(READING_TYPE_LABELS, type || '') ? type : 'horoscope';
+  });
   const [focus, setFocus] = useState('general');
   const [timeframe, setTimeframe] = useState('daily');
   const [currentReading, setCurrentReading] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [activeTab, setActiveTab] = useState('consult');
+  const [activeTab, setActiveTab] = useState(() => new URLSearchParams(window.location.search).get('tab') === 'history' ? 'history' : 'consult');
   const [selectorOpen, setSelectorOpen] = useState(false);
 
   const { data: profiles } = useQuery({

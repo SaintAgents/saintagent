@@ -39,6 +39,7 @@ import SavedItems from '@/pages/SavedItems';
 import Intelligence from '@/pages/Intelligence';
 import GlobalImpactDashboard from '@/pages/GlobalImpactDashboard';
 import ConferencePortal from '@/pages/ConferencePortal';
+import MyGuide from '@/pages/MyGuide';
 import CelestialInsights from './pages/CelestialInsights';
 import BusinessPlanBuilder from './pages/BusinessPlanBuilder';
 import Login from './pages/Login';
@@ -202,6 +203,7 @@ const AppRoutes = () => (
       <Route path="/SavedItems" element={<LayoutWrapper currentPageName="SavedItems"><SavedItems /></LayoutWrapper>} />
       <Route path="/Intelligence" element={<LayoutWrapper currentPageName="Intelligence"><Intelligence /></LayoutWrapper>} />
       <Route path="/ConferencePortal" element={<LayoutWrapper currentPageName="ConferencePortal"><ConferencePortal /></LayoutWrapper>} />
+      <Route path="/MyGuide" element={<LayoutWrapper currentPageName="MyGuide"><MyGuide /></LayoutWrapper>} />
       <Route path="/GlobalImpactDashboard" element={<LayoutWrapper currentPageName="GlobalImpactDashboard"><GlobalImpactDashboard /></LayoutWrapper>} />
     </Route>
     <Route path="*" element={<PageNotFound />} />
