@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { BookOpen, CheckCircle, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
@@ -9,6 +10,16 @@ export default function DailyToursCard({ userId }) {
   const [day, setDay] = useState(null);
   const [step, setStep] = useState(0);
   const trigger = useRef(null);
+  const card = useRef(null);
+  const { hash, key } = useLocation();
+  useEffect(() => {
+    if (hash !== '#daily-tours' || !userId) return;
+    const frame = requestAnimationFrame(() => {
+      card.current?.scrollIntoView({ block: 'start' });
+      card.current?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [hash, key, userId]);
   const { query, record, sections, unlocked, nextUnlock, save } = useDailyTours(userId);
   const completed = sections.filter((count, index) => count === DAILY_TOURS[index].sections.length).length;
   if (!userId) return null;
@@ -28,7 +39,7 @@ export default function DailyToursCard({ userId }) {
   };
 
   return (
-    <section className="mx-0 mb-6 space-y-4 rounded-xl border bg-card p-4 text-card-foreground md:mx-6 md:p-5" aria-labelledby="daily-tours-title">
+    <section id="daily-tours" ref={card} tabIndex={-1} className="mx-0 mb-6 scroll-mt-32 space-y-4 rounded-xl border bg-card p-4 text-card-foreground md:mx-6 md:p-5" aria-labelledby="daily-tours-title">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div><h2 id="daily-tours-title" className="flex items-center gap-2 font-heading text-lg font-semibold"><BookOpen size={18} aria-hidden="true" /> Getting Started Tours</h2><p className="mt-1 text-sm text-muted-foreground">Learn SaintAgent in seven tours, with seven short sections each. A new tour unlocks every 24 hours after you start.</p></div>
         {record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import SidePanelQuickAccess from '@/components/hud/SidePanelQuickAccess';
 
 import {
   ChevronLeft,
@@ -598,6 +599,7 @@ export default function SidePanel({
           {/* Content */}
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-6">
+              <SidePanelQuickAccess />
               {/* Stored Cards Section */}
               {storedCards && storedCards.length > 0 && (
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
@@ -1052,6 +1054,7 @@ export default function SidePanel({
 
       <ScrollArea className="flex-1">
         <div className="p-4 pb-24 space-y-6">
+          {isOpen && <SidePanelQuickAccess />}
           {/* Stored Cards Section */}
           {storedCards && storedCards.length > 0 && (
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-[rgba(0,255,136,0.3)]">
