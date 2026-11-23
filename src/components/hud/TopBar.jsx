@@ -925,12 +925,13 @@ export default function TopBar({
 
 
         {currentUser && canopyControl && (
-          <Button type="button" variant="ghost" size="icon" className="hidden shrink-0 md:inline-flex"
+          <Button type="button" variant="outline" size="sm" className="hidden h-8 shrink-0 gap-1.5 border-current px-2.5 font-semibold text-primary hover:text-accent-foreground md:inline-flex"
             aria-label={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}
             title={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}
             aria-expanded={canopyControl.expanded} aria-controls={canopyControl.expanded ? 'canopy-workspace' : undefined}
             onClick={canopyControl.toggle}>
             <PanelTopOpen aria-hidden="true" />
+            Canopy
           </Button>
         )}
 

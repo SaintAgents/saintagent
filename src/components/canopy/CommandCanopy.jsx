@@ -15,11 +15,11 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
   const [overlay, setOverlay] = useState(null);
   const [focus, setFocus] = useState('');
   const hud = useCanopyDeployment(user.id, location.pathname, settings, sidebarCollapsed, sidebarWidth, topbarCollapsed);
-  const { mode, setMode, enabled, root, style, recent, handle } = hud;
+  const { mode, setMode, desktop, showHandle, enabled, root, style, recent, handle } = hud;
   const focusFromToolbar = useRef(false);
   useEffect(() => {
     const expanded = mode !== 'closed';
-    onToolbarControlChange?.(enabled ? {
+    onToolbarControlChange?.(desktop ? {
       expanded,
       toggle: () => {
         focusFromToolbar.current = !expanded;
@@ -31,7 +31,7 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
       focusFromToolbar.current = false;
       root.current?.querySelector('#canopy-workspace .canopy-heading button')?.focus();
     }
-  }, [enabled, mode, onToolbarControlChange, root, setMode]);
+  }, [desktop, enabled, mode, onToolbarControlChange, root, setMode]);
   function open(to) {
     if (to.startsWith('/')) { setFocus(''); setMode('split'); navigate(to); return; }
     if (to === 'actions' || to === 'notes' || to === 'notifications') { setFocus(to); if (mode !== 'split') setMode(to === 'actions' ? 'full' : 'peek'); return; }
@@ -41,7 +41,7 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
   const unread = notifications.filter(n => !n.is_read).length;
   const ids = mode === 'peek' ? peek : settings.cards;
   return <div ref={root} className="sa-canopy" data-canopy-mode={mode} style={style} hidden={!enabled}>
-    {mode !== 'split' && <div className="canopy-handle" data-form={settings.form}>
+    {showHandle && mode !== 'split' && <div className="canopy-handle" data-form={settings.form}>
       <button type="button" aria-label="Command Canopy" aria-expanded={mode !== 'closed'} aria-controls="canopy-workspace" className="canopy-notch" {...handle}>
         {mode === 'full' ? <ChevronUp size={17} /> : <ChevronDown size={17} />}{settings.form === 'bar' && 'Command Canopy'}
       </button>
