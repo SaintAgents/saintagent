@@ -29,6 +29,7 @@ import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
 import FullscreenMatchesSwiper from '@/components/hud/FullscreenMatchesSwiper';
 import MobileCloseButton from '@/components/hud/MobileCloseButton';
 import LiveAchievementToasts from '@/components/gamification/LiveAchievementToasts';
+import LiveActivity from '@/components/live/LiveActivity';
 import VideoBackgroundLayer from '@/components/hud/VideoBackgroundLayer';
 import VideoBackgroundToolbar from '@/components/hud/VideoBackgroundToolbar';
 import SurfaceOpacityController from '@/components/hud/SurfaceOpacityController';
@@ -336,7 +337,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const { user: authUser, isLoadingAuth, navigateToLogin } = useAuth();
   const currentUser = authUser;
 
-  const { data: profiles } = useQuery({
+  const { data: profiles, isSuccess: profileReady } = useQuery({
     queryKey: ['myProfile', currentUser?.email],
     queryFn: async () => {
               return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
@@ -639,6 +640,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const rankCode = profile?.rp_rank_code || 'seeker';
 
   return (
+    <LiveActivity key={currentUser.id} user={currentUser} profile={profile} profileReady={profileReady} page={currentPageName} disabled={tourPreview}>
     <div className="min-h-screen bg-slate-50 [&[data-nav-resizing]_.nav-width-aware]:duration-0" data-bg-effect={bgEffect}
       data-nav-resizing={sidebarResizing ? '' : undefined} style={{ '--expanded-nav-width': `${sidebarWidth}px` }}>
       {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} sidebarWidth={sidebarWidth} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={query => { setCanopySearch(query || ''); setSearchOpen(true); }} onCreate={() => setQuickCreateOpen(true)} onToolbarControlChange={setCanopyControl} />}
@@ -1996,7 +1998,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
               />
 
       {/* Live Achievement Toasts */}
-      <LiveAchievementToasts />
+      {!tourPreview && profileReady && profile?.status !== 'dnd' && <LiveAchievementToasts />}
 
       {/* Video Background Toolbar */}
       <VideoBackgroundToolbar theme={theme} onThemeToggle={setTheme} currentPageName={currentPageName} />
@@ -2022,6 +2024,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
         />
       )}
     </div>
+    </LiveActivity>
   );
 }
 

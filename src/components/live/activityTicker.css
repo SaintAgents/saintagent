@@ -1,0 +1,13 @@
+.live-ticker-row { display:flex; align-items:center; min-width:0; padding:.2rem; gap:.2rem; border-top:1px solid var(--readable-border); }
+.live-ticker-bottom { position:fixed; z-index:160; bottom:3.5rem; left:0; right:var(--dock-occupied,0px); }
+.live-ticker-window { overflow:hidden; min-width:0; flex:1; }
+.live-ticker-marquee { display:flex; width:max-content; animation:live-ticker-scroll var(--ticker-loop) linear infinite; }
+.live-ticker-segment { display:flex; gap:1rem; padding-right:1rem; white-space:nowrap; }
+.live-ticker-window:hover .live-ticker-marquee { animation-play-state:paused; }
+.live-ticker-window:focus-within { overflow:auto; }
+.live-ticker-window:focus-within .live-ticker-marquee { animation:none; }
+.live-ticker-window:focus-within .live-ticker-segment[aria-hidden] { display:none; }
+@keyframes live-ticker-scroll { to { transform:translateX(-50%); } }
+@media(min-width:768px) { .live-ticker-bottom { bottom:0; } }
+@media(max-width:767px) { body:has(.dock-root[data-dock-open='true']:not([hidden])) .live-ticker-bottom { visibility:hidden; } }
+@media(prefers-reduced-motion:reduce) { .live-ticker-window { overflow:auto; } .live-ticker-marquee { animation:none; } .live-ticker-segment[aria-hidden] { display:none; } }

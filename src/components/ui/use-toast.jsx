@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 const TOAST_LIMIT = 20;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 200;
 
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
@@ -141,6 +141,8 @@ function toast({ ...props }) {
   };
 }
 
+const dismissToast = toastId => dispatch({ type: actionTypes.DISMISS_TOAST, toastId });
+
 function useToast() {
   const [state, setState] = useState(memoryState);
 
@@ -152,13 +154,14 @@ function useToast() {
         listeners.splice(index, 1);
       }
     };
-  }, [state]);
+    setState(memoryState);
+  }, []);
 
   return {
     ...state,
     toast,
-    dismiss: (toastId) => dispatch({ type: actionTypes.DISMISS_TOAST, toastId }),
+    dismiss: dismissToast,
   };
 }
 
-export { useToast, toast }; 
+export { useToast, toast };

@@ -1,0 +1,157 @@
+{
+  "name": "LiveEvent",
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": [
+        "matches",
+        "funding",
+        "projects",
+        "research",
+        "collaborations",
+        "needs",
+        "opportunities",
+        "watchlist",
+        "impact",
+        "personal",
+        "earnings",
+        "signals",
+        "new_members"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "information",
+        "success",
+        "opportunity",
+        "ai_match",
+        "milestone",
+        "priority",
+        "major_event"
+      ],
+      "default": "information"
+    },
+    "headline": {
+      "type": "string",
+      "maxLength": 180
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1600
+    },
+    "metric": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "country": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "match_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "action_path": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "profile_user_id": {
+      "type": "string"
+    },
+    "recipient_id": {
+      "type": "string",
+      "description": "App user ID for private events"
+    },
+    "audience": {
+      "type": "string",
+      "enum": [
+        "members",
+        "personal"
+      ],
+      "default": "personal"
+    },
+    "is_demo": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "category",
+    "headline",
+    "audience"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "data.audience": "members"
+            },
+            {
+              "$or": [
+                {
+                  "user_condition": {
+                    "role": "user"
+                  }
+                },
+                {
+                  "user_condition": {
+                    "role": "coordinator"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$and": [
+            {
+              "data.audience": "personal"
+            },
+            {
+              "data.recipient_id": "{{user.id}}"
+            },
+            {
+              "$or": [
+                {
+                  "user_condition": {
+                    "role": "user"
+                  }
+                },
+                {
+                  "user_condition": {
+                    "role": "coordinator"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

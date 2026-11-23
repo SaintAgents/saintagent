@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SidebarResizeHandle from '@/components/hud/SidebarResizeHandle';
+import ActivityTicker from '@/components/live/ActivityTicker';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
@@ -1094,6 +1095,7 @@ export default function Sidebar({
         </div>
 
         {/* Content */}
+        <ActivityTicker placement="sidebar" />
         <ScrollArea className="flex-1">
           {renderSidebarContent(true)}
         </ScrollArea>
@@ -1174,6 +1176,7 @@ export default function Sidebar({
         </div>
       </div>
 
+      <ActivityTicker placement="sidebar" />
       {renderSidebarContent(false)}
 
       {/* Nav popup */}

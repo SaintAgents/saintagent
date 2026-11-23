@@ -53,6 +53,7 @@ import {
   GraduationCap
 } from "lucide-react";
 import NotificationBell from './NotificationBell';
+import { TickerSetupButton } from '@/components/live/ActivityTicker';
 import ModeHelpModal from './ModeHelpModal';
 import WalkthroughModal from './WalkthroughModal';
 import DatingMatchesPopup from './DatingMatchesPopup';
@@ -916,6 +917,7 @@ export default function TopBar({
         </Popover>
 
 
+        <TickerSetupButton />
         {/* Notifications */}
         <NotificationBell 
           notifications={notifications} 
