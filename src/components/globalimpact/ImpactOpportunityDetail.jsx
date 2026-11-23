@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Globe2, MapPin, Sparkles, Users } from 'lucide-react';
+import { ArrowRight, MapPin, Sparkles, Users } from 'lucide-react';
+import ImpactOpportunityArt from '@/components/globalimpact/ImpactOpportunityArt';
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { shareUrl } from '@/components/publicprofile/publicLinks';
 import { matchReasons, openGuide, opportunityPath, researchPath, titleCase } from '@/components/globalimpact/impactDiscovery';
@@ -13,7 +14,7 @@ export default function ImpactOpportunityDetail({ row, tags, demo }) {
   const reasons = matchReasons(row, tags);
   const requirements = row.skills_required?.length ? row.skills_required : [];
   return <aside aria-label="Opportunity details" className="impact-detail min-w-0">
-    <div className="impact-detail-art">{row.image_url ? <img src={row.image_url} alt="" /> : <Globe2 aria-hidden="true" size={52} />}</div>
+    <ImpactOpportunityArt key={row.id} row={row} detail />
     <div className="space-y-3 p-3 sm:p-4">
       <div className="flex flex-wrap items-center gap-2"><span className="impact-chip">{titleCase(row.category) || 'Opportunity'}</span><span className="impact-muted text-xs">{row.listing_type === 'request' ? 'Request for help' : 'Offer'}</span></div>
       <h3 className="break-words text-lg font-bold leading-tight">{row.title}</h3>

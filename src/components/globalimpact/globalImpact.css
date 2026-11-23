@@ -115,11 +115,11 @@
 #global-impact .impact-record {display: flex; flex-direction: column; width: 100%;}
 #global-impact .impact-record-list {flex-direction: row; align-items: center;}
 #global-impact .impact-record:is(:hover,[aria-pressed='true']) {border-color: hsl(var(--impact-cyan)) !important; box-shadow: 0 0 10px hsl(var(--impact-blue) / .34) !important;}
-#global-impact :is(.impact-record-art,.impact-detail-art) {display: grid; place-items: center; overflow: hidden; width: 100%; background: radial-gradient(ellipse at 55% 100%, hsl(var(--impact-blue) / .55), transparent 75%), linear-gradient(130deg,hsl(var(--impact-night)),hsl(var(--impact-line))) !important; color: hsl(var(--impact-cyan)) !important;}
+#global-impact :is(.impact-record-art,.impact-detail-art) {position: relative; flex-shrink: 0; overflow: hidden; width: 100%; background: hsl(var(--impact-panel)) !important;}
 #global-impact .impact-record-art {height: 6rem;}
 #global-impact .impact-record-list .impact-record-art {width: 5rem; height: 4.8rem; flex-shrink: 0;}
 #global-impact .impact-detail-art {height: 9.5rem;}
-#global-impact :is(.impact-record-art,.impact-detail-art) img {width: 100%; height: 100%; object-fit: cover; filter: none !important;}
+#global-impact :is(.impact-record-art,.impact-detail-art) img {position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: none !important;}
 #global-impact .impact-chip {display: inline-block; color: hsl(var(--impact-cyan)) !important; background: hsl(var(--impact-cyan) / .11) !important; border-radius: 99px !important; font-size: .65rem; font-weight: 700; padding: .16rem .42rem;}
 #global-impact .impact-match {color: hsl(var(--impact-gold)) !important;}
 #global-impact .impact-small {min-height: 1.7rem; padding: .3rem .42rem; font-size: .69rem;}
