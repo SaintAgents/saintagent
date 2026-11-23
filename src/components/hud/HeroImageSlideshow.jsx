@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { HERO_IMAGES } from './HeroImageData';
+import useHeroCycleControls from '@/components/hud/useHeroCycleControls';
 import { Play, Pause, SkipForward, Clock, Image, Maximize2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,7 +14,7 @@ export default function HeroImageSlideshow({ className }) {
   const [currentIndex, setCurrentIndex] = useState(() => 
     Math.floor(Math.random() * HERO_IMAGES.length)
   );
-  const [isPaused, setIsPaused] = useState(false);
+  const [isPaused, setIsPaused] = useHeroCycleControls();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 

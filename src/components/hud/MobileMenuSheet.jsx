@@ -20,6 +20,7 @@ import { getStoredViewMode, VIEW_MODE_CONFIG } from './DeckViewModeSelector';
 // Full menu items with nav IDs for filtering - MUST MATCH Sidebar.jsx NAV_ITEMS
 const menuItems = [
   { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck' },
+  { id: 'observation', label: 'Observation Deck', icon: LayoutDashboard, page: 'ObservationDeck' },
   { id: 'betafeedback', label: 'Beta Feedback', icon: MessageCircle, page: 'BetaFeedback' },
   { id: 'forum', label: 'Forum', icon: MessagesSquare, page: 'Forum' },
   { id: 'initiations', label: 'Initiations', icon: Flame, page: 'Initiations' },
@@ -74,7 +75,7 @@ const menuItems = [
 ];
 
 const SIMPLE_NAV_IDS = [
-  'command', 'missions', 'projects', 'meetings', 'messages', 'matches',
+  'command', 'observation', 'missions', 'projects', 'meetings', 'messages', 'matches',
   'communityfeed', 'marketplace', 'events', 'activity', 'affiliate', 'broadcast', 'profile', 'settings'
 ];
 

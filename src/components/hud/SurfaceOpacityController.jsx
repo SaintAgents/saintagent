@@ -23,7 +23,7 @@ export default function SurfaceOpacityController() {
   const [sidebar, setSidebar] = useState(() => getSettings(SIDEBAR_KEY, SIDEBAR_DEFAULTS));
 
   useEffect(() => {
-    const h1 = (e) => setSurface(e.detail || getSettings(STORAGE_KEY, SURFACE_DEFAULTS));
+    const h1 = (e) => setSurface(current => e.detail ? {...current,...e.detail} : getSettings(STORAGE_KEY, SURFACE_DEFAULTS));
     const h2 = (e) => setSidebar(e.detail || getSettings(SIDEBAR_KEY, SIDEBAR_DEFAULTS));
     window.addEventListener('surfaceOpacityChanged', h1);
     window.addEventListener('sidebarOpacityChanged', h2);

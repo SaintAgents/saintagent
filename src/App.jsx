@@ -37,6 +37,10 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import Mfa from '@/pages/Mfa';
+import ObservationDeck from '@/pages/ObservationDeck';
+import ObservationPreview from '@/components/observation/ObservationPreview';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // ErrorBoundary used per-page in Layout, not at app level
@@ -45,15 +49,19 @@ const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
-const LayoutWrapper = ({ children, currentPageName }) => Layout ?
-  <Layout currentPageName={currentPageName}>{children}</Layout>
-  : <>{children}</>;
+const LayoutWrapper = ({ children, currentPageName }) => {
+  const { search } = useLocation();
+  if (window.parent !== window && new URLSearchParams(search).get('observationPreview') === '1') {
+    return <ObservationPreview id={currentPageName}>{children}</ObservationPreview>;
+  }
+  return Layout ? <Layout currentPageName={currentPageName}>{children}</Layout> : <>{children}</>;
+};
 
 // Pages that do NOT require authentication
 const PUBLIC_PATHS = new Set([
   '/', '/join', '/home', '/faq', '/terms', '/landing', '/onboarding',
   '/demopreview', '/demologin', '/login', '/signup', '/welcome',
-  '/register', '/forgot-password', '/reset-password'
+  '/register', '/forgot-password', '/reset-password', '/mfa'
 ]);
 
 const isPublicPath = (pathname) => {
@@ -172,6 +180,10 @@ const AppRoutes = () => (
     <Route path="/register" element={<Register />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/reset-password" element={<ResetPassword />} />
+    <Route path="/mfa" element={<Mfa />} />
+    <Route element={<ProtectedRoute unauthenticatedElement={<a href="/login">Sign in to continue</a>} />}>
+      <Route path="/ObservationDeck" element={<LayoutWrapper currentPageName="ObservationDeck"><ObservationDeck /></LayoutWrapper>} />
+    </Route>
     <Route path="*" element={<PageNotFound />} />
   </Routes>
 );
@@ -183,7 +195,7 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
-          <NavigationTracker />
+          {!(window.parent !== window && new URLSearchParams(window.location.search).get('observationPreview') === '1') && <NavigationTracker />}
           <AuthenticatedApp />
         </Router>
         <Toaster />

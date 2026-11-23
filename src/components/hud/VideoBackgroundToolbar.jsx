@@ -53,6 +53,11 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
     const saved = getSettings(SIDEBAR_OPACITY_KEY);
     return { sidebarOpacity: 100, sidebarBg: 90, fontBrightness: 100, ...saved };
   });
+  useEffect(() => {
+    const syncHero = e => { if (e.detail?.heroOpacity != null) setSurfaceOpacity(current => ({...current, heroOpacity:e.detail.heroOpacity})); };
+    window.addEventListener('surfaceOpacityChanged',syncHero);
+    return () => window.removeEventListener('surfaceOpacityChanged',syncHero);
+  },[]);
   const [activeSurface, setActiveSurface] = useState('global');
   const [uploading, setUploading] = useState(false);
   const [showLibrary, setShowLibrary] = useState(false);

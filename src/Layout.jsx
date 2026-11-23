@@ -299,6 +299,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const getPageId = (pageName) => {
     const pageMap = {
       'CommandDeck': 'command',
+      'ObservationDeck': 'observation',
       'Matches': 'matches',
       'Meetings': 'meetings',
       'Missions': 'missions',
