@@ -6,8 +6,8 @@ html[data-theme='hacker'] .dock-root {--d-scheme:dark;--d-surface:0 0% 0%;--d-ca
 .dock-root[hidden],.dock-card[hidden] {display:none!important;}
 body:has([role='dialog'][data-state='open']) .dock-root {position:relative;z-index:40;}
 .dock-root :is(button,a):focus-visible {outline:2px solid currentColor;outline-offset:2px;}
-html .dock-root[data-dock-open] .dock-launcher {position:fixed;right:.65rem;top:6rem;z-index:10001;background:hsl(var(--d-card))!important;color:hsl(var(--d-text))!important;border-color:hsl(var(--d-line))!important;}
-.dock-root .dock-launcher[data-dock-handle] {right:0;width:2rem;height:2.4rem;padding:0;border-right:0!important;border-radius:.55rem 0 0 .55rem!important;}
+html .dock-root[data-dock-open] .dock-launcher {position:fixed;right:0;top:6rem;z-index:10001;background:hsl(var(--d-card))!important;color:hsl(var(--d-text))!important;border-color:hsl(var(--d-line))!important;border-right:0!important;border-radius:.55rem 0 0 .55rem!important;}
+.dock-root .dock-launcher[data-dock-handle] {width:2rem;height:2.4rem;padding:0;}
 html .dock-root[data-dock-open] .dock-launcher:hover {background:hsl(var(--d-muted))!important;}
 .dock-launcher-grid {display:inline-grid;flex:none;grid-template-columns:repeat(2,.375rem);gap:.125rem;}
 .dock-launcher-grid > i {display:block;aspect-ratio:1;background:white;}
