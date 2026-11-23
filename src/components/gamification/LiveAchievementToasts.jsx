@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import { useActivity } from '@/components/live/useActivity';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coins, Award, Trophy, Target, Sparkles } from 'lucide-react';
 
@@ -118,6 +119,11 @@ function AchievementToast({ toast, onRemove, duration }) {
 }
 
 export default function LiveAchievementToasts() {
+  const activity = useActivity();
+  return activity?.prefs.suppress ? null : <AchievementToastStream />;
+}
+
+function AchievementToastStream() {
   const [toasts, setToasts] = useState([]);
   const toastQueue = useRef([]);
   const lastToastTime = useRef(0);

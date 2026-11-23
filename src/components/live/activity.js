@@ -4,11 +4,11 @@ export const categories = {
   matches: ['Matches', Sparkles], funding: ['Funding', Coins], projects: ['Projects', Folder],
   research: ['Research', FlaskConical], collaborations: ['Collaborations', Handshake], needs: ['Needs', Heart],
   opportunities: ['Opportunities', Briefcase], watchlist: ['Watchlist', Star], impact: ['Impact', Target],
-  personal: ['Personal activity', Activity], earnings: ['Earnings', Coins], signals: ['Signals', Radio], new_members: ['New members', UserPlus],
+  personal: ['Personal activity', Activity], earnings: ['Earnings', Coins], signals: ['Signals', Radio], new_members: ['New members', UserPlus], sign_ins: ['Sign-in', UserPlus],
 };
 export const priorities = ['information', 'success', 'opportunity', 'ai_match', 'milestone', 'priority', 'major_event'];
 export const configDefaults = { enabled: true, intensity: 'balanced', position: 'top-right', max_visible: 1, stagger_ms: 4200, duration_ms: 30000, demo_mode: false, show_earnings: true, welcome_enabled: true, quiet_minutes: 30 };
-export const prefDefaults = { enabled: true, placement: 'bottom', showInCanopy: false, speed: 'normal', suppress: false, demo: true, categories: [] };
+export const prefDefaults = { enabled: true, placement: 'bottom', showInCanopy: false, speed: 'normal', suppress: false, welcomeToast: true, memberSignInToasts: true, shareSignIn: true, demo: true, categories: [] };
 export const categoryInfo = event => categories[event.category] || ['Welcome', Bell];
 export const safePath = path => typeof path === 'string' && /^\/(?![/\\])/.test(path) && !/[\\\s]/.test(path) ? path : null;
 export const actionable = event => !!(safePath(event.action_path) || event.category === 'signals' || (event.category === 'new_members' && event.profile_user_id));

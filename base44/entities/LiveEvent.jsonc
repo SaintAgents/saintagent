@@ -17,7 +17,8 @@
         "personal",
         "earnings",
         "signals",
-        "new_members"
+        "new_members",
+        "sign_ins"
       ]
     },
     "priority": {

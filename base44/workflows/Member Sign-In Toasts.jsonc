@@ -1,0 +1,42 @@
+{
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "member_sign_in_toasts",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "announce_sign_in": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "announceMemberSignIn",
+            "args": {
+              "user_id": "${ .trigger.user_id }",
+              "event_type": "${ .trigger.event_type }",
+              "occurred_at": "${ .trigger.occurred_at }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send sign-in toasts",
+            "description": "Respect member visibility"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Welcomes a signed-in member privately and announces visible members to the community.",
+  "name": "Member Sign-In Toasts",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "app_user_auth",
+      "events": [
+        "login",
+        "signup"
+      ]
+    }
+  }
+}

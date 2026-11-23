@@ -28,6 +28,7 @@ import {
   Radar } from
 "lucide-react";
 import NotificationSettings from '@/components/notifications/NotificationSettings';
+import LiveActivitySettings from '@/components/settings/LiveActivitySettings';
 import TaskNotificationSettings from '@/components/notifications/TaskNotificationSettings';
 import InterestTagsSettings from '@/components/settings/InterestTagsSettings';
 import BackButton from '@/components/hud/BackButton';
@@ -429,6 +430,7 @@ export default function Settings() {
 
           {/* Notification Settings */}
           <TabsContent value="notifications" className="space-y-6">
+            <LiveActivitySettings />
             <Card className="bg-violet-50/50 border-violet-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">

@@ -27,13 +27,17 @@ export default function useLiveActivity(user, enabled) {
   const eventKey = ['live-activity-events', user.id];
   const scope = { $or: [{ audience:'members' }, { audience:'personal', recipient_id:user.id }] };
   const events = useQuery({ queryKey:eventKey, enabled, staleTime: 30000,
-    queryFn: () => base44.entities.LiveEvent.filter(scope, '-created_date', 50),
+    queryFn: () => base44.entities.LiveEvent.filter({ ...scope, category: { $ne:'sign_ins' } }, '-created_date', 50),
+  });
+  const signIns = useQuery({ queryKey:['live-sign-ins', user.id], enabled: enabled && !prefs.suppress && (prefs.welcomeToast || prefs.memberSignInToasts), staleTime: 30000,
+    queryFn: () => base44.entities.LiveEvent.filter({ ...scope, category:'sign_ins', created_date:{ $gte:new Date(Date.now() - 120000).toISOString() } }, '-created_date', 30),
   });
   useEffect(() => {
     if (!enabled) return;
-    const key = ['live-activity-events', user.id];
     const stopEvents = base44.entities.LiveEvent.subscribe(change => {
       const event = change.data;
+      const key = [event?.category === 'sign_ins' ? 'live-sign-ins' : 'live-activity-events', user.id];
+      if (change.type === 'delete') client.setQueryData(['live-sign-ins', user.id], previous => previous?.filter(item => item.id !== change.id));
       const allowed = event?.audience === 'members' || (event?.audience === 'personal' && event.recipient_id === user.id);
       if (!client.getQueryData(key)) { if (allowed) client.invalidateQueries({ queryKey:key }); return; }
       client.setQueryData(key, previous => {
@@ -47,5 +51,5 @@ export default function useLiveActivity(user, enabled) {
     return () => { stopEvents(); stopConfig(); };
   }, [client, enabled, user.id]);
   const shared = useMemo(() => ({ ...configDefaults, ...config.data }), [config.data]);
-  return { prefs, preferences, config: shared, configReady: config.isSuccess, events };
+  return { prefs, preferences, config: shared, configReady: config.isSuccess, events, signIns };
 }

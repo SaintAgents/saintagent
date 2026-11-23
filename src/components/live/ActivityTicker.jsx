@@ -30,7 +30,7 @@ export default function ActivityTicker({ placement }) {
     return () => { observer.disconnect(); style.removeProperty('--activity-ticker-height'); };
   }, [shown, bottom]);
   if (!activity) return null;
-  if (!shown) return bottom ? <DemoPill demo={activity.demo} toggleDemo={activity.toggleDemo} floating /> : null;
+  if (!shown) return bottom && activity.prefs.enabled ? <DemoPill demo={activity.demo} toggleDemo={activity.toggleDemo} floating /> : null;
   const candidates = new Set((activity.events.data || []).slice(0, 40).map(event => event.id));
   const events = activity.tickerHistory.filter(event => activity.demo || candidates.has(event.id)).slice(0, 30);
   const factor = { slow: 6, normal: 4, fast: 2 }[activity.prefs.speed] || 4;
