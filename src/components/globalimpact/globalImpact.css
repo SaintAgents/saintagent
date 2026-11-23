@@ -153,7 +153,75 @@
 #global-impact .impact-pulse {background: linear-gradient(180deg, transparent 49%, hsl(var(--impact-cyan) / .28) 50%, transparent 52%) !important; scrollbar-color: hsl(var(--impact-line)) transparent;}
 #global-impact .impact-event {min-width: 9rem; max-width: 13rem; flex: 0 0 auto;}
 
-/* Follow the app theme without changing the artwork or the dark dashboard. */
+/* Chromo Green: keep the dashboard and its surrounding chrome monochrome. */
+html[data-theme='hacker']:has(main[data-page='GlobalImpactDashboard']) {
+  --impact-mono-art: grayscale(1) brightness(.66) sepia(1) hue-rotate(75deg) saturate(4);
+  --impact-mono-black: 0 0% 0%;
+  --impact-mono-panel: 120 55% 5%;
+  --impact-mono-line: 120 79% 28%;
+  --impact-mono-bright: 120 100% 56%;
+  --impact-mono-ink: 120 80% 78%;
+}
+html[data-theme='hacker'] main[data-page='GlobalImpactDashboard'],
+html[data-theme='hacker']:has(main[data-page='GlobalImpactDashboard']) :is(#app-topbar, [data-sidebar], [data-sidebar] > div:first-child, .sa-canopy .canopy-handle, .sa-canopy .canopy-workspace) {
+  background: hsl(var(--impact-mono-black)) !important;
+  opacity: 1 !important;
+}
+html[data-theme='hacker']:has(main[data-page='GlobalImpactDashboard']) .sa-canopy {
+  --canopy-surface: var(--impact-mono-black);
+  --canopy-panel: var(--impact-mono-panel);
+  --canopy-line: var(--impact-mono-line);
+  --canopy-ink: var(--impact-mono-ink);
+  --canopy-metal: var(--impact-mono-bright);
+  --canopy-cyan: var(--impact-mono-bright);
+  --canopy-muted: var(--impact-mono-ink);
+}
+html[data-theme='hacker'] #global-impact,
+html[data-theme='hacker'] #global-impact .impact-intro {
+  --impact-night: var(--impact-mono-black);
+  --impact-panel: var(--impact-mono-panel);
+  --impact-line: var(--impact-mono-line);
+  --impact-ink: var(--impact-mono-ink);
+  --impact-muted: 120 44% 65%;
+  --impact-cyan: var(--impact-mono-bright);
+  --impact-gold: var(--impact-mono-bright);
+  --impact-blue: 120 84% 16%;
+}
+html[data-theme='hacker'] #global-impact .impact-shortcut {--tile-tone: var(--impact-cyan) !important;}
+html[data-theme='hacker'] #global-impact .impact-guide-tile {
+  --guide-night: var(--impact-panel);
+  --guide-ink: var(--impact-ink);
+  --guide-glow: var(--impact-cyan);
+}
+html[data-theme='hacker'] #global-impact :is(img, video, .leaflet-tile-pane, .recharts-surface),
+html[data-theme='hacker']:has(main[data-page='GlobalImpactDashboard']) [data-sidebar] video {
+  filter: var(--impact-mono-art) !important;
+}
+html[data-theme='hacker'] #global-impact :is(.impact-intro, .personal-impact-hero) {
+  position: relative;
+  isolation: isolate;
+  background: hsl(var(--impact-night)) !important;
+}
+html[data-theme='hacker'] #global-impact .impact-intro {--impact-mono-hero: var(--impact-earth); --impact-mono-position: center 34%;}
+html[data-theme='hacker'] #global-impact .personal-impact-hero {
+  --impact-mono-hero: var(--hero-art);
+  --impact-mono-position: center;
+  --hero-night: var(--impact-night);
+  --hero-text: var(--impact-ink);
+  --hero-gold: var(--impact-cyan);
+}
+html[data-theme='hacker'] #global-impact :is(.impact-intro, .personal-impact-hero)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(0deg, hsl(var(--impact-night)) 4%, transparent 94%), var(--impact-mono-hero) var(--impact-mono-position) / cover no-repeat;
+  filter: var(--impact-mono-art);
+}
+
+/* Light mode keeps the original artwork. */
 html:not([data-theme]), html[data-theme='light'] {
   & #global-impact {
     --impact-ink: 218 55% 17%;
