@@ -17,7 +17,6 @@ export default function ImpactCommand({ active, select }) {
   return <header className="impact-command impact-surface">
     <button type="button" aria-label="SaintAgent dashboard overview" className="impact-brand" onClick={() => select('overview')}>
       <AnimatedBrandLogo className="impact-brand-logo" fallback={logo} />
-      <span>SAINTAGENT</span>
     </button>
     <nav aria-label="SaintAgent command shortcuts" className="impact-shortcuts">
       {shortcuts.map(([name, id, image, tone]) => <button type="button" key={id} aria-controls="impact-workspace" aria-pressed={active === id} className="impact-shortcut" style={{ '--tile-tone':tone }} onClick={() => select(id)}>
