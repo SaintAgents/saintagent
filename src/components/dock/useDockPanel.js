@@ -25,7 +25,7 @@ export default function useDockPanel({prefs,commit,disabled,panel,actions,dragId
     const launch=()=>{if(!document.querySelector('[data-dock-full-tour][data-state="open"]'))setOpen(true);};
     const pin=e=>{const {path,title}=e.detail || {};if(safePath(path)){actions.add('Pinned Item',{path,title:typeof title==='string'?title.trim().slice(0,100):path});launch();}};
     const over=e=>{if(dragId.current&&!panel.current?.contains(e.target))e.preventDefault();};
-    const drop=e=>{if(dragId.current&&!panel.current?.contains(e.target)){e.preventDefault();actions.patch(dragId.current,{place:'float',x:e.clientX,y:e.clientY});dragId.current=null;setDrag(null);}};
+    const drop=e=>{if(dragId.current&&!panel.current?.contains(e.target)){e.preventDefault();actions.float(dragId.current,{x:e.clientX,y:e.clientY});dragId.current=null;setDrag(null);}};
     document.addEventListener('openDockDeck',launch); document.addEventListener('pinDockItem',pin); window.addEventListener('dragover',over);window.addEventListener('drop',drop);
     return ()=>{document.removeEventListener('openDockDeck',launch);document.removeEventListener('pinDockItem',pin);window.removeEventListener('dragover',over);window.removeEventListener('drop',drop);};
   },[disabled,actions,panel,dragId,setDrag]);

@@ -9,6 +9,10 @@ export default function useDockActions(commit, active) {
     cards.splice(to,0,...cards.splice(from,1)); return {cards};
   });
   return { patch, restore, reorder,
+    float: (id, point) => commit(p => {
+      const offset = (p.cards.filter(c => c.place === 'float').length % 8) * 22;
+      return { cards:p.cards.map(c => c.id === id ? { ...c, place:'float', x:point?.x ?? c.x ?? 24 + offset, y:point?.y ?? c.y ?? 96 + offset, settings:{...c.settings, frameless:true} } : c) };
+    }),
     add: (type,settings) => commit(p => ({cards:[...p.cards,{...widget(type,settings),deck:p.active}]})),
     remove: id => commit(p => ({cards:p.cards.filter(c=>c.id!==id)})),
     shortcuts: shortcuts => commit({shortcuts}),
