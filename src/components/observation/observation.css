@@ -68,3 +68,34 @@ html body .ob-workspace .ob-card header :is(button,a) { padding:.18rem; flex:non
 html body :is(.ob-workspace,.ob-picker) button:disabled { opacity:.55 !important; }
 html body :is(.ob-workspace,.ob-picker) :is(button,select,input,a):focus-visible { outline:2px solid hsl(var(--ring)) !important; outline-offset:1px; }
 @media(max-width:767px) { .ob-controls { bottom:calc(4.7rem + env(safe-area-inset-bottom,0px)); } .ob-card > header { min-height:44px; } }
+
+@media (min-width:1024px) {
+  html body .ob-workspace .ob-canvas[data-viewport='desktop'] .ob-card {
+    background:transparent !important;
+    border:0 !important;
+    border-radius:0;
+    box-shadow:none !important;
+  }
+  html body .ob-workspace .ob-canvas[data-viewport='desktop'] .ob-card-tools {
+    width:fit-content;
+    max-width:100%;
+    margin-left:auto;
+    background:var(--ob-surface) !important;
+    border:0;
+    border-radius:.55rem;
+    box-shadow:none;
+  }
+  .ob-canvas[data-viewport='desktop'] .ob-card[data-collapsed='false'] > .ob-card-tools {
+    position:absolute;
+    top:0;
+    right:0;
+    z-index:1;
+  }
+  .ob-canvas[data-viewport='desktop'] .ob-unloaded { background:var(--ob-surface) !important; }
+}
+
+@media (min-width:1024px) and (hover:hover) and (pointer:fine) {
+  .ob-canvas[data-viewport='desktop'] .ob-card[data-collapsed='false']:not(:hover,:focus-within,[data-moving='true']) > :is(.ob-card-tools,.ob-resize) {
+    opacity:0;
+  }
+}

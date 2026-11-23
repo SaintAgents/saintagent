@@ -29,8 +29,8 @@ export default function ObservationCard({ page, label, pos, width, collapsed, li
     onPointerCancel:() => { drag.current=null; setDraft(null); },
     onKeyDown:e => { const step={ArrowLeft:[-16,0],ArrowRight:[16,0],ArrowUp:[0,-16],ArrowDown:[0,16]}[e.key]; if (step) { e.preventDefault(); save(adjusted(box,...step,resize)); } },
   });
-  return <article className="ob-card" data-collapsed={collapsed} data-moving={!!draft} style={box ? {left:box.x,top:box.y,width:box.w,height:collapsed ? undefined : box.h} : undefined}>
-    <header>{box && <button type="button" className="ob-drag" aria-label={`Move ${label} (arrow keys)`} {...handlers(false)}><Grip size={16}/></button>}<h2 title={label}>{label}</h2>
+  return <article className="ob-card" aria-label={label} data-collapsed={collapsed} data-moving={!!draft} style={box ? {left:box.x,top:box.y,width:box.w,height:collapsed ? undefined : box.h} : undefined}>
+    <header className="ob-card-tools">{box && <button type="button" className="ob-drag" aria-label={`Move ${label} (arrow keys)`} {...handlers(false)}><Grip size={16}/></button>}<h2 title={label}>{label}</h2>
       <a href={page.path} target="_blank" rel="noopener noreferrer" aria-label={`Open ${label}`}><ArrowUpRight size={16}/></a>
       {canPin && <button type="button" aria-label={pinned ? `${label} is on Dock Deck` : `Pin ${label} to Dock Deck`} title={pinned ? 'On Dock Deck' : 'Pin to Dock Deck'} disabled={pinned} onClick={pin}><Pin size={15}/></button>}
       <button type="button" aria-label={collapsed ? `Expand ${label}` : `Collapse ${label}`} aria-expanded={!collapsed} onClick={fold}>{collapsed ? <ChevronDown size={16}/> : <ChevronUp size={16}/>}</button><button type="button" aria-label={`Remove ${label}`} onClick={remove}><X size={16}/></button>
