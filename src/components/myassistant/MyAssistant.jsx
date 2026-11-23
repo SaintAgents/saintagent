@@ -30,6 +30,7 @@ export default function MyAssistant({ userId, currentPage, supportOnly = false, 
   const showSupport = useCallback(() => { setTab('support'); setOpen(true); }, []);
   const [initialWork, setInitialWork] = useState('memory');
   const [input, setInput] = useState('');
+  const [researchDraft, setResearchDraft] = useState('');
   const field = useRef(null);
   const launcher = useRef(null);
   const focusInput = useRef(false);
@@ -50,7 +51,10 @@ export default function MyAssistant({ userId, currentPage, supportOnly = false, 
     if (supportOnly) return;
     const summon = event => {
       const draft = event.detail?.draft;
-      if (typeof draft === 'string' && draft.trim()) setInput(current => current.trim() ? current : draft.trim().slice(0, 6000));
+      if (typeof draft === 'string' && draft.trim()) {
+        if (event.detail?.researchHandoff) setResearchDraft(draft.trim().slice(0, 6000));
+        else setInput(current => current.trim() ? current : draft.trim().slice(0, 6000));
+      }
       show();
     };
     const keyboard = e => { if (!e.repeat && !e.defaultPrevented && e.altKey && e.shiftKey && e.code === 'KeyA') { e.preventDefault(); open && tab === 'chat' ? close() : show(); } };
@@ -88,6 +92,10 @@ export default function MyAssistant({ userId, currentPage, supportOnly = false, 
         {!!count.data?.objective && <Button className="mx-3 mt-2 self-start" size="sm" onClick={() => { setInitialWork('objective'); setTab('work'); }}>Resume work · {count.data.objective} active</Button>}
         <AssistantMessages chat={chat} greeting={settings.greeting} onPrompt={send} voice={voice} onSupport={() => { voice.stop(); showSupport(); }} />
         {voice.voiceError && <p role="alert" className="px-3 text-xs">{voice.voiceError}</p>}
+        {researchDraft && <div className="shrink-0 space-y-2 border-t p-2 text-xs">
+          <details><summary className="cursor-pointer font-medium">Review research draft</summary><p className="max-h-32 overflow-auto whitespace-pre-wrap break-words p-1">{researchDraft}</p></details>
+          <div className="flex flex-wrap gap-1"><Button size="sm" type="button" variant="outline" disabled={input.trim().length + researchDraft.length + (input.trim() ? 2 : 0) > 6000} onClick={() => { setInput(current => [current.trim(), researchDraft].filter(Boolean).join('\n\n')); setResearchDraft(''); field.current?.focus(); }}>{input.trim() ? 'Append to message' : 'Use draft'}</Button><Button size="sm" type="button" variant="ghost" onClick={() => setResearchDraft('')}>Dismiss</Button></div>
+        </div>}
         <form className="flex shrink-0 items-center gap-1 border-t p-2" onSubmit={e => { e.preventDefault(); send(input); }}>
           <Input ref={field} aria-label="Message My Assistant" placeholder="Ask or say what you want to do…" value={input} maxLength={6000} onChange={e => setInput(e.target.value)} />
           {voice.canListen && <Button type="button" size="icon" aria-pressed={voice.listening} aria-label={voice.listening ? 'Stop listening' : 'Speak to My Assistant'} onClick={() => voice.listen(text => { if (text.trim()) send(text, true); })} disabled={chat.sending || chat.loading}>{voice.listening ? <MicOff /> : <Mic />}</Button>}

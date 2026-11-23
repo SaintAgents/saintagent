@@ -43,9 +43,9 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
     setMode('closed');
     if (to === 'search') onSearch(value);
     else if (to === 'create') onCreate();
-    else if (to === 'deep-dive') {
+    else if (to === 'deep-dive' || to === 'research-cards' || to === 'research-insights') {
       document.querySelector('#app-topbar [aria-controls="canopy-workspace"]')?.focus();
-      openDeepDive(value);
+      openDeepDive(to === 'deep-dive' ? value : { view: to === 'research-cards' ? 'cards' : 'insights' });
     }
     else if (to === 'assistant') document.dispatchEvent(new CustomEvent('openRightSideTab', { detail:{tab:'concierge'} }));
     else if (to === 'my-assistant') document.dispatchEvent(new Event('openMyAssistant'));

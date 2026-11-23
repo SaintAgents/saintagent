@@ -9,6 +9,21 @@ export default function DeepDiveLauncher() {
   const [open, setOpen] = useState(false);
   const [request,setRequest] = useState({});
   const returnFocus = useRef(null);
+  const assistantDraft = useRef('');
+  function handoff(draft) {
+    assistantDraft.current = draft;
+    setOpen(false);
+  }
+  function restoreFocus(event) {
+    if (assistantDraft.current) {
+      event.preventDefault();
+      document.dispatchEvent(new CustomEvent('openMyAssistant', { detail: { draft: assistantDraft.current, researchHandoff: true } }));
+      assistantDraft.current = '';
+    } else if (returnFocus.current?.isConnected) {
+      event.preventDefault();
+      returnFocus.current.focus();
+    }
+  }
   const preview = isTourPreview();
   const params = new URLSearchParams(window.location.search);
   const hidden = preview || (window.parent !== window && params.get('observationPreview') === '1');
@@ -22,14 +37,14 @@ export default function DeepDiveLauncher() {
   if (hidden) return null;
   return <Dialog open={open} onOpenChange={setOpen}>
     <DeepDiveDragTrigger onOpen={(detail, trigger) => { returnFocus.current = trigger; setRequest(detail); setOpen(true); }} />
-    <DialogContent data-readable-surface onCloseAutoFocus={event => { if (returnFocus.current?.isConnected) { event.preventDefault(); returnFocus.current.focus(); } }} overlayClassName="z-[10999]" className="z-[11000] max-h-[85dvh] w-[calc(100%-2rem)] max-w-3xl overflow-y-auto rounded-xl p-4 sm:p-7">
+    <DialogContent data-readable-surface onCloseAutoFocus={restoreFocus} overlayClassName="z-[10999]" className="z-[11000] max-h-[85dvh] w-[calc(100%-2rem)] max-w-5xl overflow-y-auto rounded-xl p-4 sm:p-7">
       <div className="space-y-2 border-b pb-4 pr-7">
         <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"><Microscope size={17} aria-hidden="true" /> Discover · Investigate · Connect · Develop · Activate</p>
         <DialogTitle className="font-display text-2xl font-extrabold tracking-tight sm:text-4xl">DEEP DIVE INTELLIGENCE</DialogTitle>
         <DialogDescription>Explore Anything. Discover Connections. Develop Possibilities.</DialogDescription>
         <p className="text-sm">From curiosity to discovery. From discovery to meaningful action.</p>
       </div>
-      <DeepDiveWorkspace key={request.id || (request.target ? `${request.target.kind}:${request.target.id || request.target.title}` : request.objective) || 'new'} request={request} />
+      <DeepDiveWorkspace key={JSON.stringify(request)} request={request} onAssistant={handoff} />
     </DialogContent>
   </Dialog>;
 }
