@@ -1,0 +1,70 @@
+/* Dark mode is selected by data-theme in the app shell, not by .dark. */
+html[data-theme='dark'] main[data-page='AffiliateCenter'] {
+  --background: 222 36% 9%;
+  --foreground: 210 40% 98%;
+  --card: 222 28% 14%;
+  --card-foreground: var(--foreground);
+  --muted: 222 25% 19%;
+  --muted-foreground: 218 22% 76%;
+  --border: 220 22% 27%;
+  --input: var(--border);
+  --accent: 248 46% 22%;
+  --accent-foreground: 251 100% 90%;
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Keep the toolbar's white wash off this dark page, and shade only the hero art. */
+html[data-theme='dark'] main[data-page='AffiliateCenter']::before {
+  content: none;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] .page-hero {
+  opacity: 1 !important;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] .affiliate-hero-scrim {
+  background: linear-gradient(to bottom, hsl(var(--background) / 0.35), hsl(var(--background) / 0.67) 65%, hsl(var(--background))) !important;
+  opacity: 1 !important;
+}
+
+html[data-theme='dark'] main[data-page='AffiliateCenter'] .bg-card.rounded-xl {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: none !important;
+  opacity: 1;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] :is(.bg-slate-50, .bg-emerald-50, .bg-amber-50):not(.bg-card) {
+  background-color: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] [role='tablist'] {
+  background: hsl(var(--muted)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  box-shadow: none !important;
+  opacity: 1;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] [role='tab'] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] [role='tab'][data-state='active'] {
+  background: hsl(var(--accent)) !important;
+  color: hsl(var(--accent-foreground)) !important;
+  box-shadow: none !important;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] :is(.text-violet-600, .text-violet-700, .text-blue-700) {
+  color: hsl(var(--accent-foreground)) !important;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] :is(.text-amber-600, .text-amber-700, .text-amber-900, .text-yellow-700) {
+  color: hsl(43 91% 72%) !important;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] :is(.text-emerald-500, .text-emerald-600, .text-emerald-700) {
+  color: hsl(153 62% 68%) !important;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] button.affiliate-primary-action {
+  background: hsl(256 55% 46%) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(256 60% 67%) !important;
+}
+html[data-theme='dark'] main[data-page='AffiliateCenter'] button.affiliate-primary-action:hover {
+  background: hsl(256 55% 51%) !important;
+}

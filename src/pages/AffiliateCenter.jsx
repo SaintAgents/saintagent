@@ -36,6 +36,7 @@ import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import { AFFILIATE_BADGE_IMAGES } from '@/components/reputation/affiliateBadges';
+import '@/components/affiliate/affiliateDarkTheme.css';
 
 // Affiliate Tier System with badge-style icons
 const AFFILIATE_TIERS = [
@@ -282,7 +283,7 @@ export default function AffiliateCenter() {
           className="w-full h-full object-cover object-center hero-image"
           data-no-filter="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
+        <div aria-hidden="true" className="affiliate-hero-scrim absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-slate-50 dark:to-[#050505]" style={{ opacity: '0.50' }} />
         <HeroGalleryTrigger startIndex={16} className="absolute bottom-4 left-4 text-white/80 !p-1 [&_svg]:w-3 [&_svg]:h-3 z-10" />
         <div className="absolute inset-0 flex items-center justify-center hero-content">
           <div className="text-center">
@@ -317,7 +318,7 @@ export default function AffiliateCenter() {
           </Button>
           <Button 
             onClick={() => setCreateCampaignOpen(true)}
-            className="bg-violet-600 hover:bg-violet-700 gap-2"
+            className="affiliate-primary-action bg-violet-600 hover:bg-violet-700 gap-2"
           >
             <Plus className="w-4 h-4" />
             Create Campaign
