@@ -10,7 +10,8 @@
       "enum": [
         "not_started",
         "in_progress",
-        "complete"
+        "complete",
+        "skipped"
       ],
       "default": "not_started"
     },
@@ -33,6 +34,11 @@
       "type": "boolean",
       "default": false,
       "description": "True if the user has completed the initial app tour"
+    },
+    "welcome_overview_pending": {
+      "type": "boolean",
+      "default": false,
+      "description": "Open the welcome overview on the first Command Deck visit after onboarding"
     }
   },
   "required": [

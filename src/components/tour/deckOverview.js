@@ -6,7 +6,7 @@ const card = (id) => `main[data-page="CommandDeck"] [data-tour-card="${id}"]`;
 export const DECK_OVERVIEW = [
   { area: 'Top of the screen', stops: [
     stop('Top toolbar', 'The toolbar is available across SaintAgent. It brings you back to the Command Deck and gives you quick access to search, messages, notifications, and your account.', 'Use the Command Deck icon to return home, the bell to review alerts, or your avatar to open account options.', '#app-topbar'),
-    stop('Navigation sidebar', 'The left sidebar is the directory of the app. Pages are grouped by what you want to do: Discover, Participate, Connect, Build & Manage, Treasury & Exchange, and Intelligence.', 'Type a known page name into Search pages, or expand a group when you’re not sure where to start. On mobile, use the bottom navigation and menu.', '[data-sidebar]'),
+    stop('Navigation sidebar', 'The left sidebar is the directory of the app. Pages are grouped by what you want to do: Discover, Participate, Connect, Build & Manage, Treasury & Exchange, and Intelligence.', 'Type a known page name into Search pages, or expand a group when you’re not sure where to start. On mobile, tap the floating menu button to browse pages.', '[data-sidebar]'),
   ] },
   { area: 'Left sidebar', stops: SIDEBAR_STOPS },
   { area: 'Dashboard and shortcuts', stops: [
@@ -56,3 +56,21 @@ export const DECK_OVERVIEW = [
   ] },
 ];
 export const DECK_STOPS = DECK_OVERVIEW.flatMap(({ area, stops }) => stops.map(item => ({ ...item, area })));
+
+const overviewStop = title => DECK_STOPS.find(item => item.title === title);
+export const WELCOME_OVERVIEW = [
+  { area: 'Find your way', stops: [
+    stop('Start at the Command Deck', 'The Command Deck is your home base. The top toolbar takes you back here from across SaintAgent.', 'Look for the Command Deck icon in the toolbar whenever you want to get back to your dashboard.', '#app-topbar [data-tour-command-icon]'),
+    overviewStop('Navigation sidebar'),
+    overviewStop('Your profile at a glance'),
+  ] },
+  { area: 'Find something to do', stops: [
+    overviewStop('Activity Cards'),
+    overviewStop('Missions'),
+    overviewStop('Projects'),
+  ] },
+  { area: 'Keep exploring', stops: [
+    stop('Help and more tours', 'The Getting Started Tours card has the full overview and seven topic tours. They stay available after this welcome walkthrough.', 'Choose The Basics to practice, or open My Assistant and select Saint Support when you have a specific question.', card('dailyTours') + ' .collapsible-card-header'),
+  ] },
+];
+export const WELCOME_STOPS = WELCOME_OVERVIEW.flatMap(({ area, stops }) => stops.map(item => ({ ...item, area })));

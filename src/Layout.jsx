@@ -36,7 +36,7 @@ import SurfaceOpacityController from '@/components/hud/SurfaceOpacityController'
 
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
-import InteractiveOnboardingTour from '@/components/onboarding/InteractiveOnboardingTour';
+import FirstVisitTour from '@/components/tour/FirstVisitTour';
 import WalkthroughManager from '@/components/walkthrough/WalkthroughManager';
 import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 import LiveBroadcastBanner from '@/components/hud/LiveBroadcastBanner';
@@ -201,7 +201,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
     try { return localStorage.getItem('bgEffect') || 'off'; } catch { return 'off'; }
   });
   const [floatingSidePanelOpen, setFloatingSidePanelOpen] = useState(false);
-  const [userTourOpen, setUserTourOpen] = useState(false);
       const [mobileWalletOpen, setMobileWalletOpen] = useState(false);
       const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
       const [fullscreenMatchesOpen, setFullscreenMatchesOpen] = useState(false);
@@ -574,9 +573,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const hasRedirected = React.useRef(false);
   useEffect(() => {
     if (tourPreview || hasRedirected.current) return;
-    const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
     const obCompleteLS = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
-    const tourDismissed = typeof window !== 'undefined' && localStorage.getItem('tourDismissed') === '1';
     if (!currentUser || currentPageName === 'Onboarding') return;
 
     // Still loading onboarding data — wait (unless localStorage says done)
@@ -597,13 +594,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
         }
         // For non-generic pages, just let it render — don't redirect completed users to onboarding
       }
-      return;
-    }
-
-    // Tour for brand new users who JUST completed onboarding
-    if (justCompleted && !tourDismissed && !userTourOpen) {
-      try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
-      setUserTourOpen(true);
       return;
     }
 
@@ -2007,25 +1997,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {/* Video Background Toolbar */}
       <VideoBackgroundToolbar theme={theme} onThemeToggle={setTheme} currentPageName={currentPageName} />
 
-      {/* Interactive Onboarding Tour */}
-      {userTourOpen && (
-        <InteractiveOnboardingTour 
-          open={userTourOpen} 
-          onClose={async () => {
-            setUserTourOpen(false);
-            // Mark tour as dismissed in localStorage immediately to prevent re-showing
-            try { localStorage.setItem('tourDismissed', '1'); } catch {}
-            if (onboarding?.id) {
-              await base44.entities.OnboardingProgress.update(onboarding.id, { tour_completed: true });
-              queryClient.invalidateQueries({ queryKey: ['onboardingProgress'] });
-            }
-            const genericPages = ['Home', 'home', 'Landing', 'Welcome', 'ActivityFeed'];
-            if (genericPages.includes(currentPageName)) {
-              window.location.href = createPageUrl('CommandDeck');
-            }
-          }}
-          userTrack={onboarding?.step_data?.[1]?.track}
-        />
+      {!tourPreview && currentPageName === 'CommandDeck' && onboarding?.welcome_overview_pending && (onboarding.status === 'complete' || onboarding.status === 'skipped') && (
+        <FirstVisitTour key={onboarding.id} onboarding={onboarding} userEmail={currentUser.email} />
       )}
     </div>
     </LiveActivity>

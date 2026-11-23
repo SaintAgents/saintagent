@@ -62,7 +62,7 @@ import CollaborationSuggestions from '@/components/notifications/CollaborationSu
 import GamificationWidget from '@/components/gamification/GamificationWidget';
 import GoldPriceTicker from '@/components/hud/GoldPriceTicker';
 import MBTIPromptBanner from '@/components/profile/MBTIPromptBanner';
-import CommandDeckTour, { CommandDeckLoadingScreen } from '@/components/tour/CommandDeckTour';
+
 import CommunityFeedCard from '@/components/community/CommunityFeedCard';
 import MysticalIDImage from '@/components/profile/MysticalIDImage';
 import LeaderboardMiniCard from '@/components/hud/LeaderboardMiniCard';
@@ -194,10 +194,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   const [projectStatus, setProjectStatus] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
   const [cardsForceOpen, setCardsForceOpen] = useState(null);
-  
-  // Tour and loading states
-  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
-  const [showTour, setShowTour] = useState(false);
   const [showOnboardingTour, setShowOnboardingTour] = useState(false);
   const [showBasicsWalkthrough, setShowBasicsWalkthrough] = useState(false);
 
@@ -874,31 +870,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     }
   };
 
-  // Check if user just completed onboarding - ONLY show tour once ever
-  useEffect(() => {
-    if (isTourPreview()) return;
-    const tourComplete = localStorage.getItem('commandDeckTourComplete') === 'true';
-    const justCompletedOnboarding = localStorage.getItem('onboardingJustCompleted') === '1';
-    
-    // Only show tour if user JUST completed onboarding AND tour hasn't been shown before
-    if (justCompletedOnboarding && !tourComplete) {
-      setShowLoadingScreen(true);
-      try { localStorage.removeItem('onboardingJustCompleted'); } catch {}
-      try { localStorage.setItem('commandDeckTourComplete', 'true'); } catch {}
-    }
-    // Never show tour for returning users - tour is ONLY for fresh onboarding completion
-  }, []);
 
-  const handleLoadComplete = () => {
-    setShowLoadingScreen(false);
-    setShowTour(true);
-  };
-
-  const handleTourComplete = () => {
-    setShowTour(false);
-    // After the Command Deck tour, invite user to the platform help tour
-    setTimeout(() => setShowOnboardingTour(true), 500);
-  };
 
   // Show loading state while essential data is being fetched
   const isLoading = !currentUser || (!profile && (profileLoading || profileFetching));
@@ -922,11 +894,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
         <Button variant="outline" onClick={() => reloadProfile()}>Retry</Button>
       </section>
     );
-  }
-
-  // Show loading screen with Command Deck preview
-  if (showLoadingScreen) {
-    return <CommandDeckLoadingScreen onLoadComplete={handleLoadComplete} />;
   }
 
   return (
@@ -2016,7 +1983,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           }}
         />
         
-        <CommandDeckTour autoStart={showTour} onComplete={handleTourComplete} />
         {showOnboardingTour && <InteractiveOnboardingTour open onClose={() => { setShowOnboardingTour(false); setTimeout(() => setShowBasicsWalkthrough(true), 300); }} />}
         {showBasicsWalkthrough && <BasicsWalkthrough open onClose={() => { setShowBasicsWalkthrough(false); setTimeout(() => document.dispatchEvent(new CustomEvent('openRightSideTab', { detail: { tab: 'help' } })), 400); }} />}
       </div>

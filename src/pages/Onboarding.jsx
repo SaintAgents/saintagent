@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
@@ -68,6 +68,7 @@ export default function Onboarding() {
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(0);
   const [stepData, setStepData] = useState({});
+  const finishingOnboarding = useRef(false);
 
   // Fetch user
   const { data: user } = useQuery({
@@ -93,11 +94,8 @@ export default function Onboarding() {
 
   // If progress already complete or skipped, go to Command Deck
   useEffect(() => {
-    if (progress?.status === 'complete' || progress?.status === 'skipped') {
-      try { 
-        localStorage.setItem('onboardingJustCompleted', '1'); 
-        localStorage.setItem('onboardingComplete', '1'); 
-      } catch {}
+    if (!finishingOnboarding.current && (progress?.status === 'complete' || progress?.status === 'skipped')) {
+      try { localStorage.setItem('onboardingComplete', '1'); } catch {}
       window.location.href = createPageUrl('CommandDeck');
     }
   }, [progress]);
@@ -114,7 +112,8 @@ export default function Onboarding() {
         });
       }
     },
-    onSuccess: () => {
+    onSuccess: (_record, data) => {
+      if (data.welcome_overview_pending) finishingOnboarding.current = true;
       queryClient.invalidateQueries({ queryKey: ['onboardingProgress'] });
     }
   });
@@ -129,7 +128,8 @@ export default function Onboarding() {
       current_step: currentStep + 1,
       completed_steps: completedSteps,
       step_data: newStepData,
-      status: currentStep === STEPS.length - 1 ? 'complete' : 'in_progress'
+      status: currentStep === STEPS.length - 1 ? 'complete' : 'in_progress',
+      ...(currentStep === STEPS.length - 1 && { welcome_overview_pending: true })
     });
 
     if (currentStep === STEPS.length - 1) {
@@ -293,10 +293,7 @@ export default function Onboarding() {
           }
 
           // Mark local completion to avoid race redirection and go to Command Deck
-          try { 
-            localStorage.setItem('onboardingJustCompleted', '1'); 
-            localStorage.setItem('onboardingComplete', '1'); 
-          } catch {}
+          try { localStorage.setItem('onboardingComplete', '1'); } catch {}
           window.location.href = createPageUrl('CommandDeck');
         } else {
           setCurrentStep(currentStep + 1);
@@ -399,7 +396,8 @@ export default function Onboarding() {
                   current_step: STEPS.length,
                   completed_steps: progress?.completed_steps || [],
                   step_data: stepData,
-                  status: 'skipped'
+                  status: 'skipped',
+                  welcome_overview_pending: true
                 });
 
                 // Ensure basic profile exists
@@ -430,10 +428,7 @@ export default function Onboarding() {
                   console.error('SA# assignment on skip-all failed:', e);
                 }
 
-                try { 
-                  localStorage.setItem('onboardingJustCompleted', '1'); 
-                  localStorage.setItem('onboardingComplete', '1'); 
-                } catch {}
+                try { localStorage.setItem('onboardingComplete', '1'); } catch {}
                 window.location.href = createPageUrl('CommandDeck');
               }}
               className="text-amber-600 hover:text-amber-700"
