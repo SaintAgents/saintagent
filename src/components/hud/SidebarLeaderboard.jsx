@@ -350,7 +350,7 @@ export default function SidebarLeaderboard({
 
   return (
     <>
-      <div className={cn("border-t border-slate-100 p-2 pb-16", isCollapsed && !inPopup && "p-1 pb-14")}>
+      <div className={cn("border-t border-slate-100 p-2", isCollapsed && !inPopup && "p-1")}>
         {/* Header */}
         <div className={cn("mb-2 px-1", isCollapsed && !inPopup && "mb-1 px-0")}>
           <div className={cn("flex items-center justify-between gap-1 min-w-0", isCollapsed && !inPopup && "justify-center")}>
@@ -432,7 +432,7 @@ export default function SidebarLeaderboard({
             </div>
           )}
           
-          <ScrollArea className="h-48">
+          <ScrollArea className="[&>[data-radix-scroll-area-viewport]]:max-h-48">
             <TooltipProvider delayDuration={200}>
               <div className="space-y-1">
                 {displayLeaders.map((leader, index) => renderLeaderRow(leader, index, true))}

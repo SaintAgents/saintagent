@@ -907,7 +907,6 @@ export default function Sidebar({
       <div className={cn(
         "border-t border-slate-100 p-2 space-y-1.5",
         !presenceOpen && "pb-1",
-        presenceOpen && "pb-16",
         (isCollapsed && !inPopup) && "hidden",
         presenceHidden && !inPopup && "hidden"
       )}>
@@ -1494,7 +1493,7 @@ export default function Sidebar({
       <button
         onClick={onToggle}
         className={cn(
-          "absolute bottom-0 left-0 right-0 h-10 flex items-center justify-center",
+          "mt-auto h-10 shrink-0 flex items-center justify-center",
           "bg-gradient-to-t from-violet-100 to-white/90 dark:from-slate-800 dark:to-slate-900/90",
           "border-t border-slate-200 dark:border-slate-700",
           "hover:from-violet-200 dark:hover:from-slate-700 transition-colors",
