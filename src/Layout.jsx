@@ -319,6 +319,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       'ObservationDeck': 'observation',
       'Watchlist': 'watchlist',
       'SavedItems': 'saveditems',
+      'Intelligence': 'intelligence',
       'Matches': 'matches',
       'Meetings': 'meetings',
       'Missions': 'missions',

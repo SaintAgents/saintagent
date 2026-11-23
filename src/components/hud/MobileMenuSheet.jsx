@@ -24,6 +24,7 @@ const menuItems = [
   { id: 'observation', label: 'Observation Deck', icon: LayoutDashboard, page: 'ObservationDeck' },
   { id: 'watchlist', label: 'Watchlist', icon: Eye, page: 'Watchlist' },
   { id: 'saveditems', label: 'Saved Items', icon: Folder, page: 'SavedItems' },
+  { id: 'intelligence', label: 'Saint Intelligence', icon: Compass, page: 'Intelligence' },
   { id: 'betafeedback', label: 'Beta Feedback', icon: MessageCircle, page: 'BetaFeedback' },
   { id: 'forum', label: 'Forum', icon: MessagesSquare, page: 'Forum' },
   { id: 'initiations', label: 'Initiations', icon: Flame, page: 'Initiations' },

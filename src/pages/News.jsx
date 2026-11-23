@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -102,6 +103,13 @@ export default function News() {
   const [activeTab, setActiveTab] = useState('all');
   const [showAdmin, setShowAdmin] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [params, setParams] = useSearchParams();
+  const linkedId = params.get('id');
+  const linked = useQuery({
+    queryKey: ['news-source', linkedId], enabled: !!linkedId, retry: false,
+    queryFn: async () => (await base44.entities.NewsArticle.filter({id: linkedId, is_published: true}, '-published_date', 1))[0] || null,
+  });
+  const viewedArticle = selectedArticle || linked.data;
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -254,11 +262,13 @@ export default function News() {
         </Tabs>
       </div>
 
+      {linkedId && linked.isPending && <p role="status" className="px-4 pb-4">Opening cited article…</p>}
+      {linkedId && (linked.isError || (linked.isSuccess && !linked.data)) && <p role="alert" className="px-4 pb-4">The cited article could not be opened.</p>}
       {/* News Viewer Modal */}
       <NewsViewerModal
-        open={!!selectedArticle}
-        onClose={() => setSelectedArticle(null)}
-        article={selectedArticle}
+        open={!!viewedArticle}
+        onClose={() => { setSelectedArticle(null); if (linkedId) setParams(current => { const next = new URLSearchParams(current); next.delete('id'); return next; }, {replace:true}); }}
+        article={viewedArticle}
         articles={filtered}
         onNavigate={handleArticleClick}
       />
