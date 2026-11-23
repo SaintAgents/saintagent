@@ -8,12 +8,13 @@ import DailyToursCard from '@/components/tour/DailyToursCard';
 import NewsViewerModal from '@/components/news/NewsViewerModal';
 import CommunityFeedCard from '@/components/community/CommunityFeedCard';
 import DockTools from '@/components/dock/DockTools';
+import DockOnlineMembers from '@/components/dock/DockOnlineMembers';
 import DockSharing from '@/components/dock/DockSharing';
 import DockLinkTree from '@/components/dock/DockLinkTree';
 import WatchlistWidget from '@/components/watch/WatchlistWidget';
 import { links, safePath } from '@/components/dock/dockCatalog';
 
-export default function DockWidget({ card, user, save, navigate, shortcuts, recent, openModal, visible }) {
+export default function DockWidget({ card, user, save, navigate, shortcuts, recent, openModal, visible, panelOpen }) {
   const {type, settings} = card;
   const {data: news, isError} = useQuery({queryKey:['dock-news'], queryFn:async () => (await base44.entities.NewsArticle.filter({is_published:true}, {sort:'-published_date',limit:8})).items, enabled:visible && type === 'News'});
   const { data:notifications = [] } = useQuery({queryKey:['notifications',user.email], queryFn:() => base44.entities.Notification.filter({user_id:user.email}, '-created_date', 30), enabled:visible && type === 'Notifications', staleTime:300000});
@@ -26,6 +27,7 @@ export default function DockWidget({ card, user, save, navigate, shortcuts, rece
   if (type === 'Contact Card' || type === 'Invites') return <DockSharing {...{type,user,visible}} />;
   if (type === 'LinkTree') return <DockLinkTree {...{user,visible}} />;
   if (type === 'Watchlist') return <WatchlistWidget {...{user, visible}} />;
+  if (type === 'Who Is Online') return <DockOnlineMembers visible={visible && panelOpen} userId={user.id} />;
   if (type === 'pinned_item') return <div className="dock-links">{safePath(settings.path) ? <a href={settings.path}>{settings.title}</a> : <p>{settings.title}</p>}{settings.subtitle && <p>{settings.subtitle}</p>}</div>;
   if (type === 'Quick Notes') return <Scratch value={settings.note || ''} save={note => save({note})} />;
   if (type === 'Quick Access' || type === 'Quick Links') return <div className="dock-links">{(type === 'Quick Access' ? shortcuts : Object.keys(links)).map(label => <Link key={label} to={links[label]}>{label}</Link>)}{type === 'Quick Access' && <button onClick={() => openModal('shortcuts')}>Edit Quick Access</button>}</div>;

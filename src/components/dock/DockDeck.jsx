@@ -39,7 +39,7 @@ export default function DockDeck({user, disabled, children}) {
   const openModal=type => {if (!shown) setOpen(true);setModal(type);};
   const drop=(e, apply) => {e.preventDefault();e.stopPropagation();if(dragId.current) apply(dragId.current);dragId.current=null;setDrag(null);};
   const columns=width>=930 ? 3 : width>=535 ? 2 : 1;
-  const cardProps=card => ({card,user,navigate,openModal,shortcuts:prefs.shortcuts,recent,drag,columnWidth:(width-12*(columns+1))/columns,patch:update=>actions.patch(card.id,update),remove:()=>actions.remove(card.id),shift:dir=>actions.shift(card.id,dir),
+  const cardProps=card => ({card,user,navigate,openModal,shortcuts:prefs.shortcuts,recent,drag,panelOpen:shown || card.place==='float',columnWidth:(width-12*(columns+1))/columns,patch:update=>actions.patch(card.id,update),remove:()=>actions.remove(card.id),shift:dir=>actions.shift(card.id,dir),
     dragStart:(e,id)=>{if(!wide){e.preventDefault();return;}e.dataTransfer.setData('text/plain',id);e.dataTransfer.effectAllowed='move';dragId.current=id;setDrag(id);},dragEnd:()=>{dragId.current=null;setDrag(null);},reorder:(e,target)=>drop(e,id=>actions.reorder(id,target))});
   return <DockPinProvider {...{prefs, commit, disabled}}>{children}<div className="dock-root" hidden={disabled} data-dock-open={shown}>
     {!shown && <Button ref={launcher} className="dock-launcher" data-dock-handle={compactLauncher ? '' : undefined} variant="outline" onClick={() => setOpen(true)} aria-label="Open Dock Deck" title="Open Dock Deck" aria-controls="dock-deck" aria-expanded={false}><DockDeckIcon />{!compactLauncher && prefs.label && 'Dock Deck'}</Button>}
