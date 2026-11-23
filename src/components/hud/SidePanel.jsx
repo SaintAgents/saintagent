@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import SidePanelQuickAccess from '@/components/hud/SidePanelQuickAccess';
+import SidePanelBookmarks from '@/components/hud/SidePanelBookmarks';
 import SidePanelMyGroups from '@/components/hud/SidePanelMyGroups';
 
 import {
@@ -606,6 +607,7 @@ export default function SidePanel({
             <div className="p-4 space-y-6">
               <div>
                 <SidePanelQuickAccess />
+                <SidePanelBookmarks onNavigate={onToggle} />
                 <SidePanelMyGroups onNavigate={onToggle} />
               </div>
               {/* Stored Cards Section */}
@@ -1066,6 +1068,7 @@ export default function SidePanel({
         <div className="p-4 pb-24 space-y-6">
           {isOpen && <div>
             <SidePanelQuickAccess />
+            <SidePanelBookmarks onNavigate={onToggle} />
             <SidePanelMyGroups onNavigate={onToggle} />
           </div>}
           {/* Stored Cards Section */}

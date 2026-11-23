@@ -18,6 +18,10 @@
     "dock_preferences": {
       "type": "object",
       "description": "Personal Dock Deck folders, widgets, and preferences"
+    },
+    "side_panel_bookmarks": {
+      "type": "object",
+      "description": "Member's personal side-panel bookmark sections"
     }
   }
 }
