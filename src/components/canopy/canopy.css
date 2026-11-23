@@ -1,6 +1,6 @@
 #app-topbar { top: var(--canopy-offset, 0px); }
 main.canopy-page { padding-top: var(--canopy-page-top, revert-layer); }
-[data-canopy-split] main.canopy-page { padding-right: calc(var(--canopy-split-extra) + var(--canopy-dock-right)); min-width: 0; overflow-x: clip; }
+[data-canopy-split] main.canopy-page { padding-right: calc(var(--canopy-split-extra) + max(var(--canopy-dock-right), var(--dock-page-reserve, 0px))); min-width: 0; overflow-x: clip; }
 [data-canopy-split] main[data-page='CommandDeck'] .canopy-command-content { padding-right: 0; }
 .sa-canopy { --canopy-surface: 210 53% 97%; --canopy-panel: 210 53% 99%; --canopy-line: 205 27% 76%; --canopy-ink: 218 53% 15%; --canopy-metal: 34 59% 33%; --canopy-cyan: 191 77% 31%; }
 html:is([data-theme='dark'],[data-theme='hacker']) .sa-canopy, .dark .sa-canopy { --canopy-surface: 222 48% 11%; --canopy-panel: 220 43% 16%; --canopy-line: 202 34% 34%; --canopy-ink: 210 55% 97%; --canopy-metal: 41 78% 70%; --canopy-cyan: 187 78% 64%; }

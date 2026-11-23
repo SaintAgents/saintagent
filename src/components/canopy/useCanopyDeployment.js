@@ -42,9 +42,9 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
       if (nextSimple) setMode('closed');
     };
     const resize = () => setViewport(window.innerWidth);
-    const scan = () => { const d = {left:0,right:0}; document.querySelectorAll('[data-canopy-dock]').forEach(el => { const side = el.dataset.canopyDock; d[side] = Math.max(d[side], Number.parseFloat(el.style.width) || 0); }); setDock(d); };
-    scan(); document.addEventListener('sidePanelStateChange', scan); document.addEventListener('viewModeChange', change); window.addEventListener('resize', resize);
-    return () => { document.removeEventListener('sidePanelStateChange', scan); document.removeEventListener('viewModeChange', change); window.removeEventListener('resize', resize); };
+    const scan = () => { const d = {left:0,right:Number.parseFloat(document.documentElement.style.getPropertyValue('--dock-occupied')) || 0}; document.querySelectorAll('[data-canopy-dock]').forEach(el => { const side = el.dataset.canopyDock; d[side] = Math.max(d[side], Number.parseFloat(el.style.width) || 0); }); setDock(d); };
+    scan(); document.addEventListener('dockDeckWidthChange', scan); document.addEventListener('sidePanelStateChange', scan); document.addEventListener('viewModeChange', change); window.addEventListener('resize', resize);
+    return () => { document.removeEventListener('dockDeckWidthChange', scan); document.removeEventListener('sidePanelStateChange', scan); document.removeEventListener('viewModeChange', change); window.removeEventListener('resize', resize); };
   }, [pathname, setMode]);
   useEffect(() => { session.recent = [pathname, ...session.recent.filter(p => p !== pathname)].slice(0, 7); }, [pathname, session]);
   useEffect(() => {

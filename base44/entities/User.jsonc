@@ -14,6 +14,10 @@
     "canopy_preferences": {
       "type": "object",
       "description": "Personal Command Canopy layout and scratchpad"
+    },
+    "dock_preferences": {
+      "type": "object",
+      "description": "Personal Dock Deck folders, widgets, and preferences"
     }
   }
 }

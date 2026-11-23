@@ -41,6 +41,7 @@ import ResetPassword from './pages/ResetPassword';
 import Mfa from '@/pages/Mfa';
 import ObservationDeck from '@/pages/ObservationDeck';
 import ObservationPreview from '@/components/observation/ObservationPreview';
+import DockDeck from '@/components/dock/DockDeck';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -129,7 +130,9 @@ const AuthenticatedApp = () => {
     return <LoadingSpinner />;
   }
 
-  return <AppRoutes />;
+  const embedded = window.parent !== window && new URLSearchParams(location.search).get('observationPreview') === '1';
+  const dockDisabled = embedded || isTourPreview() || /^\/(g3dex|gggcrypto)\/?$/i.test(location.pathname);
+  return <><AppRoutes /><DockDeck key={user.id} user={user} disabled={dockDisabled} /></>;
 };
 
 // Separated routes so both public and authenticated paths use the same route tree

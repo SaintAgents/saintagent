@@ -23,7 +23,7 @@ export default function DeckOverviewDialog({ index, onSelect, onClose, returnFoc
   useEffect(() => { pane.current?.scrollTo({ top: 0 }); }, [index]);
 
   return <Dialog open onOpenChange={open => { if (!open) onClose(); }}>
-    <DialogContent data-readable-surface data-hacker-draggable="true" className="inset-0 z-[10010] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:rounded-none"
+    <DialogContent data-dock-full-tour data-readable-surface data-hacker-draggable="true" className="inset-0 z-[10010] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:rounded-none"
       onCloseAutoFocus={event => { event.preventDefault(); returnFocus(locate.current); }}>
       <header className="shrink-0 space-y-1 border-b px-4 py-4 pr-12 sm:px-8">
         <DialogTitle>Command Deck Overview</DialogTitle>

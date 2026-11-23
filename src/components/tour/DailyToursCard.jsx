@@ -7,7 +7,7 @@ import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import DailyTourDialog from '@/components/tour/DailyTourDialog';
 import useDailyTours from '@/components/tour/useDailyTours';
 
-export default function DailyToursCard({ userId }) {
+export default function DailyToursCard({ userId, embedded = false }) {
   const [day, setDay] = useState(null);
   const [step, setStep] = useState(0);
   const [overviewOpen, setOverviewOpen] = useState(false);
@@ -17,13 +17,13 @@ export default function DailyToursCard({ userId }) {
   const card = useRef(null);
   const { hash, key } = useLocation();
   useEffect(() => {
-    if (hash !== '#daily-tours' || !userId) return;
+    if (embedded || hash !== '#daily-tours' || !userId) return;
     const frame = requestAnimationFrame(() => {
       card.current?.scrollIntoView({ block: 'start' });
       card.current?.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(frame);
-  }, [hash, key, userId]);
+  }, [embedded, hash, key, userId]);
   const { query, record, sections, save } = useDailyTours(userId);
   const completed = sections.filter((count, index) => count === DAILY_TOURS[index].sections.length).length;
   if (!userId) return null;
@@ -43,7 +43,7 @@ export default function DailyToursCard({ userId }) {
   };
 
   return (
-    <section id="daily-tours" ref={card} tabIndex={-1} data-readable-surface className="relative scroll-mt-40 space-y-4 p-4 text-card-foreground" aria-label="Tour library">
+    <section id={embedded ? undefined : 'daily-tours'} ref={card} tabIndex={-1} data-readable-surface className="relative scroll-mt-40 space-y-4 p-4 text-card-foreground" aria-label="Tour library">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <p className="text-sm text-muted-foreground">Start with the full-screen overview or choose any topic tour. Read or listen at your own pace.</p>
         {record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}

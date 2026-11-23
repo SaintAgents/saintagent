@@ -1037,6 +1037,10 @@ export default function TopBar({
                     <User className="w-4 h-4 text-slate-500" />
                     <span>My Dashboard/Profile</span>
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => document.dispatchEvent(new CustomEvent('pinDockItem', { detail:{ path:window.location.pathname + window.location.search + window.location.hash, title:(currentPageName || 'Current page').replace(/([a-z])([A-Z])/g, '$1 $2') } }))} className="hidden items-center gap-3 px-4 py-2.5 md:flex">
+                    <PanelTopOpen className="w-4 h-4" />
+                    <span>Pin this page to Dock</span>
+                  </DropdownMenuItem>
                   {myBusinessEntities.length > 0 && myBusinessEntities.map(biz => (
                     <DropdownMenuItem key={biz.id} asChild>
                       <Link to={createPageUrl('BusinessEntityProfile') + `?id=${biz.id}`} className="flex items-center gap-3 px-4 py-2.5">

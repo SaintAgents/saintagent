@@ -435,6 +435,7 @@ export default function RightSideTabs({ previewOnly = false }) {
         <button
           onClick={toggleSuppressed}
           className="fixed right-0 bottom-28 z-[60] hidden md:flex items-center justify-center w-8 h-8 rounded-l-lg bg-violet-600/60 hover:bg-violet-600 text-white/70 hover:text-white transition-all shadow-md"
+          style={{ right:'var(--dock-occupied, 0px)' }}
           title="Show help panel"
         >
           <HelpCircle className="w-4 h-4" />
@@ -456,7 +457,7 @@ export default function RightSideTabs({ previewOnly = false }) {
           // On mobile, only show if panel is open (triggered from menu)
           showHelpPanel ? "block" : "hidden md:block"
         )}
-        style={{ bottom: '100px' }}
+        style={{ bottom: '100px', right:'var(--dock-occupied, 0px)' }}
         onMouseEnter={handleHelpMouseEnter}
         onMouseLeave={handleHelpMouseLeave}
       >
