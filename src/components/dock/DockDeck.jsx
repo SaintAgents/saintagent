@@ -5,6 +5,8 @@ import DockDeckIcon from '@/components/dock/DockDeckIcon';
 import { Button } from '@/components/ui/button';
 import CanopyResize from '@/components/canopy/CanopyResize';
 import { VIDEO_LIBRARY } from '@/components/hud/videoLibrary';
+import SurfaceHeroLayer from '@/components/hero/SurfaceHeroLayer';
+import { useSurfaceHeroes } from '@/components/hero/surfaceHeroSettings';
 import DockFooter from '@/components/dock/DockFooter';
 import DockHeader from '@/components/dock/DockHeader';
 import DockFolders from '@/components/dock/DockFolders';
@@ -20,6 +22,7 @@ import '@/components/dock/dock.css';
 export default function DockDeck({user, disabled, preview = false, children}) {
   const location=useLocation(), navigate=useNavigate();
   const {prefs,commit,error}=useDockPreferences(user, preview);
+  const heroes = useSurfaceHeroes();
   const actions=useDockActions(commit,prefs.active);
   const [modal,setModal]=useState(null), [drag,setDrag]=useState(null);
   const visited = useRef(new Set());
@@ -48,8 +51,8 @@ export default function DockDeck({user, disabled, preview = false, children}) {
     {!shown && <Button ref={launcher} className="dock-launcher" data-dock-handle={compactLauncher ? '' : undefined} variant="outline" onClick={() => setOpen(true)} aria-label="Open Dock Deck" title="Open Dock Deck" aria-controls="dock-deck" aria-expanded={false}><DockDeckIcon />{!compactLauncher && prefs.label && 'Dock Deck'}</Button>}
     <aside ref={panel} id="dock-deck" aria-label="Dock Deck" aria-hidden={!shown} {...(!shown ? {inert:''} : {})} className="dock-panel" style={{width,'--dock-video-opacity':prefs.opacity/100}}>
       {wide && <><CanopyResize label="Resize Dock Deck" className="dock-resize" direction="left" value={width} min={320} max={max} onChange={resize} /><button type="button" className="dock-edge" aria-label="Collapse Dock Deck" title="Collapse Dock Deck" onClick={close}><ChevronRight size={16} /></button></>}
-      {shown && prefs.video && <video className="dock-video" aria-hidden="true" src={VIDEO_LIBRARY[0].url} autoPlay muted loop playsInline />}
-      <DockHeader {...{prefs,deck,commit,close,openModal,compactLauncher}} />
+      {!preview && heroes.surfaces?.dock ? <SurfaceHeroLayer surface="dock" visible={shown} /> : shown && prefs.video && (preview || !heroes.hidden) && <video className="dock-video" aria-hidden="true" src={VIDEO_LIBRARY[0].url} autoPlay muted loop playsInline />}
+      <DockHeader {...{prefs,deck,commit,close,openModal,compactLauncher,preview}} configured={Boolean(heroes.surfaces?.dock)} />
       <div className="dock-scroll">
         <DockFolders {...{prefs,commit,openModal,drag}} drop={(e,target)=>drop(e,id=>{if(target!==prefs.active)actions.restore(id,target);})} />
         <div ref={grid} className="dock-grid" style={{'--dock-columns':columns}}>{deckCards.every(c=>c.deck!==deck.id) && <p className="p-3">This deck is empty. Use Add Widget to get started.</p>}</div>

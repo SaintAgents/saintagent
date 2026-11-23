@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import SidebarResizeHandle from '@/components/hud/SidebarResizeHandle';
+import SurfaceHeroLayer from '@/components/hero/SurfaceHeroLayer';
+import { openSurfaceHero } from '@/components/hero/surfaceHeroSettings';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 import AnimatedBrandLogo from '@/components/hud/AnimatedBrandLogo';
 import ActivityTicker from '@/components/live/ActivityTicker';
 import { base44 } from '@/api/base44Client';
@@ -1156,6 +1159,7 @@ export default function Sidebar({
           )}
         </div>
         <div className="flex items-center gap-1">
+          {!isCollapsed && !isTourPreview() && <Button variant="ghost" size="sm" title="Configure side navigation background" aria-label="Configure side navigation background" onClick={() => openSurfaceHero('sidebar', 'Side navigation')}>Hero</Button>}
           {!isCollapsed && (
             <Button 
               variant="ghost" 
@@ -1182,6 +1186,7 @@ export default function Sidebar({
         </div>
       </div>
 
+      {!isTourPreview() && <SurfaceHeroLayer surface="sidebar" theme={theme} desktopOnly />}
       <ActivityTicker placement="sidebar" />
       {renderSidebarContent(false)}
 

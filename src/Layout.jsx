@@ -32,6 +32,7 @@ import LiveAchievementToasts from '@/components/gamification/LiveAchievementToas
 import LiveActivity from '@/components/live/LiveActivity';
 import VideoBackgroundLayer from '@/components/hud/VideoBackgroundLayer';
 import VideoBackgroundToolbar from '@/components/hud/VideoBackgroundToolbar';
+import SurfaceHeroControls from '@/components/hero/SurfaceHeroControls';
 import SurfaceOpacityController from '@/components/hud/SurfaceOpacityController';
 
 import MeetingReminderService from '@/components/MeetingReminderService';
@@ -635,7 +636,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   return (
     <LiveActivity key={currentUser.id} user={currentUser} profile={profile} profileReady={profileReady} page={currentPageName} disabled={tourPreview}>
-    <div className="min-h-screen bg-slate-50 [&[data-nav-resizing]_.nav-width-aware]:duration-0" data-bg-effect={bgEffect}
+    <div className="relative min-h-screen bg-slate-50 [&[data-nav-resizing]_.nav-width-aware]:duration-0" data-bg-effect={bgEffect}
       data-nav-resizing={sidebarResizing ? '' : undefined} style={{ '--expanded-nav-width': `${sidebarWidth}px` }}>
       {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} sidebarWidth={sidebarWidth} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={query => { setCanopySearch(query || ''); setSearchOpen(true); }} onCreate={() => setQuickCreateOpen(true)} onToolbarControlChange={setCanopyControl} />}
       <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
@@ -1996,6 +1997,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Video Background Toolbar */}
       <VideoBackgroundToolbar theme={theme} onThemeToggle={setTheme} currentPageName={currentPageName} />
+      {!tourPreview && <SurfaceHeroControls page={currentPageName} theme={theme} />}
 
       {!tourPreview && currentPageName === 'CommandDeck' && onboarding?.welcome_overview_pending && (onboarding.status === 'complete' || onboarding.status === 'skipped') && (
         <FirstVisitTour key={onboarding.id} onboarding={onboarding} userEmail={currentUser.email} />

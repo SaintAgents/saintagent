@@ -9,6 +9,9 @@ import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { VIDEO_LIBRARY, VIDEO_CATEGORIES, getHackerVideoConfig } from '@/components/hud/videoLibrary';
+import { HeroQuickToggle, openPageHero } from '@/components/hero/SurfaceHeroControls';
+import { openSurfaceHero } from '@/components/hero/surfaceHeroSettings';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 
 const STORAGE_KEY = 'videoBgSettings';
 const SURFACE_OPACITY_KEY = 'surfaceOpacitySettings';
@@ -429,6 +432,10 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                   <button onClick={() => setActivePanel(null)} className={`p-1 rounded ${hoverBg}`} style={{ color: textMuted }}><X className="w-4 h-4" /></button>
                 </div>
 
+                {!isTourPreview() && <div className="flex flex-wrap gap-2 border-b pb-2 text-xs" style={{ borderColor, color: textColor }}>
+                  <button type="button" onClick={() => { setActivePanel(null); openPageHero(currentPageName); }}>Page &amp; surface carousels</button>
+                  <HeroQuickToggle />
+                </div>}
                 {/* Surface selector */}
                 {hackerMode ? <p className="text-xs" style={{ color: textMuted }}>Hacker mode · All pages</p> : <div className="flex flex-wrap gap-1">
                   {SURFACES.map(s => (
@@ -613,6 +620,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                 <SliderRow label="Sidebar Opacity" value={sidebarSettings.sidebarOpacity} min={0} max={100} onChange={v => updateSidebar({ sidebarOpacity: v })} accent={accentColor} labelColor={textMuted} unit="%" />
                 <SliderRow label="Sidebar Background" value={sidebarSettings.sidebarBg} min={0} max={100} onChange={v => updateSidebar({ sidebarBg: v })} accent={accentColor} labelColor={textMuted} unit="%" />
                 <SliderRow label="Font Brightness" value={sidebarSettings.fontBrightness} min={30} max={150} onChange={v => updateSidebar({ fontBrightness: v })} accent={accentColor} labelColor={textMuted} unit="%" />
+                {!isTourPreview() && <button type="button" className="w-full rounded border py-1.5 text-xs" style={{ color: textColor, borderColor }} onClick={() => { setActivePanel(null); openSurfaceHero('sidebar', 'Side navigation'); }}>Side navigation background</button>}
 
                 <button
                   onClick={() => {

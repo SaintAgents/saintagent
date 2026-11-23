@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { getHackerVideoConfig } from '@/components/hud/videoLibrary';
+import { heroMedia, heroThemeMatches, routeHeroKey, useSurfaceHeroes } from '@/components/hero/surfaceHeroSettings';
+import { SurfaceMedia } from '@/components/hero/SurfaceHeroLayer';
 
 const STORAGE_KEY = 'videoBgSettings';
 
@@ -11,6 +13,10 @@ function getSettings() {
 export default function VideoBackgroundLayer({ currentPageName, theme }) {
   const videoRef = useRef(null);
   const [settings, setSettings] = useState(getSettings);
+  const heroes = useSurfaceHeroes();
+  const routeKey = routeHeroKey(currentPageName);
+  const scoped = heroes.surfaces?.[routeKey] || heroes.surfaces?.all;
+  const useScoped = Boolean(scoped?.enabled && heroMedia(scoped).length && heroThemeMatches(scoped, theme));
 
   const surfaceMap = {
     'CommandDeck': 'commandDeck',
@@ -33,8 +39,9 @@ export default function VideoBackgroundLayer({ currentPageName, theme }) {
   const globalConfig = settings.global;
   const config = theme === 'hacker' ? getHackerVideoConfig(settings)
     : surfaceConfig?.videoUrl && surfaceConfig.enabled ? surfaceConfig : globalConfig;
-  const active = Boolean(config?.videoUrl && config.enabled && (theme === 'hacker'
+  const legacyActive = Boolean(config?.videoUrl && config.enabled && (theme === 'hacker'
     || (config.themeFilter !== 'light' || theme === 'light') && (config.themeFilter !== 'dark' || theme === 'dark')));
+  const active = !heroes.hidden && (scoped ? useScoped : legacyActive);
 
   useEffect(() => {
     if (active) document.documentElement.setAttribute('data-video-active', 'true');
@@ -42,6 +49,7 @@ export default function VideoBackgroundLayer({ currentPageName, theme }) {
   }, [active]);
 
   if (!active) return null;
+  if (useScoped) return <SurfaceMedia key={`${routeKey}:${scoped.mode}`} config={scoped} theme={theme} className={`${scoped.attachment === 'scrolls' ? 'absolute' : 'fixed'} inset-0 z-0`} />;
 
   const opacity = config.opacity ?? 0.3;
   const playbackRate = config.speed ?? 1;

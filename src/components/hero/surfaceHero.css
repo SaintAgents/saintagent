@@ -1,0 +1,4 @@
+html[data-theme='hacker'] img.surface-hero-media { filter: var(--hacker-video-filter) !important; }
+html[data-theme='light'] .surface-hero-editor select, html[data-theme='light'] .surface-hero-editor input { color: var(--readable-text); }
+html:root .surface-hero-editor button[aria-pressed='true'] { outline: 2px solid var(--readable-link); outline-offset: -2px; }
+@media (prefers-reduced-motion: reduce) { .surface-hero-media { transition-duration: 0ms !important; } }
