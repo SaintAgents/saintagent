@@ -59,10 +59,8 @@ export default function AdvicePage() {
 
   const { data: profile } = useQuery({
     queryKey: ['myProfile', currentUser?.email],
-    queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.filter({ user_id: currentUser.email });
-      return profiles[0];
-    },
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1),
+    select: profiles => profiles[0],
     enabled: !!currentUser?.email
   });
 

@@ -98,11 +98,9 @@ export default function QuickStartChecklist() {
     retry: false,
   });
   const { data: profile } = useQuery({ 
-    queryKey: ['myProfile', user?.email], 
-    queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
-      return profiles?.[0];
-    },
+    queryKey: ['myProfile', user?.email],
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1),
+    select: profiles => profiles[0],
     enabled: !!user?.email,
     staleTime: 1800000,
     gcTime: 3600000,

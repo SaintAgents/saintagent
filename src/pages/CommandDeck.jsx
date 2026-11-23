@@ -378,7 +378,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Fetch user profile (only when authenticated)
   // IMPORTANT: Use same queryKey as Layout to share cache and prevent duplicate fetches
-  const { data: profiles, isLoading: profileLoading } = useQuery({
+  const { data: profiles, isLoading: profileLoading, isFetching: profileFetching, isError: profileError, refetch: reloadProfile } = useQuery({
     queryKey: ['myProfile', currentUser?.email],
     queryFn: async () => {
       const byEmail = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
@@ -882,7 +882,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
   };
 
   // Show loading state while essential data is being fetched
-  const isLoading = !currentUser;
+  const isLoading = !currentUser || (!profile && (profileLoading || profileFetching));
 
   if (isLoading) {
     return (
@@ -892,6 +892,16 @@ export default function CommandDeck({ theme, onThemeToggle }) {
           <p className="text-slate-600">Loading...</p>
         </div>
       </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <section data-readable-surface className="mx-auto mt-8 max-w-lg space-y-3 rounded-lg border p-6 text-center">
+        <h2 className="font-semibold">{profileError ? 'Couldn’t load your profile' : 'No profile found for this account'}</h2>
+        <p className="text-sm">Your avatar, GGG balance, and profile stats are unavailable until your profile loads.</p>
+        <Button variant="outline" onClick={() => reloadProfile()}>Retry</Button>
+      </section>
     );
   }
 

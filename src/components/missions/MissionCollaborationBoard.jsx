@@ -529,10 +529,8 @@ export default function MissionCollaborationBoard({ missionId, mission }) {
 
   const { data: userProfile } = useQuery({
     queryKey: ['myProfile', user?.email],
-    queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.filter({ user_id: user.email });
-      return profiles?.[0];
-    },
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1),
+    select: profiles => profiles[0],
     enabled: !!user?.email
   });
 

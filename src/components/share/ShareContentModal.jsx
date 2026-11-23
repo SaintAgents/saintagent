@@ -33,10 +33,8 @@ export default function ShareContentModal({ open, onClose, content }) {
 
   const { data: myProfile } = useQuery({
     queryKey: ['myProfile', user?.email],
-    queryFn: async () => {
-      const res = await base44.entities.UserProfile.filter({ user_id: user.email });
-      return res?.[0];
-    },
+    queryFn: () => base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1),
+    select: profiles => profiles[0],
     enabled: !!user?.email && open
   });
 
