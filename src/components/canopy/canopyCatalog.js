@@ -1,10 +1,10 @@
 export const tabs = [
-  ['Home','/CommandDeck'], ['Deep Dive','/Insights'], ['Research','/ResourceHub'], ['Projects','/MyDashboard'], ['People','/Profiles'], ['Opportunities','/Marketplace'], ['Quests','/Quests'], ['Treasury','/GaiaGlobalTreasury'], ['Files','/Profile'], ['Calendar','/Schedule'], ['Notes','/Notes'], ['Actions','actions'],
+  ['Home','/CommandDeck'], ['Deep Dive','deep-dive'], ['Research','/ResourceHub'], ['Projects','/MyDashboard'], ['People','/Profiles'], ['Opportunities','/Marketplace'], ['Quests','/Quests'], ['Treasury','/GaiaGlobalTreasury'], ['Files','/Profile'], ['Calendar','/Schedule'], ['Notes','/Notes'], ['Actions','actions'],
 ];
 export const actions = [
-  ['Take Action','create'], ['Explore Opportunities','/Marketplace'], ['Deep Dive Research','/Insights'], ['Join Projects','/Projects'], ['Connect People','/FindCollaborators'], ['Organizations & Ventures','/BusinessEntities'], ['Build a Brighter Tomorrow','/Missions'],
+  ['Take Action','create'], ['Explore Opportunities','/Marketplace'], ['Deep Dive Research','deep-dive'], ['Join Projects','/Projects'], ['Connect People','/FindCollaborators'], ['Organizations & Ventures','/BusinessEntities'], ['Build a Brighter Tomorrow','/Missions'],
 ];
-export const shortcuts = [['Deep Dive','/Insights'], ['My Projects','/MyDashboard'], ['Research Cards','/Insights?canopy=research'], ['Quick Notes','notes'], ['Inbox','/Messages'], ['Notifications','notifications']];
+export const shortcuts = [['Deep Dive','deep-dive'], ['My Projects','/MyDashboard'], ['Research Cards','/Insights?canopy=research'], ['Quick Notes','notes'], ['Inbox','/Messages'], ['Notifications','notifications']];
 export const presets = {
   'My Day':['Time','Today','Quick Notes','Recent','Actions'],
   Research:['Deep Dive','Research Cards','Files & Knowledge','Quick Notes'],
@@ -17,7 +17,7 @@ export const presets = {
 };
 export const peek = ['Time','Today','Quick Notes','Notifications'];
 export const links = {
-  'Deep Dive':[['Explore insights','/Insights'],['Search the platform','search']],
+  'Deep Dive':[['Open Deep Dive Intelligence','deep-dive'],['Search the platform','search']],
   'Research Cards':[['Browse insight cards','/Insights'],['Browse resources','/ResourceHub']],
   Quests:[['Explore quests','/Quests'],['Browse courses','/LearningHub']],
   Opportunities:[['Browse marketplace','/Marketplace'],['Explore missions','/Missions']],

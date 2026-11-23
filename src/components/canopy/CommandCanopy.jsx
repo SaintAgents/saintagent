@@ -8,6 +8,7 @@ import useCanopyDeployment from '@/components/canopy/useCanopyDeployment';
 import CanopyResize from '@/components/canopy/CanopyResize';
 import CanopyWorkspace from '@/components/canopy/CanopyWorkspace';
 import CanopyOverlays from '@/components/canopy/CanopyOverlays';
+import { openDeepDive } from '@/components/deepdive/deepDive';
 import '@/components/canopy/canopy.css';
 
 import ActivityTicker from '@/components/live/ActivityTicker';
@@ -41,6 +42,10 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
     setMode('closed');
     if (to === 'search') onSearch(value);
     else if (to === 'create') onCreate();
+    else if (to === 'deep-dive') {
+      document.querySelector('#app-topbar [aria-controls="canopy-workspace"]')?.focus();
+      openDeepDive();
+    }
     else if (to === 'assistant') document.dispatchEvent(new CustomEvent('openRightSideTab', { detail:{tab:'concierge'} }));
     else if (to === 'my-assistant') document.dispatchEvent(new Event('openMyAssistant'));
     else if (to === 'dock') document.dispatchEvent(new Event('openDockDeck'));
