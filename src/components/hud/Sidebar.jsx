@@ -537,6 +537,7 @@ export default function Sidebar({
                     {group.isTreasury && <div className="mx-2 mb-1.5 border-t border-amber-200" />}
                     <button
                       data-tour-nav-group={group.key}
+                      aria-expanded={isGroupExpanded}
                       onClick={() => setExpandedGroups(prev => ({ ...prev, [group.key]: !prev[group.key] }))}
                       className={cn(
                         "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors text-left",

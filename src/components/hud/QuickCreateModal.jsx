@@ -460,6 +460,7 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
                 {CREATE_OPTIONS.map((option) =>
               <button
                 key={option.id}
+                data-tour-quick-option={option.id}
                 onClick={() => handleTypeSelect(option.id)}
                 className="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:border-violet-400 hover:bg-violet-500/10 transition-all text-left group">
 
@@ -482,6 +483,7 @@ export default function QuickCreateModal({ open, onClose, onCreate, initialType 
 
           <motion.div
             key="form"
+            data-tour-quick-form={selectedType}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}>

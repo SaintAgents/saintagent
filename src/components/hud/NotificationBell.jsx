@@ -129,7 +129,7 @@ export default function NotificationBell({ notifications = [], onAction }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative w-8 h-8 md:w-9 md:h-9" style={{ zIndex: 10001, pointerEvents: 'auto' }}>
+        <Button data-tour-notifications aria-label="Notifications" variant="ghost" size="icon" className="relative w-8 h-8 md:w-9 md:h-9" style={{ zIndex: 10001, pointerEvents: 'auto' }}>
           <Bell className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
           {unreadCount > 0 && (
             <span className="absolute -top-0.5 -right-0.5 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center text-[10px] md:text-xs font-bold text-white bg-rose-500 rounded-full">

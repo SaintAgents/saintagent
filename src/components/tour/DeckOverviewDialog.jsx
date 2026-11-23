@@ -3,6 +3,8 @@ import { Crosshair } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import TourNarration from '@/components/tour/TourNarration';
+import TourScreenPreview from '@/components/tour/TourScreenPreview';
+import { overviewPreviewTarget } from '@/components/tour/tourPreviewTargets';
 import DeckIconDemo from '@/components/tour/DeckIconDemo';
 import { DECK_OVERVIEW, DECK_STOPS } from '@/components/tour/deckOverview';
 import { DECK_ICON_LESSONS } from '@/components/tour/deckIconLessons';
@@ -27,17 +29,18 @@ export default function DeckOverviewDialog({ index, onSelect, onClose, returnFoc
         <DialogTitle>Command Deck Overview</DialogTitle>
         <DialogDescription>Walk through the whole screen, from navigation to the cards and tools. Choose any section or follow in order.</DialogDescription>
       </header>
-      <div className="grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)] md:grid-cols-[17rem_minmax(0,1fr)] md:grid-rows-1">
-        <div className="min-h-0 border-b p-3 md:overflow-y-auto md:border-b-0 md:border-r">
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,3fr)] md:grid-cols-2 md:grid-rows-1">
+        <TourScreenPreview targets={[overviewPreviewTarget(title, anchor)]} />
+        <div ref={pane} className="min-h-0 min-w-0 overflow-y-auto px-4 py-5 sm:px-8">
+        <div className="mx-auto mb-4 max-w-3xl">
           <label htmlFor="deck-tour-section" className="mb-2 block text-sm font-semibold">Jump to a section</label>
           <select id="deck-tour-section" className="w-full rounded-md border bg-background px-2 py-2 text-sm text-foreground" value={index} onChange={event => onSelect(Number(event.target.value))}>
             {DECK_OVERVIEW.map(group => <optgroup key={group.area} label={group.area}>{group.stops.map(item => <option key={item.title} value={DECK_STOPS.findIndex(stop => stop.title === item.title)}>{item.title}</option>)}</optgroup>)}
           </select>
-          <div className="mt-4 hidden space-y-3 md:block" aria-label="Overview sections">
-            {DECK_OVERVIEW.map(group => <details key={group.area} open={group.area === area ? true : undefined} className="text-sm"><summary className="cursor-pointer font-semibold">{group.area}</summary><ul className="mt-1 space-y-1">{group.stops.map(item => <li key={item.title}><Button type="button" variant="ghost" size="sm" aria-current={item.title === title ? 'step' : undefined} className="h-auto w-full justify-start whitespace-normal text-left aria-[current=step]:underline" onClick={() => onSelect(DECK_STOPS.findIndex(stop => stop.title === item.title))}>{item.title}</Button></li>)}</ul></details>)}
-          </div>
+          <details className="mt-2 text-sm"><summary className="cursor-pointer">Browse overview sections</summary>
+            {DECK_OVERVIEW.map(group => <details key={group.area} open={group.area === area ? true : undefined} className="mt-2"><summary className="cursor-pointer font-semibold">{group.area}</summary><ul className="mt-1 space-y-1">{group.stops.map(item => <li key={item.title}><Button type="button" variant="ghost" size="sm" aria-current={item.title === title ? 'step' : undefined} className="h-auto w-full justify-start whitespace-normal text-left aria-[current=step]:underline" onClick={() => onSelect(DECK_STOPS.findIndex(stop => stop.title === item.title))}>{item.title}</Button></li>)}</ul></details>)}
+          </details>
         </div>
-        <div ref={pane} className="min-h-0 overflow-y-auto px-4 py-5 sm:px-8">
           <div className="mx-auto max-w-3xl space-y-5">
             <div aria-live="polite"><p className="text-sm text-muted-foreground">{area} · Section {index + 1} of {DECK_STOPS.length}</p><h2 className="mt-1 font-heading text-2xl font-semibold sm:text-3xl">{title}</h2></div>
             <TourNarration key={title} text={`${title}. ${what} ${action} ${icons?.map(icon => `${icon.label}. ${icon.result}`).join(' ') || ''}`} />

@@ -53,6 +53,7 @@ import ActivityBasedMatcher from '@/components/ai/ActivityBasedMatcher';
 import LeaderPathway from '@/components/leader/LeaderPathway';
 import QuickStartChecklist from '@/components/onboarding/QuickStartChecklist';
 import DailyToursCard from '@/components/tour/DailyToursCard';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 import HelpHint from '@/components/hud/HelpHint';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
@@ -647,6 +648,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Seed demo projects once on first visit (local flag)
   useEffect(() => {
+    if (isTourPreview()) return;
     const k = 'demoProjectsSeeded_v1';
     if (typeof window !== 'undefined' && !localStorage.getItem(k)) {
       base44.functions.invoke('seedProjects', {}).
@@ -657,6 +659,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // SA#: Assign incrementally for new signups only
   useEffect(() => {
+    if (isTourPreview()) return;
     (async () => {
       if (!currentUser?.email || !profile?.id) return;
       if (!profile.sa_number) {
@@ -858,6 +861,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
   // Check if user just completed onboarding - ONLY show tour once ever
   useEffect(() => {
+    if (isTourPreview()) return;
     const tourComplete = localStorage.getItem('commandDeckTourComplete') === 'true';
     const justCompletedOnboarding = localStorage.getItem('onboardingJustCompleted') === '1';
     

@@ -176,6 +176,7 @@ export default function ProjectTrackPage() {
               </Button>
               <Button 
                 variant="ghost" 
+                data-tour-tracking-projects
                 onClick={() => setActiveView('projects')}
                 className={`h-9 gap-2 ${activeView === 'projects' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'}`}
               >

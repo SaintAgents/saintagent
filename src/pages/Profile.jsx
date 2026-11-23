@@ -654,6 +654,7 @@ export default function Profile() {
                                           <Button
                   variant="outline"
                   className="rounded-xl gap-2"
+                  data-tour-edit-profile={isEditing ? undefined : ''}
                   onClick={isEditing ? () => setIsEditing(false) : handleEdit}>
 
                                             {isEditing ?
@@ -954,7 +955,7 @@ export default function Profile() {
 
             {/* Bio & Details */}
             <CollapsibleProfileCard title="About" icon={User} headerClassName="bg-purple-100 p-6">
-                  <div className="bg-purple-100 dark:bg-[#050505] space-y-4">
+                  <div data-tour-profile-editor={isEditing ? '' : undefined} className="bg-purple-100 dark:bg-[#050505] space-y-4">
                 {isEditing ?
                     <>
                     <div>

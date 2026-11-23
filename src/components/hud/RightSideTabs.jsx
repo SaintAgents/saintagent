@@ -158,7 +158,7 @@ const getCurrentPage = () => {
   }
 };
 
-export default function RightSideTabs() {
+export default function RightSideTabs({ previewOnly = false }) {
   // Help panel state
   const [helpOpen, setHelpOpen] = useState(false);
   const [helpHovered, setHelpHovered] = useState(false);
@@ -296,7 +296,7 @@ export default function RightSideTabs() {
   // Auto-open help on first visit to each page (if enabled) — desktop only
   // Skip if user already dismissed the panel this session
   useEffect(() => {
-    if (!autoOpenHelp || helpSuppressed || dismissedPages.has(getCurrentPage())) return;
+    if (previewOnly || !autoOpenHelp || helpSuppressed || dismissedPages.has(getCurrentPage())) return;
     // Never auto-open on mobile — it blocks the entire page
     if (window.innerWidth < 768) return;
     const currentPage = getCurrentPage();

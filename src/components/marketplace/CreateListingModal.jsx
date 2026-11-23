@@ -643,7 +643,7 @@ export default function CreateListingModal({ open, onOpenChange, onCreate }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent data-tour-listing-form className="sm:max-w-lg">
         <style>{`
           [data-theme='dark'] [data-radix-dialog-content] {
             background-color: #0f172a !important;

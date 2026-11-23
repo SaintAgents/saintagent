@@ -123,7 +123,7 @@ export default function Marketplace() {
             <p className="text-white/80 text-base tracking-wider">Offer your skills, find mentors, and grow together</p>
           </div>
           <div className="flex items-center justify-center gap-2">
-            <Button className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
+            <Button data-tour-create-listing className="rounded-xl bg-violet-600 hover:bg-violet-700 gap-2" onClick={() => setCreateOpen(true)}>
               <Plus className="w-4 h-4" />
               Create Listing
             </Button>

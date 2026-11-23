@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
@@ -162,10 +163,12 @@ function useHackerDraggablePopups() {
 
 // Authenticated layout with all the hooks - only used for protected pages
 function AuthenticatedLayout({ children, currentPageName }) {
+  const tourPreview = isTourPreview();
   // Enable hacker theme draggable popups
   useHackerDraggablePopups();
   
   const [sidebarCollapsed, _setSC] = useState(() => {
+      if (tourPreview) return false;
       if (typeof window !== 'undefined') {
         if (window.innerWidth < 768) return true;
         try { const s = localStorage.getItem('sidebarCollapsed'); if (s !== null) return s === 'true'; } catch {}
@@ -283,7 +286,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
-    try { localStorage.setItem('theme', theme); } catch {}
+    if (!tourPreview) { try { localStorage.setItem('theme', theme); } catch {} }
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
       if (theme === 'custom') {
@@ -348,7 +351,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   // }, [profile?.id]);
 
   // Initialize live status tracking
-  useLiveStatus();
+  useLiveStatus(!tourPreview);
 
   // Fetch notifications with real-time subscription (rely on subscription for updates)
   const { data: notifications = [] } = useQuery({
@@ -551,7 +554,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   // IMPORTANT: Only redirect ONCE using a ref to prevent loops
   const hasRedirected = React.useRef(false);
   useEffect(() => {
-    if (hasRedirected.current) return;
+    if (tourPreview || hasRedirected.current) return;
     const justCompleted = typeof window !== 'undefined' && localStorage.getItem('onboardingJustCompleted') === '1';
     const obCompleteLS = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
     const tourDismissed = typeof window !== 'undefined' && localStorage.getItem('tourDismissed') === '1';
@@ -1915,10 +1918,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
       )}
 
       {/* Right Side Tabs (Help + Chat) */}
-      <RightSideTabs />
+      <RightSideTabs previewOnly={tourPreview} />
 
       {/* Global Side Panel Nudge */}
-      <GlobalSidePanelNudge />
+      {!tourPreview && <GlobalSidePanelNudge />}
 
       {/* Floating Side Panel for non-CommandDeck pages */}
       {floatingSidePanelOpen && currentPageName !== 'CommandDeck' && (
@@ -1933,20 +1936,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
       {/* Global Photo Viewer */}
       <GlobalPhotoViewer />
-      <WalkthroughManager />
+      {!tourPreview && <WalkthroughManager />}
 
       {/* Hero Gallery Viewer */}
       <HeroGalleryViewer />
 
-      {/* Global Dating Matches Popup */}
-      <DatingMatchesPopup currentUser={currentUser} />
-
-      {/* Global Alert Popup */}
-      <GlobalAlertPopup />
-      <LearnTutorialPopup profile={profile} onRewardGGG={async (amount, reason) => { if (profile?.user_id) { const { awardGGG } = await import('@/lib/awardGGG'); await awardGGG(profile.user_id, amount, 'learn_tutorial', reason || 'Tutorial completion reward', 'reward'); queryClient.invalidateQueries({ queryKey: ['myProfile'] }); } }} />
-
-      {/* Meeting Reminder Service */}
-              {currentUser && <MeetingReminderService />}
+      {!tourPreview && <>
+        <DatingMatchesPopup currentUser={currentUser} />
+        <GlobalAlertPopup />
+        <LearnTutorialPopup profile={profile} onRewardGGG={async (amount, reason) => { if (profile?.user_id) { const { awardGGG } = await import('@/lib/awardGGG'); await awardGGG(profile.user_id, amount, 'learn_tutorial', reason || 'Tutorial completion reward', 'reward'); queryClient.invalidateQueries({ queryKey: ['myProfile'] }); } }} />
+        {currentUser && <MeetingReminderService />}
+      </>}
 
               {/* Mobile Close Button - shows X on secondary pages */}
               <MobileCloseButton currentPageName={currentPageName} />

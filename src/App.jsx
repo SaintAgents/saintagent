@@ -4,6 +4,7 @@ import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import NavigationTracker from '@/lib/NavigationTracker'
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
@@ -195,7 +196,7 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
-          {!(window.parent !== window && new URLSearchParams(window.location.search).get('observationPreview') === '1') && <NavigationTracker />}
+          {!isTourPreview() && !(window.parent !== window && new URLSearchParams(window.location.search).get('observationPreview') === '1') && <NavigationTracker />}
           <AuthenticatedApp />
         </Router>
         <Toaster />

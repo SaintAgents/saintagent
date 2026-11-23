@@ -4,7 +4,8 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
-import CommandDeckTourHighlight from '@/components/tour/CommandDeckTourHighlight';
+import TourScreenPreview from '@/components/tour/TourScreenPreview';
+import { dailyPreviewTargets } from '@/components/tour/tourPreviewTargets';
 import TourPractice from '@/components/tour/TourPractice';
 import TourNarration from '@/components/tour/TourNarration';
 import { TOUR_PRACTICE } from '@/components/tour/tourPracticeData';
@@ -22,14 +23,16 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
 
   return (
     <Dialog open onOpenChange={(open) => { if (!open && !busy) onClose(); }}>
-      <DialogContent ref={scrollArea} data-readable-surface className="max-h-[85dvh] w-[calc(100%-2rem)] overflow-y-auto text-foreground sm:max-w-2xl" hideCloseButton={busy}
+      <DialogContent data-readable-surface data-hacker-draggable="true" className="inset-0 z-[10010] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:rounded-none" hideCloseButton={busy}
         onCloseAutoFocus={(event) => { event.preventDefault(); returnFocus(); }}>
-        {day === 0 && step === 0 && <CommandDeckTourHighlight />}
-        <div className="space-y-2 pr-6">
+        <header className="shrink-0 space-y-2 border-b px-4 py-3 pr-12 sm:px-8">
           <DialogTitle>Tour {day + 1}: {tour.title}</DialogTitle>
           <DialogDescription>Section {step + 1} of {tour.sections.length}</DialogDescription>
-        </div>
-        <progress className="h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />
+          <progress className="block h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />
+        </header>
+        <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,3fr)] md:grid-cols-2 md:grid-rows-1">
+          <TourScreenPreview key={lessonKey} targets={dailyPreviewTargets(day, step, title, path)} />
+          <section aria-label="Lesson instructions" ref={scrollArea} className="min-h-0 min-w-0 space-y-4 overflow-y-auto px-4 py-5 sm:px-8">
         <div className="space-y-3" aria-live="polite">
           <h3 className="font-heading text-lg font-semibold">{title}</h3>
         </div>
@@ -38,10 +41,12 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
         <TourPractice key={`practice-${lessonKey}`} practice={practice} />
         {path && <Link className="inline-flex w-fit items-center gap-2 text-sm font-medium text-primary underline underline-offset-4" to={path} target="_blank" rel="noopener noreferrer">Open the live page in a new tab <ArrowRight size={14} aria-hidden="true" /></Link>}
         {error && <p role="alert" className="text-sm text-destructive">Progress couldn’t be saved. Please try again.</p>}
-        <div className="flex flex-wrap justify-between gap-2 border-t pt-4">
+          </section>
+        </div>
+        <footer className="flex shrink-0 flex-wrap justify-between gap-2 border-t px-4 py-3 sm:px-8">
           <Button type="button" variant="outline" disabled={step === 0 || busy} onClick={onBack}>Back</Button>
           <Button type="button" disabled={busy} onClick={onAdvance}>{busy ? 'Saving…' : lastStep ? 'Finish tour' : 'Next section'}</Button>
-        </div>
+        </footer>
       </DialogContent>
     </Dialog>
   );

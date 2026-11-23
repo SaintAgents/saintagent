@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import TourScreenPreview from '@/components/tour/TourScreenPreview';
+import { overviewPreviewTarget } from '@/components/tour/tourPreviewTargets';
 import { Button } from "@/components/ui/button";
-import { X, ChevronRight, ChevronLeft, Sparkles, LayoutDashboard, PanelLeft, Settings, Layers, Palette, GripVertical, Moon, Cpu } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Sparkles, LayoutDashboard, PanelLeft, Settings, Layers, Palette, GripVertical, Moon, Cpu } from 'lucide-react';
 
 const TOUR_STEPS = [
   {
@@ -38,7 +41,7 @@ const TOUR_STEPS = [
   {
     id: 'cards',
     title: 'Activity Cards',
-    description: 'Collapsible cards showing your missions, meetings, marketplace, and more. Drag to reorder, collapse to save space.',
+    description: 'The Activity Cards are shortcuts: Earn opens Marketplace, Build opens Missions, and Connect opens Circles. The collapsible dashboard cards below can be rearranged separately.',
     icon: GripVertical,
     position: 'center',
     highlight: 'cards'
@@ -125,115 +128,34 @@ export default function CommandDeckTour({ onComplete, autoStart = false }) {
 
   const step = TOUR_STEPS[currentStep];
   const StepIcon = step.icon;
-
+  const anchors = { topbar: '#app-topbar', sidebar: '[data-sidebar]', sidepanel: '[data-side-panel-handle]', cards: '[data-deck-tour="shortcuts"]', controls: '[data-deck-tour="controls"]', themes: '[data-deck-tour="appearance"]', bgeffects: '[data-deck-tour="appearance"]', customize: '[data-deck-tour="controls"]' };
   if (!isOpen) return null;
 
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center"
-      >
-        {/* Backdrop */}
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleSkip} />
+  return <Dialog open onOpenChange={open => { if (!open) handleSkip(); }}>
+    <DialogContent data-readable-surface data-hacker-draggable="true" className="inset-0 z-[10010] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:rounded-none">
+      <header className="shrink-0 space-y-1 border-b px-4 py-3 pr-12 sm:px-8">
+        <DialogTitle>Command Deck Tour</DialogTitle>
+        <DialogDescription>Step {currentStep + 1} of {TOUR_STEPS.length}</DialogDescription>
+      </header>
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,3fr)] md:grid-cols-2 md:grid-rows-1">
+        <TourScreenPreview targets={[overviewPreviewTarget(step.title, anchors[step.id] ?? '[data-deck-tour="header"]')]} />
+        <section aria-label="Lesson instructions" className="space-y-3 overflow-y-auto p-5 sm:px-8" aria-live="polite">
+          <h2 className="flex items-center gap-2 text-xl font-semibold"><StepIcon size={20} aria-hidden="true" />{step.title}</h2>
+          <p className="text-sm leading-relaxed">{step.description}</p>
+        </section>
+      </div>
+      <footer className="flex shrink-0 flex-wrap justify-between gap-2 border-t px-4 py-3 sm:px-8">
+        <Button variant="ghost" onClick={handleSkip}>Skip Tour</Button>
+        <div className="flex gap-2">
+          {currentStep > 0 && <Button variant="outline" onClick={handlePrev}><ChevronLeft />Back</Button>}
+          <Button onClick={handleNext}>{currentStep === TOUR_STEPS.length - 1 ? 'Get Started' : 'Next'}{currentStep < TOUR_STEPS.length - 1 && <ChevronRight />}</Button>
+        </div>
+      </footer>
+    </DialogContent>
+  </Dialog>;
+  }
 
-        {/* Highlight overlay for specific areas */}
-        {step.highlight && (
-          <div className="absolute inset-0 pointer-events-none">
-            {step.highlight === 'sidebar' && (
-              <div className="absolute left-0 top-0 w-64 h-full border-4 border-violet-500 bg-violet-500/10 animate-pulse" />
-            )}
-            {step.highlight === 'sidepanel' && (
-              <div className="absolute right-0 top-0 w-80 h-full border-4 border-violet-500 bg-violet-500/10 animate-pulse" />
-            )}
-            {step.highlight === 'header' && (
-              <div className="absolute left-0 top-0 right-0 h-16 border-4 border-violet-500 bg-violet-500/10 animate-pulse" />
-            )}
-          </div>
-        )}
-
-        {/* Tour Card */}
-        <motion.div
-          key={step.id}
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          transition={{ duration: 0.3 }}
-          className="relative z-10 w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden"
-        >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-violet-600 to-purple-600 p-6 text-white">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-                  <StepIcon className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-violet-200 text-xs uppercase tracking-wider">Step {currentStep + 1} of {TOUR_STEPS.length}</p>
-                  <h3 className="font-bold text-lg">{step.title}</h3>
-                </div>
-              </div>
-              <button
-                onClick={handleSkip}
-                className="p-2 rounded-lg hover:bg-white/20 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            {/* Progress bar */}
-            <div className="h-1 bg-white/20 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-white transition-all duration-300"
-                style={{ width: `${((currentStep + 1) / TOUR_STEPS.length) * 100}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-6">
-            <p className="text-slate-600 leading-relaxed">{step.description}</p>
-          </div>
-
-          {/* Footer */}
-          <div className="px-6 pb-6 flex items-center justify-between">
-            <Button
-              variant="ghost"
-              onClick={handleSkip}
-              className="text-slate-500"
-            >
-              Skip Tour
-            </Button>
-            
-            <div className="flex items-center gap-2">
-              {currentStep > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={handlePrev}
-                  className="gap-1"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  Back
-                </Button>
-              )}
-              <Button
-                onClick={handleNext}
-                className="bg-violet-600 hover:bg-violet-700 gap-1"
-              >
-                {currentStep === TOUR_STEPS.length - 1 ? 'Get Started' : 'Next'}
-                {currentStep < TOUR_STEPS.length - 1 && <ChevronRight className="w-4 h-4" />}
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
-// Loading screen component
+  // Loading screen component
 export function CommandDeckLoadingScreen({ onLoadComplete }) {
   const [progress, setProgress] = useState(0);
   const [statusText, setStatusText] = useState('Initializing Command Deck...');

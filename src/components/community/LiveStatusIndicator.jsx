@@ -146,16 +146,17 @@ export default function LiveStatusIndicator({ userId, showDropdown = false, size
 }
 
 // Hook to initialize and maintain live status
-export function useLiveStatus() {
+export function useLiveStatus(enabled = true) {
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me(),
+    enabled
   });
 
   useEffect(() => {
-    if (!currentUser?.email) return;
+    if (!enabled || !currentUser?.email) return;
     let isMounted = true;
     let retryTimeout = null;
 
@@ -226,5 +227,5 @@ export function useLiveStatus() {
       if (heartbeatInterval) clearInterval(heartbeatInterval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [currentUser?.email]);
+  }, [enabled, currentUser?.email]);
 }
