@@ -12,7 +12,8 @@ export const presets = {
   'My Money':['Quests','Opportunities','Notifications','Active Projects'],
   Community:['Who’s Online','Member Profiles','Video Conference','Contacts','Notifications'],
   'My Tools':['Stopwatch','World Clock','Quick Links','Inbox','AI Assistant'],
-  Watching:['Notifications'],
+  Watching:['Notifications','News','Events','Members Feed'],
+  Planning:['Daily Planner','Business Plans','Project Timeline','Impact Dashboard'],
 };
 export const peek = ['Time','Today','Quick Notes','Notifications'];
 export const links = {
@@ -25,7 +26,18 @@ export const links = {
   'Who’s Online':[['See online members','online']],
   'Member Profiles':[['Browse member profiles','/Profiles']],
   'Files & Knowledge':[['My files','/Profile'],['Browse resources','/ResourceHub']],
-  'AI Assistant':[['Open SaintAgent concierge','assistant']],
+  'AI Assistant':[['Open My Assistant','my-assistant'],['Open SaintAgent concierge','assistant']],
+  'Daily Planner':[['Plan my day','/DailyPlanner'],['Open Daily Ops','/DailyOps']],
+  'Business Plans':[['Build a business plan','/BusinessPlanBuilder'],['Browse business entities','/BusinessEntities']],
+  'Project Timeline':[['Open project tracking','/ProjectTrack'],['Open mission timeline','/MissionTimeline']],
+  'Impact Dashboard':[['View my impact','/ImpactDashboard'],['View milestones','/Milestones']],
+  'News':[['Read SaintAgent News','/News'],['Watch broadcasts','/Broadcast']],
+  'Events':[['Browse events','/Events'],['Open my schedule','/Schedule']],
+  'Learning':[['Open Learning Hub','/LearningHub'],['Browse the glossary','/Glossary']],
+  'Deals':[['Open deal tracker','/Deals'],['Open CRM','/CRM']],
+  'Groups':[['Browse community circles','/Circles'],['Open the forum','/Forum']],
+  'Observation Deck':[['Open Observation Deck','/ObservationDeck']],
+  'Dock Deck':[['Open Dock Deck','dock']],
   'Global Search':[['Search SaintAgent','search']],
   'Quick Access':shortcuts,
   Tours:[['Open platform tours','/CommandDeck#daily-tours']],
@@ -40,4 +52,14 @@ export const links = {
   Inspiration:[['Read community testimonials','/Testimonials']],
 };
 export const widgets = [...new Set([...Object.values(presets).flat(), ...Object.keys(links)])].sort();
-export const defaults = { cards:presets['My Day'], minimized:{}, sizes:{}, form:'bar', auto:false, width:940, height:650, split:330, scale:100, zone:'UTC', scratch:'' };
+export const descriptions = {
+  'Quick Notes':'Capture a thought in your private Canopy scratchpad.', 'Quick Links':'Jump to common SaintAgent pages.',
+  'AI Assistant':'Ask a question in Canopy or open My Assistant for ongoing work.', Tours:'Play or replay a guided SaintAgent tour.',
+  Stopwatch:'Start, pause, and reset a timer.', 'World Clock':'Check the current time in another city.', Time:'See your local time and session duration.',
+  Today:'See meetings and events on your schedule today.', 'Active Projects':'Open projects you own, joined, or claimed.',
+  Notifications:'Read your recent alerts and open related items.', 'Moon Phase':'See the current approximate lunar phase.',
+  'Daily Planner':'Open your daily planner or Daily Ops.', 'Business Plans':'Open the plan builder or your business directory.',
+  'Project Timeline':'Track progress across projects and missions.', 'Impact Dashboard':'See your contributions and milestones.',
+  'Dock Deck':'Open your separate right-side workspace.', 'Observation Deck':'Open your monitoring workspace.',
+};
+export const defaults = { cards:['Quick Notes','Quick Links','AI Assistant','Tours','Stopwatch','World Clock','Time','Today','Notifications'], minimized:{}, sizes:{}, form:'bar', auto:false, width:940, height:650, split:330, scale:100, zone:'UTC', scratch:'' };

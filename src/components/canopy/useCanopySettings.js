@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { defaults, widgets } from '@/components/canopy/canopyCatalog';
 
@@ -13,8 +13,10 @@ function read(user) {
 export default function useCanopySettings(user) {
   const [settings, setSettings] = useState(() => read(user));
   const [error, setError] = useState(false);
+  const latest = useRef(settings);
   function commit(patch) {
-    const next = { ...read(user), ...patch, revision: Date.now() };
+    const next = { ...latest.current, ...patch, revision: Date.now() };
+    latest.current = next;
     setSettings(next);
     try { localStorage.setItem(`sa-canopy:${user.id}`, JSON.stringify(next)); } catch { /* account copy still saves */ }
     setError(false);

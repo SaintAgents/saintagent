@@ -194,6 +194,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [openProfileUserIds, setOpenProfileUserIds] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [canopySearch, setCanopySearch] = useState('');
   const [floatingChat, setFloatingChat] = useState(null);
   const [theme, setTheme] = useState('light');
   const [bgEffect, setBgEffect] = useState(() => {
@@ -442,7 +443,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
 
 
-  const handleSearch = (query) => {
+  const handleSearch = () => {
+    setCanopySearch('');
     setSearchOpen(true);
   };
 
@@ -640,7 +642,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-slate-50 [&[data-nav-resizing]_.nav-width-aware]:duration-0" data-bg-effect={bgEffect}
       data-nav-resizing={sidebarResizing ? '' : undefined} style={{ '--expanded-nav-width': `${sidebarWidth}px` }}>
-      {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} sidebarWidth={sidebarWidth} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={() => setSearchOpen(true)} onCreate={() => setQuickCreateOpen(true)} onToolbarControlChange={setCanopyControl} />}
+      {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} sidebarWidth={sidebarWidth} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={query => { setCanopySearch(query || ''); setSearchOpen(true); }} onCreate={() => setQuickCreateOpen(true)} onToolbarControlChange={setCanopyControl} />}
       <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
       <VideoBackgroundLayer currentPageName={currentPageName} theme={theme} />
@@ -1914,6 +1916,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {/* Search Modal */}
       <SearchModal
         open={searchOpen}
+        initialQuery={canopySearch}
         onClose={() => setSearchOpen(false)}
         onSelect={handleSearchSelect}
       />

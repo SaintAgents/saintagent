@@ -2,8 +2,7 @@
 main.canopy-page { padding-top: var(--canopy-page-top, revert-layer); }
 [data-canopy-split] main.canopy-page { padding-right: calc(var(--canopy-split-extra) + max(var(--canopy-dock-right), var(--dock-page-reserve, 0px))); min-width: 0; overflow-x: clip; }
 [data-canopy-split] main[data-page='CommandDeck'] .canopy-command-content { padding-right: 0; }
-.sa-canopy { --canopy-surface: 210 53% 97%; --canopy-panel: 210 53% 99%; --canopy-line: 205 27% 76%; --canopy-ink: 218 53% 15%; --canopy-metal: 34 59% 33%; --canopy-cyan: 191 77% 31%; }
-html:is([data-theme='dark'],[data-theme='hacker']) .sa-canopy, .dark .sa-canopy { --canopy-surface: 222 48% 11%; --canopy-panel: 220 43% 16%; --canopy-line: 202 34% 34%; --canopy-ink: 210 55% 97%; --canopy-metal: 41 78% 70%; --canopy-cyan: 187 78% 64%; }
+.sa-canopy { color-scheme:dark; --canopy-surface: 215 43% 9%; --canopy-panel: 215 38% 13%; --canopy-line: 199 39% 27%; --canopy-ink: 210 45% 94%; --canopy-metal: 43 82% 67%; --canopy-cyan: 181 65% 65%; --canopy-muted: 210 24% 70%; }
 .sa-canopy[hidden] { display:none; }
 .sa-canopy :is(.canopy-handle,.canopy-workspace) { position:fixed; left:var(--canopy-left); right:var(--canopy-right); color:hsl(var(--canopy-ink)) !important; background:hsl(var(--canopy-surface) / .97) !important; backdrop-filter:blur(22px); border:1px solid hsl(var(--canopy-line)) !important; box-shadow:0 12px 36px hsl(var(--canopy-ink) / .14); }
 .sa-canopy .canopy-handle { z-index:10000; top:0; height:36px; left:calc(var(--canopy-left) + 8px); margin-inline:auto; max-width:var(--canopy-width); display:flex; align-items:center; gap:.4rem; border-radius:0 0 .8rem .8rem; padding-inline:.55rem; }
@@ -49,4 +48,32 @@ html .sa-canopy :is(button,input,select,textarea):focus-visible { outline:2px so
 .sa-canopy .canopy-handle-resize,.sa-canopy .canopy-split-resize { position:absolute; width:5px; height:100%; cursor:ew-resize; top:0; right:0; }
 .sa-canopy .canopy-split-resize { right:auto; left:0; }
 .sa-canopy :is(.canopy-handle-resize,.canopy-split-resize)::-webkit-slider-thumb { width:4px; }
+.sa-canopy .canopy-workspace { background:hsl(var(--canopy-surface)) !important; }
+.sa-canopy .canopy-heading { border-bottom-color:hsl(var(--canopy-line)); }
+.sa-canopy .canopy-heading strong,.sa-canopy .canopy-library h3,.sa-canopy .canopy-card > header > strong { font-family:ui-monospace,monospace; text-transform:uppercase; font-size:.72rem; letter-spacing:.12em; }
+.sa-canopy .canopy-command-form { display:flex; gap:.4rem; align-items:center; }
+.sa-canopy .canopy-command-form label { position:relative; flex:1; min-width:0; }
+.sa-canopy .canopy-command-form label svg { position:absolute; left:.65rem; top:50%; transform:translateY(-50%); color:hsl(var(--canopy-metal)); pointer-events:none; }
+html .sa-canopy .canopy-command-form input { width:100%; min-height:2.3rem; padding-left:2rem; font-size:.875rem; }
+html .sa-canopy .canopy-command-form .canopy-run { background:hsl(var(--canopy-metal)) !important; color:hsl(var(--canopy-surface)) !important; min-height:2.15rem; padding-inline:.7rem; font-weight:750; }
+html .sa-canopy .canopy-run svg { color:inherit !important; }
+.sa-canopy :is(.canopy-destinations,.canopy-command-results) { margin-top:.45rem; }
+html .sa-canopy :is(.canopy-destinations [aria-current='page'],.canopy-pills [aria-pressed='true']) { border-color:hsl(var(--canopy-metal)) !important; color:hsl(var(--canopy-metal)) !important; }
+.sa-canopy .canopy-tools,.sa-canopy .canopy-library-head { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+.sa-canopy .canopy-tools p { font-size:.75rem; }
+.sa-canopy .canopy-library { display:grid; gap:.55rem; }
+.sa-canopy .canopy-library > input { width:100%; margin:0; min-height:1.9rem; }
+.sa-canopy .canopy-library h3 { color:hsl(var(--canopy-muted)) !important; }
+.sa-canopy .canopy-pills button { border-radius:999px; padding-inline:.55rem; }
+.sa-canopy .canopy-active { display:grid; gap:.35rem; border:1px solid hsl(var(--canopy-line)); border-radius:.55rem; padding:.45rem; }
+.sa-canopy .canopy-active [draggable],.sa-canopy .canopy-grip { cursor:grab; }
+.sa-canopy .canopy-size-controls label { display:inline-flex; align-items:center; gap:.4rem; font-size:.8rem; }
+.sa-canopy .canopy-library-list { display:grid; max-height:9rem; overflow:auto; gap:.2rem; scrollbar-color:hsl(var(--canopy-cyan) / .55) transparent; }
+html .sa-canopy .canopy-library-item { min-height:2.15rem; justify-content:space-between; text-align:left; }
+.sa-canopy .canopy-library-item small { display:block; font-size:.72rem; color:hsl(var(--canopy-muted)) !important; }
+html .sa-canopy .canopy-library-item[aria-pressed='true'] svg { color:hsl(var(--canopy-metal)) !important; }
+html .sa-canopy .canopy-clear { justify-content:center; }
+.sa-canopy[data-canopy-mode='full'] .canopy-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(280px * var(--widget-scale,1))),1fr)); }
+@media (min-width:1200px) { .sa-canopy[data-canopy-mode='full'] .canopy-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+.sa-canopy .canopy-card-body form input { max-width:100%; }
 @media (prefers-reduced-motion: reduce) { .sa-canopy *, .sa-canopy *::after { animation:none !important; transition:none !important; } }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
@@ -64,12 +64,19 @@ const APP_PAGES = [
   { name: 'AffiliateCenter', label: 'Affiliate Center', description: 'Referral program' },
 ];
 
-export default function SearchModal({ open, onClose, onSelect }) {
+export default function SearchModal({ open, onClose, onSelect, initialQuery }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
   const [showAll, setShowAll] = useState(true); // Default to showing all results on arrival
   const [drilldownProfile, setDrilldownProfile] = useState(null);
+  useEffect(() => {
+    if (open && initialQuery) {
+      setQuery(initialQuery);
+      setTab('all');
+      setDrilldownProfile(null);
+    }
+  }, [open, initialQuery]);
 
   const { data: profiles = [], isLoading: profilesLoading } = useQuery({
     queryKey: ['searchProfiles'],
