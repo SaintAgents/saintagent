@@ -48,7 +48,11 @@ export default function MyAssistant({ userId, currentPage, supportOnly = false, 
   useEffect(() => { if (open && tab === 'chat' && focusInput.current) { focusInput.current = false; field.current?.focus(); } }, [open, tab]);
   useEffect(() => {
     if (supportOnly) return;
-    const summon = () => show();
+    const summon = event => {
+      const draft = event.detail?.draft;
+      if (typeof draft === 'string' && draft.trim()) setInput(current => current.trim() ? current : draft.trim().slice(0, 6000));
+      show();
+    };
     const keyboard = e => { if (!e.repeat && !e.defaultPrevented && e.altKey && e.shiftKey && e.code === 'KeyA') { e.preventDefault(); open && tab === 'chat' ? close() : show(); } };
     document.addEventListener('openMyAssistant', summon);
     document.addEventListener('keydown', keyboard);

@@ -355,6 +355,9 @@ export default function TopBar({
       sidebarCollapsed ? "md:left-16" : "md:left-64 lg:left-[var(--expanded-nav-width)]",
       isCollapsed ? "h-10" : "h-14"
     )} style={{ zIndex: 9999, overflowX: 'auto', overflowY: 'visible' }}>
+      <Button asChild variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-primary sm:hidden" title="Global Impact Dashboard" aria-label="Global Impact Dashboard">
+        <Link to="/GlobalImpactDashboard" aria-current={currentPageName === 'GlobalImpactDashboard' ? 'page' : undefined}><LayoutDashboard aria-hidden="true" /></Link>
+      </Button>
       {/* Collapse/Expand Toggle */}
       <button
         onClick={() => onToggleCollapse?.()}
@@ -495,9 +498,13 @@ export default function TopBar({
         mode={helpMode || 'command'}
       />
 
+      <Button asChild variant="ghost" size="icon" className="hidden h-8 w-8 shrink-0 text-primary sm:inline-flex" title="Global Impact Dashboard" aria-label="Global Impact Dashboard">
+        <Link to="/GlobalImpactDashboard" aria-current={currentPageName === 'GlobalImpactDashboard' ? 'page' : undefined}><LayoutDashboard aria-hidden="true" /></Link>
+      </Button>
+
       {/* Search - hidden when collapsed */}
       <div ref={searchRef} className={cn(
-        "flex-1 max-w-md relative transition-all duration-300 hidden sm:block mx-2",
+        "flex-1 max-w-sm min-w-[9rem] relative transition-all duration-300 hidden sm:block mx-2",
         isCollapsed && "!hidden"
       )} data-no-top style={{ zIndex: 9998 }}>
         <form onSubmit={handleSearch}>
@@ -516,7 +523,7 @@ export default function TopBar({
             <input
               type="text"
               placeholder={searchFocused || searchQuery ? "Search people, offers, missions..." : "Enter deep search..."}
-              className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus:bg-white md:text-sm"
+              className={cn('flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus:bg-white md:text-sm', searchQuery.trim().length >= 3 ? 'pr-16' : 'pr-10')}
               value={searchQuery}
               onChange={(e) => {
                 console.log('[SEARCH] Input changed:', e.target.value);
@@ -534,6 +541,7 @@ export default function TopBar({
                 }, 300);
               }}
             />
+            {searchQuery.trim().length >= 3 && <Link to={`/Intelligence?objective=${encodeURIComponent(searchQuery.trim().slice(0, 400))}`} onClick={() => { setSearchQuery(''); setShowResults(false); }} className="absolute right-9 top-1/2 -translate-y-1/2 text-primary" title="Research in Saint Intelligence" aria-label="Research in Saint Intelligence"><Sparkles className="h-4 w-4" /></Link>}
             {searchQuery && (
               <button
                 type="button"

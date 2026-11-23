@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -11,9 +11,14 @@ import '@/components/intelligence/intelligence.css';
 
 export default function Intelligence() {
   const {user} = useAuth(), [params,setParams] = useSearchParams(), client = useQueryClient();
-  const [objective,setObjective] = useState(''), [source,setSource] = useState('all'), [matching,setMatching] = useState('keywords');
+  const [objective,setObjective] = useState(() => (params.get('objective') || '').trim().slice(0, 400)), [source,setSource] = useState('all'), [matching,setMatching] = useState('keywords');
   const [seed,setSeed] = useState(null), [parent,setParent] = useState(null), [busy,setBusy] = useState(''), [error,setError] = useState(''), [search,setSearch] = useState(null);
   const inputRef = useRef(null), resultRef = useRef(null), running = useRef(false), id = params.get('study');
+  const incomingObjective = params.get('objective');
+  useEffect(() => {
+    if (!incomingObjective) return;
+    setObjective(incomingObjective.trim().slice(0, 400)); setSeed(null); setParent(null); setError('');
+  }, [incomingObjective]);
   async function run(mode) {
     if (running.current) return;
     running.current = true; setBusy(mode); setError('');

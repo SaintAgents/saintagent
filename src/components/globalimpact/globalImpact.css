@@ -1,0 +1,60 @@
+#global-impact {
+  --impact-ink: 214 100% 96%;
+  --impact-muted: 213 38% 75%;
+  --impact-night: 218 75% 7%;
+  --impact-panel: 218 75% 10%;
+  --impact-line: 211 74% 31%;
+  --impact-cyan: 190 95% 64%;
+  --impact-gold: 42 92% 72%;
+  --impact-blue: 218 97% 39%;
+  --impact-earth: url('https://media.base44.com/images/public/694f3e0401b05e6e8a042002/080d6cd424e86902bf564333f872c1ac_generated_image.png');
+  color: hsl(var(--impact-ink)) !important;
+  background: linear-gradient(180deg, hsl(var(--impact-night) / .34), hsl(var(--impact-night) / .28) 20rem, hsl(var(--impact-night)) 65rem), var(--impact-earth) center top / max(100%, 69rem) auto no-repeat, hsl(var(--impact-night)) !important;
+  isolation: isolate;
+  font-family: var(--font-body);
+}
+#global-impact :is(h1,h2,h3,p,strong,label,a,button,input,select,span,div) {color: inherit !important; text-shadow: none !important;}
+#global-impact :is(h1,h2,h3) {color: hsl(var(--impact-ink)) !important;}
+#global-impact .impact-intro h1 {text-shadow: 0 2px 20px hsl(var(--impact-night)) !important;}
+#global-impact .impact-kicker {color: hsl(var(--impact-cyan)) !important; font-size: .69rem; font-weight: 750; letter-spacing: .13em;}
+#global-impact .impact-muted {color: hsl(var(--impact-muted)) !important;}
+#global-impact .impact-brand, #global-impact .impact-guide {color: hsl(var(--impact-gold)) !important;}
+#global-impact .impact-globe {color: hsl(var(--impact-cyan)) !important; filter: drop-shadow(0 0 8px hsl(var(--impact-cyan) / .35));}
+#global-impact .impact-surface {color: hsl(var(--impact-ink)) !important; border: 1px solid hsl(var(--impact-line)) !important; border-radius: .85rem !important; background: hsl(var(--impact-panel) / .97) !important; box-shadow: 0 0 18px hsl(var(--impact-blue) / .25) !important;}
+#global-impact .impact-command {background: hsl(var(--impact-night) / .94) !important;}
+#global-impact .impact-opportunities {container: impact-workspace / inline-size;}
+#global-impact .impact-control {background: hsl(var(--impact-panel)) !important; color: hsl(var(--impact-ink)) !important; border: 1px solid hsl(var(--impact-line)) !important; border-radius: .42rem !important; padding: .42rem .65rem; min-height: 2rem; font-size: .75rem; font-weight: 650; line-height: 1.2; text-decoration: none;}
+#global-impact .impact-control:is(:hover,:focus-visible) {border-color: hsl(var(--impact-cyan)) !important;}
+#global-impact .impact-control:focus-visible, #global-impact .impact-record:focus-visible, #global-impact .impact-text-link:focus-visible, #global-impact .impact-search:focus-within {outline: 2px solid hsl(var(--impact-cyan)) !important; outline-offset: 2px;}
+#global-impact .impact-selected, #global-impact .impact-primary {background: hsl(var(--impact-blue)) !important; border-color: hsl(var(--impact-cyan) / .65) !important; box-shadow: 0 0 12px hsl(var(--impact-blue) / .42) !important;}
+#global-impact .impact-search input {background: transparent !important; border: 0 !important; color: hsl(var(--impact-ink)) !important; width: 100%; min-width: 0; outline: none !important; box-shadow: none !important;}
+#global-impact input::placeholder {color: hsl(var(--impact-muted)) !important;}
+#global-impact .impact-tools {grid-template-columns: minmax(0,1fr); align-items: center;}
+#global-impact .impact-results, #global-impact .impact-grid {display: grid; gap: .55rem; align-items: start;}
+#global-impact .impact-grid {align-items: stretch; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.75rem), 1fr));}
+#global-impact .impact-record, #global-impact .impact-detail {min-width: 0; overflow: hidden; border: 1px solid hsl(var(--impact-line)) !important; border-radius: .6rem !important; background: hsl(var(--impact-night)) !important; color: hsl(var(--impact-ink)) !important;}
+#global-impact .impact-record {display: flex; flex-direction: column; width: 100%;}
+#global-impact .impact-record-list {flex-direction: row; align-items: center;}
+#global-impact .impact-record:is(:hover,[aria-pressed='true']) {border-color: hsl(var(--impact-cyan)) !important; box-shadow: 0 0 10px hsl(var(--impact-blue) / .34) !important;}
+#global-impact :is(.impact-record-art,.impact-detail-art) {display: grid; place-items: center; overflow: hidden; width: 100%; background: radial-gradient(ellipse at 55% 100%, hsl(var(--impact-blue) / .55), transparent 75%), linear-gradient(130deg,hsl(var(--impact-night)),hsl(var(--impact-line))) !important; color: hsl(var(--impact-cyan)) !important;}
+#global-impact .impact-record-art {height: 6rem;}
+#global-impact .impact-record-list .impact-record-art {width: 5rem; height: 4.8rem; flex-shrink: 0;}
+#global-impact .impact-detail-art {height: 9.5rem;}
+#global-impact :is(.impact-record-art,.impact-detail-art) img {width: 100%; height: 100%; object-fit: cover; filter: none !important;}
+#global-impact .impact-chip {display: inline-block; color: hsl(var(--impact-cyan)) !important; background: hsl(var(--impact-cyan) / .11) !important; border-radius: 99px !important; font-size: .65rem; font-weight: 700; padding: .16rem .42rem;}
+#global-impact .impact-match {color: hsl(var(--impact-gold)) !important;}
+#global-impact .impact-small {min-height: 1.7rem; padding: .3rem .42rem; font-size: .69rem;}
+#global-impact .impact-text-link {color: hsl(var(--impact-cyan)) !important; text-decoration: underline; text-underline-offset: .18rem;}
+#global-impact .impact-modules .impact-control {flex: 1 0 auto; text-align: center; display: grid; place-items: center;}
+#global-impact .impact-map {height: 19rem; isolation: isolate; background: hsl(var(--impact-panel)) !important;}
+#global-impact .impact-map .leaflet-control {color: hsl(var(--impact-night)) !important;}
+#global-impact .impact-pulse {background: linear-gradient(180deg, transparent 49%, hsl(var(--impact-cyan) / .28) 50%, transparent 52%) !important; scrollbar-color: hsl(var(--impact-line)) transparent;}
+#global-impact .impact-event {min-width: 9rem; max-width: 13rem; flex: 0 0 auto;}
+@container impact-workspace (min-width: 35rem) {
+  #global-impact .impact-tools {grid-template-columns: auto minmax(9rem, 1fr) auto;}
+}
+@container impact-workspace (min-width: 53rem) {
+  #global-impact .impact-tools {grid-template-columns: auto minmax(8rem, 1fr) auto auto auto;}
+  #global-impact .impact-results {grid-template-columns: minmax(0, 1.85fr) minmax(16rem,1fr);}
+  #global-impact .impact-grid {grid-template-columns: repeat(3,minmax(0,1fr));}
+}

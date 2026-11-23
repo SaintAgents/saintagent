@@ -44,7 +44,7 @@ export default function Marketplace() {
   const [tab, setTab] = useState('browse');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
-  const [createOpen, setCreateOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(() => new URLSearchParams(window.location.search).get('create') === 'opportunity');
   const [showFilters, setShowFilters] = useState(false);
   const [matrixOpen, setMatrixOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -340,6 +340,7 @@ export default function Marketplace() {
               recurring_available: !!data.recurring_available
             });
             queryClient.invalidateQueries({ queryKey: ['listings'] });
+            queryClient.invalidateQueries({ queryKey: ['global-opportunities'] });
             setCreateOpen(false);
             }} />
 
