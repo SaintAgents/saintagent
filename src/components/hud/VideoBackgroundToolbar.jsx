@@ -8,7 +8,7 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { VIDEO_LIBRARY, VIDEO_CATEGORIES } from './videoLibrary';
+import { VIDEO_LIBRARY, VIDEO_CATEGORIES, getHackerVideoConfig } from '@/components/hud/videoLibrary';
 
 const STORAGE_KEY = 'videoBgSettings';
 const SURFACE_OPACITY_KEY = 'surfaceOpacitySettings';
@@ -58,7 +58,9 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
     window.addEventListener('surfaceOpacityChanged',syncHero);
     return () => window.removeEventListener('surfaceOpacityChanged',syncHero);
   },[]);
-  const [activeSurface, setActiveSurface] = useState('global');
+  const hackerMode = theme === 'hacker';
+  const [selectedSurface, setActiveSurface] = useState('global');
+  const activeSurface = hackerMode ? 'hacker' : selectedSurface;
   const [uploading, setUploading] = useState(false);
   const [showLibrary, setShowLibrary] = useState(false);
   const [libraryCategory, setLibraryCategory] = useState('all');
@@ -109,7 +111,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
     return () => { window.removeEventListener('mousemove', onMouseMove); window.removeEventListener('mouseup', onMouseUp); window.removeEventListener('touchmove', onTouchMove); window.removeEventListener('touchend', onTouchEnd); };
   }, [onDragMove, onDragEnd]);
 
-  const surfaceConfig = videoSettings[activeSurface] || {
+  const surfaceConfig = hackerMode ? getHackerVideoConfig(videoSettings) : videoSettings[activeSurface] || {
     videoUrl: '', enabled: false, opacity: 0.3, speed: 1, blur: 0, themeFilter: 'both', muted: true,
   };
 
@@ -194,7 +196,8 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
   const hoverBg = isLight ? 'hover:bg-slate-100' : 'hover:bg-slate-700/50';
   const dividerBg = isLight ? '#e2e8f0' : borderColor;
 
-  const hasAnyVideo = Object.values(videoSettings).some(s => s?.videoUrl && s?.enabled);
+  const hasAnyVideo = hackerMode ? Boolean(surfaceConfig.videoUrl && surfaceConfig.enabled)
+    : SURFACES.some(({ key }) => videoSettings[key]?.videoUrl && videoSettings[key]?.enabled);
 
   // Collapsed state — small tab
   if (collapsed) {
@@ -427,7 +430,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                 </div>
 
                 {/* Surface selector */}
-                <div className="flex flex-wrap gap-1">
+                {hackerMode ? <p className="text-xs" style={{ color: textMuted }}>Hacker mode · All pages</p> : <div className="flex flex-wrap gap-1">
                   {SURFACES.map(s => (
                     <button
                       key={s.key}
@@ -443,13 +446,13 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                       )}
                     </button>
                   ))}
-                </div>
+                </div>}
 
                 {/* Current video preview + controls */}
                 {surfaceConfig.videoUrl && (
                   <div className="space-y-2">
                     <div className="relative rounded-lg overflow-hidden aspect-video bg-black">
-                      <video src={surfaceConfig.videoUrl} autoPlay loop muted={surfaceConfig.muted !== false} playsInline className="w-full h-full object-cover" style={{ opacity: surfaceConfig.opacity ?? 0.3 }} />
+                      <video src={surfaceConfig.videoUrl} autoPlay loop muted={surfaceConfig.muted !== false} playsInline className="w-full h-full object-cover" style={{ opacity: surfaceConfig.opacity ?? 0.3, filter: hackerMode ? 'var(--hacker-video-filter)' : undefined }} />
                       <div className="absolute bottom-1 right-1 flex gap-1">
                         <label style={{ background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '4px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                           <input type="file" accept="video/*" onChange={handleUpload} style={{ display: 'none' }} />
@@ -473,7 +476,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                     <SliderRow label="Blur" value={surfaceConfig.blur ?? 0} min={0} max={20} step={1} onChange={v => updateVideoSurface({ blur: v })} accent={accentColor} labelColor={textMuted} unit="px" />
 
                     {/* Theme filter */}
-                    <div className="flex items-center gap-2">
+                    {!hackerMode && <div className="flex items-center gap-2">
                       <span className="text-xs w-20" style={{ color: textMuted }}>Theme:</span>
                       <div className="flex gap-1">
                         {[{ key: 'both', l: 'All' }, { key: 'light', l: 'Light' }, { key: 'dark', l: 'Dark' }].map(o => (
@@ -483,7 +486,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                           >{o.l}</button>
                         ))}
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 )}
 

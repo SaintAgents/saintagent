@@ -167,6 +167,12 @@ html[data-theme='hacker']:has(main[data-page='GlobalImpactDashboard']) :is(#app-
   background: hsl(var(--impact-mono-black)) !important;
   opacity: 1 !important;
 }
+html[data-theme='hacker'][data-video-active='true'] main[data-page='GlobalImpactDashboard'] {
+  background: transparent !important;
+}
+html[data-theme='hacker'][data-video-active='true'] #global-impact {
+  background: hsl(var(--impact-night) / .38) !important;
+}
 html[data-theme='hacker']:has(main[data-page='GlobalImpactDashboard']) .sa-canopy {
   --canopy-surface: var(--impact-mono-black);
   --canopy-panel: var(--impact-mono-panel);

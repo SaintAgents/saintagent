@@ -105,3 +105,9 @@ export const VIDEO_LIBRARY = [
 ];
 
 export const VIDEO_CATEGORIES = [...new Set(VIDEO_LIBRARY.map(v => v.category))];
+
+export function getHackerVideoConfig(settings) {
+  const global = settings.global;
+  const preferred = global?.videoUrl && global.themeFilter !== 'light' ? global : {};
+  return { opacity: 0.4, ...preferred, videoUrl: preferred.videoUrl || VIDEO_LIBRARY[0].url, muted: true, enabled: true, ...settings.hacker };
+}

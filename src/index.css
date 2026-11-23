@@ -630,6 +630,10 @@ html[data-theme='light'] [data-news-viewer] h4 {
   color: #0f172a !important;
 }
 
+html[data-theme='hacker'] {
+  --hacker-video-filter: grayscale(1) sepia(1) hue-rotate(75deg) saturate(4);
+}
+
 /* Keep Chromo Green chrome black even over a custom backdrop. */
 html[data-theme='hacker'] #app-topbar,
 html[data-theme='hacker'] [data-sidebar].fixed.left-0 {

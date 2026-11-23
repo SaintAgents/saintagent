@@ -1,15 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { getHackerVideoConfig } from '@/components/hud/videoLibrary';
 
 const STORAGE_KEY = 'videoBgSettings';
 
 function getSettings() {
   try { const s = localStorage.getItem(STORAGE_KEY); if (s) return JSON.parse(s); } catch {}
   return {};
-}
-
-// Check if ANY surface has an active video
-function hasActiveVideo(settings) {
-  return Object.values(settings).some(s => s?.videoUrl && s?.enabled);
 }
 
 export default function VideoBackgroundLayer({ currentPageName, theme }) {
@@ -32,28 +28,20 @@ export default function VideoBackgroundLayer({ currentPageName, theme }) {
     return () => window.removeEventListener('videoBgSettingsChanged', handler);
   }, []);
 
-  // Resolve: surface-specific first, then global
+  // Hacker mode has its own setting so automatic playback never changes other themes.
   const surfaceConfig = settings[currentSurface];
-  const globalConfig = settings['global'];
-  const config = (surfaceConfig?.videoUrl && surfaceConfig?.enabled) ? surfaceConfig : 
-                 (globalConfig?.videoUrl && globalConfig?.enabled) ? globalConfig : null;
+  const globalConfig = settings.global;
+  const config = theme === 'hacker' ? getHackerVideoConfig(settings)
+    : surfaceConfig?.videoUrl && surfaceConfig.enabled ? surfaceConfig : globalConfig;
+  const active = Boolean(config?.videoUrl && config.enabled && (theme === 'hacker'
+    || (config.themeFilter !== 'light' || theme === 'light') && (config.themeFilter !== 'dark' || theme === 'dark')));
 
-  // Set data-video-active on <html> so CSS can make backgrounds transparent
   useEffect(() => {
-    const active = !!config;
-    if (active) {
-      document.documentElement.setAttribute('data-video-active', 'true');
-    } else {
-      document.documentElement.removeAttribute('data-video-active');
-    }
+    if (active) document.documentElement.setAttribute('data-video-active', 'true');
     return () => document.documentElement.removeAttribute('data-video-active');
-  }, [config?.videoUrl, config?.enabled, currentSurface]);
+  }, [active]);
 
-  if (!config) return null;
-
-  // Theme filter
-  if (config.themeFilter === 'light' && theme !== 'light') return null;
-  if (config.themeFilter === 'dark' && theme !== 'dark' && theme !== 'hacker') return null;
+  if (!active) return null;
 
   const opacity = config.opacity ?? 0.3;
   const playbackRate = config.speed ?? 1;
@@ -76,7 +64,7 @@ export default function VideoBackgroundLayer({ currentPageName, theme }) {
         className="w-full h-full object-cover"
         style={{
           opacity,
-          filter: blurPx > 0 ? `blur(${blurPx}px)` : 'none',
+          filter: theme === 'hacker' ? `var(--hacker-video-filter) blur(${blurPx}px)` : blurPx > 0 ? `blur(${blurPx}px)` : 'none',
           transform: blurPx > 0 ? 'scale(1.05)' : 'none',
         }}
       />
