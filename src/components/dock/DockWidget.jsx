@@ -10,6 +10,7 @@ import DockTools from '@/components/dock/DockTools';
 import DockDirectory from '@/components/dock/DockDirectory';
 import DockQuickCall from '@/components/dock/DockQuickCall';
 import DockConferenceRooms from '@/components/dock/DockConferenceRooms';
+import DockAstro from '@/components/dock/DockAstro';
 import DockMacro from '@/components/dock/DockMacro';
 import DockInbox from '@/components/dock/DockInbox';
 import DockMessages from '@/components/dock/DockMessages';
@@ -21,7 +22,7 @@ import DockLinkTree from '@/components/dock/DockLinkTree';
 import WatchlistWidget from '@/components/watch/WatchlistWidget';
 import { links, safePath } from '@/components/dock/dockCatalog';
 
-const addedWidgets = { Members:DockDirectory, 'Quick Call':DockQuickCall, 'Conference Rooms':DockConferenceRooms, Macro:DockMacro, Inbox:DockInbox, Messages:DockMessages };
+const addedWidgets = { Astro:DockAstro, Members:DockDirectory, 'Quick Call':DockQuickCall, 'Conference Rooms':DockConferenceRooms, Macro:DockMacro, Inbox:DockInbox, Messages:DockMessages };
 
 export default function DockWidget({ card, user, save, navigate, shortcuts, history, openModal, visible, panelOpen }) {
   const {type, settings} = card;
