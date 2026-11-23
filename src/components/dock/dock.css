@@ -9,6 +9,11 @@ body:has([role='dialog'][data-state='open']) .dock-root {position:relative;z-ind
 html .dock-root[data-dock-open] .dock-launcher {position:fixed;right:0;top:6rem;z-index:10001;background:hsl(var(--d-card))!important;color:hsl(var(--d-text))!important;border-color:hsl(var(--d-line))!important;border-right:0!important;border-radius:.55rem 0 0 .55rem!important;}
 .dock-root .dock-launcher[data-dock-handle] {width:2rem;height:2.4rem;padding:0;}
 html .dock-root[data-dock-open] .dock-launcher:hover {background:hsl(var(--d-muted))!important;}
+@media (min-width:768px) {
+  html:has(#app-topbar.h-14) .dock-root[data-dock-open] .dock-launcher {top:3.5rem;}
+  html:has(#app-topbar.h-10) .dock-root[data-dock-open] .dock-launcher {top:2.5rem;}
+  .dock-root .dock-launcher {transition-property:top,background-color,color,border-color;transition-duration:300ms;}
+}
 .dock-launcher-grid {display:inline-grid;flex:none;grid-template-columns:repeat(2,.375rem);gap:.125rem;}
 .dock-launcher-grid > i {display:block;aspect-ratio:1;background:white;}
 .dock-root .dock-launcher-grid > i {background:currentColor!important;}
