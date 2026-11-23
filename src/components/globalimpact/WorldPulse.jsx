@@ -12,7 +12,7 @@ export default function WorldPulse({ icon: PulseIcon, demo }) {
   const options = [['all','All updates'],['impact','Impact'],['projects','Projects'],['opportunities','Opportunities'],['signals','Signals'],['new_members','New members']];
   return <section className="impact-surface p-3 sm:p-4" aria-label="World Pulse">
     <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-      <div className="flex items-center gap-2"><PulseIcon size={19} /><h2 className="text-lg font-bold">World Pulse</h2><span className="impact-chip">{demo ? 'Sample activity' : 'SaintAgent activity'}</span></div>
+      <div className="flex items-center gap-2"><PulseIcon size={19} /><h2 className="text-lg font-bold">World Pulse</h2><span className="impact-chip">{demo ? 'Demo activity' : 'SaintAgent activity'}</span></div>
       <select aria-label="Filter World Pulse" value={filter} onChange={e => setFilter(e.target.value)} className="impact-control">{options.map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select>
     </div>
     <div className="impact-pulse flex gap-2 overflow-x-auto py-1">

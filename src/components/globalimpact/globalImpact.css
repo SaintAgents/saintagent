@@ -87,6 +87,7 @@
   color: hsl(var(--impact-ink)); background: hsl(var(--impact-night)) !important;
 }
 #global-impact .impact-embedded > :is(div,section) {min-height: 0; background: transparent !important;}
+#global-impact .impact-embedded[data-impact-module='overview'] {max-height: none; min-height: 0; overflow: visible;}
 #global-impact .impact-embedded > div > .page-hero {display: none;}
 #global-impact .impact-embedded > div > .page-hero + div {max-width: none; margin-top: 0; padding-inline: clamp(.75rem, 2vw, 1.5rem);}
 #global-impact .impact-embedded :is([class~='bg-white'],[class~='bg-slate-50'],[class~='bg-gray-50'],[class~='bg-slate-100'],[class~='bg-background'],[class~='bg-card']) {background: hsl(var(--impact-panel)) !important; border-color: hsl(var(--impact-line)) !important;}

@@ -20,7 +20,7 @@ export default function ImpactCommand({ active, select }) {
       <span>SAINTAGENT</span>
     </button>
     <nav aria-label="SaintAgent command shortcuts" className="impact-shortcuts">
-      {shortcuts.map(([name, id, image, tone]) => <button type="button" key={id} aria-controls="impact-workspace" aria-pressed={active === id || (id === 'opportunities' && active === 'overview')} className="impact-shortcut" style={{ '--tile-tone':tone }} onClick={() => select(id)}>
+      {shortcuts.map(([name, id, image, tone]) => <button type="button" key={id} aria-controls="impact-workspace" aria-pressed={active === id} className="impact-shortcut" style={{ '--tile-tone':tone }} onClick={() => select(id)}>
         <img alt="" src={`${artwork}${image}_generated_image.png`} /><span>{name}</span>
       </button>)}
     </nav>
