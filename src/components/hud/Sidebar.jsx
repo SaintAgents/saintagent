@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SidebarResizeHandle from '@/components/hud/SidebarResizeHandle';
+import AnimatedBrandLogo from '@/components/hud/AnimatedBrandLogo';
 import ActivityTicker from '@/components/live/ActivityTicker';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -1145,9 +1146,8 @@ export default function Sidebar({
           title={isCollapsed ? "Expand sidebar" : "Go to top"}
         >
           <div className="w-8 h-8 shrink-0 rounded-xl overflow-hidden bg-white shadow-lg shadow-violet-200 flex items-center justify-center select-none">
-            <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
-              alt="SaintAgent Logo"
+            <AnimatedBrandLogo
+              fallback="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/5650186ed_SA_shield.png"
               className="w-full h-full object-contain"
             />
           </div>

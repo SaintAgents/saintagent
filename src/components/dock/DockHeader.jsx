@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarDays, ChevronRight, Droplet, FolderClosed, Plus, Settings2, UserRound, Users, Video, VideoOff } from 'lucide-react';
+import AnimatedBrandLogo from '@/components/hud/AnimatedBrandLogo';
 
 const logo = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8c39339ab_logo.png';
 
@@ -13,7 +14,7 @@ export default function DockHeader({ prefs, deck, commit, close, openModal, comp
   return <header className="dock-header">
     <div className="dock-header-group dock-header-primary">
       <button type="button" className="dock-icon-button" aria-label="Collapse Dock Deck" title="Collapse Dock Deck" onClick={close}><ChevronRight size={16} /></button>
-      <img className="dock-emblem" src={logo} alt="SaintAgent" />
+      <AnimatedBrandLogo className="dock-emblem" fallback={logo} />
       <button type="button" className="dock-icon-button" aria-label="Add Widget" title="Add Widget" onClick={() => openModal('library')}><Plus size={16} /></button>
       <h2 className="dock-current-deck" title={deck.name}>{(!deck.icon || deck.icon === '▦') ? <FolderClosed size={15} className="dock-folder-icon" aria-hidden="true" /> : <span className="dock-folder-mark" aria-hidden="true">{deck.icon}</span>}<span className="truncate">{deck.name}</span></h2>
     </div>
