@@ -1,3 +1,10 @@
+/* The desktop shell already leaves room for the top bar. */
+@media (min-width: 1024px) {
+  html[data-theme] main[data-page='AffiliateCenter'] .page-hero {
+    margin-top: 0 !important;
+  }
+}
+
 /* Dark mode is selected by data-theme in the app shell, not by .dark. */
 html[data-theme='dark'] main[data-page='AffiliateCenter'] {
   --background: 222 36% 9%;
