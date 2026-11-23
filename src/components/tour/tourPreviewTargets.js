@@ -18,6 +18,9 @@ const special = {
   '5-1': [{ label: 'Create Listing form', path: '/Marketplace', anchor: '[data-tour-listing-form]', setup: { click: '[data-tour-create-listing]' } }],
   '5-3': ['overview', 'offers', 'bookings'].map(name => tab(name[0].toUpperCase() + name.slice(1), '/Studio', name)),
   '6-0': [settings('Bank tab', 'bank')],
+  '7-0': [deck('Canopy button', '#app-topbar [aria-label="Open Command Canopy"]'), deck('Canopy view controls', '#canopy-workspace .canopy-heading', { click: '#app-topbar [aria-label="Open Command Canopy"]' })],
+  '7-1': [deck('Canopy command bar', '#canopy-workspace .canopy-command-bar', { click: '#app-topbar [aria-label="Open Command Canopy"]' })],
+  '7-2': [deck('Canopy widget library', '#canopy-library', { click: '#app-topbar [aria-label="Open Command Canopy"]', then: '#canopy-workspace .canopy-tools button[aria-expanded="false"]' })],
 };
 const pageAnchors = {
   '/CommunityFeed': '[placeholder^="Search posts"]', '/Forum': '[placeholder^="Search discussions"]',

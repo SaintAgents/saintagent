@@ -65,4 +65,9 @@ export const TOUR_PRACTICE = [
     ['Leader Channel', scene('Review Leader Missions', 'Look for work you can genuinely support', {'Sample opportunity': 'Coordinate a volunteer orientation', 'Fit check': 'Do you have experience and time to lead it?'}), scene('Explore Governance', 'Understand the process before participating', {Review: 'Read the relevant proposal and participation rules.', 'Next action': 'Choose a contribution suited to your role and access.'})],
     ['Your next week', scene('Choose one goal', 'Turn seven days of learning into one action', {Goal: 'Help verify local pantry pickup times', Where: 'Missions from the Command Deck'}), scene('Set a first step', 'Make the action small enough to finish', {Action: 'Open one mission and check its availability and join policy.', When: 'Pick a specific time this week.', 'Done when': 'You know whether the mission fits and what to do next.'})],
   ],
+  [
+    ['Canopy views', scene('Choose Peek', 'See a smaller set of widgets', {Example: 'Time, Today, Quick Notes, and Notifications'}), scene('Choose split view', 'Keep your page in view', {Layout: 'The Canopy sits alongside your current page'})],
+    ['Canopy command bar', scene('Look up Projects', 'Choose a matching destination', {Example: 'Open My Projects from the command list'}), scene('Search SaintAgent', 'Search for records instead', {Example: 'Search by a project name rather than jumping to a page'})],
+    ['Canopy customization', scene('Choose a preset', 'Start with widgets grouped by purpose', {Example: 'My Day groups your schedule, notes, and recent destinations'}), scene('Arrange your widgets', 'Keep the most useful tools within reach', {Example: 'Move Quick Notes ahead of Recent and minimize a widget you use less often'})],
+  ],
 ];

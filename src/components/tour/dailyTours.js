@@ -63,4 +63,9 @@ export const DAILY_TOURS = [
     ['Explore leadership', 'Read the Leader Channel to learn what participation involves and which opportunities match your experience.', '/LeaderChannel'],
     ['Make a plan for next week', 'Choose one meaningful next action: complete a profile detail, meet a collaborator, join a mission, or draft a project. Pick a time and define what done looks like, then use the Command Deck to find the right page.', '/CommandDeck'],
   ] },
+  { title: 'Command Canopy Walkthrough', sections: [
+    ['Open the Canopy and choose a view', 'On desktop, click Canopy in the top toolbar to open the full workspace. Choose Peek to see a smaller set of widgets, or Full view to return. Use the split-view icon to keep the Canopy beside your current page. Select Close Canopy to put it away.', '/CommandDeck'],
+    ['Find a page or run a command', 'In Full view, type “Projects” into the Canopy command bar. Choose a matching destination to open it in split view, or choose Search SaintAgent to look for records instead. Shortcuts like Quick Notes and Notifications bring those tools into focus without opening a new page.', '/CommandDeck'],
+    ['Customize your widgets', 'In Full view, select Customize to pick widgets or start from a preset. Drag a widget by its title bar to reorder it, use the bottom edge to resize it, or select the minus icon to minimize it. Try the examples below without changing your saved layout.', '/CommandDeck'],
+  ] },
 ];
