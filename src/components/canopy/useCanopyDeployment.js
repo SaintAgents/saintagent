@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const sessions = new Map();
 const stepDown = { split:'peek', full:'peek', peek:'closed', closed:'closed' };
@@ -20,7 +20,7 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
   const split = draft.split ?? settings.split;
   const splitWidth = Math.max(0, Math.min(split, available - (available > 580 ? 320 : 220)));
   const height = draft.height ?? settings.height, width = draft.width ?? settings.width;
-  const setMode = next => { session.mode = next; setCurrent(next); };
+  const setMode = useCallback(next => { session.mode = next; setCurrent(next); }, [session]);
   useLayoutEffect(() => {
     const parent = root.current?.parentElement;
     if (!parent || !enabled) return;

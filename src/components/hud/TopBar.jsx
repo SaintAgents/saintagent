@@ -48,6 +48,7 @@ import {
   PoundSterling,
   ArrowLeft,
   LayoutDashboard,
+  PanelTopOpen,
   Pencil,
   GraduationCap
 } from "lucide-react";
@@ -113,6 +114,7 @@ export default function TopBar({
   sidebarCollapsed,
   isCollapsed,
   onToggleCollapse,
+  canopyControl,
   currentPageName,
   theme: themeProp,
   onThemeToggle
@@ -922,6 +924,16 @@ export default function TopBar({
 
 
 
+        {currentUser && canopyControl && (
+          <Button type="button" variant="ghost" size="icon" className="hidden shrink-0 md:inline-flex"
+            aria-label={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}
+            title={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}
+            aria-expanded={canopyControl.expanded} aria-controls={canopyControl.expanded ? 'canopy-workspace' : undefined}
+            onClick={canopyControl.toggle}>
+            <PanelTopOpen aria-hidden="true" />
+          </Button>
+        )}
+
         {/* Profile Menu / Auth */}
         {currentUser ? (
           <DropdownMenu modal={false}>
@@ -964,9 +976,6 @@ export default function TopBar({
                   <Badge className="bg-gradient-to-r from-amber-400 to-yellow-400 text-white text-[10px] px-1.5 animate-pulse">
                     BOOSTED
                   </Badge>
-                )}
-                {profile?.leader_tier === 'verified144k' && !isBoostActive && (
-                  <Badge className="bg-amber-100 text-amber-700 text-xs">144K</Badge>
                 )}
               </Button>
             </DropdownMenuTrigger>

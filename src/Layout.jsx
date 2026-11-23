@@ -177,6 +177,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
     });
     const setSidebarCollapsed = (v) => { const val = typeof v === 'function' ? v(sidebarCollapsed) : v; _setSC(val); try { localStorage.setItem('sidebarCollapsed', String(val)); } catch {} };
   const [topbarCollapsed, setTopbarCollapsed] = useState(false);
+  const [canopyControl, setCanopyControl] = useState(null);
   const [mode, setMode] = useState('command');
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [openProfileUserIds, setOpenProfileUserIds] = useState([]);
@@ -626,7 +627,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-slate-50" data-bg-effect={bgEffect}>
-      {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={() => setSearchOpen(true)} onCreate={() => setQuickCreateOpen(true)} />}
+      {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={() => setSearchOpen(true)} onCreate={() => setQuickCreateOpen(true)} onToolbarControlChange={setCanopyControl} />}
       <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
       <VideoBackgroundLayer currentPageName={currentPageName} theme={theme} />
@@ -1833,6 +1834,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           sidebarCollapsed={sidebarCollapsed}
           isCollapsed={topbarCollapsed}
           onToggleCollapse={() => setTopbarCollapsed(!topbarCollapsed)}
+          canopyControl={canopyControl}
           currentPageName={currentPageName}
         />
       )}

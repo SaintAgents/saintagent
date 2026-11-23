@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Bell, ChevronDown, ChevronUp, PanelRight } from 'lucide-react';
 import { shortcuts, peek } from '@/components/canopy/canopyCatalog';
@@ -9,13 +9,29 @@ import CanopyWorkspace from '@/components/canopy/CanopyWorkspace';
 import CanopyOverlays from '@/components/canopy/CanopyOverlays';
 import '@/components/canopy/canopy.css';
 
-export default function CommandCanopy({ user, profile, sidebarCollapsed, topbarCollapsed, notifications, onSearch, onCreate }) {
+export default function CommandCanopy({ user, profile, sidebarCollapsed, topbarCollapsed, notifications, onSearch, onCreate, onToolbarControlChange }) {
   const { settings, commit, error } = useCanopySettings(user);
   const location = useLocation(), navigate = useNavigate();
   const [overlay, setOverlay] = useState(null);
   const [focus, setFocus] = useState('');
   const hud = useCanopyDeployment(user.id, location.pathname, settings, sidebarCollapsed, topbarCollapsed);
   const { mode, setMode, enabled, root, style, recent, handle } = hud;
+  const focusFromToolbar = useRef(false);
+  useEffect(() => {
+    const expanded = mode !== 'closed';
+    onToolbarControlChange?.(enabled ? {
+      expanded,
+      toggle: () => {
+        focusFromToolbar.current = !expanded;
+        setFocus('');
+        setMode(expanded ? 'closed' : 'peek');
+      },
+    } : null);
+    if (enabled && expanded && focusFromToolbar.current) {
+      focusFromToolbar.current = false;
+      root.current?.querySelector('#canopy-workspace .canopy-heading button')?.focus();
+    }
+  }, [enabled, mode, onToolbarControlChange, root, setMode]);
   function open(to) {
     if (to.startsWith('/')) { setFocus(''); setMode('split'); navigate(to); return; }
     if (to === 'actions' || to === 'notes' || to === 'notifications') { setFocus(to); if (mode !== 'split') setMode(to === 'actions' ? 'full' : 'peek'); return; }
