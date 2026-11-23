@@ -10,6 +10,13 @@ export const widgetLibrary = {
   Notifications:'Filter alerts, mark them read, or open their destinations.', 'Who Is Online':'Open the live member list.',
   'InSite Browser':'Launch the existing SaintAgent browser.', Inspiration:'Cycle through short reflection prompts in a frameless card.',
   Watchlist:'See up to 30 watched records and open your full Watchlist.',
+  'Quick Call':'Find members and CRM contacts, pin favorites, and place calls.',
+  'Watched Countries':'Keep a local country focus list and view country stats.',
+  Macro:'Record, name, and replay your page navigation.',
+  Members:'Search the member directory and open profiles.',
+  'Conference Rooms':'Create or join a private audio room and copy member invite links.',
+  Inbox:'Read, search, compose, and manage received and sent messages.',
+  Messages:'Read and reply to conversations without leaving the Dock.',
   'Pinned Item':'Keep a shortcut to a SaintAgent page or record.'
 };
 export const widgetLabel = type => type === 'Contact Card' ? 'Digital Contact Card' : type === 'Recent' ? 'History' : type;
