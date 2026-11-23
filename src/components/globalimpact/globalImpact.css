@@ -9,12 +9,28 @@
   --impact-blue: 218 97% 39%;
   --impact-earth: url('https://media.base44.com/images/public/694f3e0401b05e6e8a042002/080d6cd424e86902bf564333f872c1ac_generated_image.png');
   color: hsl(var(--impact-ink)) !important;
-  background: linear-gradient(180deg, hsl(var(--impact-night) / .34), hsl(var(--impact-night) / .28) 20rem, hsl(var(--impact-night)) 65rem), var(--impact-earth) center top / max(100%, 69rem) auto no-repeat, hsl(var(--impact-night)) !important;
+  background: hsl(var(--impact-night)) !important;
+  color-scheme: dark;
   isolation: isolate;
   font-family: var(--font-body);
 }
-#global-impact :is(h1,h2,h3,p,strong,label,a,button,input,select,span,div):not(.impact-embedded *) {color: inherit !important; text-shadow: none !important;}
-#global-impact :is(h1,h2,h3):not(.impact-embedded *) {color: hsl(var(--impact-ink)) !important;}
+#global-impact :is(h1,h2,h3,p,strong,label,a,button,input,select,span,div):where(:not(.impact-embedded *)) {color: inherit !important; text-shadow: none !important;}
+#global-impact :is(h1,h2,h3):where(:not(.impact-embedded *)) {color: hsl(var(--impact-ink)) !important;}
+#global-impact .impact-intro {
+  --impact-ink: 214 100% 96%;
+  --impact-muted: 213 45% 85%;
+  --impact-night: 218 75% 7%;
+  --impact-panel: 218 75% 10%;
+  --impact-line: 211 64% 44%;
+  --impact-cyan: 190 95% 72%;
+  --impact-gold: 42 92% 78%;
+  color: hsl(var(--impact-ink)) !important;
+  min-height: clamp(13rem, 24vw, 19rem);
+  padding: clamp(1rem, 2.5vw, 2rem);
+  border-radius: .85rem;
+  border: 1px solid hsl(var(--impact-line) / .7);
+  background: linear-gradient(0deg, hsl(var(--impact-night) / .96), transparent 80%), linear-gradient(90deg, hsl(var(--impact-night) / .55), transparent 78%), var(--impact-earth) center 34% / cover no-repeat, hsl(var(--impact-night)) !important;
+}
 #global-impact .impact-intro h1 {text-shadow: 0 2px 20px hsl(var(--impact-night)) !important;}
 #global-impact .impact-kicker {color: hsl(var(--impact-cyan)) !important; font-size: .69rem; font-weight: 750; letter-spacing: .13em;}
 #global-impact .impact-muted {color: hsl(var(--impact-muted)) !important;}
@@ -67,7 +83,7 @@
   --muted: var(--impact-panel); --muted-foreground: var(--impact-muted);
   --border: var(--impact-line); --input: var(--impact-line); --ring: var(--impact-cyan);
   max-height: min(60dvh, 48rem); min-height: min(22rem, 52dvh); overflow: auto;
-  scrollbar-color: hsl(var(--impact-line)) hsl(var(--impact-night)); color-scheme: dark;
+  scrollbar-color: hsl(var(--impact-line)) hsl(var(--impact-night));
   color: hsl(var(--impact-ink)); background: hsl(var(--impact-night)) !important;
 }
 #global-impact .impact-embedded > :is(div,section) {min-height: 0; background: transparent !important;}
@@ -113,6 +129,30 @@
 #global-impact .impact-map .leaflet-control {color: hsl(var(--impact-night)) !important;}
 #global-impact .impact-pulse {background: linear-gradient(180deg, transparent 49%, hsl(var(--impact-cyan) / .28) 50%, transparent 52%) !important; scrollbar-color: hsl(var(--impact-line)) transparent;}
 #global-impact .impact-event {min-width: 9rem; max-width: 13rem; flex: 0 0 auto;}
+
+/* Follow the app theme without changing the artwork or the dark dashboard. */
+html:not([data-theme]), html[data-theme='light'] {
+  & #global-impact {
+    --impact-ink: 218 55% 17%;
+    --impact-muted: 215 30% 36%;
+    --impact-night: 213 70% 96%;
+    --impact-panel: 0 0% 100%;
+    --impact-line: 213 48% 78%;
+    --impact-cyan: 208 89% 32%;
+    --impact-gold: 34 84% 28%;
+    --impact-blue: 212 90% 91%;
+    color-scheme: light;
+  }
+  & #global-impact :is(.impact-command, .impact-workspace-heading, .impact-record, .impact-detail) {background: hsl(var(--impact-panel)) !important;}
+  & #global-impact .impact-surface {box-shadow: 0 5px 18px hsl(var(--impact-cyan) / .08) !important;}
+  & #global-impact .impact-shortcut {background: hsl(var(--impact-panel)) !important; border-color: hsl(var(--impact-line)) !important;}
+  & #global-impact .impact-shortcut span {color: hsl(var(--impact-ink)) !important;}
+  & #global-impact .impact-shortcut:is(:hover,[aria-pressed='true']) {background: hsl(var(--impact-blue)) !important; border-color: hsl(var(--impact-cyan)) !important;}
+  & #global-impact .impact-map .leaflet-control {color: hsl(var(--impact-ink)) !important;}
+  & #global-impact [data-impact-module='growth'] > .text-white {color: hsl(var(--impact-ink)) !important;}
+  & #global-impact [data-impact-module='growth'] :is([class~='bg-slate-800/30'],[class~='bg-slate-800/50']) {background: hsl(var(--impact-panel)) !important; border-color: hsl(var(--impact-line)) !important;}
+  & #global-impact [data-impact-module='growth'] :is(h3.text-white,span.text-white,p.text-cyan-400,p.text-slate-300,p.text-slate-200,p.text-amber-400,span.text-violet-400):not([class~='bg-gradient-to-br'] *) {color: hsl(var(--impact-ink)) !important;}
+}
 @container impact-workspace (min-width: 35rem) {
   #global-impact .impact-tools {grid-template-columns: auto minmax(9rem, 1fr) auto;}
 }

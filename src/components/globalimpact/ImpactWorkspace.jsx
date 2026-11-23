@@ -1,6 +1,13 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useSyncExternalStore } from 'react';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ImpactOpportunities from '@/components/globalimpact/ImpactOpportunities';
+
+function subscribeTheme(onChange) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+  return () => observer.disconnect();
+}
+const readDark = () => ['dark', 'hacker', 'custom'].includes(document.documentElement.dataset.theme);
 
 const workspacePages = {
   projects: ['Projects', lazy(() => import('@/pages/Projects'))],
@@ -18,11 +25,12 @@ export const isImpactTab = id => tabs.some(([key]) => id === key) || Object.hasO
 
 export default function ImpactWorkspace({ active, select, demo }) {
   const [title, Page] = workspacePages[active] || [];
+  const dark = useSyncExternalStore(subscribeTheme, readDark, () => false);
   return <div className="impact-module-stack">
     <section id="impact-workspace" aria-label={title || 'Opportunities'} key={active} className="min-w-0">
       {Page ? <div className="impact-surface impact-embedded-shell">
         <header className="impact-workspace-heading"><p className="impact-kicker">Global Impact / Workspace</p><h2 className="text-2xl font-bold">{title}</h2></header>
-        <div className="impact-embedded dark" tabIndex={0} role="region" aria-label={`${title} content`}>
+        <div className={`impact-embedded${dark ? ' dark' : ''}`} data-impact-module={active} tabIndex={0} role="region" aria-label={`${title} content`}>
           <ErrorBoundary><Suspense fallback={<p role="status" className="p-4">Loading {title}…</p>}><Page embedded /></Suspense></ErrorBoundary>
         </div>
       </div> : <ImpactOpportunities key={demo ? 'demo' : 'live'} demo={demo} />}
