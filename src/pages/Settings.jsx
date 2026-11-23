@@ -42,6 +42,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Settings() {
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('account');
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -215,8 +216,8 @@ export default function Settings() {
 
       <div className="max-w-3xl mx-auto p-6">
 
-        <Tabs defaultValue="account" className="space-y-6">
-          <TabsList className="w-full grid grid-cols-6 h-11 bg-white dark:bg-[#0a0a0a] rounded-xl border dark:border-[#00ff88]/30">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="flex h-auto min-h-11 w-full flex-wrap justify-start bg-white dark:bg-[#0a0a0a] rounded-xl border dark:border-[#00ff88]/30">
             <TabsTrigger value="account" className="rounded-lg gap-2">
               <User className="w-4 h-4" />
               Account
@@ -232,6 +233,10 @@ export default function Settings() {
             <TabsTrigger value="notifications" className="rounded-lg gap-2">
               <Bell className="w-4 h-4" />
               Notifications
+            </TabsTrigger>
+            <TabsTrigger value="live-activity" className="rounded-lg gap-2">
+              <Radar className="w-4 h-4" aria-hidden="true" />
+              Ticker &amp; Toasts
             </TabsTrigger>
             <TabsTrigger value="preferences" className="rounded-lg gap-2">
               <Eye className="w-4 h-4" />
@@ -428,9 +433,12 @@ export default function Settings() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="live-activity">
+            <LiveActivitySettings />
+          </TabsContent>
+
           {/* Notification Settings */}
           <TabsContent value="notifications" className="space-y-6">
-            <LiveActivitySettings />
             <Card className="bg-violet-50/50 border-violet-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -769,16 +777,18 @@ export default function Settings() {
         </Tabs>
 
         {/* Save Button */}
-        <div className="flex justify-end mt-6">
-          <Button
-            onClick={handleSave}
-            className="bg-violet-600 hover:bg-violet-700 dark:bg-[#00ff88] dark:hover:bg-[#00dd77] dark:text-black rounded-xl gap-2"
-            disabled={updateMutation.isPending}
-          >
-            <Save className="w-4 h-4" />
-            Save Changes
-          </Button>
-        </div>
+        {activeTab !== 'live-activity' && (
+          <div className="flex justify-end mt-6">
+            <Button
+              onClick={handleSave}
+              className="bg-violet-600 hover:bg-violet-700 dark:bg-[#00ff88] dark:hover:bg-[#00dd77] dark:text-black rounded-xl gap-2"
+              disabled={updateMutation.isPending}
+            >
+              <Save className="w-4 h-4" />
+              Save Changes
+            </Button>
+          </div>
+        )}
       </div>
     </div>);
 

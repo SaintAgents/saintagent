@@ -58,7 +58,7 @@ export default function LiveActivity({ children, user, profile, profileReady, di
   const deepLink = eventId && dismissedLink !== eventId ? knownEvent || linkedEvent.data : null;
   useEffect(() => { setClosed(false); }, [location.pathname, prefs.enabled]);
   if (disabled) return children;
-  const state = { prefs, placement, ticker, history, events, demo, toggleDemo, tickerHistory: demo ? samples : history, open, setDialog, closeTicker: () => setClosed(true) };
+  const state = { prefs, preferences, placement, ticker, history, events, demo, toggleDemo, tickerHistory: demo ? samples : history, open, setDialog, closeTicker: () => setClosed(true) };
   return <ActivityContext.Provider value={state}>{children}<ActivityTicker placement="bottom" />
     <div className={`pointer-events-none fixed z-[9997] flex flex-col gap-2 ${positions[config.position] || positions['top-right']}`}>
       {demo && playDemo && config.enabled && !dnd && !prefs.suppress && <DemoActivityToasts events={samples.slice(0, 3)} open={open} />}
