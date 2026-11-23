@@ -48,6 +48,8 @@ export default function Circles() {
     queryKey: ['circles'],
     queryFn: () => base44.entities.Circle.list('-created_date', 100)
   });
+  const selectedCircle = circles.find((circle) => circle.id === selectedGroup);
+  const managedCircle = circles.find((circle) => circle.id === manageCircle);
 
   const joinMutation = useMutation({
     mutationFn: async (circle) => {
@@ -243,7 +245,7 @@ export default function Circles() {
           <div className="mb-6">
             <GeoLocationHub
               circles={filteredCircles}
-              onCircleClick={(circle) => setSelectedGroup(circle)}
+              onCircleClick={(circle) => setSelectedGroup(circle.id)}
             />
           </div>
         )}
@@ -253,7 +255,7 @@ export default function Circles() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCircles.map((circle) => {
             const isMember = circle.member_ids?.includes(user?.email);
-            const isOwner = circle.owner_id === user?.email;
+            const isOwner = !!user?.email && circle.owner_id === user.email;
 
             return (
               <div key={circle.id} className="bg-white dark:bg-slate-900/90 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:hover:shadow-[0_0_12px_#00ff00] rounded-xl border overflow-hidden hover:shadow-lg dark:hover:shadow-violet-500/20 transition-all">
@@ -320,12 +322,13 @@ export default function Circles() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex gap-2">
-                    {isMember ?
+                  <div className="flex flex-wrap gap-2">
+                    {isOwner && <Button variant="outline" onClick={() => setManageCircle(circle.id)} className="flex-1 rounded-xl">Manage</Button>}
+                    {isMember || isOwner ?
                     <>
                         <Button
                         variant="outline"
-                        onClick={() => setSelectedGroup(circle)}
+                        onClick={() => setSelectedGroup(circle.id)}
                         className="flex-1 rounded-xl gap-1">
 
                           <ArrowRight className="w-4 h-4" />
@@ -379,9 +382,9 @@ export default function Circles() {
 
 
       <CircleManageModal
-        open={!!manageCircle}
+        open={!!managedCircle}
         onOpenChange={(o) => !o && setManageCircle(null)}
-        circle={manageCircle}
+        circle={managedCircle}
         currentUser={user} />
 
 
@@ -402,10 +405,11 @@ export default function Circles() {
       }
 
       {/* Group Detail View */}
-      {selectedGroup &&
-      <div className="fixed inset-0 z-50 bg-slate-50">
+      {selectedCircle &&
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-50">
           <GroupDetailPage
-          circle={selectedGroup}
+          key={selectedCircle.id}
+          circle={selectedCircle}
           user={user}
           onBack={() => setSelectedGroup(null)} />
 

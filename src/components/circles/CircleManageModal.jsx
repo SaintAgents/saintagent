@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import CircleSettingsFields from '@/components/circles/CircleSettingsFields';
+
+const splitList = (value) => Array.isArray(value) ? value : (value || '').split(',').map((item) => item.trim()).filter(Boolean);
 
 export default function CircleManageModal({ open, onOpenChange, circle, currentUser }) {
   const queryClient = useQueryClient();
@@ -16,7 +19,7 @@ export default function CircleManageModal({ open, onOpenChange, circle, currentU
 
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.Circle.update(circle.id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["circles"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['circles'] }),
   });
 
   const deleteMutation = useMutation({
@@ -27,16 +30,30 @@ export default function CircleManageModal({ open, onOpenChange, circle, currentU
     },
   });
 
-  if (!circle) return null;
-  const isOwner = circle.owner_id === currentUser?.email;
+  const isOwner = !!currentUser?.email && circle?.owner_id === currentUser.email;
+  if (!open || !isOwner) return null;
+  const busy = updateMutation.isPending || deleteMutation.isPending;
+  const handleClose = (nextOpen) => {
+    if (busy) return;
+    updateMutation.reset();
+    deleteMutation.reset();
+    setNewMember('');
+    onOpenChange(nextOpen);
+  };
 
   const handleSave = () => {
-    const tags = typeof local.tags === "string" ? local.tags.split(",").map((t) => t.trim()).filter(Boolean) : local.tags;
+    if (!local.name?.trim() || busy) return;
     updateMutation.mutate({
-      name: local.name,
-      purpose: local.purpose,
-      description: local.description,
-      tags,
+      name: local.name.trim(),
+      purpose: local.purpose || '',
+      description: local.description || '',
+      tags: splitList(local.tags),
+      category: local.category || 'social',
+      visibility: local.visibility || 'public',
+      meeting_frequency: local.meeting_frequency || 'as_needed',
+      values: splitList(local.values),
+      interests: splitList(local.interests),
+      chat_enabled: local.chat_enabled ?? true,
     });
   };
 
@@ -53,8 +70,8 @@ export default function CircleManageModal({ open, onOpenChange, circle, currentU
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent overlayClassName="z-[60]" className="z-[61] max-w-2xl max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Manage Circle</DialogTitle>
         </DialogHeader>
@@ -77,12 +94,13 @@ export default function CircleManageModal({ open, onOpenChange, circle, currentU
               <label className="text-xs font-medium text-slate-600">Tags (comma-separated)</label>
               <Input className="mt-2" value={Array.isArray(local.tags) ? local.tags.join(", ") : (local.tags || "")} onChange={(e) => setLocal({ ...local, tags: e.target.value })} />
             </div>
+            <CircleSettingsFields local={local} onChange={(field, value) => setLocal((draft) => ({ ...draft, [field]: value }))} />
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl flex-1">Close</Button>
-              {isOwner && (
-                <Button onClick={handleSave} className="rounded-xl flex-1 bg-violet-600 hover:bg-violet-700">Save Changes</Button>
-              )}
+              <Button variant="outline" disabled={busy} onClick={() => handleClose(false)} className="rounded-xl flex-1">Close</Button>
+              <Button onClick={handleSave} disabled={busy || !local.name?.trim()} className="rounded-xl flex-1">{updateMutation.isPending ? 'Saving…' : 'Save Changes'}</Button>
             </div>
+            {updateMutation.isSuccess && <p role="status" className="text-sm text-muted-foreground">{updateMutation.variables?.name ? 'Circle settings saved.' : 'Members updated.'}</p>}
+            {(updateMutation.isError || deleteMutation.isError) && <p role="alert" className="text-sm text-destructive">Couldn’t update the circle. Please try again.</p>}
           </div>
 
           <div className="space-y-3">
@@ -92,7 +110,7 @@ export default function CircleManageModal({ open, onOpenChange, circle, currentU
                 <Input className="mt-2" placeholder="user@example.com" value={newMember} onChange={(e) => setNewMember(e.target.value)} />
               </div>
               {isOwner && (
-                <Button onClick={handleAddMember} className="rounded-xl bg-violet-600 hover:bg-violet-700">Add</Button>
+                <Button onClick={handleAddMember} disabled={busy || !newMember.trim()} className="rounded-xl bg-violet-600 hover:bg-violet-700">Add</Button>
               )}
             </div>
 
@@ -106,7 +124,7 @@ export default function CircleManageModal({ open, onOpenChange, circle, currentU
                       <span className="text-sm text-slate-700">{m}</span>
                     </div>
                     {isOwner && m !== currentUser?.email && (
-                      <Button variant="outline" size="sm" className="rounded-lg" onClick={() => handleRemove(m)}>Remove</Button>
+                      <Button variant="outline" size="sm" className="rounded-lg" disabled={busy} onClick={() => handleRemove(m)}>Remove</Button>
                     )}
                   </div>
                 ))}
@@ -118,7 +136,7 @@ export default function CircleManageModal({ open, onOpenChange, circle, currentU
 
             {isOwner && (
               <div className="pt-2">
-                <Button variant="destructive" className="w-full rounded-xl" onClick={() => deleteMutation.mutate()}>Delete Circle</Button>
+                <Button variant="destructive" className="w-full rounded-xl" disabled={busy} onClick={() => { if (window.confirm(`Delete ${circle.name}? This cannot be undone.`)) deleteMutation.mutate(); }}>Delete Circle</Button>
               </div>
             )}
           </div>

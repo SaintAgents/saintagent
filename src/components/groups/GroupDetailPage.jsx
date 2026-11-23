@@ -24,6 +24,7 @@ import GroupEvents from './GroupEvents';
 import GroupMeetings from './GroupMeetings';
 import CircleChatPanel from '@/components/community/CircleChatPanel';
 import CircleCover from '@/components/circles/CircleCover';
+import CircleManageModal from '@/components/circles/CircleManageModal';
 import VideoCallRoom from '@/components/video/VideoCallRoom';
 
 export default function GroupDetailPage({ circle, user, onBack }) {
@@ -33,8 +34,9 @@ export default function GroupDetailPage({ circle, user, onBack }) {
   const [videoFullscreen, setVideoFullscreen] = useState(false);
   const queryClient = useQueryClient();
 
-  const isMember = circle?.member_ids?.includes(user?.email);
-  const isOwner = circle?.owner_id === user?.email;
+  const [manageOpen, setManageOpen] = useState(false);
+  const isOwner = !!user?.email && circle?.owner_id === user.email;
+  const isMember = isOwner || circle?.member_ids?.includes(user?.email);
 
   const joinMutation = useMutation({
     mutationFn: async () => {
@@ -197,7 +199,7 @@ export default function GroupDetailPage({ circle, user, onBack }) {
               <TabsContent value="settings">
                 <div className="bg-white rounded-xl border p-6">
                   <h3 className="font-semibold text-slate-900 mb-4">Group Settings</h3>
-                  <p className="text-slate-500 text-sm">Use the Manage button from the groups list to edit settings.</p>
+                  <Button variant="outline" onClick={() => setManageOpen(true)}>Manage Circle</Button>
                 </div>
               </TabsContent>
             )}
@@ -217,6 +219,8 @@ export default function GroupDetailPage({ circle, user, onBack }) {
           </div>
         )}
       </div>
+
+      {isOwner && manageOpen && <CircleManageModal open onOpenChange={setManageOpen} circle={circle} currentUser={user} />}
 
       {/* Chat Panel */}
       {showChat && (
