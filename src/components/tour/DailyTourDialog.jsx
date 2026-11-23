@@ -24,7 +24,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
         <progress className="h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />
         <div className="space-y-3" aria-live="polite">
           <h3 className="font-heading text-lg font-semibold">{title}</h3>
-          <p className="text-sm leading-relaxed">{description}</p>
+          <p className="whitespace-pre-line text-sm leading-relaxed">{description}</p>
         </div>
         {path && <Link className="inline-flex w-fit items-center gap-2 text-sm font-medium text-primary underline underline-offset-4" to={path} target="_blank" rel="noopener noreferrer">Explore in a new tab <ArrowRight size={14} aria-hidden="true" /></Link>}
         {error && <p role="alert" className="text-sm text-destructive">Progress couldn’t be saved. Please try again.</p>}
