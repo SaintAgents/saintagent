@@ -1133,7 +1133,7 @@ export default function Sidebar({
     )} data-sidebar>
       {!isCollapsed && onResize && <SidebarResizeHandle width={width} onResize={onResize} onDraggingChange={onResizeDraggingChange} />}
       {/* Logo */}
-      <div className={cn("flex items-center justify-between px-2 py-2 border-b border-slate-100", isCollapsed && "px-1")}>
+      <div data-sidebar-brand className={cn("flex items-center justify-between px-2 py-2 border-b border-slate-100", isCollapsed && "px-1")}>
         <div
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => {

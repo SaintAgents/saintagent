@@ -86,6 +86,9 @@ export default function SurfaceOpacityController() {
     aside:not(.dock-panel) > div:first-child, [data-sidebar] > div:first-child {
       background-color: rgba(var(--sidebar-bg-rgb, 15,23,42), ${sidebar.sidebarBg / 100}) !important;
     }
+    html[data-theme='light'] [data-sidebar] > [data-sidebar-brand] {
+      background-color: hsl(var(--background)) !important;
+    }
     aside:not(.dock-panel) :is(a, span, p), [data-sidebar] a, [data-sidebar] span, [data-sidebar] p {
       filter: brightness(${sidebar.fontBrightness / 100}) !important;
     }
