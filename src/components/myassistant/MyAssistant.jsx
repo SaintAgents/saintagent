@@ -10,6 +10,7 @@ import AssistantMessages from '@/components/myassistant/AssistantMessages';
 import AssistantSavedWork from '@/components/myassistant/AssistantSavedWork';
 import AssistantSettings from '@/components/myassistant/AssistantSettings';
 import AssistantWindow from '@/components/myassistant/AssistantWindow';
+import AssistantLauncher from '@/components/myassistant/AssistantLauncher';
 import useAssistantConversation from '@/components/myassistant/useAssistantConversation';
 import useAssistantVoice from '@/components/myassistant/useAssistantVoice';
 
@@ -71,7 +72,7 @@ export default function MyAssistant({ userId, currentPage, supportOnly = false, 
   const Icon = supportOnly ? HelpCircle : icons[settings.icon] || Sparkles;
   const title = supportOnly ? 'Saint Support' : settings.name.trim() || defaults.name;
   return <>
-    {!open && <Button ref={launcher} data-deck-tour="help" onClick={() => supportOnly || tab === 'support' ? showSupport() : show()} title={supportOnly ? 'Open Saint Support' : 'Open My Assistant (Alt+Shift+A)'} className={`fixed bottom-[calc(6rem+var(--activity-ticker-height,0px))] right-4 z-[170] gap-2 shadow-lg md:bottom-[calc(1.5rem+var(--activity-ticker-height,0px))] md:right-16 ${supportOnly ? 'hidden md:inline-flex' : ''}`} aria-keyshortcuts={supportOnly ? undefined : 'Alt+Shift+A'} aria-label={`Open ${title}`} aria-controls="sa-assistant-panel"><Icon />{title}</Button>}
+    {!open && (supportOnly ? <Button ref={launcher} data-deck-tour="help" onClick={showSupport} title="Open Saint Support" className="fixed bottom-[calc(6rem+var(--activity-ticker-height,0px))] right-4 z-[170] hidden gap-2 shadow-lg md:bottom-[calc(1.5rem+var(--activity-ticker-height,0px))] md:right-16 md:inline-flex" aria-label="Open Saint Support" aria-controls="sa-assistant-panel"><Icon />{title}</Button> : <AssistantLauncher launcher={launcher} userId={userId} previewOnly={previewOnly} label={`Open ${title}`} onOpen={() => tab === 'support' ? showSupport() : show()} />)}
     <AssistantWindow title={title} icon={Icon} accent={accents[settings.accent] || accents.primary} open={open && !supportModal} onClose={close}>
       {!supportOnly && <div className="flex shrink-0 flex-wrap items-center gap-1 border-b px-3 py-2">
         {[['chat', 'Chat'], ['support', 'Saint Support'], ['work', count.isSuccess ? `Saved work · ${count.data.memory || 0} memories` : 'Saved work'], ['settings', 'Settings']].map(([id, label]) => <Button size="sm" variant={tab === id ? 'default' : 'ghost'} className="aria-pressed:ring-1 aria-pressed:ring-inset aria-pressed:ring-current" aria-pressed={tab === id} key={id} onClick={() => { setInitialWork('memory'); if (id === 'chat') setActivated(true); if (id === 'support') voice.stop(); setTab(id); }}>{label}</Button>)}
