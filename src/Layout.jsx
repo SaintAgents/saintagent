@@ -320,6 +320,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       'Watchlist': 'watchlist',
       'SavedItems': 'saveditems',
       'Intelligence': 'intelligence',
+      'ConferencePortal': 'conferences',
       'Matches': 'matches',
       'Meetings': 'meetings',
       'Missions': 'missions',

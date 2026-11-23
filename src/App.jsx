@@ -37,6 +37,7 @@ import LinkTreeEditor from '@/pages/LinkTreeEditor';
 import Watchlist from '@/pages/Watchlist';
 import SavedItems from '@/pages/SavedItems';
 import Intelligence from '@/pages/Intelligence';
+import ConferencePortal from '@/pages/ConferencePortal';
 import CelestialInsights from './pages/CelestialInsights';
 import BusinessPlanBuilder from './pages/BusinessPlanBuilder';
 import Login from './pages/Login';
@@ -199,6 +200,7 @@ const AppRoutes = () => (
       <Route path="/Watchlist" element={<LayoutWrapper currentPageName="Watchlist"><Watchlist /></LayoutWrapper>} />
       <Route path="/SavedItems" element={<LayoutWrapper currentPageName="SavedItems"><SavedItems /></LayoutWrapper>} />
       <Route path="/Intelligence" element={<LayoutWrapper currentPageName="Intelligence"><Intelligence /></LayoutWrapper>} />
+      <Route path="/ConferencePortal" element={<LayoutWrapper currentPageName="ConferencePortal"><ConferencePortal /></LayoutWrapper>} />
     </Route>
     <Route path="*" element={<PageNotFound />} />
   </Routes>

@@ -34,6 +34,7 @@ const menuItems = [
   { id: 'mentorship', label: 'Mentorship', icon: GraduationCap, page: 'Mentorship' },
   { id: 'matches', label: 'Matches', icon: Heart, page: 'Matches' },
   { id: 'meetings', label: 'Meetings', icon: Calendar, page: 'Meetings' },
+  { id: 'conferences', label: 'Conference Portal', icon: Headphones, page: 'ConferencePortal' },
   { id: 'missions', label: 'Missions', icon: Target, page: 'Missions' },
   { id: 'teams', label: 'Teams & Guilds', icon: UsersRound, page: 'Teams' },
   { id: 'projects', label: 'Projects', icon: Folder, page: 'Projects' },
@@ -79,7 +80,7 @@ const menuItems = [
 ];
 
 const SIMPLE_NAV_IDS = [
-  'command', 'observation', 'missions', 'projects', 'meetings', 'messages', 'matches',
+  'command', 'observation', 'missions', 'projects', 'meetings', 'conferences', 'messages', 'matches',
   'communityfeed', 'marketplace', 'events', 'activity', 'affiliate', 'broadcast', 'profile', 'settings'
 ];
 

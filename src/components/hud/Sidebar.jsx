@@ -107,6 +107,7 @@ const ALL_NAV_ITEMS = {
   watchlist: { id: 'watchlist', label: 'Watchlist', Icon: Eye, page: 'Watchlist', hint: 'See updates on watched records' },
   saveditems: { id: 'saveditems', label: 'Saved Items', Icon: Folder, page: 'SavedItems', hint: 'Open saved references and research' },
   intelligence: { id: 'intelligence', label: 'Saint Intelligence', Icon: BookOpen, page: 'Intelligence', hint: 'Search sources and save cited investigations' },
+  conferences: { id: 'conferences', label: 'Conference Portal', Icon: Mic, page: 'ConferencePortal', hint: 'Private audio calls and invitations' },
   news: { id: 'news', label: 'News & Updates', Icon: Newspaper, page: 'News', hint: 'Platform announcements, updates, and community news' },
   gallery: { id: 'gallery', label: 'Hero Gallery', Icon: Eye, page: 'CommandDeck', hint: 'View and explore the hero image gallery', action: 'openGallery' },
   insights: { id: 'insights', label: 'Insights & Analysis', Icon: BookOpen, page: 'Insights', hint: 'Deep-dive analyses, strategic frameworks, and thought leadership' },
@@ -161,7 +162,7 @@ const ALL_NAV_ITEMS = {
 const NAV_GROUPS = [
   { key: 'discover', label: 'Discover', icon: Newspaper, items: ['news', 'gallery', 'insights', 'videos', 'testimonials', 'glossary', 'celestial'] },
   { key: 'participate', label: 'Participate', icon: Trophy, items: ['initiations', 'quests', 'missions', 'matches', 'gamification', 'leaderboards', 'lottery', 'topgggmission'] },
-  { key: 'connect', label: 'Connect', icon: Users, items: ['forum', 'advice', 'mentorship', 'meetings', 'teams', 'profiles', 'crm', 'activity', 'messages', 'circles', 'events', 'communityfeed'] },
+  { key: 'connect', label: 'Connect', icon: Users, items: ['forum', 'advice', 'mentorship', 'meetings', 'conferences', 'teams', 'profiles', 'crm', 'activity', 'messages', 'circles', 'events', 'communityfeed'] },
   { key: 'build', label: 'Build & Manage', icon: Folder, items: ['observation', 'intelligence', 'watchlist', 'saveditems', 'projects', 'deals', 'reviewworkflow', 'reviewmanager', 'business5d', 'betafeedback', 'marketplace', 'broadcast', 'schedule', 'leader', 'studio', 'contentstudio', 'affiliate', 'collaborators'] },
   { key: 'treasury', label: 'Treasury & Exchange', icon: Coins, isTreasury: true, items: ['ggt', 'g3dex', 'gggcrypto', 'drx', 'authority144', 'sovereignalliance'] },
   { key: 'intelligence', label: 'Intelligence', icon: Orbit, items: ['synchronicity', 'matches', 'celestial'] },

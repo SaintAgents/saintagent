@@ -1,0 +1,80 @@
+{
+  "name": "ConferenceRoom",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "maxLength": 36
+    },
+    "host_id": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "member_ids": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "ended"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "code",
+    "host_id",
+    "host_name",
+    "member_ids",
+    "status",
+    "title",
+    "started_at"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.member_ids": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
