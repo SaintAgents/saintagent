@@ -18,7 +18,7 @@ export default function SidePanelBookmarkSection({ section, sections, current, s
   return <div className="space-y-1 border-t py-2">
     <div className="flex items-center gap-1">
       <p className="min-w-0 flex-1 break-words text-sm font-semibold">{name}</p>
-      <Button size="sm" variant="ghost" className="h-7 px-1.5" disabled={busy || !current || alreadySaved || pages.length >= bookmarkLimit} title={alreadySaved ? 'Current page already bookmarked' : 'Pin to Group'} aria-label={`Pin to Group: ${name}`} onClick={() => update({ pages: [...pages, current] })}><BookmarkPlus /><span className="sr-only">Pin to Group</span></Button>
+      <Button size="sm" variant="ghost" className="h-7 px-1.5" disabled={busy || !current || alreadySaved || pages.length >= bookmarkLimit} title={alreadySaved ? 'Current page already bookmarked' : 'Pin to Group'} aria-label={`Pin to Group: ${name}`} onClick={() => update({ pages: [...pages, current] })}><BookmarkPlus /><span className="text-xs">Pin to Group</span></Button>
       <Button size="sm" variant="ghost" className="h-7 px-1.5" aria-label={`Manage ${name}`} aria-expanded={editing} onClick={() => setEditing(!editing)}><Pencil /></Button>
     </div>
     {editing && <form className="flex flex-wrap gap-1" onSubmit={event => {

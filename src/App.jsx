@@ -35,6 +35,7 @@ import VCardLanding from './pages/VCardLanding';
 import PublicLinkTree from '@/pages/PublicLinkTree';
 import LinkTreeEditor from '@/pages/LinkTreeEditor';
 import Watchlist from '@/pages/Watchlist';
+import SavedItems from '@/pages/SavedItems';
 import CelestialInsights from './pages/CelestialInsights';
 import BusinessPlanBuilder from './pages/BusinessPlanBuilder';
 import Login from './pages/Login';
@@ -195,6 +196,7 @@ const AppRoutes = () => (
     <Route element={<ProtectedRoute unauthenticatedElement={<a href="/login">Sign in to continue</a>} />}>
       <Route path="/ObservationDeck" element={<LayoutWrapper currentPageName="ObservationDeck"><ObservationDeck /></LayoutWrapper>} />
       <Route path="/Watchlist" element={<LayoutWrapper currentPageName="Watchlist"><Watchlist /></LayoutWrapper>} />
+      <Route path="/SavedItems" element={<LayoutWrapper currentPageName="SavedItems"><SavedItems /></LayoutWrapper>} />
     </Route>
     <Route path="*" element={<PageNotFound />} />
   </Routes>

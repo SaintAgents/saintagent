@@ -10,13 +10,13 @@ export async function watchActivity(items, email) {
   }
   const ids = [...new Set(items.map(item => item.record_id))];
   const paths = [...new Set(items.map(itemPath).filter(Boolean))];
-  const fields = [...new Set(['record_id', 'entity_id', 'item_id', ...Object.values(types).map(type => type.field)])];
+  const fields = [...new Set(['record_id', 'entity_id', 'item_id', ...Object.values(types).map(type => type.field).filter(Boolean)])];
   const filter = { user_id: email, created_date: { $gte: items.map(item => item.created_date).sort()[0] }, $or: [
     ...fields.map(field => ({ [`metadata.${field}`]: { $in: ids } })), ...(paths.length ? [{action_url: {$in: paths}}] : []),
   ] };
   const [rows, notifications] = await Promise.all([
     Promise.all([...byType].map(async ([type, ids]) => {
-      const visibility = type === 'person' ? { profile_visibility: 'public' } : {};
+      const visibility = type === 'person' ? { profile_visibility: 'public' } : type === 'rights_asset' ? { owner_id: email || null } : {};
       const records = await base44.entities[types[type].entity].filter({ id: { $in: ids }, ...visibility }, '-updated_date', ids.length);
       return records.map(record => [itemKey({item_type: type, record_id: record.id}), record.updated_date]);
     })),

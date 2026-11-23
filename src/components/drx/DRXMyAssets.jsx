@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
+import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -193,7 +194,7 @@ Based on the title${pendingFile ? ' and file name' : ''}, generate:
           {assets.map((asset) => {
             const Icon = getAssetIcon(asset.asset_type);
             return (
-              <Card key={asset.id} className="bg-white/5 border-white/10 hover:border-emerald-500/30 transition-all">
+              <Card key={asset.id} id={`asset-${asset.id}`} className="scroll-mt-32 bg-white/5 border-white/10 hover:border-emerald-500/30 transition-all">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-3">
                     <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
@@ -220,6 +221,7 @@ Based on the title${pendingFile ? ' and file name' : ''}, generate:
                   </div>
 
                   <h3 className="font-semibold text-white mb-1 line-clamp-1">{asset.title}</h3>
+                  <RecordKeepActions type="rights_asset" id={asset.id} title={asset.title} route={`/DigitalRightsExchange?asset=${encodeURIComponent(asset.id)}#asset-${encodeURIComponent(asset.id)}`} />
                   <p className="text-xs text-slate-400 line-clamp-2 mb-3">{asset.description || 'No description'}</p>
 
                   <div className="flex items-center gap-2 flex-wrap mb-3">

@@ -1,4 +1,4 @@
-export const links = { Profile:'/Profile', Members:'/Profiles', Calendar:'/Schedule', Messages:'/Messages', Quests:'/Quests', Tours:'/CommandDeck#daily-tours', News:'/News', Community:'/CommunityFeed', Projects:'/Projects', Watchlist:'/Watchlist', Invites:'/AffiliateCenter' };
+export const links = { Profile:'/Profile', Members:'/Profiles', Calendar:'/Schedule', Messages:'/Messages', Quests:'/Quests', Tours:'/CommandDeck#daily-tours', News:'/News', Community:'/CommunityFeed', Projects:'/Projects', Watchlist:'/Watchlist', 'Saved Items':'/SavedItems', Invites:'/AffiliateCenter' };
 export const defaultShortcuts = ['Profile', 'Tours', 'Messages', 'Quests', 'Calendar'];
 export const widgetLibrary = {
   'AI Assistant':'Ask a question in a lightweight, session-only chat.', 'Global Search':'Find pages or open Advanced Search for platform records.',
@@ -13,6 +13,6 @@ export const widgetLibrary = {
   'Pinned Item':'Keep a shortcut to a SaintAgent page or record.'
 };
 export const icons = ['▦','★','◈','☀','✦','◉','◇','◆'];
-export const safePath = value => typeof value === 'string' && /^\/(?![\\/])[^\\\r\n]*$/.test(value);
+export const safePath = value => typeof value === 'string' && /^\/(?!\/)[^\\\x00-\x20\x7f]*$/.test(value);
 export const widget = (type, settings = {}) => ({ id:crypto.randomUUID(), type, settings, deck:'main', place:'deck' });
 export const initial = () => ({ active:'main', decks:[{id:'main',name:'My Dock',icon:icons[0]}], cards:[widget('Quick Access'),widget('Quick Notes')], width:1120, label:true, beside:false, folders:true, video:false, opacity:100, shortcuts:defaultShortcuts });

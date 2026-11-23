@@ -1,0 +1,122 @@
+{
+  "name": "WorkspaceReference",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "saved",
+        "research",
+        "plan"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft"
+      ],
+      "default": "draft"
+    },
+    "source_type": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "source_id": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "references": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "record_id": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "subtitle": {
+            "type": "string",
+            "maxLength": 250
+          },
+          "route": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "item_type",
+          "record_id",
+          "title"
+        ]
+      }
+    }
+  },
+  "required": [
+    "kind",
+    "title",
+    "references"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

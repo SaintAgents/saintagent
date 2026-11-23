@@ -66,7 +66,8 @@ const USE_CASES = [
 ];
 
 export default function DigitalRightsExchange() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const assetId = new URLSearchParams(window.location.search).get('asset');
+  const [activeTab, setActiveTab] = useState(() => assetId ? 'assets' : 'overview');
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -99,6 +100,11 @@ export default function DigitalRightsExchange() {
     queryFn: () => base44.entities.DRXRightsGrant.filter({ grantee_id: currentUser.email }),
     enabled: !!currentUser?.email
   });
+
+  React.useEffect(() => {
+    if (!assetId || activeTab !== 'assets' || !myAssets.some(asset => asset.id === assetId)) return;
+    document.getElementById(`asset-${assetId}`)?.scrollIntoView({ block: 'center' });
+  }, [assetId, activeTab, myAssets]);
 
   const activeGrants = grantedRights.filter(g => g.status === 'active');
   const activeIncoming = incomingRights.filter(g => g.status === 'active');

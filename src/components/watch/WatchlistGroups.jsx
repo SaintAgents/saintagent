@@ -14,7 +14,7 @@ export default function WatchlistGroups({ items, counts, owner, email, editable 
   }, onError: () => toast.error('Could not remove this watch. Please try again.') });
   const groups = Object.groupBy ? Object.groupBy(items, item => item.watchlist_name) : items.reduce((groups, item) => { (groups[item.watchlist_name] ||= []).push(item); return groups; }, Object.create(null));
   return <>{Object.entries(groups).map(([name, watches]) => <section key={name} className="rounded-xl border bg-card p-4 text-card-foreground" data-readable-surface>
-    <h2 className="mb-2 font-semibold">{name} <span className="text-sm text-muted-foreground">({counts.get(name) ?? watches.length})</span></h2>
+    <h2 className="mb-2 font-semibold">{name} <span className="text-sm text-muted-foreground">({counts.get(name) ?? '—'})</span></h2>
     <ul className="divide-y">{watches.map(item => <li key={item.id} className="flex flex-wrap items-center gap-2 py-2">
       <button type="button" className="min-w-0 flex-1 break-words text-left hover:underline" onClick={() => setSelected(item)}><strong>{item.display_name}</strong><span className="ml-2 text-sm text-muted-foreground">{typeLabel(item.item_type)}</span></button>
       {itemPath(item) && <a href={itemPath(item)} className="text-sm underline">Open record</a>}

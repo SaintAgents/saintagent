@@ -23,6 +23,7 @@ const menuItems = [
   { id: 'command', label: 'Command Deck', icon: LayoutDashboard, page: 'CommandDeck' },
   { id: 'observation', label: 'Observation Deck', icon: LayoutDashboard, page: 'ObservationDeck' },
   { id: 'watchlist', label: 'Watchlist', icon: Eye, page: 'Watchlist' },
+  { id: 'saveditems', label: 'Saved Items', icon: Folder, page: 'SavedItems' },
   { id: 'betafeedback', label: 'Beta Feedback', icon: MessageCircle, page: 'BetaFeedback' },
   { id: 'forum', label: 'Forum', icon: MessagesSquare, page: 'Forum' },
   { id: 'initiations', label: 'Initiations', icon: Flame, page: 'Initiations' },

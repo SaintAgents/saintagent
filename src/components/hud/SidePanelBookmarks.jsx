@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 import SidePanelBookmarkSection from '@/components/hud/SidePanelBookmarkSection';
-import useSidePanelBookmarks, { pagePath, sectionLimit } from '@/components/hud/useSidePanelBookmarks';
+import useSidePanelBookmarks, { pageLabel, pagePath, sectionLimit } from '@/components/hud/useSidePanelBookmarks';
+import RecordKeepActions from '@/components/watch/RecordKeepActions';
 
 function BookmarkSections({ user, onNavigate }) {
   const { pathname } = useLocation();
   const [adding, setAdding] = useState(false);
+  const [pageActions, setPageActions] = useState(false);
   const [name, setName] = useState('');
   const { sections, save, busy, error } = useSidePanelBookmarks(user);
   const current = pagePath(pathname);
@@ -34,6 +36,7 @@ function BookmarkSections({ user, onNavigate }) {
     {busy && <p role="status" className="text-xs">Saving bookmarks…</p>}
     {!sections.length && !adding && <p className="py-1 text-xs text-muted-foreground">Create a section to bookmark pages for quick access.</p>}
     {sections.map(section => <SidePanelBookmarkSection key={section.id} {...{ section, sections, current, save, busy, onNavigate }} />)}
+    {current && <><Button type="button" size="sm" variant="ghost" aria-expanded={pageActions} onClick={() => setPageActions(value => !value)}>Other page actions</Button>{pageActions && <RecordKeepActions key={current} type="page" id={current.toLowerCase()} title={pageLabel(current)} route={current} />}</>}
   </section>;
 }
 
