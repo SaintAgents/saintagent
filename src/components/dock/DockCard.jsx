@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Archive, GripVertical, Link2, Maximize2, MoreHorizontal, MoveUpRight, Newspaper, PanelsTopLeft, X } from 'lucide-react';
+import { Archive, ArrowRightToLine, GripVertical, Link2, Maximize2, MoreHorizontal, MoveUpRight, Newspaper, PanelsTopLeft, X } from 'lucide-react';
 import DockWidget from '@/components/dock/DockWidget';
 import { widgetLabel } from '@/components/dock/dockCatalog';
 
@@ -34,7 +34,7 @@ export default function DockCard({ card, floating, visible, order, patch, onFloa
       }} {...move('move')}><GripVertical size={14} /></button>}
       {!frameless && <strong className="dock-card-title"><WidgetIcon size={14} aria-hidden="true" /><span className="truncate">{settings.title || widgetLabel(type)}</span></strong>}
       {!floating && <><button type="button" aria-label={`Float ${settings.title || widgetLabel(type)}`} title="Pop out as a frameless tool" onClick={() => switchPlace(onFloat,'.dock-move')}><MoveUpRight size={15} /></button><button aria-label="Archive widget" title="Archive widget" onClick={() => patch({place:'drawer'})}><Archive size={15} /></button></>}
-      {floating && <><button aria-label="Widget options" title="Widget options" aria-expanded={menu} onClick={() => setMenu(!menu)}><MoreHorizontal size={16} /></button>{!frameless && <button aria-label="Close floating widget" title="Close floating widget" onClick={() => patch({place:'drawer'})}><X size={15} /></button>}</>}
+      {floating && <><button type="button" aria-label="Return to Dock Deck" title="Return to Dock Deck" onClick={() => switchPlace(onReturn,'[data-dock-arrange]')}><ArrowRightToLine size={15} aria-hidden="true" /></button><button aria-label="Widget options" title="Widget options" aria-expanded={menu} onClick={() => setMenu(!menu)}><MoreHorizontal size={16} /></button>{!frameless && <button aria-label="Close floating widget" title="Close floating widget" onClick={() => patch({place:'drawer'})}><X size={15} /></button>}</>}
     </div>
     {menu && <div className="dock-card-menu dock-links">{floating ? <><button onClick={() => switchPlace(onReturn,'[data-dock-arrange]')}>Return to deck</button>{type !== 'Inspiration' && <button onClick={() => {patch({settings:{frameless:!frameless,compact:false}});setMenu(false);}}>{frameless?'Restore frame':'Frameless mode'}</button>}{type === 'Music Player' && <button onClick={() => {patch({settings:{compact:!settings.compact}});setMenu(false);}}>{settings.compact?'Full player':'Compact player'}</button>}<button onClick={() => patch({place:'drawer'})}>Close to Drawer</button><button onClick={() => {if(window.confirm(`Permanently remove ${type}?`)) remove();}}>Remove widget</button></> : <><button onClick={() => widgetProps.shift(-1)}>Move earlier</button><button onClick={() => widgetProps.shift(1)}>Move later</button><button onClick={() => patch({w:null,h:null})}>Reset size</button></>}</div>}
     <div className="dock-card-body"><DockWidget {...widgetProps} {...{card,visible,save:settings => patch({settings})}} /></div>
