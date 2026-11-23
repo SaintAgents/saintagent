@@ -4,4 +4,4 @@ export const ownerFilter = user => ({ $or: [{ created_by_id: user.id }, { $and: 
 export const isUploader = (doc, user) => Boolean(user && (doc.created_by_id ? doc.created_by_id === user.id : doc.created_by && doc.created_by === user.email));
 export const canEditDocument = (doc, user) => user?.role === 'admin' || isUploader(doc, user);
 export const safeFileUrl = value => typeof value === 'string' && /^https?:\/\//i.test(value) ? value : undefined;
-export const canSeeProjectFiles = (project, user) => Boolean(user && (user.role === 'admin' || [project.submitter_user_id, project.owner_id, project.created_by_id, project.created_by, project.claim_status === 'approved' && project.claimed_by].some(id => id && (id === user.id || id === user.email))));
+export const canSeeProjectFiles = (project, user) => Boolean(user && (user.role === 'admin' || (project.created_by_id ? project.created_by_id === user.id : user.email && project.created_by === user.email)));

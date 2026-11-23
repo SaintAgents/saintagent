@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/collapsible";
 import { 
   LayoutDashboard,
+  Image as ImageIcon,
   Users,
   Calendar,
   Target,
@@ -1161,7 +1162,7 @@ export default function Sidebar({
           )}
         </div>
         <div className="flex items-center gap-1">
-          {!isCollapsed && !isTourPreview() && <Button variant="ghost" size="sm" title="Configure side navigation background" aria-label="Configure side navigation background" onClick={() => openSurfaceHero('sidebar', 'Side navigation')}>Hero</Button>}
+          {!isCollapsed && !isTourPreview() && <Button variant="ghost" size="icon" title="Configure side navigation background" aria-label="Configure side navigation background" onClick={() => openSurfaceHero('sidebar', 'Side navigation')}><ImageIcon aria-hidden="true" /></Button>}
           {!isCollapsed && (
             <Button 
               variant="ghost" 

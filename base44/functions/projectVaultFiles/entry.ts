@@ -9,11 +9,12 @@ export default async function(req: Request): Promise<Response> {
     if (typeof projectId !== 'string' || !projectId || projectId.length > 160 || !['list','attach'].includes(action)) return Response.json({error:'Invalid request'},{status:400});
     const project = await client.entities.Project.get(projectId).catch(e=>e.status===404 ? null : Promise.reject(e));
     if (!project) return Response.json({error:'Project not found'},{status:404});
-    const authorized = user.role === 'admin' || [project.submitter_user_id,project.owner_id,project.created_by_id,project.created_by,project.claim_status === 'approved' && project.claimed_by].some(id=>id && (id===user.id || id===user.email));
+    // Project owner/claim fields are editable and cannot authorize private files.
+    const authorized = user.role === 'admin' || (project.created_by_id ? project.created_by_id === user.id : !!user.email && project.created_by === user.email);
     if (!authorized) return Response.json({error:'Not authorized'},{status:403});
     const attachments = client.asServiceRole.entities.ProjectAttachment;
     if (action === 'attach') {
-      if (typeof file?.uri !== 'string' || !file.uri.startsWith('private/') || file.uri.length > 4000 || typeof file?.name !== 'string' || !file.name.trim() || file.name.length > 300) return Response.json({error:'A private uploaded file is required'},{status:400});
+      if (typeof file?.uri !== 'string' || !file.uri.trim() || /^https?:\/\//i.test(file.uri) || file.uri.length > 4000 || typeof file?.name !== 'string' || !file.name.trim() || file.name.length > 300) return Response.json({error:'A private uploaded file is required'},{status:400});
       await attachments.create({project_id:project.id, file_uri:file.uri, file_name:file.name, uploaded_by_id:user.id, uploaded_by_name:user.full_name || 'Member'});
       return Response.json({ok:true});
     }
