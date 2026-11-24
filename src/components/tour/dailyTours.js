@@ -1,4 +1,5 @@
 import { siteSkillsTour } from '@/components/tour/siteSkillsLessons';
+import { handsOnTours } from '@/components/tour/handsOnTours';
 
 export const DAILY_TOURS = [
   { title: 'The Basics', sections: [
@@ -78,4 +79,5 @@ export const DAILY_TOURS = [
     ['Share your LinkTree and Digital Contact Card', 'Open the LinkTree & Contact Card editor. Add links to your LinkTree and choose which contact details to share. Check Publish LinkTree when you’re ready and save your changes. Share LinkTree from the editor, or open the Digital Contact Card on your profile to copy its link or show its QR code.', '/LinkTreeEditor'],
   ] },
   siteSkillsTour,
+  ...handsOnTours,
 ];
