@@ -1,0 +1,46 @@
+{
+  "name": "VaultGroupDocument",
+  "type": "object",
+  "properties": {
+    "group_id": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "file_uri": {
+      "type": "string",
+      "maxLength": 4000
+    }
+  },
+  "required": [
+    "group_id",
+    "name",
+    "file_uri"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
