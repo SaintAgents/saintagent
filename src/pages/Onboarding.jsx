@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
+import { isSharedCirclePost, safeReturnTo } from '@/lib/authReturnTo';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
@@ -65,6 +66,8 @@ const STEPS = [
 ];
 
 export default function Onboarding() {
+  const returnTo = safeReturnTo();
+  const nextPage = isSharedCirclePost(returnTo) ? returnTo : createPageUrl('CommandDeck');
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(0);
   const [stepData, setStepData] = useState({});
@@ -96,9 +99,9 @@ export default function Onboarding() {
   useEffect(() => {
     if (!finishingOnboarding.current && (progress?.status === 'complete' || progress?.status === 'skipped')) {
       try { localStorage.setItem('onboardingComplete', '1'); } catch {}
-      window.location.href = createPageUrl('CommandDeck');
+      window.location.href = nextPage;
     }
-  }, [progress]);
+  }, [progress, nextPage]);
 
   // Save progress mutation
   const saveProgressMutation = useMutation({
@@ -294,7 +297,7 @@ export default function Onboarding() {
 
           // Mark local completion to avoid race redirection and go to Command Deck
           try { localStorage.setItem('onboardingComplete', '1'); } catch {}
-          window.location.href = createPageUrl('CommandDeck');
+          window.location.href = nextPage;
         } else {
           setCurrentStep(currentStep + 1);
         }
@@ -429,7 +432,7 @@ export default function Onboarding() {
                 }
 
                 try { localStorage.setItem('onboardingComplete', '1'); } catch {}
-                window.location.href = createPageUrl('CommandDeck');
+                window.location.href = nextPage;
               }}
               className="text-amber-600 hover:text-amber-700"
             >

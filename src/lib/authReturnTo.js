@@ -1,3 +1,9 @@
+export function isSharedCirclePost(path) {
+  const [pathname, query] = path.split('?');
+  const params = new URLSearchParams(query);
+  return /^\/circles\/?$/i.test(pathname) && Boolean(params.get('group') && params.get('post'));
+}
+
 // Shared by the auth pages (Login, Register, and any page that resumes a flow
 // after sign-in, e.g. the MCP OAuth consent page). Keep the redirect
 // validation in one place — it is security-sensitive and easy to drift.

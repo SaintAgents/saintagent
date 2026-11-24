@@ -10,13 +10,16 @@ import { myGroupsFilter } from '@/components/groups/myGroupsQuery';
 export default function GroupShortcutDetail() {
   const [params, setParams] = useSearchParams();
   const id = params.get('group');
+  const sharedPost = Boolean(params.get('post'));
   const { user } = useAuth();
   const email = user?.email;
   const group = useQuery({
-    queryKey: ['circles', 'group-shortcut', email, id],
+    queryKey: ['circles', 'group-shortcut', email, id, sharedPost],
     enabled: !!id && !!email,
     queryFn: async () => {
-      const { items } = await base44.entities.Circle.filter({ id, ...myGroupsFilter(email) }, { limit: 1 });
+      const membership = myGroupsFilter(email);
+      const access = sharedPost ? { $or: [...membership.$or, { visibility: 'public' }] } : membership;
+      const { items } = await base44.entities.Circle.filter({ id, ...access }, { limit: 1 });
       return items[0] ?? null;
     },
   });
@@ -41,6 +44,7 @@ export default function GroupShortcutDetail() {
   return <div className="grid min-h-[50vh] place-items-center bg-background p-4 text-foreground">
     <div className="space-y-3 text-center">
       <p role="status">{notFound ? 'This Circle is unavailable or you don’t have access.' : group.isError ? 'Couldn’t open this group.' : 'Opening group…'}</p>
+      {notFound && sharedPost && <p className="text-sm text-muted-foreground">If the Circle is private, ask its owner to add you before opening this link again.</p>}
       {group.isError && <Button variant="ghost" onClick={() => group.refetch()}>Retry</Button>}
       <Button variant="outline" onClick={close}>Back to Groups</Button>
     </div>

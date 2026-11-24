@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/lib/AuthContext';
+import { isSharedCirclePost } from '@/lib/authReturnTo';
 import Sidebar from '@/components/hud/Sidebar';
 import { clampSidebarWidth, DEFAULT_SIDEBAR_WIDTH } from '@/components/hud/SidebarResizeHandle';
 import TopBar from '@/components/hud/TopBar';
@@ -604,7 +605,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
     if (!onboarding || (onboarding.status !== 'complete' && onboarding.status !== 'skipped')) {
       if (obCompleteLS) return; // Trust localStorage to prevent loops
       hasRedirected.current = true;
-      window.location.href = createPageUrl('Onboarding');
+      const returnTo = window.location.pathname + window.location.search;
+      window.location.href = createPageUrl('Onboarding') + (isSharedCirclePost(returnTo) ? `?${new URLSearchParams({ returnTo })}` : '');
       return;
     }
 

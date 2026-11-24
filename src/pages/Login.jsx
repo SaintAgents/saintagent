@@ -5,10 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { Sparkles, Eye, EyeOff } from 'lucide-react';
-import { safeReturnTo } from '@/lib/authReturnTo';
+import { isSharedCirclePost, safeReturnTo } from '@/lib/authReturnTo';
 
 export default function Login() {
   const returnTo = safeReturnTo();
+  const sharedPost = isSharedCirclePost(returnTo);
+  const registerLink = returnTo === '/' ? '/register' : `/register?${new URLSearchParams({ returnTo })}`;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +43,8 @@ export default function Login() {
             <Sparkles className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
-          <p className="text-slate-500 mt-1">Sign in to your SaintAgent account</p>
+          <p className="text-slate-500 mt-1">{sharedPost ? 'Sign up or sign in to view the shared post and play any audio. You’ll need to be a member of the Circle.' : 'Sign in to your SaintAgent account'}</p>
+          {sharedPost && <Button asChild className="mt-4"><Link to={registerLink}>Sign up to listen</Link></Button>}
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-8">
@@ -85,9 +88,9 @@ export default function Login() {
           </div>
         </div>
 
-        <p className="text-center text-sm text-slate-500 mt-6">
-          Don't have an account? <Link to="/register" className="text-violet-600 font-medium hover:underline">Sign up</Link>
-        </p>
+        {!sharedPost && <p className="text-center text-sm text-slate-500 mt-6">
+          Don't have an account? <Link to={registerLink} className="text-violet-600 font-medium hover:underline">Sign up</Link>
+        </p>}
       </div>
     </div>
   );

@@ -228,8 +228,9 @@ export default function GroupDetailPage({ circle, user, onBack }) {
         ) : (
           <div className="bg-white rounded-xl border p-8 text-center">
             <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">Join to Access</h3>
-            <p className="text-slate-500 mb-6">Join this group to access forums, member directory, and events.</p>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">{linkedPost ? 'Join the Circle to listen' : 'Join to Access'}</h3>
+            <p className="text-slate-500 mb-6">{linkedPost ? 'Join this Circle to open the shared post and play any attached audio.' : 'Join this group to access forums, member directory, and events.'}</p>
+            {linkedPost && joinMutation.isError && <p role="alert" className="mb-3 text-sm text-destructive">Couldn’t join the Circle. Please try again.</p>}
             <Button 
               onClick={() => joinMutation.mutate()}
               disabled={joinMutation.isPending}

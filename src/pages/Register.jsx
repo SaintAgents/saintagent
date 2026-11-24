@@ -5,8 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
 import { Sparkles, Eye, EyeOff } from 'lucide-react';
+import { isSharedCirclePost, safeReturnTo } from '@/lib/authReturnTo';
 
 export default function Register() {
+  const returnTo = safeReturnTo();
+  const sharedPost = isSharedCirclePost(returnTo);
+  const loginLink = returnTo === '/' ? '/login' : `/login?${new URLSearchParams({ returnTo })}`;
   const [step, setStep] = useState('register'); // 'register' | 'otp'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,7 +49,7 @@ export default function Register() {
     try {
       const result = await base44.auth.verifyOtp({ email, otpCode });
       base44.auth.setToken(result.access_token);
-      window.location.href = '/';
+      window.location.href = returnTo;
     } catch (err) {
       setError(err?.message || 'Invalid verification code');
     } finally {
@@ -63,7 +67,7 @@ export default function Register() {
   };
 
   const handleGoogleLogin = () => {
-    base44.auth.loginWithProvider('google', window.location.origin + '/');
+    base44.auth.loginWithProvider('google', new URL(returnTo, window.location.origin).href);
   };
 
   if (step === 'otp') {
@@ -105,7 +109,7 @@ export default function Register() {
             <Sparkles className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Create your account</h1>
-          <p className="text-slate-500 mt-1">Join the SaintAgent community</p>
+          <p className="text-slate-500 mt-1">{sharedPost ? 'Create a SaintAgent account, then join the Circle to listen.' : 'Join the SaintAgent community'}</p>
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-8">
@@ -150,7 +154,7 @@ export default function Register() {
         </div>
 
         <p className="text-center text-sm text-slate-500 mt-6">
-          Already have an account? <Link to="/login" className="text-violet-600 font-medium hover:underline">Sign in</Link>
+          Already have an account? <Link to={loginLink} className="text-violet-600 font-medium hover:underline">Sign in</Link>
         </p>
       </div>
     </div>
