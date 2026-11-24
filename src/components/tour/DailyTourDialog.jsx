@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import TourScreenPreview from '@/components/tour/TourScreenPreview';
+import TourSplitPane from '@/components/tour/TourSplitPane';
 import { dailyPreviewTargets } from '@/components/tour/tourPreviewTargets';
 import TourPractice from '@/components/tour/TourPractice';
 import TourNarration from '@/components/tour/TourNarration';
@@ -30,8 +31,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
           <DialogDescription>Section {step + 1} of {tour.sections.length}</DialogDescription>
           <progress className="block h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />
         </header>
-        <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,3fr)] md:grid-cols-2 md:grid-rows-1">
-          <TourScreenPreview key={lessonKey} targets={dailyPreviewTargets(day, step, title, path)} />
+        <TourSplitPane resizable={Boolean(tour.reward)} preview={<TourScreenPreview key={lessonKey} targets={dailyPreviewTargets(day, step, title, path)} />}>
           <section aria-label="Lesson instructions" ref={scrollArea} className="min-h-0 min-w-0 space-y-4 overflow-y-auto px-4 py-5 sm:px-8">
         <div className="space-y-3" aria-live="polite">
           <h3 className="font-heading text-lg font-semibold">{title}</h3>
@@ -42,7 +42,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
         {path && <Link className="inline-flex w-fit items-center gap-2 text-sm font-medium text-primary underline underline-offset-4" to={path} target="_blank" rel="noopener noreferrer">Open the live page in a new tab <ArrowRight size={14} aria-hidden="true" /></Link>}
         {error && <p role="alert" className="text-sm text-destructive">Progress couldn’t be saved. Please try again.</p>}
           </section>
-        </div>
+        </TourSplitPane>
         <footer className="flex shrink-0 flex-wrap justify-between gap-2 border-t px-4 py-3 sm:px-8">
           <Button type="button" variant="outline" disabled={step === 0 || busy} onClick={onBack}>Back</Button>
           <Button type="button" disabled={busy} onClick={onAdvance}>{busy ? 'Saving…' : lastStep ? 'Finish tour' : 'Next section'}</Button>
