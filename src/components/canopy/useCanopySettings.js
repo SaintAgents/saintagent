@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { defaults, widgets } from '@/components/canopy/canopyCatalog';
 
 const saves = new Map();
+const layoutOf = ({ cards, minimized, sizes, scale, height, split }) => ({ cards, minimized, sizes, scale, height, split });
 function read(user) {
   let local;
   try { local = JSON.parse(localStorage.getItem(`sa-canopy:${user.id}`)); } catch { /* use account copy */ }
@@ -25,5 +26,16 @@ export default function useCanopySettings(user) {
     saves.set(user.id, save);
     save.catch(() => setError(true)).finally(() => { if (saves.get(user.id) === save) saves.delete(user.id); });
   }
-  return { settings, commit, error };
+  const original = settings.showOriginal === true;
+  const saved = settings.savedView;
+  const viewSaved = !!saved && JSON.stringify(layoutOf(saved)) === JSON.stringify(layoutOf(settings));
+  function saveView() {
+    if (!latest.current.showOriginal) commit({ savedView: layoutOf(latest.current) });
+  }
+  function toggleOriginal() {
+    const current = latest.current;
+    if (!current.showOriginal) commit({ showOriginal: true });
+    else commit({ ...(current.savedView || {}), showOriginal: false });
+  }
+  return { settings: original ? { ...settings, ...layoutOf(defaults) } : settings, commit, error, original, saved, viewSaved, saveView, toggleOriginal };
 }

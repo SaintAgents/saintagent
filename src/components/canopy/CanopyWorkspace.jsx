@@ -6,11 +6,11 @@ import CanopyCommandBar from '@/components/canopy/CanopyCommandBar';
 import CanopyCustomizer from '@/components/canopy/CanopyCustomizer';
 
 export default function CanopyWorkspace(props) {
-  const { mode, ids, settings, commit, profile, error, focus } = props;
+  const { mode, ids, settings, commit, profile, error, focus, original, saved, viewSaved, saveView, onToggleOriginal } = props;
   const [library,setLibrary] = useState(false), [scale,setScale] = useState(null);
-  const cardScale = scale ?? settings.scale;
+  const cardScale = original ? settings.scale : scale ?? settings.scale;
   const dragging = useRef(null);
-  const editable = mode !== 'peek';
+  const editable = !original && mode !== 'peek';
   const allowed = id => id !== 'Contact Card' || !!profile;
   const special = { actions:'Actions', notes:'Quick Notes', notifications:'Notifications', knowledge:'Files & Knowledge', online:'Who’s Online' }[focus];
   const widgetFocus = useRef(null);
@@ -31,17 +31,24 @@ export default function CanopyWorkspace(props) {
   const dropTarget = id => ({onDragOver:e => {if (dragging.current) {e.preventDefault(); e.dataTransfer.dropEffect='move';}},onDrop:e => {if (!dragging.current) return; e.preventDefault(); move(dragging.current,id); dragging.current=null;}});
   const card = (id, focused = false) => <CanopyCard key={id} id={id} focused={focused} scale={cardScale} size={settings.sizes[id]}
     minimized={!focused && editable && Boolean(settings.minimized[id])}
-    onResize={size => commit({sizes:{...settings.sizes,[id]:size}})}
+    onResize={original ? undefined : size => commit({sizes:{...settings.sizes,[id]:size}})}
     dragHandle={!focused && editable ? dragHandle(id) : undefined} dropTarget={!focused && editable ? dropTarget(id) : undefined}
     onToggle={!focused && editable ? () => commit({minimized:{...settings.minimized,[id]:!settings.minimized[id]}}) : undefined}
     onRemove={!focused && editable ? () => commit({cards:settings.cards.filter(card => card !== id)}) : undefined}>{tile(id)}</CanopyCard>;
   return <div className="canopy-scroll" style={{'--widget-scale':cardScale/100}}>
-    {editable && <><CanopyCommandBar {...props} /><div className="canopy-tools"><p>{visible.length} widgets · Drag edges to resize or a grip to reorder</p><button aria-expanded={library} aria-controls={library ? 'canopy-library' : undefined} onClick={() => setLibrary(!library)}><Settings2 size={14} /> Customize</button></div>
+    <div className="canopy-tabs">
+      {editable && <button type="button" disabled={viewSaved} onClick={saveView}>{viewSaved ? 'View saved' : 'Save view'}</button>}
+      <button type="button" onClick={() => { setScale(null); onToggleOriginal(); }}>
+        {original ? (saved ? 'Return to saved view' : 'Return to my view') : 'View original'}
+      </button>
+    </div>
+    {mode !== 'peek' && <CanopyCommandBar {...props} />}
+    {editable && <><div className="canopy-tools"><p>{visible.length} widgets · Drag edges to resize or a grip to reorder</p><button aria-expanded={library} aria-controls={library ? 'canopy-library' : undefined} onClick={() => setLibrary(!library)}><Settings2 size={14} /> Customize</button></div>
       {library && <CanopyCustomizer {...{settings,commit,allowed,scale,setScale,move,dragHandle,dropTarget}} />}</>}
     {error && <p role="status" className="canopy-status">Saved on this device; account sync failed. <button onClick={() => commit({})}>Retry sync</button></p>}
     {special && <div className="canopy-focus" key={special} ref={widgetFocus}>{card(special, true)}</div>}
     <div className="canopy-grid">
-      {!visible.length && !special && <p>No widgets yet. Add one from Customize.</p>}
+      {!visible.length && !special && <p>{editable ? 'No widgets yet. Add one from Customize.' : 'No widgets to display.'}</p>}
       {visible.map(id => card(id))}
     </div>
   </div>;

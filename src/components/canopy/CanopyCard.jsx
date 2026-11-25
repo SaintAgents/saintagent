@@ -21,6 +21,6 @@ export default function CanopyCard({ id, size, scale, focused, minimized, onResi
       {onRemove && <button aria-label={`Remove ${id}`} onClick={onRemove}><X size={14} /></button>}
     </header>
     {!minimized && <div className="canopy-card-body">{children}</div>}
-    <CanopyCardHandles card={card} label={id} horizontalOnly={minimized} onPreview={setDraft} onSave={change => onResize({ ...saved, ...change })} />
+    {onResize && <CanopyCardHandles card={card} label={id} horizontalOnly={minimized} onPreview={setDraft} onSave={change => onResize({ ...saved, ...change })} />}
   </article>;
 }
