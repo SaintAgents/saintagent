@@ -1,6 +1,6 @@
 import ImpactCommandPulse from '@/components/globalimpact/ImpactCommandPulse';
 import { Link } from 'react-router-dom';
-import { Compass, Radio, Search } from 'lucide-react';
+import { Activity, Compass, Microscope } from 'lucide-react';
 import { scopeRoute } from '@/components/globalimpact/pulse/pulseGeography';
 
 const artwork = 'https://media.base44.com/images/public/694f3e0401b05e6e8a042002/';
@@ -32,13 +32,13 @@ export default function ImpactCommand({ active, select, demo }) {
     </button>
     <nav aria-label="SaintAgent command shortcuts" className="impact-shortcuts">
       <Link to="/SharedSearch" aria-label="Shared Search" title="Shared Search" className="impact-shortcut text-center" data-impact-shortcut="search">
-        <Search className="m-auto size-7" aria-hidden="true" /><span>Search</span>
+        <Microscope className="m-auto size-7" aria-hidden="true" /><span>Search</span>
       </Link>
       <Link to="/IntelligenceDashboard" aria-label="Intel Hub: Intelligence Dashboard" title="Intelligence Dashboard" className="impact-shortcut text-center" style={{ '--tile-tone':'245 100% 76%' }}>
         <img alt="" src={`${artwork}dee14f8e015f59dc910ae9185e67c4bd_generated_image.png`} /><span>Intel Hub</span>
       </Link>
       <Link to={scopeRoute(null, demo)} aria-label="Pulse: World Pulse" title="World Pulse" className="impact-shortcut text-center" data-impact-shortcut="pulse">
-        <Radio className="m-auto size-7" aria-hidden="true" /><span>Pulse</span>
+        <Activity className="m-auto size-7" aria-hidden="true" /><span>Pulse</span>
       </Link>
       {shortcuts.map(([name, id, image, tone, title]) => <button type="button" key={id} title={title} aria-controls="impact-workspace" aria-pressed={active === id} className="impact-shortcut" style={{ '--tile-tone':tone }} onClick={() => select(id)}>
         <img alt="" src={`${artwork}${image}_generated_image.png`} /><span>{name}</span>
