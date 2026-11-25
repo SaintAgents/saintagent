@@ -52,6 +52,13 @@
   background: transparent !important; border: 0 !important; box-shadow: none !important;
 }
 #global-impact .impact-brand-logo {width: calc(2 * var(--tile-size)); height: calc(2 * var(--tile-size)); object-fit: cover; border-radius: 50%; filter: none !important;}
+@media (prefers-reduced-motion: no-preference) {
+  #global-impact .impact-brand-logo {animation: impact-brand-spin 6s linear infinite;}
+}
+@keyframes impact-brand-spin {
+  from {transform: perspective(24rem) rotateY(0turn);}
+  to {transform: perspective(24rem) rotateY(1turn);}
+}
 #global-impact .impact-shortcuts {
   grid-column: 1 / -1; grid-row: 2; display: flex; align-items: center; justify-content: flex-start;
   width: 100%; min-width: 0; overflow-x: auto; gap: .45rem; padding: .4rem .25rem;

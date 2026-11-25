@@ -1,4 +1,3 @@
-import AnimatedBrandLogo from '@/components/hud/AnimatedBrandLogo';
 import ImpactCommandPulse from '@/components/globalimpact/ImpactCommandPulse';
 import { Link } from 'react-router-dom';
 import { Compass } from 'lucide-react';
@@ -28,7 +27,7 @@ export default function ImpactCommand({ active, select }) {
           <feComposite in2="SourceGraphic" operator="in" />
         </filter></defs>
       </svg>
-      <AnimatedBrandLogo className="impact-brand-logo" fallback={logo} />
+      <img className="impact-brand-logo" src={logo} alt="" draggable={false} />
     </button>
     <nav aria-label="SaintAgent command shortcuts" className="impact-shortcuts">
       <Link to="/IntelligenceDashboard" aria-label="Intel Hub: Intelligence Dashboard" title="Intelligence Dashboard" className="impact-shortcut text-center" style={{ '--tile-tone':'245 100% 76%' }}>
