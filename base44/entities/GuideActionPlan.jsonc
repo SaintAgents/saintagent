@@ -1,0 +1,118 @@
+{
+  "name": "GuideActionPlan",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 400
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "explore_existing",
+        "gather_information",
+        "prepare_mission"
+      ]
+    },
+    "first_action": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "collaboration": {
+      "type": "string",
+      "maxLength": 700
+    },
+    "resources": {
+      "type": "string",
+      "maxLength": 700
+    },
+    "milestone": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "schedule": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "dependencies": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "references": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "id": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "kind",
+          "id"
+        ]
+      }
+    }
+  },
+  "required": [
+    "title",
+    "objective",
+    "direction",
+    "first_action",
+    "references"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

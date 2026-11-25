@@ -3,6 +3,7 @@ import GuideEngine from '@/components/guide/GuideEngine';
 import GuideHero from '@/components/guide/GuideHero';
 import GuidePillar from '@/components/guide/GuidePillar';
 import GuidePrimaryFunctions from '@/components/guide/GuidePrimaryFunctions';
+import GuideLessons from '@/components/guide/GuideLessons';
 import { pillars } from '@/components/guide/guideTools';
 
 export default function MyGuide() {
@@ -13,6 +14,7 @@ export default function MyGuide() {
       <GuideEngine />
       <GuideAsk />
       <div className="grid gap-4 md:grid-cols-3">{pillars.map(p => <GuidePillar key={p.id} pillar={p} />)}</div>
+      <GuideLessons />
     </div>
   </section>;
 }

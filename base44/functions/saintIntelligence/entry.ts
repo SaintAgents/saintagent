@@ -23,11 +23,11 @@ const stop = new Set('about across after agent and are can community could devel
 const string = {type:'string'};
 const reportSchema = {type:'object',properties:{summary:string,findings:{type:'array',items:{type:'object',properties:{kind:{type:'string',enum:labels},text:string,citations:{type:'array',items:{type:'integer'}}},required:['kind','text','citations']}},next_steps:{type:'array',items:string}},required:['summary','findings','next_steps']};
 
-async function retrieve(api,user,kind,terms,exact,ids) {
+async function retrieve(api,user,kind,terms,exact,ids,extraScope = {}) {
   const config = sources[kind] || deepSources[kind];
   const pattern = terms.map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
   const filter = ids ? {id:{$in:ids}} : {$or:config.fields.map(field => ({[field]:{$regex:pattern,$options:'i'}}))};
-  const page = await api.entities[config.entity].filter({...config.scope(user),...filter},{limit:ids?.length || 20,sort:'-created_date'});
+  const page = await api.entities[config.entity].filter({...config.scope(user),...filter,...extraScope},{limit:ids?.length || 20,sort:'-created_date'});
   const mentorUsers = kind === 'mentor' ? [...new Set(page.items.map(row => row.user_id).filter(Boolean))] : [];
   const publicMentors = mentorUsers.length ? (await api.entities.UserProfile.filter({profile_visibility:'public',user_id:{$in:mentorUsers}}, {limit:mentorUsers.length})).items : [];
   return page.items.map(row => {
@@ -48,7 +48,15 @@ export default async function(req: Request): Promise<Response> {
     const api = createClientFromRequest(req);
     const user = await api.auth.me().catch(error => (error.status === 401 || error.response?.status === 401) ? null : Promise.reject(error));
     if (!user) return Response.json({error:'Sign in to use Saint Intelligence.'},{status:401});
-    const {objective, source = 'all', mode = 'search', matching = 'keywords', seed, parentId, angle, purpose, draft} = (await req.json().catch(() => null)) || {};
+    const {objective, source = 'all', mode = 'search', matching = 'keywords', seed, parentId, angle, purpose, draft, references} = (await req.json().catch(() => null)) || {};
+    if (mode === 'resolveReferences') {
+      const registry = { ...sources, ...deepSources };
+      if (!Array.isArray(references) || references.length > 6 || references.some(ref => !ref || typeof ref.kind !== 'string' || !own(registry,ref.kind) || !validId(ref.id))) return Response.json({error:'Provide up to six supported source references.'},{status:400});
+      const kinds = [...new Set(references.map(ref => ref.kind))];
+      const missionVisibility = { $or:[{ mission_type:{ $in:['platform','region'] } },{ creator_id:user.email },{ created_by_id:user.id }] };
+      const groups = await Promise.all(kinds.map(kind => retrieve(api,user,kind,[],'', [...new Set(references.filter(ref => ref.kind === kind).map(ref => ref.id))],kind === 'mission' ? missionVisibility : {})));
+      return Response.json({ references:groups.flat().map(({kind,id,title,profileNumber}) => ({kind,id,title,profile_number:profileNumber})) });
+    }
     const deep = mode === 'deep';
     const registry = deep ? {...sources,...deepSources} : sources;
     const purposes = ['explore','connect','develop','plan'];
