@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { canopySunrise, canopyNight } from '@/components/hero/canopyArtwork';
 
 const imageRoot = 'https://media.base44.com/images/public/694f3e0401b05e6e8a042002/';
 const backgrounds = [
@@ -6,13 +7,13 @@ const backgrounds = [
     ['Porcelain Dawn', '5c12021e08492bb19ee80043e8970372'],
     ['Glacier Glass', '6f9dd434d95dbfa313143f4d8a7ead0c'],
     ['Orchid Veil', '841f7a6fcf7f3798438e70aa1e75fb5c'],
-    ['Ethereal Sunrise Canopy', 'https://base44.app/api/apps/694f3e0401b05e6e8a042002/files/mp/public/694f3e0401b05e6e8a042002/b0ec388fb14264baafd251ac1b555f03_EtherealSunriseOverMistyMountains.png'],
+    canopySunrise,
   ]],
   ['Dark Theme', [
     ['Obsidian Ember', 'bab133691aae9671bf77435a58a9ab99'],
     ['Deep Current', 'bea04c880b73ca4f8ce163f7788024a9'],
     ['Violet Eclipse', '7881dabafbfc8acc791d71111260a13f'],
-    ['Violet Night Canopy', 'https://base44.app/api/apps/694f3e0401b05e6e8a042002/files/mp/public/694f3e0401b05e6e8a042002/3d678d3fdb4949ce2596423080efeefc_VioletNightCanopy.png'],
+    canopyNight,
   ]],
 ];
 

@@ -9,6 +9,8 @@ import CanopyResize from '@/components/canopy/CanopyResize';
 import CanopyWorkspace from '@/components/canopy/CanopyWorkspace';
 import CanopyOverlays from '@/components/canopy/CanopyOverlays';
 import { openDeepDive } from '@/components/deepdive/deepDive';
+import { canopySunrise, canopyNight } from '@/components/hero/canopyArtwork';
+import { useSurfaceHeroes } from '@/components/hero/surfaceHeroSettings';
 import '@/components/canopy/canopy.css';
 
 import ActivityTicker from '@/components/live/ActivityTicker';
@@ -55,8 +57,11 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
   }
   const unread = notifications.filter(n => !n.is_read).length;
   const ids = mode === 'peek' ? peek : settings.cards;
+  const { hidden: hideBackgrounds } = useSurfaceHeroes();
   return <div ref={root} className="sa-canopy" data-canopy-mode={mode} style={style} hidden={!enabled}>
-    {mode !== 'closed' && <section id="canopy-workspace" aria-label="Command Canopy workspace" className="canopy-workspace">
+    {mode !== 'closed' && <section id="canopy-workspace" aria-label="Command Canopy workspace" className="canopy-workspace"
+      data-canopy-art={!hideBackgrounds ? '' : undefined}
+      style={{ '--canopy-sunrise': `url("${canopySunrise[1]}")`, '--canopy-night': `url("${canopyNight[1]}")` }}>
       <div className="canopy-heading"><strong>SaintAgent Command Canopy</strong><div><button onClick={() => open('/Messages')} aria-label="Inbox" title="Inbox"><Mail size={15} /></button><button onClick={() => open('notifications')} aria-label="Notifications" title="Notifications"><Bell size={15} />{unread > 0 && <b>{unread}</b>}</button><button onClick={() => { setFocus(''); setMode(mode === 'full' ? 'peek' : 'full'); }}>{mode === 'full' ? 'Peek' : 'Full view'}</button>{desktop && <button onClick={() => setMode(mode === 'split' ? 'full' : 'split')} aria-label={mode === 'split' ? 'Exit split view' : 'Open split view'} title={mode === 'split' ? 'Exit split view' : 'Open split view'}><PanelRight size={15} /></button>}<button onClick={() => open('dock')} aria-label="Open Dock Deck" title="Open Dock Deck"><DockDeckIcon /></button><button onClick={() => setMode('closed')} aria-label="Close Canopy" title="Close Canopy"><X size={15} /></button></div></div>
       <ActivityTicker placement="canopy" />
       <CanopyWorkspace activePath={location.pathname} onToggleOriginal={() => { setFocus(''); if (mode === 'peek') setMode('full'); toggleOriginal(); }}
