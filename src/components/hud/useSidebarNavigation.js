@@ -4,12 +4,12 @@ import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 const storageKey = 'sidebarNavMode';
 
 export default function useSidebarNavigation({ groups, currentPage, startNavCollapsed, onToggle }) {
-  const [navOpen, setNavOpen] = useState(true);
-  const [overrides, setOverrides] = useState({});
   const [mode, setMode] = useState(() => {
     if (isTourPreview()) return 'default';
     try { return sessionStorage.getItem(storageKey) || 'default'; } catch { return 'default'; }
   });
+  const [navOpen, setNavOpen] = useState(() => mode !== 'collapsed');
+  const [overrides, setOverrides] = useState({});
   const activeGroup = groups.find(group => group.items.includes(currentPage));
   const defaults = mode === 'expanded' ? Object.fromEntries(groups.map(({ key }) => [key, true]))
     : mode === 'collapsed' || startNavCollapsed ? {} : { [activeGroup?.key || 'discover']: true };
@@ -23,7 +23,7 @@ export default function useSidebarNavigation({ groups, currentPage, startNavColl
   const changeNavMode = (value, compact = false) => {
     setMode(value);
     setOverrides({});
-    setNavOpen(true);
+    setNavOpen(value !== 'collapsed');
     if (compact && value === 'expanded') onToggle?.();
     if (!isTourPreview()) {
       try { sessionStorage.setItem(storageKey, value); } catch {}
