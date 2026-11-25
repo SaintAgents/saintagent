@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { GripVertical, Minus, Plus, Settings2, X } from 'lucide-react';
-import { actions } from '@/components/canopy/canopyCatalog';
+import { Settings2 } from 'lucide-react';
 import CanopyWidget from '@/components/canopy/CanopyWidget';
-import CanopyResize from '@/components/canopy/CanopyResize';
+import CanopyCard from '@/components/canopy/CanopyCard';
 import CanopyCommandBar from '@/components/canopy/CanopyCommandBar';
 import CanopyCustomizer from '@/components/canopy/CanopyCustomizer';
 
 export default function CanopyWorkspace(props) {
-  const { mode, ids, settings, commit, profile, open, error, focus } = props;
-  const [library,setLibrary] = useState(false), [sizes,setSizes] = useState({}), [scale,setScale] = useState(null);
+  const { mode, ids, settings, commit, profile, error, focus } = props;
+  const [library,setLibrary] = useState(false), [scale,setScale] = useState(null);
+  const cardScale = scale ?? settings.scale;
   const dragging = useRef(null);
   const editable = mode !== 'peek';
   const allowed = id => id !== 'Contact Card' || !!profile;
-  const special = { notes:'Quick Notes', notifications:'Notifications', knowledge:'Files & Knowledge', online:'Who’s Online' }[focus];
+  const special = { actions:'Actions', notes:'Quick Notes', notifications:'Notifications', knowledge:'Files & Knowledge', online:'Who’s Online' }[focus];
   const widgetFocus = useRef(null);
   useEffect(() => {
     if (focus !== 'knowledge' && focus !== 'online') return;
@@ -29,18 +29,20 @@ export default function CanopyWorkspace(props) {
   }
   const dragHandle = id => ({draggable:true,onDragStart:e => { dragging.current=id; e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',id); },onDragEnd:() => {dragging.current=null;}});
   const dropTarget = id => ({onDragOver:e => {if (dragging.current) {e.preventDefault(); e.dataTransfer.dropEffect='move';}},onDrop:e => {if (!dragging.current) return; e.preventDefault(); move(dragging.current,id); dragging.current=null;}});
-  return <div className="canopy-scroll">
-    {editable && <><CanopyCommandBar {...props} /><div className="canopy-tools"><p>{visible.length} widgets · Drag a card by its title bar</p><button aria-expanded={library} aria-controls={library ? 'canopy-library' : undefined} onClick={() => setLibrary(!library)}><Settings2 size={14} /> Customize</button></div>
+  const card = (id, focused = false) => <CanopyCard key={id} id={id} focused={focused} scale={cardScale} size={settings.sizes[id]}
+    minimized={!focused && editable && Boolean(settings.minimized[id])}
+    onResize={size => commit({sizes:{...settings.sizes,[id]:size}})}
+    dragHandle={!focused && editable ? dragHandle(id) : undefined} dropTarget={!focused && editable ? dropTarget(id) : undefined}
+    onToggle={!focused && editable ? () => commit({minimized:{...settings.minimized,[id]:!settings.minimized[id]}}) : undefined}
+    onRemove={!focused && editable ? () => commit({cards:settings.cards.filter(card => card !== id)}) : undefined}>{tile(id)}</CanopyCard>;
+  return <div className="canopy-scroll" style={{'--widget-scale':cardScale/100}}>
+    {editable && <><CanopyCommandBar {...props} /><div className="canopy-tools"><p>{visible.length} widgets · Drag edges to resize or a grip to reorder</p><button aria-expanded={library} aria-controls={library ? 'canopy-library' : undefined} onClick={() => setLibrary(!library)}><Settings2 size={14} /> Customize</button></div>
       {library && <CanopyCustomizer {...{settings,commit,allowed,scale,setScale,move,dragHandle,dropTarget}} />}</>}
     {error && <p role="status" className="canopy-status">Saved on this device; account sync failed. <button onClick={() => commit({})}>Retry sync</button></p>}
-    {focus === 'actions' && <div className="canopy-action-grid">{actions.map(([label,target]) => <button key={label} onClick={() => open(target)}>{label}</button>)}</div>}
-    {special && <div className="canopy-focus" key={special} ref={widgetFocus}><h3>{special}</h3>{tile(special)}</div>}
-    <div className="canopy-grid" style={{'--widget-scale':(scale ?? settings.scale)/100}}>
+    {special && <div className="canopy-focus" key={special} ref={widgetFocus}>{card(special, true)}</div>}
+    <div className="canopy-grid">
       {!visible.length && !special && <p>No widgets yet. Add one from Customize.</p>}
-      {visible.map(id => <article className="canopy-card" key={id} {...(editable ? dropTarget(id) : {})} style={{'--card-height':`${sizes[id] ?? settings.sizes[id] ?? (id === 'Files & Knowledge' ? 320 : 156)}px`}}>
-        <header>{editable && <span className="canopy-grip" title={`Drag to reorder ${id}`} {...dragHandle(id)}><GripVertical size={14} /></span>}<strong>{id}</strong>{editable && <><button aria-label={`${settings.minimized[id] ? 'Expand' : 'Minimize'} ${id}`} onClick={() => commit({minimized:{...settings.minimized,[id]:!settings.minimized[id]}})}>{settings.minimized[id] ? <Plus size={14} /> : <Minus size={14} />}</button><button aria-label={`Remove ${id}`} onClick={() => commit({cards:settings.cards.filter(card => card !== id)})}><X size={14} /></button></>}</header>
-        {(!editable || !settings.minimized[id]) && <><div className="canopy-card-body">{tile(id)}</div>{editable && <CanopyResize className="canopy-card-resize" label={`Resize ${id}`} direction="down" min={100} max={400} value={sizes[id] ?? settings.sizes[id] ?? (id === 'Files & Knowledge' ? 320 : 156)} onChange={(value,done) => { if (done && value !== (settings.sizes[id] ?? (id === 'Files & Knowledge' ? 320 : 156))) commit({sizes:{...settings.sizes,[id]:value}}); setSizes(prev => ({...prev,[id]:done ? undefined : value})); }} />}</>}
-      </article>)}
+      {visible.map(id => card(id))}
     </div>
   </div>;
 }
