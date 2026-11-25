@@ -1,0 +1,46 @@
+#global-impact .impact-command {
+  position: relative;
+  isolation: isolate;
+}
+
+#global-impact .impact-command-pulse {
+  --pulse-core: var(--impact-cyan);
+  --pulse-echo: var(--impact-gold);
+  --pulse-glow: var(--impact-cyan);
+  display: block;
+  width: 200%;
+  max-width: none;
+  height: 100%;
+  animation: impact-command-current 15s linear infinite;
+}
+
+/* The header clips the repeating artwork without clipping keyboard outlines. */
+#global-impact .impact-command-pulse-window {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+#global-impact .impact-pulse-crest { stroke: hsl(var(--pulse-core) / .68); stroke-width: 1.5; }
+#global-impact .impact-pulse-echo { stroke: hsl(var(--pulse-echo) / .42); stroke-width: 1; }
+#global-impact .impact-pulse-halo { stroke: hsl(var(--pulse-glow) / .25); stroke-width: 13; filter: blur(5px); }
+
+:is(html:not([data-theme]), html[data-theme='light']) #global-impact .impact-command-pulse {
+  --pulse-core: var(--primary);
+  --pulse-echo: var(--impact-cyan);
+  --pulse-glow: var(--primary);
+}
+
+html[data-theme='hacker'] #global-impact .impact-command-pulse-window { display: none; }
+
+@keyframes impact-command-current {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #global-impact .impact-command-pulse-window .impact-command-pulse { animation: none; }
+}

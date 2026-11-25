@@ -1,4 +1,5 @@
 import AnimatedBrandLogo from '@/components/hud/AnimatedBrandLogo';
+import ImpactCommandPulse from '@/components/globalimpact/ImpactCommandPulse';
 import { Link } from 'react-router-dom';
 
 const artwork = 'https://media.base44.com/images/public/694f3e0401b05e6e8a042002/';
@@ -18,6 +19,7 @@ const shortcuts = [
 
 export default function ImpactCommand({ active, select }) {
   return <header className="impact-command impact-surface">
+    <div className="impact-command-pulse-window" aria-hidden="true"><ImpactCommandPulse /></div>
     <button type="button" aria-label="SaintAgent dashboard overview" className="impact-brand" onClick={() => select('overview')}>
       <AnimatedBrandLogo className="impact-brand-logo" fallback={logo} />
     </button>
