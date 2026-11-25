@@ -52,7 +52,7 @@ import BackButton from '@/components/hud/BackButton';
 import ForwardButton from '@/components/hud/ForwardButton';
 import { HeroGalleryTrigger } from '@/components/hud/HeroGalleryViewer';
 import AgentTestimonialsMarquee from '@/components/missions/AgentTestimonialsMarquee';
-import MissionMapView from '@/components/missions/MissionMapView';
+const MissionMapView = React.lazy(() => import('@/components/missions/MissionMapView'));
 
 export default function Missions() {
   const [tab, setTab] = useState('active');
@@ -633,7 +633,9 @@ export default function Missions() {
             </Button>
           </div>
         ) : viewMode === 'map' ? (
-          <MissionMapView missions={filteredMissions} onAction={handleAction} />
+          <React.Suspense fallback={<p role="status" className="py-8 text-center">Loading mission map…</p>}>
+            <MissionMapView missions={filteredMissions} onAction={handleAction} />
+          </React.Suspense>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredMissions.map((mission) =>

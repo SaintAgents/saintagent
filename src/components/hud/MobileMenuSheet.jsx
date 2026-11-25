@@ -137,8 +137,8 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" className="h-[60vh] rounded-t-3xl p-0 bg-white dark:bg-[#0a0a0a]">
-          <SheetHeader className="p-3 border-b border-slate-200 dark:border-[#00ff88]/20">
+        <SheetContent side="bottom" className="flex h-[60vh] flex-col gap-0 rounded-t-3xl p-0 bg-white dark:bg-[#0a0a0a]">
+          <SheetHeader className="shrink-0 p-3 border-b border-slate-200 dark:border-[#00ff88]/20">
             <div className="flex items-center justify-between">
               <SheetTitle className="text-slate-900 dark:text-white">Menu</SheetTitle>
               <div className="flex items-center gap-2 mr-6">
@@ -199,7 +199,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
               </div>
             </div>
           </SheetHeader>
-          <div className="overflow-y-auto h-[calc(60vh-56px)] p-3 pb-20">
+          <div className="min-h-0 flex-1 overflow-y-auto p-3 pb-20">
             <div className="grid grid-cols-4 gap-2">
               {filteredMenuItems.map((item) => {
                 const Icon = item.icon;

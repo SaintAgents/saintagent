@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Users, Target, Compass } from "lucide-react";
 import HelpHint from '@/components/hud/HelpHint';
-import GlobalCommunityMap from '@/components/community/GlobalCommunityMap';
+const GlobalCommunityMap = React.lazy(() => import('@/components/community/GlobalCommunityMap'));
 
 export default function CirclesRegions() {
   const [mapOpen, setMapOpen] = useState(false);
@@ -44,7 +44,9 @@ export default function CirclesRegions() {
         </div>
       </Button>
 
-      <GlobalCommunityMap open={mapOpen} onClose={() => setMapOpen(false)} />
+      {mapOpen && <React.Suspense fallback={<p role="status">Loading community map…</p>}>
+        <GlobalCommunityMap open={mapOpen} onClose={() => setMapOpen(false)} />
+      </React.Suspense>}
     </div>
   );
 }

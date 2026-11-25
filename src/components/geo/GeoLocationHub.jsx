@@ -8,8 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Globe, Map, MapPin, Users, Sparkles, Locate, RefreshCw } from "lucide-react";
 import SpinningGlobe from './SpinningGlobe';
-import GeoMapView from './GeoMapView';
 import GeoFenceManager from './GeoFenceManager';
+
+const GeoMapView = React.lazy(() => import('./GeoMapView'));
 
 export default function GeoLocationHub({ 
   circles = [], 
@@ -209,16 +210,11 @@ export default function GeoLocationHub({
         )}
 
         {viewMode === 'map' && (
-          <GeoMapView
-            users={usersWithCoords}
-            circles={circlesWithCoords}
-            geoFences={geoFences}
-            onUserClick={handleUserClick}
-            onCircleClick={onCircleClick}
-            onGeoFenceCreate={handleGeoFenceCreate}
-            editable={true}
-            height="450px"
-          />
+          <React.Suspense fallback={<p role="status">Loading map…</p>}>
+            <GeoMapView users={usersWithCoords} circles={circlesWithCoords} geoFences={geoFences}
+              onUserClick={handleUserClick} onCircleClick={onCircleClick} onGeoFenceCreate={handleGeoFenceCreate}
+              editable={true} height="450px" />
+          </React.Suspense>
         )}
 
         {viewMode === 'manage' && (

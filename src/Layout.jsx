@@ -205,7 +205,8 @@ function AuthenticatedLayout({ children, currentPageName }) {
       const saved = localStorage.getItem('theme');
       if (['light', 'dark', 'hacker', 'custom'].includes(saved)) return saved;
     } catch { /* system preference still applies */ }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const android = /Android/i.test(window.navigator.userAgent);
+    return android && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
   const setTheme = (nextTheme) => {
     setActiveTheme(nextTheme);
