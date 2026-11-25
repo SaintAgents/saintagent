@@ -30,6 +30,7 @@ import HeroImageManager from '@/components/admin/HeroImageManager';
 import InspirationImagesAdmin from '@/components/admin/InspirationImagesAdmin';
 import EmailNewsletterManager from '@/components/admin/EmailNewsletterManager';
 import NewsletterAnalyticsDashboard from '@/components/admin/NewsletterAnalyticsDashboard';
+import NewsletterHistory from '@/components/admin/NewsletterHistory';
 import AdminAuditLog from '@/components/admin/AdminAuditLog';
 import MasterActivityLog from '@/components/admin/MasterActivityLog';
 import GGGTotalsTab from '@/components/admin/GGGTotalsTab';
@@ -301,6 +302,10 @@ export default function Admin() {
                   <Mail className="w-4 h-4" />
                   Compose
                 </TabsTrigger>
+                <TabsTrigger value="history" className="gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  History
+                </TabsTrigger>
                 <TabsTrigger value="analytics" className="gap-2">
                   <BarChart3 className="w-4 h-4" />
                   Analytics
@@ -308,6 +313,9 @@ export default function Admin() {
               </TabsList>
               <TabsContent value="compose">
                 <EmailNewsletterManager />
+              </TabsContent>
+              <TabsContent value="history">
+                <NewsletterHistory />
               </TabsContent>
               <TabsContent value="analytics">
                 <NewsletterAnalyticsDashboard />

@@ -76,6 +76,7 @@
       "properties": {
         "test_percentage": {
           "type": "number",
+          "default": 20,
           "description": "Percentage of audience for testing (e.g., 20 = 20%)"
         },
         "winning_metric": {
@@ -154,5 +155,45 @@
   },
   "required": [
     "subject"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "coordinator"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "coordinator"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

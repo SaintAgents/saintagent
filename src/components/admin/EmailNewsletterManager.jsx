@@ -590,6 +590,7 @@ Return ONLY the formatted content.`;
           recipient_count: recipients.length,
           articles_included: selectedArticles
         });
+        queryClient.invalidateQueries({ queryKey: ['newsletterCampaigns'] });
         toast.success(`Newsletter scheduled for ${scheduledDateTime.toLocaleString()}`);
         // Reset form
         setSubject('');
@@ -632,11 +633,13 @@ Return ONLY the formatted content.`;
     try {
       await base44.entities.NewsletterCampaign.create({
         subject,
+        body_content: finalContent,
         sent_at: new Date().toISOString(),
         total_sent: successCount,
         status: 'sent',
         articles_included: selectedArticles
       });
+      queryClient.invalidateQueries({ queryKey: ['newsletterCampaigns'] });
     } catch (e) {
       console.error('Failed to record campaign:', e);
     }
