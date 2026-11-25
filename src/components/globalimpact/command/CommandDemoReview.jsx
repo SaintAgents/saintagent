@@ -1,5 +1,5 @@
 export default function CommandDemoReview({ stage, onStageChange }) {
-  return <details className="mc-review">
+  return <details id="command-plan-review" className="mc-review scroll-mt-32">
     <summary>Review &amp; Create Draft</summary>
     <div className="space-y-3 pt-3 text-sm">
       <p>Review the proposed steps above, then try each approval to see the pipeline advance.</p>
