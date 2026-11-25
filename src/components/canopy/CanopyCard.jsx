@@ -16,7 +16,8 @@ export default function CanopyCard({ id, size, scale, focused, minimized, onResi
     '--card-height': minimized ? undefined : height ? `${height}px` : focused ? undefined : `${defaultHeight}px`,
   };
   return <article ref={card} className="canopy-card" data-focused={focused || undefined} data-minimized={minimized || undefined} style={style}
-    data-canopy-card-id={dragHandle ? id : undefined} data-canopy-card-position={position ? '' : undefined} data-canopy-drag={dragState}>
+    data-canopy-card-id={dragHandle ? id : undefined} data-canopy-card-position={position ? '' : undefined} data-canopy-drag={dragState}
+    data-inspiration-card={id === 'Inspiration' ? '' : undefined}>
     <header>
       {dragHandle && <button type="button" className="canopy-grip" aria-label={`Move ${id} (drag or use arrow keys)`} title={`Move ${id} (drag or use arrow keys)`} {...dragHandle}><GripVertical size={14} aria-hidden="true" /></button>}
       <strong>{id}</strong>
