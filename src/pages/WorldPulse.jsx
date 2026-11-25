@@ -31,7 +31,7 @@ export default function WorldPulse() {
         </div>
       </div>}
       {demo && !preview && <p className="impact-muted text-sm" role="status">Demo mode · Fictional samples only. Nothing is saved or published.</p>}
-      {treasury ? <TreasuryPulse key={String(demo)} demo={demo} /> : <WorldPulsePanel key={String(demo)} icon={Radio} demo={demo} preview={preview} standalone />}
+      {treasury ? <TreasuryPulse key={String(demo)} demo={demo} /> : <WorldPulsePanel key={String(demo)} icon={Radio} demo={demo} preview={preview} standalone onDemoChange={preview ? undefined : enabled => selectSetting('impactDemo', enabled ? '1' : '')} />}
     </div>
   </div>;
 }
