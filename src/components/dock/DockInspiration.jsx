@@ -1,32 +1,50 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import InspirationArtwork from '@/components/dock/InspirationArtwork';
 import { useInspirationImages } from '@/components/dock/useInspirationImages';
 import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 
-const prompts = ['What is one small action you can take today?', 'Who could help you see this differently?', 'What would you try if the first step were easy?'];
-
 export default function DockInspiration({ visible }) {
   const [index, setIndex] = useState(0);
-  const [reflection, setReflection] = useState(0);
+  const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const preview = isTourPreview();
-  const { data, hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage } = useInspirationImages(visible && !preview);
-  const images = preview ? [] : data?.pages.flatMap(page => page.items) ?? [];
-  const position = index % (images.length || 1);
+  const { data, isPending, isError, hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage } = useInspirationImages(visible && !preview);
+  const images = data?.pages.flatMap(page => page.items) ?? [];
+  const count = images.length;
+  const position = index % (count || 1);
   const image = images[position];
-  async function next() {
-    if (image && position === images.length - 1 && hasNextPage) {
+  const canCycle = count > 1 || Boolean(hasNextPage);
+  const next = useCallback(async () => {
+    if (position === count - 1 && hasNextPage) {
       const result = await fetchNextPage();
       if (result.isFetchNextPageError) return;
-      const size = result.data?.pages.reduce((count, page) => count + page.items.length, 0) ?? 0;
-      setIndex(size > images.length ? position + 1 : 0);
-    } else setIndex((position + 1) % (images.length || 1));
-    setReflection(previous => (previous + 1) % prompts.length);
-  }
+      const size = result.data?.pages.reduce((total, page) => total + page.items.length, 0) ?? 0;
+      setIndex(size > count ? position + 1 : 0);
+    } else setIndex((position + 1) % (count || 1));
+  }, [position, count, hasNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    if (!visible || preview || paused || !canCycle || isFetchingNextPage || isFetchNextPageError) return;
+    let timer;
+    const schedule = () => {
+      window.clearTimeout(timer);
+      if (!document.hidden) timer = window.setTimeout(() => void next(), 10000);
+    };
+    schedule();
+    document.addEventListener('visibilitychange', schedule);
+    return () => { window.clearTimeout(timer); document.removeEventListener('visibilitychange', schedule); };
+  }, [visible, preview, paused, canCycle, isFetchingNextPage, isFetchNextPageError, next]);
+
+  if (!visible) return null;
+  if (preview) return <p>Open Inspiration outside the tour to view your cards.</p>;
+  if (isPending) return <p role="status">Loading inspiration cards…</p>;
+  if (!image) return <p role="status">{isError ? 'Could not load inspiration cards.' : 'No inspiration cards have been uploaded yet.'}</p>;
   return <div className="grid gap-2">
-    {visible && image && <InspirationArtwork key={image.file_uri} image={image} />}
-    {image?.caption && <p className="text-sm break-words">{image.caption}</p>}
-    <p>{prompts[reflection]}</p>
-    {isFetchNextPageError && <p role="status" className="text-sm">Could not load more images. Select Next reflection to retry.</p>}
-    <button type="button" disabled={isFetchingNextPage} onClick={next}>{isFetchingNextPage ? 'Loading…' : 'Next reflection'}</button>
+    <InspirationArtwork key={image.file_uri} image={image} />
+    {image.caption && <p className="break-words text-sm">{image.caption}</p>}
+    {isFetchNextPageError && <p role="status" className="text-sm">Could not load more cards. Select Next card to retry.</p>}
+    {canCycle && <div className="flex flex-wrap gap-2">
+      <button type="button" onClick={() => setPaused(value => !value)}>{paused ? 'Play' : 'Pause'}</button>
+      <button type="button" disabled={isFetchingNextPage} onClick={() => void next()}>{isFetchingNextPage ? 'Loading…' : 'Next card'}</button>
+    </div>}
   </div>;
 }

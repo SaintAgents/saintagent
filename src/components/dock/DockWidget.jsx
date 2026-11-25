@@ -45,5 +45,5 @@ export default function DockWidget({ card, user, save, navigate, shortcuts, hist
   if (type === 'Quick Notes') return <QuickNotes value={settings.note} save={note => save({note})} />;
   if (type === 'Quick Access' || type === 'Quick Links') return <div className="dock-links">{(type === 'Quick Access' ? shortcuts : Object.keys(links)).map(label => <Link key={label} to={links[label]}>{label}</Link>)}{type === 'Quick Access' && <button onClick={() => openModal('shortcuts')}>Edit Quick Access</button>}</div>;
   if (type === 'Pinned Item') return settings.path ? <Link to={settings.path}>{settings.title || settings.path}</Link> : <form onSubmit={e => { e.preventDefault(); const path = new FormData(e.currentTarget).get('path').trim(); if (safePath(path)) save({path, title:path}); else { e.currentTarget.elements.path.setCustomValidity('Enter a SaintAgent path beginning with one slash.'); e.currentTarget.elements.path.reportValidity(); } }}><label>SaintAgent path <input name="path" required maxLength={500} onInput={e => e.currentTarget.setCustomValidity('')} placeholder="/Projects" /></label><button>Pin</button></form>;
-  return <DockTools {...{type, settings, save, navigate, visible}} />;
+  return <DockTools {...{type, settings, save, navigate}} visible={type === 'Inspiration' ? active : visible} />;
 }

@@ -8,7 +8,7 @@ export const widgetLibrary = {
   'Contact Card':'Open your digital contact card and sharing QR.', LinkTree:'Open, edit, or share your public LinkTree and its QR code.', Invites:'Copy your ambassador signup link or open the program.',
   'Quick Links':'Open commonly used SaintAgent pages.', 'Community Feed':'Read and compose community posts.', News:'Open the four newest published headlines on the News page.',
   Notifications:'Filter alerts, mark them read, or open their destinations.', 'Who Is Online':'Open the live member list.',
-  'InSite Browser':'Launch the existing SaintAgent browser.', Inspiration:'Cycle through short reflection prompts in a frameless card.',
+  'InSite Browser':'Launch the existing SaintAgent browser.', Inspiration:'Cycle through uploaded inspiration cards.',
   Watchlist:'See up to 30 watched records and open your full Watchlist.',
   'Quick Call':'Find members and CRM contacts, pin favorites, and place calls.',
   'Gold Spot Ticker':'See the latest gold spot quote in USD per troy ounce.',

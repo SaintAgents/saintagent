@@ -19,6 +19,7 @@ export default function CanopyWidget({ id, user, profile, settings, commit, noti
   if (id === 'Time') return <CanopyClock {...{ id, settings, commit }} />;
   if (id === 'Today' || id === 'Active Projects') return <CanopyRecords {...{ id, user, profile, open }} />;
   if (id === 'Tours') return <DailyToursCard userId={user.id} embedded />;
+  if (id === 'Inspiration') return <DockTools type={id} visible={enabled} />;
   if (id === 'AI Assistant') return <div className="canopy-links"><DockTools type="AI Assistant" settings={settings} save={commit} /><button onClick={() => open('my-assistant')}>Open My Assistant</button><button onClick={() => open('assistant')}>Open Concierge</button></div>;
   if (id === 'Notifications') return <Notifications {...{user, notifications, open}} />;
   if (id === 'Files & Knowledge') return <CanopyKnowledge {...{user,open}} />;

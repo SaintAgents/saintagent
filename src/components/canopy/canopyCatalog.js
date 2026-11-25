@@ -49,10 +49,10 @@ export const links = {
   'Members Feed':[['Open member activity','/ActivityFeed']],
   Inbox:[['Open messages','/Messages']],
   'InSite Browser':[['Open SaintBrowser','browser']],
-  Inspiration:[['Read community testimonials','/Testimonials']],
 };
-export const widgets = [...new Set([...Object.values(presets).flat(), ...Object.keys(links)])].sort();
+export const widgets = [...new Set([...Object.values(presets).flat(), ...Object.keys(links), 'Inspiration'])].sort();
 export const descriptions = {
+  Inspiration:'Cycle through uploaded inspiration cards.',
   'Files & Knowledge':'Search your files, vault documents, investigations, saved work, Wisdom Cards, and resources.',
   'Quick Notes':'Capture a thought in your private Canopy scratchpad.', 'Quick Links':'Jump to common SaintAgent pages.',
   'AI Assistant':'Ask a question in Canopy or open My Assistant for ongoing work.', Tours:'Play or replay a guided SaintAgent tour.',
