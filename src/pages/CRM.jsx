@@ -43,7 +43,7 @@ import { createPageUrl } from '@/utils';
 const CRM_HERO_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/39cbe3778_universal_upscale_0_670aa858-8e9d-4a5c-b555-2af097ec5967_0.jpg";
 
 export default function CRM() {
-  const [tab, setTab] = useState('my-contacts');
+  const [tab, setTab] = useState(() => new URLSearchParams(window.location.search).get('tab') === 'network' ? 'network' : 'my-contacts');
   const [filters, setFilters] = useState({
     search: '', domain: 'all', leadStatus: 'all', leadSource: 'all',
     priority: 'all', strengthMin: 0, federated: 'all', tag: '', sortBy: 'newest',

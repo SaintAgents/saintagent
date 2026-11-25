@@ -710,6 +710,10 @@ export default function TopBar({
           <GlobalTimerWidget currentUser={currentUser} currentPageName={currentPageName} />
         )}
 
+        <Button asChild variant="ghost" size="icon" className="rounded-xl shrink-0" title="My Guide">
+          <Link to="/MyGuide" aria-label="My Guide" aria-current={currentPageName === 'MyGuide' ? 'page' : undefined}><Sparkles aria-hidden="true" /></Link>
+        </Button>
+
         {/* SaintBrowser */}
         <Button 
           variant="ghost" 

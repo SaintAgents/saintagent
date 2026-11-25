@@ -10,7 +10,7 @@ function coordinates(value) {
   return Math.abs(lat) <= 90 && Math.abs(lng) <= 180 ? [lat,lng] : null;
 }
 
-export default function ImpactOpportunityMap({ rows, select, selected, demo }) {
+export default function ImpactOpportunityMap({ rows, select, selected, demo, recordLabel = 'opportunities' }) {
   const names = [...new Set(rows.map(row => row.region?.trim()).filter(Boolean))].sort();
   const locations = useQuery({ queryKey:['impact-map-regions',names], enabled:!demo && !!names.length, queryFn:() => base44.entities.Region.filter({ name:{ $in:names } }, 'name', names.length) });
   const regionMap = new Map((locations.data || []).map(region => [region.name, coordinates(region.coordinates)]));
@@ -21,9 +21,9 @@ export default function ImpactOpportunityMap({ rows, select, selected, demo }) {
   return <div className="space-y-2">
     <MapContainer key={center.join(',')} center={center} zoom={zoom} scrollWheelZoom={false} className="impact-map">
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      {[...markers.entries()].map(([key,group]) => <CircleMarker key={key} center={group.point} radius={9} pathOptions={{color:'#0369a1',fillOpacity:0.9}} eventHandlers={{ click:() => select(group.rows[0].id) }}><Tooltip>{group.rows[0].region} · {group.rows.length} {group.rows.length === 1 ? 'opportunity' : 'opportunities'}</Tooltip></CircleMarker>)}
+      {[...markers.entries()].map(([key,group]) => <CircleMarker key={key} center={group.point} radius={9} pathOptions={{color:'#0369a1',fillOpacity:0.9}} eventHandlers={{ click:() => select(group.rows[0].id) }}><Tooltip>{group.rows[0].region} · {group.rows.length} {group.rows.length === 1 ? recordLabel.slice(0, -1).replace(/ie$/, 'y') : recordLabel}</Tooltip></CircleMarker>)}
     </MapContainer>
-    <p className="impact-muted text-xs">{locations.isFetching ? 'Looking up regions…' : locations.isError ? 'Map locations could not be loaded.' : markers.size ? 'Pins mark known regions, not exact sites.' : 'No opportunities on this page have a mapped region.'}</p>
+    <p className="impact-muted text-xs">{locations.isFetching ? 'Looking up regions…' : locations.isError ? 'Map locations could not be loaded.' : markers.size ? 'Pins mark known regions, not exact sites.' : `No ${recordLabel} on this page have a mapped region.`}</p>
     <ul className="grid gap-1">{rows.map(row => <li key={row.id}><button type="button" aria-pressed={selected === row.id} className="impact-text-link text-left text-sm" onClick={() => select(row.id)}>{row.title} · {row.region || 'No region listed'}</button></li>)}</ul>
   </div>;
 }

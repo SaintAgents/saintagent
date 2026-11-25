@@ -21,9 +21,9 @@ export default function GuideEngine() {
   const [useBlueprint, setUseBlueprint] = useState(false);
   const [edit, setEdit] = useState(false);
   const guide = useMutation({ mutationFn: runGuide });
-  return <section data-readable-surface className="space-y-4 rounded-2xl border p-4 shadow-sm sm:p-6" aria-label="The Weaver">
+  return <section id="guide-weaver" data-readable-surface className="scroll-mt-32 space-y-4 rounded-2xl border p-4 shadow-sm sm:p-6" aria-label="The Weaver">
     <div><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"><Sparkles size={16} /> The Weaver</p><h2 className="mt-1 text-2xl font-bold">Find your Path Forward</h2><p className="mt-1 text-sm text-muted-foreground">Search across SaintAgent, connect what you find to your goals, and turn it into a plan you can review.</p></div>
-    <div className="space-y-3 rounded-lg border p-3">
+    <div id="guide-blueprint" className="scroll-mt-32 space-y-3 rounded-lg border p-3">
       <button type="button" aria-expanded={edit} aria-controls="guide-blueprint-editor" className="text-sm font-semibold underline underline-offset-2" onClick={() => setEdit(!edit)}>{edit ? 'Close Living Blueprint' : blueprint.data ? 'Edit Living Blueprint' : 'Set up Living Blueprint'}</button>
       <div id="guide-blueprint-editor" hidden={!edit}>{edit && (blueprint.isPending ? <p role="status" className="text-sm">Loading Blueprint…</p> : blueprint.isError ? <p role="alert" className="text-sm">Could not load the Blueprint. <button type="button" className="underline" onClick={() => blueprint.refetch()}>Retry</button></p> : <GuideBlueprintEditor record={blueprint.data} onSave={record => { client.setQueryData(queryKey, record); if (!record) setUseBlueprint(false); }} />)}</div>
     </div>

@@ -411,6 +411,10 @@ function AuthenticatedLayout({ children, currentPageName }) {
     retry: 1,
   });
   const onboarding = onboardingRecords?.[0];
+  const initialWelcome = React.useRef(false);
+  useEffect(() => {
+    if (onboarding?.welcome_overview_pending) initialWelcome.current = true;
+  }, [onboarding?.welcome_overview_pending]);
 
   // Proactively sync localStorage when onboarding data arrives as complete
   useEffect(() => {
@@ -1830,6 +1834,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           onResizeDraggingChange={setSidebarResizing}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
           currentPage={getPageId(currentPageName)}
+          startNavCollapsed={!tourPreview && (!onboardingFetched || initialWelcome.current || onboarding?.welcome_overview_pending === true)}
           profile={profile}
           onStatusChange={handleStatusChange}
           onDMPolicyChange={handleDMPolicyChange}

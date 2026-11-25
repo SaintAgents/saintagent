@@ -204,6 +204,7 @@ export default function Sidebar({
   onResizeDraggingChange,
   onToggle,
   currentPage,
+  startNavCollapsed = false,
   profile,
   onStatusChange,
   onDMPolicyChange,
@@ -216,11 +217,11 @@ export default function Sidebar({
   const [navPopupOpen, setNavPopupOpen] = useState(false);
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
-  // Track which nav groups are expanded — default: group containing active page
-  const [expandedGroups, setExpandedGroups] = useState(() => {
-    const activeGroup = NAV_GROUPS.find(g => g.items.includes(currentPage));
-    return activeGroup ? { [activeGroup.key]: true } : { discover: true };
-  });
+  const [navOverrides, setNavOverrides] = useState({});
+  const activeNavGroup = NAV_GROUPS.find(g => g.items.includes(currentPage));
+  const navDefaults = startNavCollapsed ? {} : { [activeNavGroup?.key || 'discover']: true };
+  const expandedGroups = { ...navDefaults, ...navOverrides };
+  const toggleGroup = key => setNavOverrides(prev => ({ ...prev, [key]: !(prev[key] ?? navDefaults[key]) }));
   const [presenceOpen, setPresenceOpen] = useState(true);
   const [presenceHidden, setPresenceHidden] = useState(() => {
     try { return localStorage.getItem('presenceHidden') === 'true'; } catch { return false; }
@@ -247,16 +248,8 @@ export default function Sidebar({
   const [viewMode, setViewMode] = useState(getStoredViewMode);
   const isDark = theme === 'dark';
 
-  // Auto-expand the group containing the active page
-  React.useEffect(() => {
-    const activeGroup = NAV_GROUPS.find(g => g.items.includes(currentPage));
-    if (activeGroup) {
-      setExpandedGroups(prev => {
-        if (prev[activeGroup.key]) return prev;
-        return { [activeGroup.key]: true };
-      });
-    }
-  }, [currentPage]);
+  // On a new page, use that page’s defaults rather than the previous page’s overrides.
+  React.useEffect(() => setNavOverrides({}), [currentPage]);
 
   // Listen for view mode changes from Command Deck
   React.useEffect(() => {
@@ -531,7 +524,7 @@ export default function Sidebar({
                       <TooltipTrigger asChild>
                         <button
                           data-tour-nav-group={group.key}
-                          onClick={() => setExpandedGroups(prev => ({ ...prev, [group.key]: !prev[group.key] }))}
+                          onClick={() => toggleGroup(group.key)}
                           className={cn(
                             "w-full flex items-center justify-center p-2 rounded-lg transition-colors relative",
                             hasActivePage ? "bg-violet-100 text-violet-600" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
@@ -555,7 +548,7 @@ export default function Sidebar({
                     <button
                       data-tour-nav-group={group.key}
                       aria-expanded={isGroupExpanded}
-                      onClick={() => setExpandedGroups(prev => ({ ...prev, [group.key]: !prev[group.key] }))}
+                      onClick={() => toggleGroup(group.key)}
                       className={cn(
                         "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors text-left",
                         group.isTreasury
