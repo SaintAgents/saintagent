@@ -12,18 +12,19 @@ export default function DockCard({ card, floating, visible, order, patch, onFloa
   };
   const [menu,setMenu] = useState(false), [preview,setPreview] = useState(null);
   const {type, settings} = card;
+  const autoHeight = type === 'Inspiration';
   const WidgetIcon = ['Community Feed', 'News'].includes(type) ? Newspaper : ['Quick Links', 'Quick Access', 'Pinned Item', 'pinned_item'].includes(type) ? Link2 : PanelsTopLeft;
   const frameless = floating && (settings.frameless !== false || type === 'Inspiration' || settings.compact);
   const move = mode => ({
     onPointerDown:e => { if(e.button !== 0) return; const r=host.current.getBoundingClientRect(); gesture.current={mode,x:e.clientX,y:e.clientY,left:r.left,top:r.top,w:r.width,h:r.height}; e.currentTarget.setPointerCapture(e.pointerId); },
     onPointerMove:e => { const g=gesture.current; if(!g) return; const dx=e.clientX-g.x,dy=e.clientY-g.y;
-      pending.current = g.mode==='move' ? {x:g.left+dx,y:g.top+dy} : {w:Math.max(155,g.w+dx),h:Math.max(120,g.h+dy)};
+      pending.current = g.mode==='move' ? {x:g.left+dx,y:g.top+dy} : {w:Math.max(155,g.w+dx),...(!autoHeight && {h:Math.max(120,g.h+dy)})};
       setPreview(pending.current); },
     onPointerUp:() => { if(pending.current) patch(pending.current); gesture.current=null; pending.current=null; setPreview(null); },
     onPointerCancel:() => {gesture.current=null;pending.current=null;setPreview(null);}
   });
   const g={...card,...preview};
-  const style = floating ? {'--dock-float-x':`${g.x ?? 24}px`,'--dock-float-y':`${g.y ?? 96}px`,'--dock-float-width':`${settings.compact ? 245 : (g.w || 355)}px`,height:settings.compact || (frameless && !g.h) ? undefined : (g.h || 280)} : {order,width:g.w || undefined,height:g.h || undefined, '--dock-card-span': Math.max(1, Math.ceil(((g.w || 1) + 10) / (columnWidth + 10)))};
+  const style = floating ? {'--dock-float-x':`${g.x ?? 24}px`,'--dock-float-y':`${g.y ?? 96}px`,'--dock-float-width':`${settings.compact ? 245 : (g.w || 355)}px`,height:autoHeight || settings.compact || (frameless && !g.h) ? undefined : (g.h || 280)} : {order,width:g.w || undefined,height:autoHeight ? undefined : g.h || undefined, '--dock-card-span': Math.max(1, Math.ceil(((g.w || 1) + 10) / (columnWidth + 10)))};
   return <article ref={host} aria-label={settings.title || widgetLabel(type)} hidden={!visible} className={`dock-card ${floating?'dock-float':''} ${frameless?'dock-frameless':''}`} style={style} onDragOver={e => {if(!floating && drag) e.preventDefault();}} onDrop={e => {if(!floating && drag) reorder(e,card.id);}} onContextMenu={e => {if(frameless && !e.target.closest('input,textarea,select,a,[contenteditable]')) {e.preventDefault();setMenu(true);}}}>
     <div className="dock-card-header">
       {!floating && <button type="button" draggable onDragStart={e => dragStart(e,card.id)} onDragEnd={dragEnd} title="Drag to rearrange, or press Enter for options" data-dock-arrange aria-label={`Arrange ${type}`} onClick={() => setMenu(!menu)}><GripVertical size={14} /></button>}
@@ -38,6 +39,6 @@ export default function DockCard({ card, floating, visible, order, patch, onFloa
     </div>
     {menu && <div className="dock-card-menu dock-links">{floating ? <><button onClick={() => switchPlace(onReturn,'[data-dock-arrange]')}>Return to deck</button>{type !== 'Inspiration' && <button onClick={() => {patch({settings:{frameless:!frameless,compact:false}});setMenu(false);}}>{frameless?'Restore frame':'Frameless mode'}</button>}{type === 'Music Player' && <button onClick={() => {patch({settings:{compact:!settings.compact}});setMenu(false);}}>{settings.compact?'Full player':'Compact player'}</button>}<button onClick={() => patch({place:'drawer'})}>Close to Drawer</button><button onClick={() => {if(window.confirm(`Permanently remove ${type}?`)) remove();}}>Remove widget</button></> : <><button onClick={() => widgetProps.shift(-1)}>Move earlier</button><button onClick={() => widgetProps.shift(1)}>Move later</button><button onClick={() => patch({w:null,h:null})}>Reset size</button></>}</div>}
     <div className="dock-card-body" data-inspiration-card={type === 'Inspiration' ? '' : undefined}><DockWidget {...widgetProps} {...{card,visible,save:settings => patch({settings})}} /></div>
-    {!settings.compact && <button className="dock-card-resize" aria-label="Resize widget" title="Drag to resize; arrow keys adjust size" onKeyDown={e => {const x=(e.key==='ArrowRight'?24:e.key==='ArrowLeft'?-24:0), y=(e.key==='ArrowDown'?24:e.key==='ArrowUp'?-24:0);if(!x&&!y)return;e.preventDefault();const r=host.current.getBoundingClientRect();patch({w:Math.max(155,r.width+x),h:Math.max(120,r.height+y)});}} {...move('resize')}><Maximize2 size={13} /></button>}
+    {!settings.compact && <button className="dock-card-resize" aria-label={autoHeight ? 'Resize widget width' : 'Resize widget'} title={autoHeight ? 'Drag sideways or use left and right arrow keys' : 'Drag to resize; arrow keys adjust size'} onKeyDown={e => {const x=(e.key==='ArrowRight'?24:e.key==='ArrowLeft'?-24:0), y=autoHeight?0:(e.key==='ArrowDown'?24:e.key==='ArrowUp'?-24:0);if(!x&&!y)return;e.preventDefault();const r=host.current.getBoundingClientRect();patch({w:Math.max(155,r.width+x),...(!autoHeight && {h:Math.max(120,r.height+y)})});}} {...move('resize')}><Maximize2 size={13} /></button>}
   </article>;
 }

@@ -13,7 +13,7 @@ export default function CanopyCard({ id, size, scale, focused, minimized, onResi
     '--card-width': width ? `${width}px` : undefined,
     '--card-x': position ? `${position.x}px` : undefined,
     '--card-y': position ? `${position.y}px` : undefined,
-    '--card-height': minimized ? undefined : height ? `${height}px` : focused || id === 'Inspiration' ? undefined : `${defaultHeight}px`,
+    '--card-height': minimized || id === 'Inspiration' ? undefined : height ? `${height}px` : focused ? undefined : `${defaultHeight}px`,
   };
   return <article ref={card} className="canopy-card" data-focused={focused || undefined} data-minimized={minimized || undefined} style={style}
     data-canopy-card-id={dragHandle ? id : undefined} data-canopy-card-position={position ? '' : undefined} data-canopy-drag={dragState}
@@ -25,6 +25,6 @@ export default function CanopyCard({ id, size, scale, focused, minimized, onResi
       {onRemove && <button aria-label={`Remove ${id}`} onClick={onRemove}><X size={14} /></button>}
     </header>
     {!minimized && <div className="canopy-card-body">{children}</div>}
-    {onResize && <CanopyCardHandles card={card} label={id} horizontalOnly={minimized} onPreview={setDraft} onSave={change => onResize({ ...saved, ...change })} />}
+    {onResize && <CanopyCardHandles card={card} label={id} horizontalOnly={minimized || id === 'Inspiration'} onPreview={setDraft} onSave={change => onResize({ ...saved, ...change })} />}
   </article>;
 }
