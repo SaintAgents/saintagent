@@ -11,6 +11,8 @@ export const widgetLibrary = {
   'InSite Browser':'Launch the existing SaintAgent browser.', Inspiration:'Cycle through short reflection prompts in a frameless card.',
   Watchlist:'See up to 30 watched records and open your full Watchlist.',
   'Quick Call':'Find members and CRM contacts, pin favorites, and place calls.',
+  'Gold Spot Ticker':'See the latest gold spot quote in USD per troy ounce.',
+  'Crypto Ticker':'Stream USD prices for BTC, ETH, SOL, XRP, ADA, and DOGE.' ,
   Astro:'See current planetary positions by zodiac sign and degree.',
   Macro:'Record, name, and replay your page navigation.',
   Members:'Search the member directory and open profiles.',

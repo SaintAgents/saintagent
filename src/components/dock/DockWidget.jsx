@@ -1,6 +1,7 @@
 import React from 'react';
 import QuickNotes from '@/components/dock/QuickNotes';
 import DockNews from '@/components/dock/DockNews';
+import DockMarketTicker from '@/components/dock/DockMarketTicker';
 import WorldClocks from '@/components/dock/WorldClocks';
 import { Link } from 'react-router-dom';
 import DockNotifications from '@/components/dock/DockNotifications';
@@ -29,6 +30,7 @@ export default function DockWidget({ card, user, save, navigate, shortcuts, hist
   const active = visible && panelOpen;
   const AddedWidget = addedWidgets[type];
   if (AddedWidget) return <div className="dock-added-widget">{isTourPreview() ? <p>Open the Dock outside the tour to use this widget.</p> : <AddedWidget {...{user,settings,save}} visible={active} />}</div>;
+  if (type === 'Gold Spot Ticker' || type === 'Crypto Ticker') return <DockMarketTicker type={type} visible={active && !isTourPreview()} />;
   if (type === 'News') return <DockNews visible={visible} />;
   if (type === 'Recent') return <DockHistory history={history} />;
   if (type === 'Notifications') return <DockNotifications {...{user, visible, settings, save}} open={navigate} />;
