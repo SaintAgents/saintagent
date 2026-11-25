@@ -17,6 +17,8 @@ import FloatingPanel from '@/components/hud/FloatingPanel';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import SidebarLeaderboard from '@/components/hud/SidebarLeaderboard';
 import SidebarPageSearch from '@/components/hud/SidebarPageSearch';
+import SidebarNavFooter from '@/components/hud/SidebarNavFooter';
+import useSidebarNavigation from '@/components/hud/useSidebarNavigation';
 import SidePanelBookmarks from '@/components/hud/SidePanelBookmarks';
 import {
   Select,
@@ -216,12 +218,8 @@ export default function Sidebar({
 
   const [navPopupOpen, setNavPopupOpen] = useState(false);
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
-  const [navOpen, setNavOpen] = useState(true);
-  const [navOverrides, setNavOverrides] = useState({});
-  const activeNavGroup = NAV_GROUPS.find(g => g.items.includes(currentPage));
-  const navDefaults = startNavCollapsed ? {} : { [activeNavGroup?.key || 'discover']: true };
-  const expandedGroups = { ...navDefaults, ...navOverrides };
-  const toggleGroup = key => setNavOverrides(prev => ({ ...prev, [key]: !(prev[key] ?? navDefaults[key]) }));
+  const { navOpen, setNavOpen, expandedGroups, toggleGroup, openCompactGroup, changeNavMode } =
+    useSidebarNavigation({ groups: NAV_GROUPS, currentPage, startNavCollapsed, onToggle });
   const [presenceOpen, setPresenceOpen] = useState(true);
   const [presenceHidden, setPresenceHidden] = useState(() => {
     try { return localStorage.getItem('presenceHidden') === 'true'; } catch { return false; }
@@ -247,9 +245,6 @@ export default function Sidebar({
   });
   const [viewMode, setViewMode] = useState(getStoredViewMode);
   const isDark = theme === 'dark';
-
-  // On a new page, use that page’s defaults rather than the previous page’s overrides.
-  React.useEffect(() => setNavOverrides({}), [currentPage]);
 
   // Listen for view mode changes from Command Deck
   React.useEffect(() => {
@@ -427,7 +422,7 @@ export default function Sidebar({
   const renderSidebarContent = (inPopup = false) => (
     <>
       {/* Navigation */}
-      <div className={cn("overflow-y-auto", navOpen ? "flex-1" : "flex-shrink-0")}>
+      <div className={cn("min-h-0 overflow-y-auto", navOpen ? "flex-1" : "flex-shrink-0")}>
         {/* Nav Header with Popout */}
         {(!isCollapsed || inPopup) && (
           <div className="px-2 pt-1.5 pb-0.5">
@@ -524,7 +519,8 @@ export default function Sidebar({
                       <TooltipTrigger asChild>
                         <button
                           data-tour-nav-group={group.key}
-                          onClick={() => toggleGroup(group.key)}
+                          aria-label={`Open ${group.label} navigation`}
+                          onClick={() => openCompactGroup(group.key)}
                           className={cn(
                             "w-full flex items-center justify-center p-2 rounded-lg transition-colors relative",
                             hasActivePage ? "bg-violet-100 text-violet-600" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
@@ -1102,9 +1098,10 @@ export default function Sidebar({
 
         {/* Content */}
         <ActivityTicker placement="sidebar" />
-        <ScrollArea className="flex-1">
+        <ScrollArea className="min-h-0 flex-1">
           {renderSidebarContent(true)}
         </ScrollArea>
+        <div className="shrink-0 px-2 pb-2"><SidebarNavFooter onChange={changeNavMode} /></div>
 
         {/* Resize handles */}
         <div onMouseDown={(e) => onResizeStart(e, 'e')} className="absolute right-0 top-10 bottom-0 w-2 cursor-e-resize hover:bg-violet-200/50" />
@@ -1185,6 +1182,7 @@ export default function Sidebar({
       {!isTourPreview() && <SurfaceHeroLayer surface="sidebar" theme={theme} desktopOnly />}
       <ActivityTicker placement="sidebar" />
       {renderSidebarContent(false)}
+      <SidebarNavFooter compact={isCollapsed} onChange={value => changeNavMode(value, isCollapsed)} />
 
       {/* Nav popup */}
       {navPopupOpen && (

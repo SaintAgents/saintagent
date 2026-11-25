@@ -1,0 +1,33 @@
+import { useEffect, useState } from 'react';
+import { isTourPreview } from '@/components/tour/tourPreviewTargets';
+
+const storageKey = 'sidebarNavMode';
+
+export default function useSidebarNavigation({ groups, currentPage, startNavCollapsed, onToggle }) {
+  const [navOpen, setNavOpen] = useState(true);
+  const [overrides, setOverrides] = useState({});
+  const [mode, setMode] = useState(() => {
+    if (isTourPreview()) return 'default';
+    try { return sessionStorage.getItem(storageKey) || 'default'; } catch { return 'default'; }
+  });
+  const activeGroup = groups.find(group => group.items.includes(currentPage));
+  const defaults = mode === 'expanded' ? Object.fromEntries(groups.map(({ key }) => [key, true]))
+    : mode === 'collapsed' || startNavCollapsed ? {} : { [activeGroup?.key || 'discover']: true };
+  useEffect(() => setOverrides({}), [currentPage]);
+
+  const toggleGroup = key => setOverrides(prev => ({ ...prev, [key]: !(prev[key] ?? defaults[key]) }));
+  const openCompactGroup = key => {
+    setOverrides(prev => ({ ...prev, [key]: true }));
+    onToggle?.();
+  };
+  const changeNavMode = (value, compact = false) => {
+    setMode(value);
+    setOverrides({});
+    setNavOpen(true);
+    if (compact && value === 'expanded') onToggle?.();
+    if (!isTourPreview()) {
+      try { sessionStorage.setItem(storageKey, value); } catch {}
+    }
+  };
+  return { navOpen, setNavOpen, expandedGroups: { ...defaults, ...overrides }, toggleGroup, openCompactGroup, changeNavMode };
+}
