@@ -1,6 +1,7 @@
 import AnimatedBrandLogo from '@/components/hud/AnimatedBrandLogo';
 import ImpactCommandPulse from '@/components/globalimpact/ImpactCommandPulse';
 import { Link } from 'react-router-dom';
+import { Compass } from 'lucide-react';
 
 const artwork = 'https://media.base44.com/images/public/694f3e0401b05e6e8a042002/';
 const logo = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8c39339ab_logo.png';
@@ -21,6 +22,12 @@ export default function ImpactCommand({ active, select }) {
   return <header className="impact-command impact-surface">
     <div className="impact-command-pulse-window" aria-hidden="true"><ImpactCommandPulse /></div>
     <button type="button" aria-label="SaintAgent dashboard overview" className="impact-brand" onClick={() => select('overview')}>
+      <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
+        <defs><filter id="impact-brand-light-key" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  1.4 2.2 0.9 0 -0.14" />
+          <feComposite in2="SourceGraphic" operator="in" />
+        </filter></defs>
+      </svg>
       <AnimatedBrandLogo className="impact-brand-logo" fallback={logo} />
     </button>
     <nav aria-label="SaintAgent command shortcuts" className="impact-shortcuts">
@@ -33,6 +40,7 @@ export default function ImpactCommand({ active, select }) {
     </nav>
     <Link to="/MyGuide" className="impact-guide-tile">
       <img src={`${artwork}6c80615230009d4020195b9535d88852_generated_image.png`} alt="" width={52} height={52} />
+      <Compass className="impact-guide-light-icon" aria-hidden="true" />
       <span>My Guide</span>
     </Link>
   </header>;

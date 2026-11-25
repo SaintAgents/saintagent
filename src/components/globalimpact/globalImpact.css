@@ -89,6 +89,7 @@
   white-space: nowrap;
 }
 #global-impact .impact-guide-tile img {width: 64%; height: auto; mix-blend-mode: screen; object-fit: contain; filter: none !important;}
+#global-impact .impact-guide-light-icon {display: none;}
 #global-impact .impact-guide-tile:is(:hover, :focus-visible) {border-color: hsl(var(--guide-glow)) !important; box-shadow: 0 0 .85rem hsl(var(--guide-glow) / .3) !important;}
 @media (min-width: 1024px) {
   #global-impact .impact-command {grid-template-columns: minmax(7rem, 1fr) minmax(0, max-content) minmax(5.5rem, 1fr); min-height: 8rem;}
@@ -242,6 +243,15 @@ html:not([data-theme]), html[data-theme='light'] {
   }
   & #global-impact :is(.impact-command, .impact-workspace-heading, .impact-record, .impact-detail) {background: hsl(var(--impact-panel)) !important;}
   & #global-impact .impact-surface {box-shadow: 0 5px 18px hsl(var(--impact-cyan) / .08) !important;}
+  & #global-impact .impact-brand {background: hsl(var(--impact-panel)) !important; border-radius: 50%;}
+  & #global-impact .impact-brand-logo {filter: url(#impact-brand-light-key) !important;}
+  & #global-impact .impact-guide-tile {
+    --guide-night: var(--impact-night);
+    --guide-ink: var(--impact-ink);
+    --guide-glow: var(--impact-cyan);
+  }
+  & #global-impact .impact-guide-tile img {display: none;}
+  & #global-impact .impact-guide-light-icon {display: block; width: 46%; height: auto; color: hsl(var(--impact-cyan));}
   & #global-impact .impact-shortcut {background: hsl(var(--impact-panel)) !important; border-color: hsl(var(--impact-line)) !important;}
   & #global-impact .impact-shortcut span {color: hsl(var(--impact-ink)) !important;}
   & #global-impact .impact-shortcut:is(:hover,[aria-pressed='true']) {background: hsl(var(--impact-blue)) !important; border-color: hsl(var(--impact-cyan)) !important;}
