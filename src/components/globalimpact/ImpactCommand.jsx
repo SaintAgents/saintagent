@@ -10,6 +10,9 @@ const shortcuts = [
   ['Projects', 'projects', '36847c626aeb25092e95695a1181e09a', '355 100% 67%'],
   ['Growth', 'growth', '51694b92302ca82066a2ae0d2970fe5b', '144 82% 55%'],
   ['Missions', 'missions', '781c6d0d734fcc95fe4d643c6eac2745', '192 100% 65%'],
+  ['Radar', 'radar', '35bb6e47b416cacdb4c17849bedb98fa', '173 90% 60%', 'Collaboration Radar'],
+  ['Collectives', 'collectives', 'b42f024e61bfe678315c36d1fe6ccb9d', '151 82% 62%'],
+  ['Gatherings', 'gatherings', '535aef5be25fb6e2774242e44de04325', '49 100% 67%'],
 ];
 
 export default function ImpactCommand({ active, select }) {
@@ -18,7 +21,7 @@ export default function ImpactCommand({ active, select }) {
       <AnimatedBrandLogo className="impact-brand-logo" fallback={logo} />
     </button>
     <nav aria-label="SaintAgent command shortcuts" className="impact-shortcuts">
-      {shortcuts.map(([name, id, image, tone]) => <button type="button" key={id} aria-controls="impact-workspace" aria-pressed={active === id} className="impact-shortcut" style={{ '--tile-tone':tone }} onClick={() => select(id)}>
+      {shortcuts.map(([name, id, image, tone, title]) => <button type="button" key={id} title={title} aria-controls="impact-workspace" aria-pressed={active === id} className="impact-shortcut" style={{ '--tile-tone':tone }} onClick={() => select(id)}>
         <img alt="" src={`${artwork}${image}_generated_image.png`} /><span>{name}</span>
       </button>)}
     </nav>

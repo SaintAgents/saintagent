@@ -91,7 +91,7 @@
 #global-impact .impact-guide-tile img {width: 64%; height: auto; mix-blend-mode: screen; object-fit: contain; filter: none !important;}
 #global-impact .impact-guide-tile:is(:hover, :focus-visible) {border-color: hsl(var(--guide-glow)) !important; box-shadow: 0 0 .85rem hsl(var(--guide-glow) / .3) !important;}
 @media (min-width: 1024px) {
-  #global-impact .impact-command {grid-template-columns: 1fr auto 1fr; min-height: 8rem;}
+  #global-impact .impact-command {grid-template-columns: minmax(7rem, 1fr) minmax(0, max-content) minmax(5.5rem, 1fr); min-height: 8rem;}
   #global-impact .impact-shortcuts {grid-column: auto; grid-row: auto; gap: .7rem;}
 }
 
