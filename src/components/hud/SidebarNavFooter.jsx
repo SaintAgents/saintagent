@@ -10,7 +10,7 @@ const controls = [
 
 export default function SidebarNavFooter({ compact, onChange }) {
   return (
-    <div role="group" aria-label="Navigation section controls" className={cn(
+    <div data-sidebar-nav-footer role="group" aria-label="Navigation section controls" className={cn(
       'relative shrink-0 flex items-center gap-0.5 border-t bg-background px-1 py-1 text-foreground',
       compact && 'justify-center',
     )}>

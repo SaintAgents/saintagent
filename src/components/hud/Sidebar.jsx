@@ -455,6 +455,7 @@ export default function Sidebar({
             <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Navigation</span>
           )}
           <button
+            data-sidebar-nav-toggle
             onClick={() => setNavOpen(!navOpen)}
             className={cn("p-1 rounded-md hover:bg-slate-50", isCollapsed && !inPopup && "w-full flex items-center justify-center")}
             aria-label={navOpen ? 'Collapse navigation' : 'Expand navigation'}
@@ -1187,6 +1188,7 @@ export default function Sidebar({
             variant="ghost"
             size="icon"
             className={cn("shrink-0", isCollapsed && "h-8 w-5")}
+            data-sidebar-nav-toggle
             onClick={onToggle}
             aria-expanded={!isCollapsed}
             aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -1528,6 +1530,7 @@ export default function Sidebar({
 
       {/* Bottom Expand/Collapse Chevron */}
       <button
+        data-sidebar-nav-toggle
         onClick={onToggle}
         className={cn(
           "mt-auto h-10 shrink-0 flex items-center justify-center",
