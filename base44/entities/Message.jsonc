@@ -4,25 +4,81 @@
   "properties": {
     "conversation_id": {
       "type": "string",
-      "description": "Groups messages into conversations"
+      "description": "Groups messages into conversations",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "from_user_id": {
-      "type": "string"
+      "type": "string",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "to_user_id": {
-      "type": "string"
+      "type": "string",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "from_name": {
-      "type": "string"
+      "type": "string",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "from_avatar": {
-      "type": "string"
+      "type": "string",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "to_name": {
-      "type": "string"
+      "type": "string",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "content": {
-      "type": "string"
+      "type": "string",
+      "rls": {
+        "update": {
+          "$or": [
+            {
+              "data.from_user_id": "{{user.email}}"
+            },
+            {
+              "user_condition": {
+                "role": "admin"
+              }
+            }
+          ]
+        }
+      }
     },
     "message_type": {
       "type": "string",
@@ -35,27 +91,69 @@
         "icebreaker"
       ],
       "default": "text",
-      "description": "Type of message content"
+      "description": "Type of message content",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "media_url": {
       "type": "string",
-      "description": "URL of attached media file"
+      "description": "URL of attached media file",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "media_thumbnail": {
       "type": "string",
-      "description": "Thumbnail for video/image media"
+      "description": "Thumbnail for video/image media",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "file_name": {
       "type": "string",
-      "description": "Original filename for file attachments"
+      "description": "Original filename for file attachments",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "file_size": {
       "type": "number",
-      "description": "File size in bytes"
+      "description": "File size in bytes",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "icebreaker_prompt": {
       "type": "string",
-      "description": "The icebreaker question/prompt used"
+      "description": "Icebreaker question/prompt used",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "is_read": {
       "type": "boolean",
@@ -69,11 +167,32 @@
     "edited_at": {
       "type": "string",
       "format": "date-time",
-      "description": "When the message was last edited"
+      "description": "When the message was last edited",
+      "rls": {
+        "update": {
+          "$or": [
+            {
+              "data.from_user_id": "{{user.email}}"
+            },
+            {
+              "user_condition": {
+                "role": "admin"
+              }
+            }
+          ]
+        }
+      }
     },
     "parent_message_id": {
       "type": "string",
-      "description": "For threaded replies"
+      "description": "For threaded replies",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     },
     "deleted_for_user_ids": {
       "type": "array",
@@ -112,5 +231,119 @@
     "from_user_id",
     "to_user_id",
     "content"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "$or": [
+                {
+                  "user_condition": {
+                    "role": "user"
+                  }
+                },
+                {
+                  "user_condition": {
+                    "role": "coordinator"
+                  }
+                }
+              ]
+            },
+            {
+              "$or": [
+                {
+                  "data.from_user_id": "{{user.email}}"
+                },
+                {
+                  "data.to_user_id": "{{user.email}}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "created_by_id": "{{user.id}}"
+            },
+            {
+              "data.from_user_id": "{{user.email}}"
+            }
+          ]
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "$or": [
+                {
+                  "user_condition": {
+                    "role": "user"
+                  }
+                },
+                {
+                  "user_condition": {
+                    "role": "coordinator"
+                  }
+                }
+              ]
+            },
+            {
+              "$or": [
+                {
+                  "data.from_user_id": "{{user.email}}"
+                },
+                {
+                  "data.to_user_id": "{{user.email}}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "created_by_id": "{{user.id}}"
+            },
+            {
+              "data.from_user_id": "{{user.email}}"
+            }
+          ]
+        }
+      ]
+    }
+  }
 }

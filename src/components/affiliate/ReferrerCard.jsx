@@ -36,22 +36,11 @@ export default function ReferrerCard() {
     enabled: !!refCode
   });
 
-  // Get the affiliate's profile for more details
-  const { data: affiliateProfile } = useQuery({
-    queryKey: ['referrerProfile', affiliateCode?.user_id],
-    queryFn: async () => {
-      if (!affiliateCode?.user_id) return null;
-      const profiles = await base44.entities.UserProfile.filter({ user_id: affiliateCode.user_id });
-      return profiles[0] || null;
-    },
-    enabled: !!affiliateCode?.user_id
-  });
-
   if (!refCode || !affiliateCode) return null;
 
-  const displayName = affiliateCode.display_name || affiliateProfile?.display_name || 'A Saint Agent';
-  const avatarUrl = affiliateCode.avatar_url || affiliateProfile?.avatar_url;
-  const tagline = affiliateCode.tagline || affiliateProfile?.tagline || 'Invited you to join';
+  const displayName = affiliateCode.display_name || 'A Saint Agent';
+  const avatarUrl = affiliateCode.avatar_url;
+  const tagline = affiliateCode.tagline || 'Invited you to join';
   const saNumber = affiliateCode.sa_number || affiliateCode.code;
 
   return (
