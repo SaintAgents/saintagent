@@ -359,6 +359,11 @@ export default function TopBar({
       <Button asChild variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-primary sm:hidden" title="Global Impact Dashboard" aria-label="Global Impact Dashboard">
         <Link to="/GlobalImpactDashboard" aria-current={currentPageName === 'GlobalImpactDashboard' ? 'page' : undefined}><LayoutDashboard aria-hidden="true" /></Link>
       </Button>
+      {currentUser && canopyControl && <Button type="button" variant="outline" size="icon" className="h-8 w-8 shrink-0 border-current text-primary md:hidden"
+        aria-label={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'} title="Command Canopy"
+        aria-expanded={canopyControl.expanded} aria-controls={canopyControl.expanded ? 'canopy-workspace' : undefined} onClick={canopyControl.toggle}>
+        <PanelTopOpen aria-hidden="true" />
+      </Button>}
       {/* Collapse/Expand Toggle */}
       <button
         onClick={() => onToggleCollapse?.()}

@@ -5,7 +5,7 @@ import CanopyCardHandles from '@/components/canopy/CanopyCardHandles';
 export default function CanopyCard({ id, size, scale, focused, minimized, onResize, onToggle, onRemove, dragHandle, dropTarget, children }) {
   const card = useRef(null);
   const [draft, setDraft] = useState(null);
-  const saved = typeof size === 'number' ? { height: size } : size;
+  const saved = typeof size === 'number' ? { height: 46 + (size - 46) * scale / 100 } : size;
   const width = draft?.width ?? saved?.width;
   const height = draft?.height ?? saved?.height;
   const defaultHeight = 46 + ((id === 'Files & Knowledge' ? 320 : 156) - 46) * scale / 100;

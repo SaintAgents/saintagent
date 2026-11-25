@@ -13,7 +13,7 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
   const [draft, setDraft] = useState({});
   const root = useRef(null);
   const desktop = viewport >= 768;
-  const enabled = desktop && mode !== 'closed';
+  const enabled = mode !== 'closed';
   const sidebar = sidebarCollapsed ? 64 : viewport >= 1024 ? sidebarWidth : 256;
   const available = viewport - Math.max(sidebar, dock.left) - dock.right;
   const split = draft.split ?? settings.split;
@@ -22,12 +22,12 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
   const setMode = useCallback(next => { session.mode = next; setCurrent(next); }, [session]);
   useLayoutEffect(() => {
     const parent = root.current?.parentElement;
-    if (!parent || !enabled || mode !== 'split') return;
+    if (!parent || !desktop || !enabled || mode !== 'split') return;
     parent.style.setProperty('--canopy-split-extra', `${splitWidth}px`);
     parent.style.setProperty('--canopy-dock-right', `${dock.right}px`);
     parent.setAttribute('data-canopy-split', '');
     return () => { ['--canopy-split-extra','--canopy-dock-right'].forEach(key => parent.style.removeProperty(key)); parent.removeAttribute('data-canopy-split'); };
-  }, [enabled, mode, splitWidth, dock.right]);
+  }, [desktop, enabled, mode, splitWidth, dock.right]);
   useEffect(() => {
     const change = e => {
       if (e.detail.viewMode === 'simple') setMode('closed');
@@ -39,7 +39,7 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
   }, [pathname, setMode]);
   useEffect(() => { session.recent = [pathname, ...session.recent.filter(p => p !== pathname)].slice(0, 7); }, [pathname, session]);
   useEffect(() => {
-    if (!desktop) { setMode('closed'); return; }
+    if (!desktop && mode === 'split') { setMode('full'); return; }
     if (mode === 'closed') return;
     let timer;
     const reset = () => { if (!settings.auto) return; clearTimeout(timer); timer = setTimeout(() => setMode(stepDown[mode]), 90000); };
