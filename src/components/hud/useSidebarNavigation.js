@@ -29,5 +29,5 @@ export default function useSidebarNavigation({ groups, currentPage, startNavColl
       try { sessionStorage.setItem(storageKey, value); } catch {}
     }
   };
-  return { navOpen, setNavOpen, expandedGroups: { ...defaults, ...overrides }, toggleGroup, openCompactGroup, changeNavMode };
+  return { mode, navOpen, setNavOpen, expandedGroups: { ...defaults, ...overrides }, toggleGroup, openCompactGroup, changeNavMode };
 }

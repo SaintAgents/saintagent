@@ -37,11 +37,13 @@ const TIME_FILTERS = [
 
 export default function SidebarLeaderboard({ 
   isCollapsed, 
-  inPopup = false, 
+  inPopup = false,
+  leaderboardOpen,
+  onToggleLeaderboard,
+  showCollapsedPreview,
   profile,
-  currentUserEmail 
+  currentUserEmail
 }) {
-  const [leaderboardOpen, setLeaderboardOpen] = useState(true);
   const [leadersPopupOpen, setLeadersPopupOpen] = useState(false);
   const [leaderboardHidden, setLeaderboardHidden] = useState(() => {
     try { return localStorage.getItem('sidebarLeaderboardHidden') === 'true'; } catch { return false; }
@@ -355,7 +357,7 @@ export default function SidebarLeaderboard({
         <div className={cn("mb-2 px-1", isCollapsed && !inPopup && "mb-1 px-0")}>
           <div className={cn("flex items-center justify-between gap-1 min-w-0", isCollapsed && !inPopup && "justify-center")}>
             <button
-              onClick={() => setLeaderboardOpen(!leaderboardOpen)}
+              onClick={onToggleLeaderboard}
               className={cn("flex items-center gap-1.5 hover:bg-slate-50 rounded-lg py-1 px-1 transition-colors min-w-0 flex-shrink", isCollapsed && !inPopup && "p-1 justify-center")}
             >
               <Trophy className="w-4 h-4 text-amber-500 flex-shrink-0" />
@@ -376,7 +378,7 @@ export default function SidebarLeaderboard({
                   variant="ghost" 
                   size="icon"
                   className="h-6 w-6"
-                  onClick={() => setLeaderboardOpen(open => !open)}
+                  onClick={onToggleLeaderboard}
                   aria-expanded={leaderboardOpen}
                   aria-label={leaderboardOpen ? 'Collapse leaders' : 'Expand leaders'}
                   title={leaderboardOpen ? 'Collapse leaders' : 'Expand leaders'}
@@ -402,10 +404,10 @@ export default function SidebarLeaderboard({
         </div>
 
         {/* Collapsed: show avatars only */}
-        {(!leaderboardOpen || !showExpanded) && renderCollapsedView()}
+        {showCollapsedPreview && (!leaderboardOpen || !showExpanded) && renderCollapsedView()}
 
         {/* Expanded: show full list */}
-        <div className={cn("overflow-hidden transition-all duration-300", leaderboardOpen && showExpanded ? "max-h-72 opacity-100" : "max-h-0 opacity-0")}>
+        <div hidden={!leaderboardOpen || !showExpanded} className="max-h-72 overflow-hidden">
           {/* Inline Time Filter */}
           <div className="flex gap-0.5 mb-2 px-1">
             {TIME_FILTERS.map(filter => (

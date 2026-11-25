@@ -218,15 +218,25 @@ export default function Sidebar({
 
   const [navPopupOpen, setNavPopupOpen] = useState(false);
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
-  const { navOpen, setNavOpen, expandedGroups, toggleGroup, openCompactGroup, changeNavMode } =
+  const { mode, navOpen, setNavOpen, expandedGroups, toggleGroup, openCompactGroup, changeNavMode } =
     useSidebarNavigation({ groups: NAV_GROUPS, currentPage, startNavCollapsed, onToggle });
-  const [presenceOpen, setPresenceOpen] = useState(true);
+  const [sectionOverrides, setSectionOverrides] = useState({});
+  const sectionsCollapsed = mode === 'collapsed';
+  const presenceOpen = sectionOverrides.presence ?? !sectionsCollapsed;
+  const appearanceOpen = sectionOverrides.appearance ?? !sectionsCollapsed;
+  const leaderboardOpen = sectionOverrides.leaders ?? !sectionsCollapsed;
+  const toggleSection = section => setSectionOverrides(previous => ({
+    ...previous, [section]: !(previous[section] ?? !sectionsCollapsed),
+  }));
+  const changeSidebarMode = (value, compact = false) => {
+    setSectionOverrides({});
+    changeNavMode(value, compact);
+  };
   const [presenceHidden, setPresenceHidden] = useState(() => {
     try { return localStorage.getItem('presenceHidden') === 'true'; } catch { return false; }
   });
   const [themeOpen, setThemeOpen] = useState(false);
   const [bgEffectOpen, setBgEffectOpen] = useState(true);
-  const [appearanceOpen, setAppearanceOpen] = useState(true);
   const [appearanceHidden, setAppearanceHidden] = useState(() => {
     try { return localStorage.getItem('appearanceHidden') === 'true'; } catch { return false; }
   });
@@ -704,6 +714,9 @@ export default function Sidebar({
       <SidebarLeaderboard
         isCollapsed={isCollapsed}
         inPopup={inPopup}
+        leaderboardOpen={leaderboardOpen}
+        onToggleLeaderboard={() => toggleSection('leaders')}
+        showCollapsedPreview={!sectionsCollapsed}
         profile={profile}
         currentUserEmail={currentUser?.email}
       />
@@ -756,8 +769,10 @@ export default function Sidebar({
               </div>
               <div className="flex items-center gap-1">
                 <button
-                  onClick={() => setAppearanceOpen(!appearanceOpen)}
+                  onClick={() => toggleSection('appearance')}
                   className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                  aria-expanded={appearanceOpen}
+                  aria-label={appearanceOpen ? 'Collapse appearance' : 'Expand appearance'}
                   title={appearanceOpen ? 'Collapse' : 'Expand'}
                 >
                   {appearanceOpen ? (
@@ -939,8 +954,10 @@ export default function Sidebar({
                 <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
               </button>
               <button
-                onClick={() => setPresenceOpen(!presenceOpen)}
+                onClick={() => toggleSection('presence')}
                 className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                aria-expanded={presenceOpen}
+                aria-label={presenceOpen ? 'Collapse presence' : 'Expand presence'}
                 title={presenceOpen ? 'Collapse' : 'Expand'}
               >
                 {presenceOpen ? (
@@ -969,7 +986,7 @@ export default function Sidebar({
         </div>
 
         {/* RP & Rank Header */}
-        {(!isCollapsed || inPopup) && profile && (
+        {(presenceOpen || !sectionsCollapsed) && (!isCollapsed || inPopup) && profile && (
           <div className="flex items-center justify-between px-1 py-1 bg-violet-50 rounded-lg">
             <div className="flex items-center gap-2">
               <TrendingUp className="w-3.5 h-3.5 text-violet-500" />
@@ -1034,7 +1051,8 @@ export default function Sidebar({
           to={createPageUrl('Profile')}
           className={cn(
             "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all mt-2 bg-violet-50 hover:bg-violet-100 text-violet-700 md:hidden",
-            (isCollapsed && !inPopup) && "justify-center px-2"
+            (isCollapsed && !inPopup) && "justify-center px-2",
+            sectionsCollapsed && !presenceOpen && "hidden"
           )}
         >
           {profile?.avatar_url ? (
@@ -1101,7 +1119,7 @@ export default function Sidebar({
         <ScrollArea className="min-h-0 flex-1">
           {renderSidebarContent(true)}
         </ScrollArea>
-        <div className="shrink-0 px-2 pb-2"><SidebarNavFooter onChange={changeNavMode} /></div>
+        <div className="shrink-0 px-2 pb-2"><SidebarNavFooter onChange={changeSidebarMode} /></div>
 
         {/* Resize handles */}
         <div onMouseDown={(e) => onResizeStart(e, 'e')} className="absolute right-0 top-10 bottom-0 w-2 cursor-e-resize hover:bg-violet-200/50" />
@@ -1182,7 +1200,7 @@ export default function Sidebar({
       {!isTourPreview() && <SurfaceHeroLayer surface="sidebar" theme={theme} desktopOnly />}
       <ActivityTicker placement="sidebar" />
       {renderSidebarContent(false)}
-      <SidebarNavFooter compact={isCollapsed} onChange={value => changeNavMode(value, isCollapsed)} />
+      <SidebarNavFooter compact={isCollapsed} onChange={value => changeSidebarMode(value, isCollapsed)} />
 
       {/* Nav popup */}
       {navPopupOpen && (
