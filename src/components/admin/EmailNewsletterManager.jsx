@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import './newsletterTheme.css';
 import TemplateManagerModal from './TemplateManagerModal';
 import ABTestingPanel from './ABTestingPanel';
+import NewsletterArticlePicker from './NewsletterArticlePicker';
 
 export default function EmailNewsletterManager() {
   const queryClient = useQueryClient();
@@ -854,36 +855,7 @@ Return ONLY the formatted content.`;
 
                   {/* Select Articles to Embed */}
                   <div>
-                    <Label className="flex items-center gap-2 mb-2">
-                      <Newspaper className="w-4 h-4" />
-                      Select Articles to Include in Newsletter
-                    </Label>
-                <div className="border rounded-lg p-3 max-h-[200px] overflow-y-auto space-y-2">
-                  {loadingArticles ? (
-                    <p className="text-sm text-slate-500">Loading articles...</p>
-                  ) : newsArticles.length === 0 ? (
-                    <p className="text-sm text-slate-500">No articles available</p>
-                  ) : (
-                    newsArticles.slice(0, 20).map((article) => {
-                      const isSelected = selectedArticles.includes(article.id);
-                      return (
-                        <div 
-                          key={article.id} 
-                          className={`flex items-start gap-3 p-2 rounded cursor-pointer border ${isSelected ? 'bg-violet-50 border-violet-300 dark:bg-violet-900/20 dark:border-violet-700' : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-800'}`}
-                          onClick={() => toggleArticleSelection(article.id)}
-                        >
-                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 ${isSelected ? 'bg-violet-600 border-violet-600' : 'border-slate-300'}`}>
-                            {isSelected && <CheckCircle className="w-4 h-4 text-white" />}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate">{article.title}</p>
-                            <p className="text-xs text-slate-500 truncate">{article.summary || 'No summary'}</p>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
+                <NewsletterArticlePicker articles={newsArticles} loading={loadingArticles} selected={selectedArticles} onToggle={toggleArticleSelection} />
                 {selectedArticles.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
                     {selectedArticles.map(id => {
