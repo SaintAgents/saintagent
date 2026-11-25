@@ -57,6 +57,7 @@ export default function DailyToursCard({ userId, embedded = false }) {
         <p className="text-sm text-muted-foreground">Start with the full-screen overview or choose any topic tour. Read or listen at your own pace.</p>
         {!embedded && record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}
       </div>
+      {!readOnly && !embedded && <Button type="button" variant="outline" data-welcome-course-launch onClick={() => window.dispatchEvent(new Event('open-welcome-course'))}>7-day welcome course</Button>}
       <Button ref={overviewTrigger} type="button" variant="outline" className="h-auto min-h-10 whitespace-normal" onClick={() => setOverviewOpen(true)}><LayoutDashboard aria-hidden="true" /> Command Deck Overview · Full screen</Button>
       {!readOnly && query.isPending ? <p role="status" className="text-sm">Loading tours…</p> : !readOnly && query.isError ? <div className="flex items-center gap-3"><p role="alert" className="text-sm">Tours couldn’t be loaded.</p><Button type="button" size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></div> : (
         <ol className="daily-tours-grid grid grid-cols-1 gap-2">

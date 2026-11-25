@@ -65,6 +65,45 @@
           "id"
         ]
       }
+    },
+    "mission_draft": {
+      "type": "object",
+      "rls": {
+        "create": {
+          "user_condition": {
+            "collaborator_role": "editor"
+          }
+        },
+        "update": {
+          "user_condition": {
+            "collaborator_role": "editor"
+          }
+        }
+      },
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "objective": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "milestone": {
+          "type": "string"
+        },
+        "saved_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "objective",
+        "description",
+        "milestone",
+        "saved_at"
+      ]
     }
   },
   "required": [

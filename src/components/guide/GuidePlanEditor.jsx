@@ -7,12 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { directions, planFields, planKey, resolvePlanReferences } from '@/components/guide/guidePlan';
 import { sourceHref } from '@/components/intelligence/intelligenceSources';
+import GuideMissionHandoff from '@/components/guide/GuideMissionHandoff';
 
-export default function GuidePlanEditor({ initial, owner, onSave, links = [] }) {
+export default function GuidePlanEditor({ initial, owner, onSave, onDirty, links = [] }) {
   const uid = useId(), client = useQueryClient();
   const [draft,setDraft] = useState(initial);
   const [saved,setSaved] = useState(null);
-  const set = (key,value) => { save.reset(); setDraft(previous => ({...previous,[key]:value})); };
+  const set = (key,value) => { save.reset(); onDirty?.(true); setDraft(previous => ({...previous,[key]:value})); };
   const save = useMutation({ mutationFn: async () => {
     const links = await resolvePlanReferences(draft.references);
     const safe = new Set(links.map(ref => `${ref.kind}:${ref.id}`));
@@ -20,8 +21,8 @@ export default function GuidePlanEditor({ initial, owner, onSave, links = [] }) 
     const payload = { title:draft.title.trim(), objective:draft.objective, direction:draft.direction, references,
       ...Object.fromEntries(planFields.map(([key]) => [key,draft[key]?.trim() || ''])) };
     return initial.id ? base44.entities.GuideActionPlan.update(initial.id,payload) : base44.entities.GuideActionPlan.create(payload);
-  }, onSuccess: record => { if (!initial.id) setSaved(record); client.invalidateQueries({queryKey:planKey(owner)}); onSave?.(record); } });
-  return <form className="space-y-3" onSubmit={e => { e.preventDefault(); if (!save.isPending && !saved && draft.title.trim() && draft.first_action.trim()) save.mutate(); }}>
+  }, onSuccess: record => { if (!initial.id) setSaved(record); onDirty?.(false); client.invalidateQueries({queryKey:planKey(owner)}); onSave?.(record); } });
+  return <><form className="space-y-3" onSubmit={e => { e.preventDefault(); if (!save.isPending && !saved && draft.title.trim() && draft.first_action.trim()) save.mutate(); }}>
     <h4 className="font-semibold">Review your action plan</h4>
     <p className="text-sm text-muted-foreground">Saving approves only this private Planner draft. It won’t publish a Mission, send messages, or assign work.</p>
     <fieldset disabled={save.isPending || !!saved} className="grid gap-3 sm:grid-cols-2">
@@ -35,5 +36,5 @@ export default function GuidePlanEditor({ initial, owner, onSave, links = [] }) 
     {saved ? <p role="status" className="text-sm">Private plan saved. {!onSave && <Link className="font-semibold underline" to={`/Planner?guidePlan=${encodeURIComponent(saved.id)}#guide-action-plans`}>Open in Planner</Link>}</p> : <Button type="submit" disabled={save.isPending || !draft.title.trim() || !draft.first_action.trim()}>{save.isPending ? 'Saving…' : initial.id ? 'Save changes' : 'Approve and save private plan'}</Button>}
     {initial.id && save.isSuccess && <p role="status" className="text-sm">Changes saved.</p>}
     {save.isError && <p role="alert" className="text-sm">Couldn’t save the plan. Try again.</p>}
-  </form>;
+  </form>{saved && <GuideMissionHandoff plan={saved} owner={owner} />}</>;
 }

@@ -39,6 +39,7 @@ import SurfaceOpacityController from '@/components/hud/SurfaceOpacityController'
 import MeetingReminderService from '@/components/MeetingReminderService';
 import { createPageUrl } from '@/utils';
 import FirstVisitTour from '@/components/tour/FirstVisitTour';
+import WelcomeCourse from '@/components/tour/WelcomeCourse';
 import WalkthroughManager from '@/components/walkthrough/WalkthroughManager';
 import AnnouncementBanner from '@/components/hud/AnnouncementBanner';
 import LiveBroadcastBanner from '@/components/hud/LiveBroadcastBanner';
@@ -2008,6 +2009,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       <VideoBackgroundToolbar theme={theme} onThemeToggle={setTheme} currentPageName={currentPageName} />
       {!tourPreview && <SurfaceHeroControls page={currentPageName} theme={theme} />}
 
+      {!tourPreview && currentPageName === 'CommandDeck' && !onboarding?.welcome_overview_pending && <WelcomeCourse key={currentUser.id} userId={currentUser.id} eligible={['complete','skipped'].includes(onboarding?.status) && Date.now() - Date.parse(currentUser.created_date || onboarding?.created_date) < 14 * 86400000} />}
       {!tourPreview && currentPageName === 'CommandDeck' && onboarding?.welcome_overview_pending && (onboarding.status === 'complete' || onboarding.status === 'skipped') && (
         <FirstVisitTour key={onboarding.id} onboarding={onboarding} userEmail={currentUser.email} />
       )}
