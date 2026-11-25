@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import SidePanelQuickAccess from '@/components/hud/SidePanelQuickAccess';
 import SidePanelBookmarks from '@/components/hud/SidePanelBookmarks';
 import SidePanelMyGroups from '@/components/hud/SidePanelMyGroups';
+import GoldFlakeCounter from '@/components/rewards/GoldFlakeCounter';
 
 import {
   ChevronLeft,
@@ -704,6 +705,7 @@ export default function SidePanel({
                 </div>
               </div>
 
+              <GoldFlakeCounter />
               {/* GGG Balance */}
               <CollapsibleCard title="GGG Balance" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
                 <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100">
@@ -1162,6 +1164,7 @@ export default function SidePanel({
             </div>
           </div>
 
+          <GoldFlakeCounter />
           {/* GGG Balance */}
           <CollapsibleCard title="GGG Balance" icon={Coins} onPopout={() => setGggPopupOpen(true)}>
             <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-[#0a1f0a] dark:to-[#051505] border border-violet-100 dark:border-[rgba(0,255,136,0.2)]" data-wallet-panel>

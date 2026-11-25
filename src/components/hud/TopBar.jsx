@@ -1,5 +1,4 @@
 import DeepDiveLauncher from '@/components/deepdive/DeepDiveLauncher';
-import GoldFlakeCounter from '@/components/rewards/GoldFlakeCounter';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -717,7 +716,6 @@ export default function TopBar({
           <GlobalTimerWidget currentUser={currentUser} currentPageName={currentPageName} />
         )}
 
-        <GoldFlakeCounter />
         <Button asChild variant="ghost" size="icon" className="rounded-xl shrink-0" title="My Guide">
           <Link to="/MyGuide" aria-label="My Guide" aria-current={currentPageName === 'MyGuide' ? 'page' : undefined}><span aria-hidden="true" className="text-lg leading-none">🔮</span></Link>
         </Button>
