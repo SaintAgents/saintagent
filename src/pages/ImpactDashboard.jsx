@@ -3,8 +3,8 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { Target, Compass, Coins, Users, MessageSquare, Award } from 'lucide-react';
 import ImpactDashboardHero from '@/components/impact/ImpactDashboardHero';
-
-import { getRPRank } from '@/components/reputation/rpUtils';
+import useImpactProfile from '@/components/impact/useImpactProfile';
+import { resolveImpactRank } from '@/components/impact/impactRankArt';
 import ImpactStatCard from '@/components/impact/ImpactStatCard';
 import ContributionTimeline from '@/components/impact/ContributionTimeline';
 import GlobalGoalsProgress from '@/components/impact/GlobalGoalsProgress';
@@ -21,13 +21,7 @@ export default function ImpactDashboard({ embedded = false, afterStats, previewU
 
   const email = currentUser?.email;
 
-  // Fetch user profile
-  const { data: profiles = [] } = useQuery({
-    queryKey: ['impactProfile', email],
-    queryFn: () => base44.entities.UserProfile.filter({ user_id: email }),
-    enabled: !!email,
-  });
-  const profile = profiles[0];
+  const { profile, rankReady } = useImpactProfile(email);
 
   // Fetch user's GGG transactions
   const { data: gggTransactions = [] } = useQuery({
@@ -152,7 +146,7 @@ export default function ImpactDashboard({ embedded = false, afterStats, previewU
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
-      <ImpactDashboardHero embedded={embedded} name={profile?.display_name || currentUser?.full_name || 'Agent'} rank={profile?.rp_rank_code || profile?.rank_code || getRPRank(rankPoints).title} />
+      <ImpactDashboardHero embedded={embedded} name={profile?.display_name || currentUser?.full_name || 'Agent'} rank={rankReady ? resolveImpactRank(profile, profile?.rp_points || rankPoints) : null} />
 
       <div className="max-w-7xl mx-auto px-4 py-6 md:px-6 md:pb-12">
         {/* Stat Cards Row */}

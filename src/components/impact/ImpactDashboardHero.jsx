@@ -2,11 +2,12 @@ import { ArrowLeft, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { impactRankBackground } from '@/components/impact/impactRankArt';
 import '@/components/impact/impactDashboardHero.css';
 
 export default function ImpactDashboardHero({ name, rank, embedded }) {
   const Heading = embedded ? 'h3' : 'h1';
-  return <header className="personal-impact-hero">
+  return <header className="personal-impact-hero" style={{ '--hero-art': impactRankBackground(rank?.code) }}>
     {!embedded && <Button asChild variant="ghost" size="icon" className="personal-impact-back">
       <Link to="/CommandDeck" aria-label="Back to Command Deck"><ArrowLeft /></Link>
     </Button>}
@@ -15,7 +16,7 @@ export default function ImpactDashboardHero({ name, rank, embedded }) {
       <p className="mt-2 text-sm sm:text-lg">Your contributions, progress, and impact on the global mission</p>
       <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
         <Badge variant="outline" className="personal-impact-identity max-w-full min-w-0 whitespace-normal break-words px-3 py-1 text-sm">{name}</Badge>
-        <Badge variant="outline" className="personal-impact-identity personal-impact-rank px-3 py-1 text-sm capitalize">{rank}</Badge>
+        {rank && <Badge variant="outline" className="personal-impact-identity personal-impact-rank px-3 py-1 text-sm">{rank.title}</Badge>}
       </div>
     </div>
   </header>;
