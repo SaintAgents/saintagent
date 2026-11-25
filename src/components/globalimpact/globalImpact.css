@@ -250,7 +250,7 @@ html:not([data-theme]), html[data-theme='light'] {
   }
   & #global-impact :is(.impact-command, .impact-workspace-heading, .impact-record, .impact-detail) {background: hsl(var(--impact-panel)) !important;}
   & #global-impact .impact-surface {box-shadow: 0 5px 18px hsl(var(--impact-cyan) / .08) !important;}
-  & #global-impact .impact-brand {background: hsl(var(--impact-panel)) !important; border-radius: 50%;}
+  & #global-impact .impact-brand {border-radius: 50%;}
   & #global-impact .impact-brand-logo {filter: url(#impact-brand-light-key) !important;}
   & #global-impact .impact-guide-tile {
     --guide-night: var(--impact-night);
