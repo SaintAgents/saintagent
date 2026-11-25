@@ -28,6 +28,7 @@ import {
   Eye
 } from "lucide-react";
 import FloatingPanel from '@/components/hud/FloatingPanel';
+import SidebarSectionSizer from '@/components/hud/SidebarSectionSizer';
 
 const TIME_FILTERS = [
   { id: 'all', label: 'All Time', icon: Trophy },
@@ -41,6 +42,7 @@ export default function SidebarLeaderboard({
   leaderboardOpen,
   onToggleLeaderboard,
   showCollapsedPreview,
+  sectionSize,
   profile,
   currentUserEmail
 }) {
@@ -352,6 +354,7 @@ export default function SidebarLeaderboard({
 
   return (
     <>
+      <SidebarSectionSizer label="Leaders" open={leaderboardOpen || (!showExpanded && showCollapsedPreview)} {...sectionSize}>
       <div className={cn("border-t border-slate-100 p-2", isCollapsed && !inPopup && "p-1")}>
         {/* Header */}
         <div className={cn("mb-2 px-1", isCollapsed && !inPopup && "mb-1 px-0")}>
@@ -404,10 +407,10 @@ export default function SidebarLeaderboard({
         </div>
 
         {/* Collapsed: show avatars only */}
-        {showCollapsedPreview && (!leaderboardOpen || !showExpanded) && renderCollapsedView()}
+        {((showCollapsedPreview && (!leaderboardOpen || !showExpanded)) || (!showExpanded && leaderboardOpen)) && renderCollapsedView()}
 
         {/* Expanded: show full list */}
-        <div hidden={!leaderboardOpen || !showExpanded} className="max-h-72 overflow-hidden">
+        <div hidden={!leaderboardOpen || !showExpanded}>
           {/* Inline Time Filter */}
           <div className="flex gap-0.5 mb-2 px-1">
             {TIME_FILTERS.map(filter => (
@@ -434,7 +437,7 @@ export default function SidebarLeaderboard({
             </div>
           )}
           
-          <ScrollArea className="[&>[data-radix-scroll-area-viewport]]:max-h-48">
+          <ScrollArea className={sectionSize?.height == null ? '[&>[data-radix-scroll-area-viewport]]:max-h-48' : undefined}>
             <TooltipProvider delayDuration={200}>
               <div className="space-y-1">
                 {displayLeaders.map((leader, index) => renderLeaderRow(leader, index, true))}
@@ -443,6 +446,7 @@ export default function SidebarLeaderboard({
           </ScrollArea>
         </div>
       </div>
+      </SidebarSectionSizer>
 
       {/* Leaders Popup */}
       {leadersPopupOpen && (

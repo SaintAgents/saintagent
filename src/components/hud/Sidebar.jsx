@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import FloatingPanel from '@/components/hud/FloatingPanel';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
@@ -19,6 +18,8 @@ import SidebarLeaderboard from '@/components/hud/SidebarLeaderboard';
 import SidebarPageSearch from '@/components/hud/SidebarPageSearch';
 import SidebarNavFooter from '@/components/hud/SidebarNavFooter';
 import useSidebarNavigation from '@/components/hud/useSidebarNavigation';
+import useSidebarSectionSizes from '@/components/hud/useSidebarSectionSizes';
+import SidebarSectionSizer from '@/components/hud/SidebarSectionSizer';
 import SidePanelBookmarks from '@/components/hud/SidePanelBookmarks';
 import {
   Select,
@@ -220,6 +221,7 @@ export default function Sidebar({
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
   const { mode, navOpen, setNavOpen, expandedGroups, toggleGroup, openCompactGroup, changeNavMode } =
     useSidebarNavigation({ groups: NAV_GROUPS, currentPage, startNavCollapsed, onToggle });
+  const sectionSize = useSidebarSectionSizes(isCollapsed);
   const [sectionOverrides, setSectionOverrides] = useState({});
   const sectionsCollapsed = mode === 'collapsed';
   const presenceOpen = sectionOverrides.presence ?? !sectionsCollapsed;
@@ -430,12 +432,12 @@ export default function Sidebar({
 
   // Render full sidebar content (reused in both docked and popped-off modes)
   const renderSidebarContent = (inPopup = false) => (
-    <>
+    <div className="h-full flex flex-col">
       {/* Navigation */}
-      <div className={cn("min-h-0 overflow-y-auto", navOpen ? "flex-1" : "flex-shrink-0")}>
+      <SidebarSectionSizer label="Navigation" open={navOpen} fill {...sectionSize('navigation', inPopup)}>
         {/* Nav Header with Popout */}
         {(!isCollapsed || inPopup) && (
-          <div className="px-2 pt-1.5 pb-0.5">
+          <div className="shrink-0 px-2 pt-1.5 pb-0.5">
             <button
               onClick={() => {
                 setNavPopupOpen(true);
@@ -450,7 +452,7 @@ export default function Sidebar({
             </button>
           </div>
         )}
-        <div className={cn("px-3 py-2 flex items-center justify-between", isCollapsed && !inPopup && "justify-center px-1")}> 
+        <div className={cn("shrink-0 px-3 py-2 flex items-center justify-between", isCollapsed && !inPopup && "justify-center px-1")}> 
           {(!isCollapsed || inPopup) && (
             <span className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Navigation</span>
           )}
@@ -458,6 +460,7 @@ export default function Sidebar({
             data-sidebar-nav-toggle
             onClick={() => setNavOpen(!navOpen)}
             className={cn("p-1 rounded-md hover:bg-slate-50", isCollapsed && !inPopup && "w-full flex items-center justify-center")}
+            aria-expanded={navOpen}
             aria-label={navOpen ? 'Collapse navigation' : 'Expand navigation'}
             title={navOpen ? 'Collapse' : 'Expand'}
           >
@@ -469,7 +472,7 @@ export default function Sidebar({
           </button>
         </div>
         {navOpen && (
-          <nav className={cn("p-3 pt-0 space-y-0.5", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
+          <nav className={cn("min-h-0 flex-1 overflow-y-auto p-3 pt-0 space-y-0.5", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
             <SidebarPageSearch
               pages={Object.values(ALL_NAV_ITEMS).filter(item => !item.action && !item.locked &&
                 (!item.adminOnly || currentUser?.role === 'admin') &&
@@ -675,7 +678,7 @@ export default function Sidebar({
             {(!isCollapsed || inPopup) && <SidePanelBookmarks />}
           </nav>
         )}
-      </div>
+      </SidebarSectionSizer>
 
       {/* Show presence toggle when hidden */}
       {presenceHidden && !isCollapsed && !inPopup && (
@@ -718,11 +721,13 @@ export default function Sidebar({
         leaderboardOpen={leaderboardOpen}
         onToggleLeaderboard={() => toggleSection('leaders')}
         showCollapsedPreview={!sectionsCollapsed}
+        sectionSize={sectionSize('leaders', inPopup)}
         profile={profile}
         currentUserEmail={currentUser?.email}
       />
 
       {/* Appearance Section - Dedicated section for theme & effects */}
+      <SidebarSectionSizer label="Appearance" open={appearanceOpen && (!isCollapsed || inPopup) && (!appearanceHidden || inPopup)} {...sectionSize('appearance', inPopup)}>
       <div className={cn(
         "border-t border-slate-100",
         (isCollapsed && !inPopup) ? "px-2 py-1" : "px-2 py-1",
@@ -931,8 +936,10 @@ export default function Sidebar({
           </div>
         )}
       </div>
+      </SidebarSectionSizer>
 
       {/* Footer - Status Controls - hidden when collapsed or presence hidden */}
+      <SidebarSectionSizer label="Presence" open={presenceOpen && (!isCollapsed || inPopup) && (!presenceHidden || inPopup)} {...sectionSize('presence', inPopup)}>
       <div className={cn(
         "border-t border-slate-100 p-2 space-y-1.5",
         !presenceOpen && "pb-1",
@@ -1080,7 +1087,8 @@ export default function Sidebar({
           </Button>
         )}
       </div>
-    </>
+      </SidebarSectionSizer>
+    </div>
   );
 
   // Popped-off panel render
@@ -1117,9 +1125,9 @@ export default function Sidebar({
 
         {/* Content */}
         <ActivityTicker placement="sidebar" />
-        <ScrollArea className="min-h-0 flex-1">
+        <div className="min-h-0 flex-1 overflow-y-auto">
           {renderSidebarContent(true)}
-        </ScrollArea>
+        </div>
         <div className="shrink-0 px-2 pb-2"><SidebarNavFooter onChange={changeSidebarMode} /></div>
 
         {/* Resize handles */}
@@ -1201,7 +1209,9 @@ export default function Sidebar({
 
       {!isTourPreview() && <SurfaceHeroLayer surface="sidebar" theme={theme} desktopOnly />}
       <ActivityTicker placement="sidebar" />
-      {renderSidebarContent(false)}
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {renderSidebarContent(false)}
+      </div>
       <SidebarNavFooter compact={isCollapsed} onChange={value => changeSidebarMode(value, isCollapsed)} />
 
       {/* Nav popup */}
