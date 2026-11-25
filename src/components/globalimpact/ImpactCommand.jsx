@@ -21,6 +21,9 @@ export default function ImpactCommand({ active, select }) {
       <AnimatedBrandLogo className="impact-brand-logo" fallback={logo} />
     </button>
     <nav aria-label="SaintAgent command shortcuts" className="impact-shortcuts">
+      <Link to="/IntelligenceDashboard" aria-label="Intel Hub: Intelligence Dashboard" title="Intelligence Dashboard" className="impact-shortcut text-center" style={{ '--tile-tone':'245 100% 76%' }}>
+        <img alt="" src={`${artwork}dee14f8e015f59dc910ae9185e67c4bd_generated_image.png`} /><span>Intel Hub</span>
+      </Link>
       {shortcuts.map(([name, id, image, tone, title]) => <button type="button" key={id} title={title} aria-controls="impact-workspace" aria-pressed={active === id} className="impact-shortcut" style={{ '--tile-tone':tone }} onClick={() => select(id)}>
         <img alt="" src={`${artwork}${image}_generated_image.png`} /><span>{name}</span>
       </button>)}
