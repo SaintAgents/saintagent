@@ -55,9 +55,12 @@
 .mc-metrics dt {font-size:.67rem;} .mc-metrics dd {font-size:1.15rem; font-weight:800; color:hsl(var(--mc-gold));}
 .mc-metrics + label progress {accent-color:hsl(var(--mc-gold)); height:.6rem; margin-top:.25rem;}
 .mc-pipeline-steps {display:flex; flex-wrap:wrap; gap:.5rem 1rem;}
-.mc-pipeline-steps li {display:flex; align-items:center; gap:.3rem; font-size:.75rem;}
-#global-impact .master-command .mc-pipeline-steps li > span {display:grid; place-items:center; width:1.35rem; height:1.35rem; border-radius:50%; border:1px solid currentColor;}
-#global-impact .master-command .mc-pipeline-steps li[data-stage='current'] > span {color:hsl(var(--mc-gold)) !important;}
-#global-impact .master-command .mc-pipeline-steps li[data-stage='done'] > span {color:hsl(var(--mc-green)) !important;}
+#global-impact .master-command .mc-stage-help {display:inline-flex; align-items:center; gap:.35rem; font-size:.75rem; background:transparent !important; border:0 !important; padding:.2rem; color:hsl(var(--mc-ink)) !important;}
+#global-impact .master-command .mc-stage-circle {display:grid; place-items:center; flex:none; width:1.35rem; height:1.35rem; border-radius:50%; border:1px solid currentColor;}
+#global-impact .master-command [data-stage='current'] .mc-stage-circle {color:hsl(var(--mc-gold)) !important;}
+#global-impact .master-command [data-stage='done'] .mc-stage-circle {color:hsl(var(--mc-green)) !important;}
+#global-impact .master-command .mc-stage-question {font-size:.66rem; font-weight:700; color:hsl(var(--mc-muted)) !important;}
+#global-impact .master-command .mc-stage-help:is(:hover,[data-state='open']) .mc-stage-question {color:hsl(var(--mc-gold)) !important;}
+html:root .mc-stage-popover[data-readable-surface] {z-index:150; background:var(--readable-bg) !important; color:var(--readable-text) !important; border-color:var(--readable-border) !important;}
 .mc-architecture summary::before {content:'▸'; margin-inline-end:.4rem;} .mc-architecture[open] summary::before {content:'▾';}
 .mc-architecture summary > span {margin-inline-start:auto;}

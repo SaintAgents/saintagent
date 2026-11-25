@@ -19,3 +19,10 @@ export const commandDemo = {
   ],
   questions: ['Who will drive on Thursdays and confirm the first pickup with the pantry?', 'How much produce can the garden reliably supply each week?'],
 };
+
+export const commandDemoPlan = {
+  direction: 'prepare_mission',
+  first_action: commandDemo.steps[0],
+  collaboration: 'Volunteer coordinator (unassigned)',
+  milestone: 'Four weekly deliveries logged and reviewed',
+};

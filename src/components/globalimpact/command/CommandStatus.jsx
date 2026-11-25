@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import CommandStageHelp from '@/components/globalimpact/command/CommandStageHelp';
 import GuideMissionHandoff from '@/components/guide/GuideMissionHandoff';
 
 const steps = ['Goal', 'Evidence review', 'Private plan', 'Mission draft'];
@@ -24,7 +24,7 @@ export default function CommandStatus({ result, plan, missionDraft, owner, onMis
       <ol className="mc-pipeline-steps" aria-label="Mission draft stages">{labels.map((label,i) => {
         const done = complete || i < currentStep;
         const current = !done && i === currentStep;
-        return <li key={label} data-stage={done ? 'done' : current ? 'current' : 'waiting'} aria-current={current ? 'step' : undefined}><span>{done ? <Check size={13} aria-label="Done" /> : i+1}</span>{label}</li>;
+        return <li key={label} data-stage={done ? 'done' : current ? 'current' : 'waiting'} aria-current={current ? 'step' : undefined}><CommandStageHelp index={i} label={label} done={done} result={result} plan={plan} missionDraft={missionDraft} demoStage={demoStage} nextAction={nextAction} /></li>;
       })}</ol>
       <p className="text-sm mc-muted" role="status">{demo ? demoStatus[stage] : complete ? 'Private Mission draft saved in Planner. Nothing was published.' : nextAction ? 'Private plan saved. Continue in the workspace that matches the approved direction.' : plan ? 'Private plan saved. Review the Mission details before approving a draft.' : result ? 'Review the evidence and proposed actions before saving a private plan.' : 'Choose a goal to start a Mission Intelligence run.'}</p>
       {stage === 0 && <button className="mc-small-button" type="button" onClick={() => document.getElementById('guide-objective')?.focus()}>Enter mission goal</button>}
