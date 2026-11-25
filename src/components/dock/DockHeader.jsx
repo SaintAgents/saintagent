@@ -26,13 +26,12 @@ export default function DockHeader({ prefs, deck, commit, close, openModal, comp
       {(!configured || preview) && <><button type="button" className="dock-icon-button" aria-label="Background video" title="Background video" aria-pressed={prefs.video} onClick={() => commit({video:!prefs.video})}><VideoIcon size={15} /></button>
       <label className="dock-video-level" title="Background video intensity"><Droplet size={14} aria-hidden="true" /><input type="range" aria-label="Background video intensity" min="0" max="100" defaultValue={prefs.opacity} disabled={!prefs.video} onInput={e => e.currentTarget.closest('.dock-panel').style.setProperty('--dock-video-opacity', e.currentTarget.value / 100)} onBlur={saveIntensity} onPointerUp={saveIntensity} onKeyUp={saveIntensity} /></label></>}
       {!preview && <button type="button" className="dock-icon-button" aria-label="Configure Dock Deck background" title="Configure Dock Deck background" onClick={() => openSurfaceHero('dock', 'Dock Deck')}><Settings2 size={15} /></button>}
-      <details className="dock-settings">
+      {!compactLauncher && <details className="dock-settings">
         <summary className="dock-icon-button" aria-label="Dock settings" title="Dock settings"><Settings2 size={15} /></summary>
         <div className="dock-settings-menu">
-          <label><input type="checkbox" checked={prefs.beside} onChange={e => commit({beside:e.target.checked})} /> Show page beside deck</label>
-          {!compactLauncher && <label><input type="checkbox" checked={prefs.label} onChange={e => commit({label:e.target.checked})} /> Launcher label</label>}
+          <label><input type="checkbox" checked={prefs.label} onChange={e => commit({label:e.target.checked})} /> Launcher label</label>
         </div>
-      </details>
+      </details>}
     </nav>
   </header>;
 }

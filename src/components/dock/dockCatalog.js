@@ -25,4 +25,4 @@ export const widgetLabel = type => type === 'Contact Card' ? 'Digital Contact Ca
 export const icons = ['▦','★','◈','☀','✦','◉','◇','◆'];
 export const safePath = value => typeof value === 'string' && /^\/(?!\/)[^\\\x00-\x20\x7f]*$/.test(value);
 export const widget = (type, settings = {}) => ({ id:crypto.randomUUID(), type, settings, deck:'main', place:'deck' });
-export const initial = () => ({ active:'main', decks:[{id:'main',name:'My Dock',icon:icons[0]}], cards:[widget('Quick Access'),widget('Quick Notes')], width:1120, label:true, beside:false, folders:true, video:false, opacity:100, shortcuts:defaultShortcuts });
+export const initial = () => ({ active:'main', decks:[{id:'main',name:'My Dock',icon:icons[0]}], cards:[widget('Quick Access'),widget('Quick Notes')], width:1120, label:true, folders:true, video:false, opacity:100, shortcuts:defaultShortcuts });

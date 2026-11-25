@@ -3,17 +3,19 @@ import { safePath } from '@/components/dock/dockCatalog';
 
 export default function useDockPanel({prefs,commit,disabled,panel,actions,dragId,setDrag,setModal}) {
   const [open,setOpen]=useState(false), [viewport,setViewport]=useState(()=>window.innerWidth), [draft,setDraft]=useState(null);
-  const wide=viewport>=768, max=Math.min(1122,Math.floor(viewport*.88));
+  const wide=viewport>=768;
+  // Leave room for page content and the widest navigation at each breakpoint.
+  const max=Math.min(1122, viewport - (viewport >= 1024 ? 704 : 368));
   const width=wide ? Math.min(max,Math.max(320,draft ?? prefs.width)) : viewport;
   const shown=open&&!disabled;
   useEffect(()=>{const update=()=>setViewport(window.innerWidth);window.addEventListener('resize',update);return ()=>window.removeEventListener('resize',update);},[]);
   useLayoutEffect(()=>{
     const style=document.documentElement.style;
     style.setProperty('--dock-occupied', `${shown && wide ? width : 0}px`);
-    style.setProperty('--dock-page-reserve', `${shown && wide && prefs.beside ? width : 0}px`);
+    style.setProperty('--dock-page-reserve', `${shown && wide ? width : 0}px`);
     document.dispatchEvent(new Event('dockDeckWidthChange'));
     return ()=>{style.removeProperty('--dock-occupied');style.removeProperty('--dock-page-reserve');document.dispatchEvent(new Event('dockDeckWidthChange'));};
-  },[shown,wide,width,prefs.beside]);
+  },[shown,wide,width]);
   useEffect(()=>{
     if(disabled) return;
     const change=()=>{if (document.querySelector('[data-dock-full-tour][data-state="open"]')) {setOpen(false);setModal(null);}};
