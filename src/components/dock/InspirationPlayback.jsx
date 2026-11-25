@@ -9,7 +9,7 @@ export const inspirationSpeeds = [
 ];
 
 export default function InspirationPlayback({ paused, onToggle, delay, onSpeedChange, onNext, loading }) {
-  return <div role="group" aria-label="Inspiration playback" className="flex flex-wrap items-center gap-2">
+  return <div role="group" aria-label="Inspiration playback" className="flex shrink-0 flex-wrap items-center gap-2">
     <Button type="button" size="icon" variant="outline" aria-label={paused ? 'Resume' : 'Pause'} title={paused ? 'Resume' : 'Pause'} onClick={onToggle}>
       {paused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
     </Button>

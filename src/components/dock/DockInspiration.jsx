@@ -40,10 +40,10 @@ export default function DockInspiration({ visible }) {
   if (preview) return <p>Open Inspiration outside the tour to view your cards.</p>;
   if (isPending) return <p role="status">Loading inspiration cards…</p>;
   if (!image) return <p role="status">{isError ? 'Could not load inspiration cards.' : 'No inspiration cards have been uploaded yet.'}</p>;
-  return <div className="grid min-w-0">
+  return <div className="flex min-h-0 min-w-0 flex-1 flex-col">
     {canCycle && <InspirationPlayback paused={paused} onToggle={() => setPaused(value => !value)}
       delay={delay} onSpeedChange={setDelay} onNext={() => void next()} loading={isFetchingNextPage} />}
     {isFetchNextPageError && <p role="status" className="text-sm">Could not load more cards. Select Next card to retry.</p>}
-    <InspirationArtwork key={image.file_uri} image={image} compactLoading />
+    <InspirationArtwork key={image.file_uri} image={image} fitWidget />
   </div>;
 }

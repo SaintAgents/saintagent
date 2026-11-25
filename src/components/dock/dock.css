@@ -81,7 +81,8 @@ html[data-theme='custom'] #dock-deck :is(.dock-header,.dock-footer,.dock-card-he
 #dock-deck :is(.dock-card-header button,.dock-card-resize) {background:transparent!important;color:hsl(var(--d-subtle))!important;border:0!important;border-radius:.25rem!important;box-shadow:none!important;}
 #dock-deck :is(.dock-card-header button,.dock-card-resize):hover {background:hsl(var(--d-muted))!important;color:hsl(var(--d-text))!important;}
 .dock-card-body {min-height:0;overflow:auto;padding:.5rem .55rem .9rem;font-size:.83rem;overflow-wrap:anywhere;}
-.dock-card-body[data-inspiration-card] {padding:0;}
+.dock-card-body[data-inspiration-card] {display:flex;flex:1 1 auto;padding:0;}
+.dock-card-body[data-inspiration-card] > * {width:100%;}
 .dock-root .dock-added-widget :is(button,a):not(:disabled) {border:1px solid hsl(var(--d-line));border-radius:.35rem;padding:.2rem .45rem;}
 .dock-root .dock-added-widget :is(button,a):is(:hover,[aria-pressed='true']):not(:disabled) {background:hsl(var(--d-muted))!important;border-color:hsl(var(--d-selected))!important;}
 .dock-root .dock-added-widget button:disabled {opacity:.5;}
