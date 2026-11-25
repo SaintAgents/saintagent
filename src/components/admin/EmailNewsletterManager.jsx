@@ -948,7 +948,7 @@ Return ONLY the formatted content.`;
                         AI Format
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent data-newsletter-manager className="w-80 p-3" align="end">
+                    <PopoverContent data-newsletter-manager data-newsletter-formatter className="w-80 p-3" align="end" sideOffset={8} collisionPadding={12}>
                       <div className="space-y-3">
                         <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                           <Sparkles className="w-4 h-4 text-violet-500" />

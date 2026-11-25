@@ -20,3 +20,22 @@ html[data-theme='dark'] [data-newsletter-manager] :is(input, textarea)::placehol
 html[data-theme='dark'] [data-newsletter-manager] button:disabled {
   opacity: 0.65;
 }
+
+html [data-radix-popper-content-wrapper]:has(> [data-newsletter-formatter]) {
+  z-index: 10010 !important;
+}
+html [data-radix-popper-content-wrapper] > [data-newsletter-formatter] {
+  --formatter-surface: var(--popover);
+  background: hsl(var(--formatter-surface)) !important;
+  opacity: 1 !important;
+  isolation: isolate;
+  max-width: var(--radix-popover-content-available-width);
+  max-height: var(--radix-popover-content-available-height);
+  overflow: auto;
+}
+html[data-theme='dark'] [data-newsletter-formatter] {
+  --formatter-surface: 222 47% 8%;
+}
+html[data-theme='hacker'] [data-newsletter-formatter] {
+  --formatter-surface: 0 0% 0%;
+}
