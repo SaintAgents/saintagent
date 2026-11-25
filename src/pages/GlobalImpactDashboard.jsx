@@ -1,15 +1,16 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { ArrowUpRight, Radio, Sparkles } from 'lucide-react';
+import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
+import { ArrowUpRight, Sparkles } from 'lucide-react';
 import ImpactCommand from '@/components/globalimpact/ImpactCommand';
 import ImpactWorkspace, { isImpactTab } from '@/components/globalimpact/ImpactWorkspace';
-import WorldPulse from '@/components/globalimpact/WorldPulse';
+import { readScope, scopeRoute } from '@/components/globalimpact/pulse/pulseGeography';
 import { openGuide } from '@/components/globalimpact/impactDiscovery';
 import '@/components/globalimpact/globalImpact.css';
 import MasterCommandHud from '@/components/globalimpact/command/MasterCommandHud';
 
 export default function GlobalImpactDashboard() {
   const [params, setParams] = useSearchParams();
+  const { hash } = useLocation();
   const requested = params.get('workspace');
   // Old My Impact shortcuts resolve to the new Overview workspace.
   const active = isImpactTab(requested) ? requested : 'overview';
@@ -33,9 +34,10 @@ export default function GlobalImpactDashboard() {
     }
     setParams(next, { preventScrollReset:true });
   }
+  if (hash === '#world-pulse' || params.has('pulse')) return <Navigate replace to={scopeRoute(params.get('pulse'), demo, readScope(params))} />;
   return <section id="global-impact" className="min-h-dvh px-3 pb-24 pt-5 sm:px-6">
     <div className="mx-auto max-w-[100rem] space-y-4">
-      <ImpactCommand active={active} select={select} />
+      <ImpactCommand active={active} select={select} demo={demo} />
       {active === 'command' ? <MasterCommandHud key={demo ? 'demo' : 'live'} demo={demo} /> : <>
       <div className="impact-intro flex flex-wrap content-end items-end justify-between gap-3">
         <div><p className="impact-kicker">SAINTAGENT / GLOBAL OPERATIONS</p><h1 className="mt-1 text-3xl font-extrabold tracking-tight sm:text-5xl">Global Impact Dashboard</h1><p className="impact-muted mt-2 text-sm">Find opportunities, connect with people, and turn ideas into action.</p></div>
@@ -45,9 +47,7 @@ export default function GlobalImpactDashboard() {
         <button type="button" aria-pressed={demo} className={`impact-control ${demo ? 'impact-selected' : ''}`} onClick={toggleDemo}>{demo ? 'Exit Demo' : 'Demo'}</button>
         {demo && <p className="impact-muted text-sm" role="status">Demo mode is on. World Pulse and Opportunities show fictional examples; My Impact shows your own activity.</p>}
       </div>
-      {demo && <WorldPulse key="sample-pulse" icon={Radio} demo />}
       <ImpactWorkspace active={active} select={select} demo={demo} />
-      {!demo && <WorldPulse key="live-pulse" icon={Radio} />}
       </>}
     </div>
   </section>;

@@ -5,7 +5,8 @@ import LiveActivityDialog from '@/components/live/LiveActivityDialog';
 import { demoPulse } from '@/components/globalimpact/impactDemo';
 import PulseModules from '@/components/globalimpact/pulse/PulseModules';
 
-export default function WorldPulse({ icon: PulseIcon, demo, preview = false }) {
+export default function WorldPulse({ icon: PulseIcon, demo, preview = false, standalone = false }) {
+  const Heading = standalone ? 'h1' : 'h2';
   const activity = useActivity();
   const [filter, setFilter] = useState('all');
   const [sample, setSample] = useState(null);
@@ -13,7 +14,7 @@ export default function WorldPulse({ icon: PulseIcon, demo, preview = false }) {
   const options = [['all','All updates'],['impact','Impact'],['projects','Projects'],['opportunities','Opportunities'],['signals','Signals'],['new_members','New members']];
   return <section id="world-pulse" className="impact-surface scroll-mt-32 p-3 sm:p-4" aria-label="World Pulse">
     <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-      <div className="flex items-center gap-2"><PulseIcon size={19} /><h2 className="text-lg font-bold">World Pulse</h2><span className="impact-chip">{demo ? 'Demo activity' : 'SaintAgent activity'}</span></div>
+      <div className="flex items-center gap-2"><PulseIcon size={19} aria-hidden="true" /><Heading className={standalone ? 'text-2xl font-bold sm:text-3xl' : 'text-lg font-bold'}>World Pulse</Heading><span className="impact-chip">{demo ? 'Demo activity' : 'SaintAgent activity'}</span></div>
     </div>
     <PulseModules demo={demo} preview={preview} />
     <div className="mt-4 border-t pt-3">

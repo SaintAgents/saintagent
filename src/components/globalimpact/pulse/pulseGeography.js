@@ -10,10 +10,11 @@ export const pulseRegions = [
 export const pulseScope = ({region, country, local}) => local || country || region || 'Global';
 export const pulseLevels = ['Global Pulse','Regional Intelligence','Country Intelligence','Local Developments','Actionable Opportunities'];
 export function scopeRoute(domain, demo, scope = {}) {
-  const params = new URLSearchParams({pulse:domain});
-  if (demo) params.set('impactDemo','1');
+  const params = new URLSearchParams();
+  if (domain) params.set('pulse', domain);
+  if (demo) params.set('impactDemo', '1');
   for (const key of ['region','country','local']) if (scope[key]) params.set(`pulse${key}`, scope[key]);
-  return `/GlobalImpactDashboard?${params}#world-pulse`;
+  return `/WorldPulse${params.size ? `?${params}` : ''}${domain ? '#world-pulse' : ''}`;
 }
 export function readScope(params) {
   const region = pulseRegions.find(row => row.name === params.get('pulseregion'));

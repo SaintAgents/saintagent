@@ -1,6 +1,7 @@
 import ImpactCommandPulse from '@/components/globalimpact/ImpactCommandPulse';
 import { Link } from 'react-router-dom';
-import { Compass, Search } from 'lucide-react';
+import { Compass, Radio, Search } from 'lucide-react';
+import { scopeRoute } from '@/components/globalimpact/pulse/pulseGeography';
 
 const artwork = 'https://media.base44.com/images/public/694f3e0401b05e6e8a042002/';
 const logo = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8c39339ab_logo.png';
@@ -17,7 +18,7 @@ const shortcuts = [
   ['Gatherings', 'gatherings', '535aef5be25fb6e2774242e44de04325', '49 100% 67%'],
 ];
 
-export default function ImpactCommand({ active, select }) {
+export default function ImpactCommand({ active, select, demo }) {
   return <header className="impact-command impact-surface">
     <div className="impact-command-pulse-window" aria-hidden="true"><ImpactCommandPulse /></div>
     <button type="button" aria-label="SaintAgent dashboard overview" className="impact-brand" onClick={() => select('overview')}>
@@ -35,6 +36,9 @@ export default function ImpactCommand({ active, select }) {
       </Link>
       <Link to="/IntelligenceDashboard" aria-label="Intel Hub: Intelligence Dashboard" title="Intelligence Dashboard" className="impact-shortcut text-center" style={{ '--tile-tone':'245 100% 76%' }}>
         <img alt="" src={`${artwork}dee14f8e015f59dc910ae9185e67c4bd_generated_image.png`} /><span>Intel Hub</span>
+      </Link>
+      <Link to={scopeRoute(null, demo)} aria-label="Pulse: World Pulse" title="World Pulse" className="impact-shortcut text-center" style={{ '--tile-tone':'var(--impact-cyan)' }}>
+        <Radio className="m-auto size-6 text-card-foreground" aria-hidden="true" /><span>Pulse</span>
       </Link>
       {shortcuts.map(([name, id, image, tone, title]) => <button type="button" key={id} title={title} aria-controls="impact-workspace" aria-pressed={active === id} className="impact-shortcut" style={{ '--tile-tone':tone }} onClick={() => select(id)}>
         <img alt="" src={`${artwork}${image}_generated_image.png`} /><span>{name}</span>

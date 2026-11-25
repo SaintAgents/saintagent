@@ -39,6 +39,7 @@ import SavedItems from '@/pages/SavedItems';
 import Intelligence from '@/pages/Intelligence';
 import WisdomExchange from '@/pages/WisdomExchange';
 import GlobalImpactDashboard from '@/pages/GlobalImpactDashboard';
+import WorldPulse from '@/pages/WorldPulse';
 import SharedSearch from '@/pages/SharedSearch';
 import IntelligenceDashboard from '@/pages/IntelligenceDashboard';
 import DocumentVault from '@/pages/DocumentVault';
@@ -213,6 +214,7 @@ const AppRoutes = () => (
       <Route path="/ConferencePortal" element={<LayoutWrapper currentPageName="ConferencePortal"><ConferencePortal /></LayoutWrapper>} />
       <Route path="/MyGuide" element={<LayoutWrapper currentPageName="MyGuide"><MyGuide /></LayoutWrapper>} />
       <Route path="/GlobalImpactDashboard" element={<LayoutWrapper currentPageName="GlobalImpactDashboard"><GlobalImpactDashboard /></LayoutWrapper>} />
+      <Route path="/WorldPulse" element={<LayoutWrapper currentPageName="WorldPulse"><WorldPulse /></LayoutWrapper>} />
       <Route path="/SharedSearch" element={<LayoutWrapper currentPageName="SharedSearch"><SharedSearch /></LayoutWrapper>} />
       <Route path="/IntelligenceDashboard" element={<LayoutWrapper currentPageName="IntelligenceDashboard"><IntelligenceDashboard /></LayoutWrapper>} />
       <Route path="/DocumentVault" element={<LayoutWrapper currentPageName="DocumentVault"><DocumentVault /></LayoutWrapper>} />
