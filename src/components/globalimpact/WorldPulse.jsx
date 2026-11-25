@@ -3,6 +3,7 @@ import PulseActivity from '@/components/globalimpact/pulse/PulseActivity';
 import PulseCommandSignals from '@/components/globalimpact/pulse/PulseCommandSignals';
 import { demoPulse } from '@/components/globalimpact/impactDemo';
 import PulseModules from '@/components/globalimpact/pulse/PulseModules';
+import ImpactIndexCalculator from '@/components/globalimpact/pulse/ImpactIndexCalculator';
 
 export default function WorldPulse({ icon: PulseIcon, demo, preview = false, standalone = false, onDemoChange }) {
   const Heading = standalone ? 'h1' : 'h2';
@@ -14,6 +15,7 @@ export default function WorldPulse({ icon: PulseIcon, demo, preview = false, sta
     </div>
     <PulseModules demo={demo} preview={preview} />
     <PulseActivity title="SaintAgent activity" events={events} query={demo ? undefined : activity?.events} demo={demo} onDemoChange={onDemoChange} />
+    {standalone && demo && !preview && <ImpactIndexCalculator />}
     <PulseCommandSignals demo={demo} preview={preview} />
   </section>;
 }
