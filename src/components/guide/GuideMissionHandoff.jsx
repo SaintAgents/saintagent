@@ -6,11 +6,11 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import CreateMissionModal from '@/components/CreateMissionModal';
 import { planKey } from '@/components/guide/guidePlan';
 
-export default function GuideMissionHandoff({ plan, owner, dirty }) {
+export default function GuideMissionHandoff({ plan, owner, dirty, onMissionDraft }) {
   const client = useQueryClient();
   const [review,setReview] = useState(false), [open,setOpen] = useState(false);
   const approval = useMutation({ mutationFn:async () => (await base44.functions.invoke('approveGuideMissionDraft',{id:plan.id, revision:plan.updated_date, approve:true})).data.draft,
-    onSuccess: () => { setReview(false); client.invalidateQueries({queryKey:planKey(owner)}); } });
+    onSuccess: draft => { setReview(false); client.invalidateQueries({queryKey:planKey(owner)}); onMissionDraft?.(draft); } });
   const draft = approval.data || plan.mission_draft;
   const [prefill,setPrefill] = useState(null);
   if (!draft && plan.direction !== 'prepare_mission') return null;

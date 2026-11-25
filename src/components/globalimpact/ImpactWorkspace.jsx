@@ -23,7 +23,7 @@ const workspacePages = {
   growth: ['Growth', lazy(() => import('@/pages/Learn'))],
 };
 const tabs = [['overview','Overview'], ['opportunities','Opportunities'], ['radar','Collaboration Radar'], ...['projects','missions','challenges','collectives','gatherings','research'].map(id => [id, workspacePages[id][0]])];
-export const isImpactTab = id => tabs.some(([key]) => id === key) || Object.hasOwn(workspacePages, id);
+export const isImpactTab = id => id === 'command' || tabs.some(([key]) => id === key) || Object.hasOwn(workspacePages, id);
 
 export default function ImpactWorkspace({ active, select, demo, previewUser }) {
   const [title, Page] = workspacePages[active] || [];

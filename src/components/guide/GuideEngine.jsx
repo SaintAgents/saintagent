@@ -10,7 +10,7 @@ import GuideResult from '@/components/guide/GuideResult';
 import { runGuide } from '@/components/guide/guideEngine';
 
 const example = 'I want to start a neighborhood project that turns food waste into compost for a community garden. What is a realistic first milestone, and who could help?';
-export default function GuideEngine({ blueprintOnly = false }) {
+export default function GuideEngine({ blueprintOnly = false, onResult }) {
   const { user } = useAuth();
   const client = useQueryClient();
   const queryKey = ['guide-blueprint', user?.id];
@@ -19,9 +19,9 @@ export default function GuideEngine({ blueprintOnly = false }) {
   const [seven, setSeven] = useState(false);
   const [deep, setDeep] = useState(false);
   const [useBlueprint, setUseBlueprint] = useState(false);
-  const guide = useMutation({ mutationFn: runGuide });
-  return <section id={blueprintOnly ? undefined : 'guide-weaver'} data-readable-surface className="scroll-mt-32 space-y-4 rounded-2xl border p-4 shadow-sm sm:p-6" aria-label={blueprintOnly ? 'Living Blueprint' : 'The Weaver'}>
-    {!blueprintOnly && <div><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"><Sparkles size={16} /> The Weaver</p><h3 className="mt-1 text-xl font-bold">Find your Path Forward</h3><p className="mt-1 text-sm text-muted-foreground">Search across SaintAgent, connect what you find to your goals, and turn it into a plan you can review.</p></div>}
+  const guide = useMutation({ mutationFn: runGuide, onSuccess: onResult });
+  return <section id={blueprintOnly ? undefined : 'guide-weaver'} data-readable-surface={onResult ? undefined : ''} className={onResult ? 'space-y-3' : 'scroll-mt-32 space-y-4 rounded-2xl border p-4 shadow-sm sm:p-6'} aria-label={blueprintOnly ? 'Living Blueprint' : 'The Weaver'}>
+    {!blueprintOnly && !onResult && <div><p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"><Sparkles size={16} /> The Weaver</p><h3 className="mt-1 text-xl font-bold">Find your Path Forward</h3><p className="mt-1 text-sm text-muted-foreground">Search across SaintAgent, connect what you find to your goals, and turn it into a plan you can review.</p></div>}
     {blueprintOnly && <div id="guide-blueprint" className="scroll-mt-32 space-y-3 rounded-lg border p-3">
       {blueprint.isPending ? <p role="status" className="text-sm">Loading Blueprint…</p> : blueprint.isError ? <p role="alert" className="text-sm">Could not load the Blueprint. <button type="button" className="underline" onClick={() => blueprint.refetch()}>Retry</button></p> : <GuideBlueprintEditor record={blueprint.data} onSave={record => { client.setQueryData(queryKey, record); if (!record) setUseBlueprint(false); }} />}
     </div>}
@@ -38,6 +38,6 @@ export default function GuideEngine({ blueprintOnly = false }) {
       {guide.isPending && <p role="status" className="text-sm">{deep ? 'Running Deep Dive, saving the investigation, and preparing a draft for review.' : 'Searching SaintAgent and synthesizing a draft. No records are being changed.'}</p>}
       {guide.isError && <p role="alert" className="text-sm">The Guide couldn’t finish this run. Try again or narrow your question.</p>}
     </form>}
-    {!blueprintOnly && guide.isSuccess && <GuideResult key={guide.submittedAt} result={guide.data} userId={user.id} />}
+    {!blueprintOnly && !onResult && guide.isSuccess && <GuideResult key={guide.submittedAt} result={guide.data} userId={user.id} />}
   </section>;
 }

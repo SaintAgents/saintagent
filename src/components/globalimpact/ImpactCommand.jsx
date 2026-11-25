@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 const artwork = 'https://media.base44.com/images/public/694f3e0401b05e6e8a042002/';
 const logo = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8c39339ab_logo.png';
 const shortcuts = [
+  ['Master HUD', 'command', 'd80829ac69d2eef09e39e0d19343e854', '43 92% 68%', 'Master Command HUD'],
   ['Discovery', 'opportunities', 'ffb35bb8cdec7d7b4c723663895bea1a', '209 100% 63%'],
   ['Research', 'research', 'ad5132ad4cd9bda39cbfee0406c69b0c', '35 100% 61%'],
   ['People', 'people', '3ed8d44b72648d5bf2d1af32d666523c', '270 100% 72%'],

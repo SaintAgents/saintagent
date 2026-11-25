@@ -9,7 +9,7 @@ import { directions, planFields, planKey, resolvePlanReferences } from '@/compon
 import { sourceHref } from '@/components/intelligence/intelligenceSources';
 import GuideMissionHandoff from '@/components/guide/GuideMissionHandoff';
 
-export default function GuidePlanEditor({ initial, owner, onSave, onDirty, links = [] }) {
+export default function GuidePlanEditor({ initial, owner, onSave, onDirty, onMissionDraft, links = [] }) {
   const uid = useId(), client = useQueryClient();
   const [draft,setDraft] = useState(initial);
   const [saved,setSaved] = useState(null);
@@ -36,5 +36,5 @@ export default function GuidePlanEditor({ initial, owner, onSave, onDirty, links
     {saved ? <p role="status" className="text-sm">Private plan saved. {!onSave && <Link className="font-semibold underline" to={`/Planner?guidePlan=${encodeURIComponent(saved.id)}#guide-action-plans`}>Open in Planner</Link>}</p> : <Button type="submit" disabled={save.isPending || !draft.title.trim() || !draft.first_action.trim()}>{save.isPending ? 'Saving…' : initial.id ? 'Save changes' : 'Approve and save private plan'}</Button>}
     {initial.id && save.isSuccess && <p role="status" className="text-sm">Changes saved.</p>}
     {save.isError && <p role="alert" className="text-sm">Couldn’t save the plan. Try again.</p>}
-  </form>{saved && <GuideMissionHandoff plan={saved} owner={owner} />}</>;
+  </form>{saved && <GuideMissionHandoff plan={saved} owner={owner} onMissionDraft={onMissionDraft} />}</>;
 }
