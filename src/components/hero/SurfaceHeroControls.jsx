@@ -20,6 +20,6 @@ export default function SurfaceHeroControls({ page, theme }) {
   return request && <SurfaceHeroEditor request={request} targets={targets} theme={theme} close={() => setRequest(null)} />;
 }
 
-export function openPageHero(page) {
-  openSurfaceHero(routeHeroKey(page), `${page.replace(/([a-z0-9])([A-Z])/g, '$1 $2')} · This page`);
+export function openPageHero(page, options) {
+  openSurfaceHero(routeHeroKey(page), `${page.replace(/([a-z0-9])([A-Z])/g, '$1 $2')} · This page`, options);
 }

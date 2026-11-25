@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { VIDEO_LIBRARY, VIDEO_CATEGORIES, getHackerVideoConfig } from '@/components/hud/videoLibrary';
 import { HeroQuickToggle, openPageHero } from '@/components/hero/SurfaceHeroControls';
+import CommandDeckHeroLibrary from '@/components/hero/CommandDeckHeroLibrary';
 import { openSurfaceHero } from '@/components/hero/surfaceHeroSettings';
 import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 
@@ -71,6 +72,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
   const [helpOpen, setHelpOpen] = useState(false);
   const panelRef = useRef(null);
   const toolbarRef = useRef(null);
+  const heroButtonRef = useRef(null);
 
   const { position: dragPos, handleProps } = useToolbarDrag(toolbarRef, collapsed, panelRef, activePanel);
 
@@ -231,6 +233,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
 
         {/* Hero Background / Video */}
         <button
+          ref={heroButtonRef}
           data-toolbar-btn
           onClick={() => togglePanel('hero')}
           className={btnClass(activePanel === 'hero')}
@@ -394,6 +397,12 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
                   <button type="button" onClick={() => { setActivePanel(null); openPageHero(currentPageName); }}>Page &amp; surface carousels</button>
                   <HeroQuickToggle />
                 </div>}
+                {currentPageName === 'CommandDeck' && !isTourPreview() && (
+                  <CommandDeckHeroLibrary onSelect={preset => {
+                    setActivePanel(null);
+                    openPageHero(currentPageName, { preset, trigger: heroButtonRef.current });
+                  }} />
+                )}
                 {/* Surface selector */}
                 {hackerMode ? <p className="text-xs" style={{ color: textMuted }}>Hacker mode · All pages</p> : <div className="flex flex-wrap gap-1">
                   {SURFACES.map(s => (

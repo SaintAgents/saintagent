@@ -10,10 +10,20 @@ import { getSavedHeroes, heroDefaults, heroMedia, previewSurfaceHero, saveSurfac
 
 const initial = surface => getSavedHeroes().surfaces?.[surface] || heroDefaults(surface);
 export default function SurfaceHeroEditor({ request, targets, theme, close }) {
-  const [surface, setSurface] = useState(request.surface), [draft, setDraft] = useState(() => initial(request.surface));
-  const [dirty, setDirty] = useState(false), [release, setRelease] = useState(false), [confirm, setConfirm] = useState(false), [notice, setNotice] = useState('');
+  const [start] = useState(() => {
+    const config = initial(request.surface);
+    if (!request.preset) return { config };
+    const remaining = (config.images || []).filter(item => item.url !== request.preset.url);
+    if (remaining.length >= 4) return { config: { ...config, mode: 'image' }, notice: 'The image carousel is full. Remove an item before adding another.' };
+    return { config: { ...config, mode: 'image', enabled: true, images: [request.preset, ...remaining] }, preview: true };
+  });
+  const [surface, setSurface] = useState(request.surface), [draft, setDraft] = useState(start.config);
+  const [dirty, setDirty] = useState(Boolean(start.preview)), [release, setRelease] = useState(Boolean(start.preview)), [confirm, setConfirm] = useState(false), [notice, setNotice] = useState(start.notice || '');
   const media = heroMedia(draft), field = draft.mode === 'image' ? 'images' : 'videos';
-  useEffect(() => () => previewSurfaceHero(null), []);
+  useEffect(() => {
+    if (start.preview) previewSurfaceHero({ surfaces: { [request.surface]: start.config }, hidden: false });
+    return () => previewSurfaceHero(null);
+  }, [request.surface, start]);
   const change = (patch, show = false) => {
     const next = { ...draft, ...patch }; setDraft(next); setDirty(true); setNotice(''); setRelease(release || show);
     previewSurfaceHero({ surfaces: { [surface]: next }, ...((release || show) && { hidden: false }) });
@@ -38,7 +48,7 @@ export default function SurfaceHeroEditor({ request, targets, theme, close }) {
     <div className="pr-8"><DialogTitle>Hero / Video Background</DialogTitle><DialogDescription>Choose a background for a page or workspace. Changes preview live and save in this browser.</DialogDescription></div>
     <label className="grid gap-1 text-sm">Surface<select className="rounded border bg-background p-2" value={surface} onChange={event => { const next = event.target.value; if (dirty && !window.confirm('Discard unsaved changes to this surface?')) return; previewSurfaceHero(null); setSurface(next); setDraft(initial(next)); setDirty(false); setRelease(false); setConfirm(false); setNotice(''); }}>{targets.map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
     <div className="surface-hero-preview relative isolate aspect-[3/1] overflow-hidden rounded border bg-muted" aria-label="Background preview">{media.length ? <SurfaceMedia config={{ ...draft, muted: true }} className="absolute inset-0" theme={theme} /> : <p className="p-3 text-sm">No media selected</p>}</div>
-    {surface === 'page:CommandDeck' && <CommandDeckHeroLibrary selected={draft.images || []} toggle={item => add(item, true, 'image')} />}
+    {surface === 'page:CommandDeck' && <CommandDeckHeroLibrary selected={draft.images || []} onSelect={item => add(item, true, 'image')} />}
     <SurfaceHeroOptions config={draft} update={change} page={surface !== 'dock' && surface !== 'sidebar'} />
     <SurfaceHeroQueue key={`${surface}:${field}`} config={draft} update={change} notice={setNotice} add={add} />
     {draft.mode === 'video' && <SurfaceHeroLibrary selected={media} toggle={item => add(item, true)} />}

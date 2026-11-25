@@ -23,7 +23,7 @@ export function toggleSurfaceHeroes() {
   const next = { ...saved, hidden: !saved.hidden };
   localStorage.setItem(key, JSON.stringify(next)); saved = next; publish();
 }
-export const openSurfaceHero = (surface, label) => window.dispatchEvent(new CustomEvent('openSurfaceHero', { detail: { surface, label, trigger: document.activeElement } }));
+export const openSurfaceHero = (surface, label, { preset, trigger = document.activeElement } = {}) => window.dispatchEvent(new CustomEvent('openSurfaceHero', { detail: { surface, label, trigger, preset } }));
 export const routeHeroKey = page => `page:${page}`;
 export const heroDefaults = surface => ({ enabled: false, mode: 'video', videos: [], images: [], videoRotate: true, imageRotate: true, videoInterval: 15, imageInterval: 10, videoFade: 800, imageFade: 800, opacity: surface === 'dock' ? 0.45 : 0.24, speed: 1, blur: 0, muted: true, theme: 'all', fit: 'cover', position: 'center', attachment: 'fixed' });
 export function heroUrl(value) {
