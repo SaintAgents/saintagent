@@ -44,7 +44,6 @@ export default function DockInspiration({ visible }) {
     {canCycle && <InspirationPlayback paused={paused} onToggle={() => setPaused(value => !value)}
       delay={delay} onSpeedChange={setDelay} onNext={() => void next()} loading={isFetchingNextPage} />}
     {isFetchNextPageError && <p role="status" className="text-sm">Could not load more cards. Select Next card to retry.</p>}
-    <InspirationArtwork key={image.file_uri} image={image} />
-    {image.caption && <p className="break-words text-sm">{image.caption}</p>}
+    <InspirationArtwork key={image.file_uri} image={image} compactLoading />
   </div>;
 }
