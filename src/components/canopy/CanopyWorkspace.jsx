@@ -30,8 +30,12 @@ export default function CanopyWorkspace(props) {
   }
   const dragHandle = id => ({draggable:true,onDragStart:e => { dragging.current=id; e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',id); },onDragEnd:() => {dragging.current=null;}});
   const dropTarget = id => ({onDragOver:e => {if (dragging.current) {e.preventDefault(); e.dataTransfer.dropEffect='move';}},onDrop:e => {if (!dragging.current) return; e.preventDefault(); move(dragging.current,id); dragging.current=null;}});
-  const reorder = useCanopyCardReorder(visible, move);
+  const freeform = editable && mode === 'full';
+  const positions = settings.positions || {};
+  const reorder = useCanopyCardReorder(visible, move, { freeform, positions, save: next => commit({ positions: next }) });
+  const layout = reorder.drag?.layout || positions;
   const card = (id, focused = false) => <CanopyCard key={id} id={id} focused={focused} scale={cardScale} size={settings.sizes[id]}
+    position={!focused && freeform ? layout[id] : undefined}
     minimized={!focused && editable && Boolean(settings.minimized[id])}
     onResize={original ? undefined : size => commit({sizes:{...settings.sizes,[id]:size}})}
     dragHandle={!focused && editable ? reorder.grip(id) : undefined}
@@ -46,11 +50,11 @@ export default function CanopyWorkspace(props) {
       </button>
     </div>
     {mode !== 'peek' && <CanopyCommandBar {...props} />}
-    {editable && <><div className="canopy-tools"><p>{visible.length} widgets · Drag a card’s grip onto another card to reorder. Drag edges to resize.</p><button aria-expanded={library} aria-controls={library ? 'canopy-library' : undefined} onClick={() => setLibrary(!library)}><Settings2 size={14} /> Customize</button></div>
+    {editable && <><div className="canopy-tools"><p>{visible.length} widgets · {freeform ? <><span className="hidden md:inline">Drag a grip to place a card anywhere.</span><span className="md:hidden">Drag a grip onto another card to reorder.</span></> : 'Drag a grip onto another card to reorder.'} Drag edges to resize.</p><button aria-expanded={library} aria-controls={library ? 'canopy-library' : undefined} onClick={() => setLibrary(!library)}><Settings2 size={14} /> Customize</button></div>
       {library && <CanopyCustomizer {...{settings,commit,allowed,scale,setScale,move,dragHandle,dropTarget}} />}</>}
     {error && <p role="status" className="canopy-status">Saved on this device; account sync failed. <button onClick={() => commit({})}>Retry sync</button></p>}
     {special && <div className="canopy-focus" key={special} ref={widgetFocus}>{card(special, true)}</div>}
-    <div className="canopy-grid" ref={reorder.grid}>
+    <div className="canopy-grid" ref={reorder.grid} data-canopy-placed={freeform && visible.some(id => layout[id]) ? '' : undefined}>
       {!visible.length && !special && <p>{editable ? 'No widgets yet. Add one from Customize.' : 'No widgets to display.'}</p>}
       {visible.map(id => card(id))}
     </div>

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { canopyPlacementQuery, measureCanopyPlacement, placeCanopyCard, sameCanopyPosition } from '@/components/canopy/canopyCardPositions';
 
-export default function useCanopyCardReorder(visible, move) {
+export default function useCanopyCardReorder(visible, move, { freeform, positions, save }) {
+  const canPlace = () => freeform && window.matchMedia(canopyPlacementQuery).matches;
   const grid = useRef(null), press = useRef(null), frame = useRef(0);
   const [drag, setDrag] = useState(null);
   const cardAt = (x, y) => {
@@ -9,6 +11,12 @@ export default function useCanopyCardReorder(visible, move) {
   };
   const stop = () => { cancelAnimationFrame(frame.current); frame.current = 0; press.current = null; setDrag(null); };
   useEffect(() => () => cancelAnimationFrame(frame.current), []);
+
+  function positionAt(current, x, y) {
+    const { placement, gridTop, startX, startY } = current;
+    return placeCanopyCard(grid.current, placement, placement.origin.x + x - startX,
+      placement.origin.y + y - startY + gridTop - grid.current.getBoundingClientRect().top);
+  }
 
   function preview() {
     const current = press.current, scroller = grid.current?.closest('.canopy-scroll');
@@ -19,8 +27,14 @@ export default function useCanopyCardReorder(visible, move) {
       if (y < top + 32) scroller.scrollTop -= 9;
       if (y > bottom - 32) scroller.scrollTop += 9;
     }
-    const target = cardAt(x, y);
-    setDrag(previous => previous?.id === id && previous?.target === target ? previous : { id, target });
+    if (current.placement) {
+      const point = positionAt(current, x, y);
+      setDrag(previous => previous?.id === id && sameCanopyPosition(previous.layout?.[id], point)
+        ? previous : { id, layout: { ...current.placement.layout, [id]: point } });
+    } else {
+      const target = cardAt(x, y);
+      setDrag(previous => previous?.id === id && previous?.target === target ? previous : { id, target });
+    }
     frame.current = requestAnimationFrame(preview);
   }
 
@@ -28,7 +42,8 @@ export default function useCanopyCardReorder(visible, move) {
     onPointerDown(e) {
       if (e.button !== 0 || !e.isPrimary || press.current) return;
       e.currentTarget.setPointerCapture(e.pointerId);
-      press.current = { id, pointer: e.pointerId, startX: e.clientX, startY: e.clientY };
+      const placement = canPlace() ? measureCanopyPlacement(grid.current, id, positions) : null;
+      press.current = { id, pointer: e.pointerId, startX: e.clientX, startY: e.clientY, placement, gridTop: grid.current.getBoundingClientRect().top };
     },
     onPointerMove(e) {
       const current = press.current;
@@ -39,10 +54,16 @@ export default function useCanopyCardReorder(visible, move) {
       }
     },
     onPointerUp(e) {
-      if (press.current?.pointer !== e.pointerId) return;
-      const target = press.current.active ? cardAt(e.clientX, e.clientY) : null;
+      const current = press.current;
+      if (current?.pointer !== e.pointerId) return;
+      if (current.active && current.placement) {
+        const point = positionAt(current, e.clientX, e.clientY);
+        if (!sameCanopyPosition(point, current.placement.origin)) save({ ...current.placement.layout, [id]: point });
+      } else if (current.active) {
+        const target = cardAt(e.clientX, e.clientY);
+        if (target) move(id, target);
+      }
       stop();
-      if (target) move(id, target);
     },
     onPointerCancel(e) { if (press.current?.pointer === e.pointerId) stop(); },
     onLostPointerCapture(e) { if (press.current?.pointer === e.pointerId) stop(); },
@@ -51,6 +72,15 @@ export default function useCanopyCardReorder(visible, move) {
       const step = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 }[e.key];
       if (!step || press.current) return;
       e.preventDefault();
+      if (canPlace()) {
+        const placement = measureCanopyPlacement(grid.current, id, positions);
+        if (!placement) return;
+        const axis = e.key === 'ArrowUp' || e.key === 'ArrowDown' ? 'y' : 'x';
+        const next = { ...placement.origin, [axis]: placement.origin[axis] + step * (e.shiftKey ? 24 : 4) };
+        const point = placeCanopyCard(grid.current, placement, next.x, next.y);
+        if (!sameCanopyPosition(point, placement.origin)) save({ ...placement.layout, [id]: point });
+        return;
+      }
       const target = visible[visible.indexOf(id) + step];
       if (target) move(id, target);
     },
