@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import InspirationArtwork from '@/components/dock/InspirationArtwork';
+import InspirationSlides from '@/components/dock/InspirationSlides';
 import InspirationPlayback, { inspirationSpeeds } from '@/components/dock/InspirationPlayback';
 import { useInspirationImages } from '@/components/dock/useInspirationImages';
 import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 
 export default function DockInspiration({ visible }) {
   const [index, setIndex] = useState(0);
+  const [settledUri, setSettledUri] = useState(null);
   const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [delay, setDelay] = useState(inspirationSpeeds[1].delay);
   const preview = isTourPreview();
@@ -24,8 +25,9 @@ export default function DockInspiration({ visible }) {
     } else setIndex((position + 1) % (count || 1));
   }, [position, count, hasNextPage, fetchNextPage]);
 
+  const loadingSlide = Boolean(image && image.file_uri !== settledUri);
   useEffect(() => {
-    if (!visible || preview || paused || !canCycle || isFetchingNextPage || isFetchNextPageError) return;
+    if (!visible || preview || paused || !canCycle || loadingSlide || isFetchingNextPage || isFetchNextPageError) return;
     let timer;
     const schedule = () => {
       window.clearTimeout(timer);
@@ -34,7 +36,7 @@ export default function DockInspiration({ visible }) {
     schedule();
     document.addEventListener('visibilitychange', schedule);
     return () => { window.clearTimeout(timer); document.removeEventListener('visibilitychange', schedule); };
-  }, [visible, preview, paused, canCycle, isFetchingNextPage, isFetchNextPageError, next, delay]);
+  }, [visible, preview, paused, canCycle, loadingSlide, isFetchingNextPage, isFetchNextPageError, next, delay]);
 
   if (!visible) return null;
   if (preview) return <p>Open Inspiration outside the tour to view your cards.</p>;
@@ -42,8 +44,8 @@ export default function DockInspiration({ visible }) {
   if (!image) return <p role="status">{isError ? 'Could not load inspiration cards.' : 'No inspiration cards have been uploaded yet.'}</p>;
   return <div className="flex min-h-0 min-w-0 flex-1 flex-col">
     {canCycle && <InspirationPlayback paused={paused} onToggle={() => setPaused(value => !value)}
-      delay={delay} onSpeedChange={setDelay} onNext={() => void next()} loading={isFetchingNextPage} />}
+      delay={delay} onSpeedChange={setDelay} onNext={() => void next()} loading={isFetchingNextPage || loadingSlide} />}
     {isFetchNextPageError && <p role="status" className="text-sm">Could not load more cards. Select Next card to retry.</p>}
-    <InspirationArtwork key={image.file_uri} image={image} fitWidget />
+    <InspirationSlides image={image} onSettled={setSettledUri} />
   </div>;
 }
