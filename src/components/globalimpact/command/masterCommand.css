@@ -6,6 +6,24 @@
   border: 1px solid hsl(var(--mc-line)); border-radius: .8rem; color-scheme: dark;
   container: master-command / inline-size; scroll-margin-top: 8rem;
 }
+/* Light-mode flight console: white panels, blueprint blue and a signal-red review badge. */
+html:is(:not([data-theme]), [data-theme='light']) #global-impact .master-command {
+  --mc-bg: 213 53% 95%; --mc-panel: 0 0% 100%; --mc-bar: 213 57% 91%;
+  --mc-line: 213 31% 73%; --mc-ink: 220 55% 17%; --mc-muted: 215 27% 35%;
+  --mc-gold: 214 84% 32%; --mc-green: 154 70% 26%; --mc-signal: 355 70% 36%;
+  color-scheme: light;
+  box-shadow: 0 5px 18px hsl(var(--mc-gold) / .09);
+}
+html:is(:not([data-theme]), [data-theme='light']) #global-impact .master-command .mc-header {
+  background: linear-gradient(105deg, hsl(var(--mc-panel)), hsl(var(--mc-bar)));
+  box-shadow: inset 0 3px hsl(var(--mc-gold));
+  border-radius: .75rem .75rem 0 0;
+}
+html:is(:not([data-theme]), [data-theme='light']) #global-impact .master-command .mc-badge {
+  color: hsl(var(--mc-signal)) !important;
+  background: hsl(var(--mc-signal) / .07) !important;
+  border-color: hsl(var(--mc-signal) / .35);
+}
 #global-impact .master-command :is(.mc-header,.mc-panel-title,.mc-small-button,.mc-event,.mc-review,.mc-steps li) {border-color: hsl(var(--mc-line)) !important;}
 #global-impact .master-command :is(.mc-muted,.mc-panel-title > span,.text-muted-foreground) {color: hsl(var(--mc-muted)) !important;}
 #global-impact .master-command :is(.mc-gold,.mc-kicker,a:any-link) {color: hsl(var(--mc-gold)) !important;}
