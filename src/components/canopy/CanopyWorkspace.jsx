@@ -4,6 +4,7 @@ import CanopyWidget from '@/components/canopy/CanopyWidget';
 import CanopyCard from '@/components/canopy/CanopyCard';
 import CanopyCommandBar from '@/components/canopy/CanopyCommandBar';
 import CanopyCustomizer from '@/components/canopy/CanopyCustomizer';
+import useCanopyCardReorder from '@/components/canopy/useCanopyCardReorder';
 
 export default function CanopyWorkspace(props) {
   const { mode, ids, settings, commit, profile, error, focus, original, saved, viewSaved, saveView, onToggleOriginal } = props;
@@ -29,10 +30,12 @@ export default function CanopyWorkspace(props) {
   }
   const dragHandle = id => ({draggable:true,onDragStart:e => { dragging.current=id; e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain',id); },onDragEnd:() => {dragging.current=null;}});
   const dropTarget = id => ({onDragOver:e => {if (dragging.current) {e.preventDefault(); e.dataTransfer.dropEffect='move';}},onDrop:e => {if (!dragging.current) return; e.preventDefault(); move(dragging.current,id); dragging.current=null;}});
+  const reorder = useCanopyCardReorder(visible, move);
   const card = (id, focused = false) => <CanopyCard key={id} id={id} focused={focused} scale={cardScale} size={settings.sizes[id]}
     minimized={!focused && editable && Boolean(settings.minimized[id])}
     onResize={original ? undefined : size => commit({sizes:{...settings.sizes,[id]:size}})}
-    dragHandle={!focused && editable ? dragHandle(id) : undefined} dropTarget={!focused && editable ? dropTarget(id) : undefined}
+    dragHandle={!focused && editable ? reorder.grip(id) : undefined}
+    dragState={!focused && editable && reorder.drag ? (reorder.drag.id === id ? 'source' : reorder.drag.target === id ? 'target' : undefined) : undefined}
     onToggle={!focused && editable ? () => commit({minimized:{...settings.minimized,[id]:!settings.minimized[id]}}) : undefined}
     onRemove={!focused && editable ? () => commit({cards:settings.cards.filter(card => card !== id)}) : undefined}>{tile(id)}</CanopyCard>;
   return <div className="canopy-scroll" style={{'--widget-scale':cardScale/100}}>
@@ -43,11 +46,11 @@ export default function CanopyWorkspace(props) {
       </button>
     </div>
     {mode !== 'peek' && <CanopyCommandBar {...props} />}
-    {editable && <><div className="canopy-tools"><p>{visible.length} widgets · Drag edges to resize or a grip to reorder</p><button aria-expanded={library} aria-controls={library ? 'canopy-library' : undefined} onClick={() => setLibrary(!library)}><Settings2 size={14} /> Customize</button></div>
+    {editable && <><div className="canopy-tools"><p>{visible.length} widgets · Drag a card’s grip onto another card to reorder. Drag edges to resize.</p><button aria-expanded={library} aria-controls={library ? 'canopy-library' : undefined} onClick={() => setLibrary(!library)}><Settings2 size={14} /> Customize</button></div>
       {library && <CanopyCustomizer {...{settings,commit,allowed,scale,setScale,move,dragHandle,dropTarget}} />}</>}
     {error && <p role="status" className="canopy-status">Saved on this device; account sync failed. <button onClick={() => commit({})}>Retry sync</button></p>}
     {special && <div className="canopy-focus" key={special} ref={widgetFocus}>{card(special, true)}</div>}
-    <div className="canopy-grid">
+    <div className="canopy-grid" ref={reorder.grid}>
       {!visible.length && !special && <p>{editable ? 'No widgets yet. Add one from Customize.' : 'No widgets to display.'}</p>}
       {visible.map(id => card(id))}
     </div>

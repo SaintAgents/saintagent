@@ -78,6 +78,14 @@ html .sa-canopy :is(.canopy-destinations [aria-current='page'],.canopy-pills [ar
 .sa-canopy .canopy-pills button { border-radius:999px; padding-inline:.55rem; }
 .sa-canopy .canopy-active { display:grid; gap:.35rem; border:1px solid hsl(var(--canopy-line)); border-radius:.55rem; padding:.45rem; }
 .sa-canopy .canopy-active [draggable],.sa-canopy .canopy-grip { cursor:grab; }
+html .sa-canopy button.canopy-grip { touch-action:none; justify-content:center; min-width:1.55rem; }
+.sa-canopy .canopy-grip:active { cursor:grabbing; }
+.sa-canopy .canopy-card[data-canopy-drag='source'] { opacity:.6; }
+.sa-canopy .canopy-card[data-canopy-drag='target'] { outline:2px solid hsl(var(--canopy-cyan)); outline-offset:-2px; }
+@media (max-width:767px), (pointer:coarse) {
+  html .sa-canopy button.canopy-grip { min-width:44px; min-height:44px; }
+  .sa-canopy .canopy-card[data-minimized] button.canopy-grip { min-height:0; }
+}
 .sa-canopy .canopy-size-controls label { display:inline-flex; align-items:center; gap:.4rem; font-size:.8rem; }
 .sa-canopy .canopy-library-list { display:grid; max-height:9rem; overflow:auto; gap:.2rem; scrollbar-color:hsl(var(--canopy-cyan) / .55) transparent; }
 html .sa-canopy .canopy-library-item { min-height:2.15rem; justify-content:space-between; text-align:left; }
