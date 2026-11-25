@@ -1,4 +1,5 @@
 export const commandDemo = {
+  projectTitle: 'Community Garden to Food Pantry Pilot',
   objective: 'Launch a four-week community garden pilot that can supply a neighborhood food pantry.',
   recommendation: 'Start with one garden and one pantry. Confirm their capacity before scheduling volunteers.',
   steps: ['Confirm a host garden and agree on a weekly pickup window with the pantry.', 'Recruit four volunteers and assign one person to log each delivery.', 'Complete four weekly deliveries and review the logs with the pantry.'],
@@ -21,8 +22,19 @@ export const commandDemo = {
 };
 
 export const commandDemoPlan = {
+  title: commandDemo.projectTitle,
   direction: 'prepare_mission',
   first_action: commandDemo.steps[0],
   collaboration: 'Volunteer coordinator (unassigned)',
+  resources: 'Two raised beds, two reusable crates, a scale, and a delivery log.',
   milestone: 'Four weekly deliveries logged and reviewed',
+  schedule: 'Four weekly deliveries during the pantry’s Thursday 3–5 p.m. intake window.',
+  dependencies: 'Confirm weekly harvest capacity and a Thursday driver before committing to deliveries.',
+};
+
+export const commandDemoDraft = {
+  title: commandDemoPlan.title,
+  objective: commandDemo.objective,
+  description: commandDemo.steps.join('\n'),
+  milestone: commandDemoPlan.milestone,
 };
