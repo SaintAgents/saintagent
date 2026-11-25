@@ -640,10 +640,15 @@ html[data-theme='hacker'] [data-sidebar].fixed.left-0 {
   background-color: hsl(0 0% 0%) !important;
 }
 
-/* The collapsed light-mode swatch keeps its own color in every active theme. */
+/* Collapsed theme swatches keep their own colors in every active theme. */
 #app-topbar button[data-theme-swatch='light'] {
   background: hsl(49 100% 82%) !important;
   border: 1px solid hsl(43 68% 35%) !important;
+  border-radius: 9999px;
+}
+#app-topbar button[data-theme-swatch='hacker'] {
+  background: #00ff00 !important;
+  border: 1px solid #00ff00 !important;
   border-radius: 9999px;
 }
 
