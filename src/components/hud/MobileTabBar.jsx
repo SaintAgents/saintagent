@@ -67,7 +67,8 @@ export default function MobileTabBar({ currentPage, onWalletOpen, onMenuOpen }) 
         "ring-4 ring-white/50 dark:ring-black/30",
         "touch-none select-none"
       )}
-      style={{ zIndex: 99999, right: pos.right, bottom: pos.bottom }}
+      aria-label="Open mobile menu"
+      style={{ zIndex: 99999, right: `clamp(calc(4px + env(safe-area-inset-right, 0px)), calc(${pos.right}px + env(safe-area-inset-right, 0px)), calc(100% - 60px - env(safe-area-inset-left, 0px)))`, bottom: `clamp(calc(4px + env(safe-area-inset-bottom, 0px)), calc(${pos.bottom}px + env(safe-area-inset-bottom, 0px)), calc(100% - 60px - env(safe-area-inset-top, 0px)))` }}
     >
       <Menu className="w-6 h-6 text-white dark:text-black" />
     </button>

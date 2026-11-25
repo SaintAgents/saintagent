@@ -8,57 +8,28 @@ import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
-import BudgetForecast from './pages/BudgetForecast';
-import MissionGantt from './pages/MissionGantt';
-import ResourceScheduler from './pages/ResourceScheduler';
-import TeamWorkload from './pages/TeamWorkload';
-import MyDashboard from './pages/MyDashboard';
-import ClientPortal from './pages/ClientPortal';
-import ImpactDashboard from './pages/ImpactDashboard';
-import OutreachSequences from './pages/OutreachSequences';
-import DailyPlanner from './pages/DailyPlanner';
-import Analytics from './pages/Analytics';
-import BookCall from './pages/BookCall';
-import WhatsAppDashboard from './pages/WhatsAppDashboard';
-import BusinessEntities from './pages/BusinessEntities';
-import BusinessEntityProfile from './pages/BusinessEntityProfile';
-import Glossary from './pages/Glossary';
-import Milestones from './pages/Milestones';
-import CacheAdmin from './pages/CacheAdmin';
-import MissionManage from './pages/MissionManage';
-import MissionTimeline from './pages/MissionTimeline';
-import MissionGrid from './pages/MissionGrid';
-import Learn from './pages/Learn';
-import ReviewerWorkflow from './pages/ReviewerWorkflow';
-import ReviewManagerDashboard from './pages/ReviewManagerDashboard';
-import VCardLanding from './pages/VCardLanding';
-import PublicLinkTree from '@/pages/PublicLinkTree';
-import LinkTreeEditor from '@/pages/LinkTreeEditor';
-import Watchlist from '@/pages/Watchlist';
-import SavedItems from '@/pages/SavedItems';
-import Intelligence from '@/pages/Intelligence';
-import WisdomExchange from '@/pages/WisdomExchange';
-import GlobalImpactDashboard from '@/pages/GlobalImpactDashboard';
-import WorldPulse from '@/pages/WorldPulse';
-import SharedSearch from '@/pages/SharedSearch';
-import IntelligenceDashboard from '@/pages/IntelligenceDashboard';
-import DocumentVault from '@/pages/DocumentVault';
-import ConferencePortal from '@/pages/ConferencePortal';
-import MyGuide from '@/pages/MyGuide';
-import CelestialInsights from './pages/CelestialInsights';
-import BusinessPlanBuilder from './pages/BusinessPlanBuilder';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import Mfa from '@/pages/Mfa';
-import ObservationDeck from '@/pages/ObservationDeck';
+
 import ObservationPreview from '@/components/observation/ObservationPreview';
 import DockDeck from '@/components/dock/DockDeck';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // ErrorBoundary used per-page in Layout, not at app level
+
+const loaders = import.meta.glob('./pages/*.jsx');
+const lazyPage = name => React.lazy(loaders[`./pages/${name}.jsx`]);
+const BudgetForecast = lazyPage('BudgetForecast'), MissionGantt = lazyPage('MissionGantt'), ResourceScheduler = lazyPage('ResourceScheduler'), TeamWorkload = lazyPage('TeamWorkload');
+const MyDashboard = lazyPage('MyDashboard'), ClientPortal = lazyPage('ClientPortal'), ImpactDashboard = lazyPage('ImpactDashboard'), OutreachSequences = lazyPage('OutreachSequences');
+const DailyPlanner = lazyPage('DailyPlanner'), Analytics = lazyPage('Analytics'), BookCall = lazyPage('BookCall'), WhatsAppDashboard = lazyPage('WhatsAppDashboard');
+const BusinessEntities = lazyPage('BusinessEntities'), BusinessEntityProfile = lazyPage('BusinessEntityProfile'), Glossary = lazyPage('Glossary'), Milestones = lazyPage('Milestones');
+const CacheAdmin = lazyPage('CacheAdmin'), MissionManage = lazyPage('MissionManage'), MissionTimeline = lazyPage('MissionTimeline'), MissionGrid = lazyPage('MissionGrid');
+const Learn = lazyPage('Learn'), ReviewerWorkflow = lazyPage('ReviewerWorkflow'), ReviewManagerDashboard = lazyPage('ReviewManagerDashboard');
+const VCardLanding = lazyPage('VCardLanding'), PublicLinkTree = lazyPage('PublicLinkTree'), LinkTreeEditor = lazyPage('LinkTreeEditor');
+const Watchlist = lazyPage('Watchlist'), SavedItems = lazyPage('SavedItems'), Intelligence = lazyPage('Intelligence'), WisdomExchange = lazyPage('WisdomExchange');
+const GlobalImpactDashboard = lazyPage('GlobalImpactDashboard'), WorldPulse = lazyPage('WorldPulse'), SharedSearch = lazyPage('SharedSearch'), IntelligenceDashboard = lazyPage('IntelligenceDashboard');
+const DocumentVault = lazyPage('DocumentVault'), ConferencePortal = lazyPage('ConferencePortal'), MyGuide = lazyPage('MyGuide'), CelestialInsights = lazyPage('CelestialInsights'), BusinessPlanBuilder = lazyPage('BusinessPlanBuilder');
+const Login = lazyPage('Login'), Register = lazyPage('Register'), ForgotPassword = lazyPage('ForgotPassword'), ResetPassword = lazyPage('ResetPassword'), Mfa = lazyPage('Mfa');
+const ObservationDeck = lazyPage('ObservationDeck');
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -231,7 +202,9 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           {!isTourPreview() && !(window.parent !== window && new URLSearchParams(window.location.search).get('observationPreview') === '1') && <NavigationTracker />}
-          <AuthenticatedApp />
+          <React.Suspense fallback={<LoadingSpinner />}>
+            <AuthenticatedApp />
+          </React.Suspense>
         </Router>
         <Toaster />
         <SonnerToaster />

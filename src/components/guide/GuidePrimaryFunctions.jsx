@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/lib/AuthContext';
 import GuideEngine from '@/components/guide/GuideEngine';
 import GuideKnowledgeGraph from '@/components/guide/GuideKnowledgeGraph';
 import GuideOrchestrator from '@/components/guide/GuideOrchestrator';
 import GuidePossibilitySimulator from '@/components/guide/GuidePossibilitySimulator';
-import Intelligence from '@/pages/Intelligence';
 import CollaborationRadar from '@/components/globalimpact/CollaborationRadar';
 import '@/components/globalimpact/globalImpact.css';
+
+const Intelligence = lazy(() => import('@/pages/Intelligence'));
 
 const functions = [
   ['mission','SAINT Mission Intelligence','Ground a goal in SaintAgent evidence and prepare a mission plan.'],
@@ -32,7 +33,7 @@ export default function GuidePrimaryFunctions() {
     return () => cancelAnimationFrame(frame);
   }, [active,hash]);
   const [,,description] = functions.find(([id]) => id === active);
-  const content = {mission:<GuideEngine />, graph:<GuideKnowledgeGraph email={user?.email} />, research:user && <Intelligence inGuide guideActive={active === 'research'} />, actions:user && <GuideOrchestrator owner={user.id} />, simulator:<GuidePossibilitySimulator expanded />, blueprint:<GuideEngine blueprintOnly />, radar:<div id="global-impact" className="rounded-xl"><CollaborationRadar inGuide /></div>};
+  const content = {mission:<GuideEngine />, graph:<GuideKnowledgeGraph email={user?.email} />, research:user && <Suspense fallback={<p role="status">Loading research…</p>}><Intelligence inGuide guideActive={active === 'research'} /></Suspense>, actions:user && <GuideOrchestrator owner={user.id} />, simulator:<GuidePossibilitySimulator expanded />, blueprint:<GuideEngine blueprintOnly />, radar:<div id="global-impact" className="rounded-xl"><CollaborationRadar inGuide /></div>};
   return <section className="space-y-4" aria-labelledby="guide-functions-title">
     <h2 id="guide-functions-title" className="font-heading text-2xl font-bold">Primary functions</h2>
     <nav aria-label="My Guide workspaces" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">

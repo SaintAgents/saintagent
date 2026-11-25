@@ -789,3 +789,54 @@ html:root [data-readable-surface][data-testimonial-card] textarea {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+html, body { overscroll-behavior: none; }
+button, [role='button'], [role='tab'], nav, svg {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+input, textarea, [contenteditable='true'] { -webkit-user-select: text; user-select: text; }
+
+#app-topbar {
+  --topbar-height: 3.5rem;
+  height: calc(var(--topbar-height) + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: max(.5rem, env(safe-area-inset-left, 0px));
+  padding-right: max(.5rem, env(safe-area-inset-right, 0px));
+}
+#app-topbar.h-10 { --topbar-height: 2.5rem; }
+@media (min-width: 768px) {
+  #app-topbar { padding-inline: 1rem max(1rem, env(safe-area-inset-right, 0px)); }
+}
+.canopy-page:is(.pt-8, .pt-28) { padding-top: calc(7rem + env(safe-area-inset-top, 0px)); }
+.canopy-page.pt-8 { padding-top: calc(2rem + env(safe-area-inset-top, 0px)); }
+[data-sheet-side='bottom'], [data-safe-bottom-drawer] {
+  --sheet-padding: 1.5rem;
+  padding-bottom: calc(var(--sheet-padding) + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(var(--sheet-padding) + env(safe-area-inset-left, 0px));
+  padding-right: calc(var(--sheet-padding) + env(safe-area-inset-right, 0px));
+  max-height: calc(100dvh - env(safe-area-inset-top, 0px));
+}
+[data-sheet-side='bottom'].p-0, [data-safe-bottom-drawer] { --sheet-padding: 0px; }
+[data-sheet-side='bottom'] > [data-sheet-close] { right: calc(1rem + env(safe-area-inset-right, 0px)); }
+
+@media (max-width: 767px), (pointer: coarse) {
+  :is(button, a, [role='button'], summary):is([data-icon-button], :has(> svg:only-child), :has(> svg + .sr-only)) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  :is(.text-xs, [class~='text-[9px]'], [class~='text-[10px]'], [class~='text-[11px]'], [class~='text-[12px]'], [class~='text-[13px]']):not(.sr-only) {
+    font-size: .875rem;
+  }
+  #app-topbar.h-10 { --topbar-height: 44px; }
+  .canopy-page.pt-8 { padding-top: calc(44px + env(safe-area-inset-top, 0px)); }
+}
+
+.mobile-pull-status {
+  position: fixed;
+  inset: calc(4rem + env(safe-area-inset-top, 0px)) auto auto 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  pointer-events: none;
+}

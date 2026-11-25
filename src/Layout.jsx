@@ -25,6 +25,7 @@ import HeroGalleryViewer from '@/components/hud/HeroGalleryViewer';
 import { useLiveStatus } from '@/components/community/LiveStatusIndicator';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import MobileTabBar from '@/components/hud/MobileTabBar';
+import MobilePullRefresh from '@/components/hud/MobilePullRefresh';
 import MobileWalletSheet from '@/components/hud/MobileWalletSheet';
 import MobileMenuSheet from '@/components/hud/MobileMenuSheet';
 import FullscreenMatchesSwiper from '@/components/hud/FullscreenMatchesSwiper';
@@ -199,7 +200,17 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [canopySearch, setCanopySearch] = useState('');
   const [floatingChat, setFloatingChat] = useState(null);
-  const [theme, setTheme] = useState('light');
+  const [theme, setActiveTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (['light', 'dark', 'hacker', 'custom'].includes(saved)) return saved;
+    } catch { /* system preference still applies */ }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+  const setTheme = (nextTheme) => {
+    setActiveTheme(nextTheme);
+    if (!tourPreview) { try { localStorage.setItem('theme', nextTheme); } catch {} }
+  };
   const [bgEffect, setBgEffect] = useState(() => {
     try { return localStorage.getItem('bgEffect') || 'off'; } catch { return 'off'; }
   });
@@ -287,22 +298,14 @@ function AuthenticatedLayout({ children, currentPageName }) {
     };
     }, []);
 
-  // Initialize theme from localStorage + listen for external theme changes
+  // Sync manual theme changes made outside this layout.
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('theme');
-      if (saved === 'dark' || saved === 'light' || saved === 'custom' || saved === 'hacker') {
-        setTheme(saved);
-        document.documentElement.setAttribute('data-theme', saved);
-      }
-    } catch {}
-    const handleExternalThemeChange = (e) => { if (e.detail?.theme) setTheme(e.detail.theme); };
+    const handleExternalThemeChange = (e) => { if (e.detail?.theme) setActiveTheme(e.detail.theme); };
     window.addEventListener('themeChange', handleExternalThemeChange);
     return () => window.removeEventListener('themeChange', handleExternalThemeChange);
   }, []);
 
-  useEffect(() => {
-    if (!tourPreview) { try { localStorage.setItem('theme', theme); } catch {} }
+  React.useLayoutEffect(() => {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
       if (theme === 'custom') {
@@ -1896,6 +1899,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
           currentPageName === 'CommandDeck' && cmdViewMode === 'analytics' ? "cmd-analytics" : ""
         )}>
         <AnnouncementBanner />
+        {!tourPreview && <MobilePullRefresh page={currentPageName} />}
         {currentPageName === 'CommandDeck' ? 
           React.cloneElement(children, { theme, onThemeToggle: setTheme }) : 
           children
@@ -1992,6 +1996,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
 
               {/* Mobile Menu Sheet */}
               <MobileMenuSheet 
+                theme={theme}
                 open={mobileMenuOpen} 
                 onOpenChange={setMobileMenuOpen} 
               />
