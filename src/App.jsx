@@ -11,6 +11,7 @@ import PageNotFound from './lib/PageNotFound';
 
 import ObservationPreview from '@/components/observation/ObservationPreview';
 import DockDeck from '@/components/dock/DockDeck';
+import GoldFlakeProvider from '@/components/rewards/GoldFlakeProvider';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -119,7 +120,9 @@ const AuthenticatedApp = () => {
   const tourPreview = isTourPreview();
   const dockPreview = tourPreview && new URLSearchParams(location.search).get('tourView') === 'dock';
   const dockDisabled = embedded || (tourPreview && !dockPreview) || /^\/(g3dex|gggcrypto)\/?$/i.test(location.pathname);
-  return <DockDeck key={user.id} user={user} disabled={dockDisabled} preview={dockPreview}><AppRoutes /></DockDeck>;
+  return <GoldFlakeProvider key={user.id} user={user} disabled={embedded || tourPreview}>
+    <DockDeck key={user.id} user={user} disabled={dockDisabled} preview={dockPreview}><AppRoutes /></DockDeck>
+  </GoldFlakeProvider>;
 };
 
 // Separated routes so both public and authenticated paths use the same route tree
