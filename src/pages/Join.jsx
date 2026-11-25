@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createPageUrl } from '@/utils';
@@ -57,6 +58,8 @@ const PHASES = [
   { phase: 6, title: 'Expansion', description: 'Grow your network and influence', icon: Heart, gradient: 'from-[#1e4d3a] to-[#0f2d1e]', border: '#2e7a5c' },
   { phase: 7, title: 'Ascension', description: 'Unlock leadership tiers and advanced features', icon: Crown, gradient: 'from-[#5c4d1e] to-[#3d2d0f]', border: '#8a7a2e' },
 ];
+
+const REGISTER_LINK = `/register?${new URLSearchParams({ returnTo: '/Onboarding' })}`;
 
 const TRUST_FEATURES = [
   { icon: Shield, title: 'Verified Members', description: 'Every Saint Agent is verified through our trust system' },
@@ -233,13 +236,15 @@ export default function Join() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button 
-              size="lg" 
+            <Button
+              asChild
+              size="lg"
               className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-lg px-8 py-6 rounded-xl shadow-lg shadow-violet-500/25"
-              onClick={handleJoin}
             >
-              Become a Saint Agent
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <Link to={REGISTER_LINK}>
+                Become a Saint Agent
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
             </Button>
             <Button 
               size="lg" 
@@ -384,13 +389,15 @@ export default function Join() {
             Join thousands of conscious creators building the future together. 
             Your mission awaits.
           </p>
-          <Button 
-            size="lg" 
+          <Button
+            asChild
+            size="lg"
             className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-lg px-10 py-6 rounded-xl shadow-lg shadow-amber-500/25"
-            onClick={handleJoin}
           >
-            Become a Saint Agent
-            <ArrowRight className="w-5 h-5 ml-2" />
+            <Link to={REGISTER_LINK}>
+              Become a Saint Agent
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
           </Button>
         </div>
       </div>
