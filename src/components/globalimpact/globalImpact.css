@@ -267,6 +267,26 @@ html:not([data-theme]), html[data-theme='light'] {
   & #global-impact [data-impact-module='growth'] :is([class~='bg-slate-800/30'],[class~='bg-slate-800/50']) {background: hsl(var(--impact-panel)) !important; border-color: hsl(var(--impact-line)) !important;}
   & #global-impact [data-impact-module='growth'] :is(h3.text-white,span.text-white,p.text-cyan-400,p.text-slate-300,p.text-slate-200,p.text-amber-400,span.text-violet-400):not([class~='bg-gradient-to-br'] *) {color: hsl(var(--impact-ink)) !important;}
 }
+/* Match icon-only shortcuts to the color and depth of the illustrated tiles. */
+#global-impact [data-impact-shortcut='search'] { --tile-tone: 188 91% 61%; }
+#global-impact [data-impact-shortcut='pulse'] { --tile-tone: 39 100% 65%; }
+:is(html:not([data-theme]), html[data-theme='light']) #global-impact [data-impact-shortcut='search'] { --tile-tone: 192 92% 30%; }
+:is(html:not([data-theme]), html[data-theme='light']) #global-impact [data-impact-shortcut='pulse'] { --tile-tone: 32 100% 30%; }
+html #global-impact .impact-shortcut[data-impact-shortcut] {
+  border-color: hsl(var(--tile-tone) / .6) !important;
+  background: radial-gradient(ellipse at 50% 25%, hsl(var(--tile-tone) / .24), transparent 78%), hsl(var(--impact-night)) !important;
+}
+html #global-impact .impact-shortcut[data-impact-shortcut] :is(svg, span) {
+  color: hsl(var(--tile-tone)) !important;
+}
+html #global-impact .impact-shortcut[data-impact-shortcut] svg {
+  filter: drop-shadow(0 0 .32rem hsl(var(--tile-tone) / .42));
+}
+html #global-impact .impact-shortcut[data-impact-shortcut]:is(:hover, :focus-visible) {
+  border-color: hsl(var(--tile-tone)) !important;
+  background: radial-gradient(ellipse at 50% 25%, hsl(var(--tile-tone) / .34), transparent 85%), hsl(var(--impact-night)) !important;
+}
+
 @container impact-workspace (min-width: 35rem) {
   #global-impact .impact-tools {grid-template-columns: auto minmax(9rem, 1fr) auto;}
 }
