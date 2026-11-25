@@ -6,11 +6,11 @@ import { formatTime, safePath } from '@/components/live/activity';
 import { Link } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
 
-export default function LiveActivityDialog({ state, dialog, close, preferences, sampleImage }) {
+export default function LiveActivityDialog({ state, dialog, close, preferences, sampleImage, eventTitle }) {
   const setup = dialog === 'setup';
   const list = dialog === 'all';
   const demoList = list && state.demo;
-  const title = setup ? 'Ticker setup' : list ? (demoList ? 'Demo Activity' : 'Live Activity Notification Center') : dialog.category === 'signals' ? 'GGT Signal' : 'Event details';
+  const title = setup ? 'Ticker setup' : list ? (demoList ? 'Demo Activity' : 'Live Activity Notification Center') : eventTitle ?? (dialog.category === 'signals' ? 'GGT Signal' : 'Event details');
   return <Dialog open onOpenChange={open => { if (!open) close(); }}><DialogContent data-readable-surface className="max-h-[85dvh] overflow-auto">
     <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>{setup ? 'Choose where activity appears and which events to see.' : list ? (demoList ? 'Fictional events for previewing the activity ticker.' : 'Recent live events. Dismissing a toast doesn’t remove it here.') : dialog.headline}</DialogDescription></DialogHeader>
     {setup ? <LiveActivityPreferences key={state.prefs.revision} prefs={state.prefs} preferences={preferences} onSaved={() => { close(); toast({ title: 'Activity preferences saved' }); }} /> : list ? <div className="space-y-2">
