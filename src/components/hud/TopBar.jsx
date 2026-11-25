@@ -411,12 +411,13 @@ export default function TopBar({
       {isCollapsed && (
         <div className="flex items-center gap-2 mr-2">
           {[
-            { id: 'light', title: 'Light theme', className: 'bg-gradient-to-br from-amber-300 to-orange-400', activeRing: 'ring-amber-500', shadow: '0 0 6px rgba(245,158,11,0.4)' },
+            { id: 'light', title: 'Light theme', activeRing: 'ring-amber-500', shadow: '0 0 6px rgba(245,158,11,0.4)' },
             { id: 'dark', title: 'Dark theme', className: 'bg-gradient-to-br from-slate-600 to-slate-900', activeRing: 'ring-[#00ff88]', shadow: '0 0 6px rgba(0,255,136,0.4)' },
             { id: 'hacker', title: 'Hacker theme', className: 'bg-[#00ff00]', activeRing: 'ring-[#00ff00]', shadow: '0 0 8px rgba(0,255,0,0.5)' },
           ].map(t => (
             <button
               key={t.id}
+              data-theme-swatch={t.id}
               onClick={() => {
                 localStorage.setItem('theme', t.id);
                 document.documentElement.setAttribute('data-theme', t.id);
