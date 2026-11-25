@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import InspirationArtwork from '@/components/dock/InspirationArtwork';
+import InspirationPlayback, { inspirationSpeeds } from '@/components/dock/InspirationPlayback';
 import { useInspirationImages } from '@/components/dock/useInspirationImages';
 import { isTourPreview } from '@/components/tour/tourPreviewTargets';
 
 export default function DockInspiration({ visible }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [delay, setDelay] = useState(inspirationSpeeds[1].delay);
   const preview = isTourPreview();
   const { data, isPending, isError, hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage } = useInspirationImages(visible && !preview);
   const images = data?.pages.flatMap(page => page.items) ?? [];
@@ -27,24 +29,22 @@ export default function DockInspiration({ visible }) {
     let timer;
     const schedule = () => {
       window.clearTimeout(timer);
-      if (!document.hidden) timer = window.setTimeout(() => void next(), 10000);
+      if (!document.hidden) timer = window.setTimeout(() => void next(), delay);
     };
     schedule();
     document.addEventListener('visibilitychange', schedule);
     return () => { window.clearTimeout(timer); document.removeEventListener('visibilitychange', schedule); };
-  }, [visible, preview, paused, canCycle, isFetchingNextPage, isFetchNextPageError, next]);
+  }, [visible, preview, paused, canCycle, isFetchingNextPage, isFetchNextPageError, next, delay]);
 
   if (!visible) return null;
   if (preview) return <p>Open Inspiration outside the tour to view your cards.</p>;
   if (isPending) return <p role="status">Loading inspiration cards…</p>;
   if (!image) return <p role="status">{isError ? 'Could not load inspiration cards.' : 'No inspiration cards have been uploaded yet.'}</p>;
   return <div className="grid gap-2">
+    {canCycle && <InspirationPlayback paused={paused} onToggle={() => setPaused(value => !value)}
+      delay={delay} onSpeedChange={setDelay} onNext={() => void next()} loading={isFetchingNextPage} />}
+    {isFetchNextPageError && <p role="status" className="text-sm">Could not load more cards. Select Next card to retry.</p>}
     <InspirationArtwork key={image.file_uri} image={image} />
     {image.caption && <p className="break-words text-sm">{image.caption}</p>}
-    {isFetchNextPageError && <p role="status" className="text-sm">Could not load more cards. Select Next card to retry.</p>}
-    {canCycle && <div className="flex flex-wrap gap-2">
-      <button type="button" onClick={() => setPaused(value => !value)}>{paused ? 'Play' : 'Pause'}</button>
-      <button type="button" disabled={isFetchingNextPage} onClick={() => void next()}>{isFetchingNextPage ? 'Loading…' : 'Next card'}</button>
-    </div>}
   </div>;
 }
