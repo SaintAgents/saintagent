@@ -1,6 +1,6 @@
 import ImpactCommandPulse from '@/components/globalimpact/ImpactCommandPulse';
 import { Link } from 'react-router-dom';
-import { Compass } from 'lucide-react';
+import { Compass, Search } from 'lucide-react';
 
 const artwork = 'https://media.base44.com/images/public/694f3e0401b05e6e8a042002/';
 const logo = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/694f3e0401b05e6e8a042002/8c39339ab_logo.png';
@@ -30,6 +30,9 @@ export default function ImpactCommand({ active, select }) {
       <img className="impact-brand-logo" src={logo} alt="" draggable={false} />
     </button>
     <nav aria-label="SaintAgent command shortcuts" className="impact-shortcuts">
+      <Link to="/SharedSearch" aria-label="Shared Search" title="Shared Search" className="impact-shortcut text-center" style={{ '--tile-tone':'var(--impact-cyan)' }}>
+        <Search className="m-auto size-6 text-card-foreground" aria-hidden="true" /><span>Search</span>
+      </Link>
       <Link to="/IntelligenceDashboard" aria-label="Intel Hub: Intelligence Dashboard" title="Intelligence Dashboard" className="impact-shortcut text-center" style={{ '--tile-tone':'245 100% 76%' }}>
         <img alt="" src={`${artwork}dee14f8e015f59dc910ae9185e67c4bd_generated_image.png`} /><span>Intel Hub</span>
       </Link>
