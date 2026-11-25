@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { openDeepDive } from '@/components/deepdive/deepDive';
-import { openGuide, researchPath } from '@/components/globalimpact/impactDiscovery';
+import { researchPath } from '@/components/globalimpact/impactDiscovery';
 import { scopeRoute } from '@/components/globalimpact/pulse/pulseGeography';
 
 export default function PulseActions({ domain, demo, scope, location, preview, section }) {
@@ -19,7 +19,7 @@ export default function PulseActions({ domain, demo, scope, location, preview, s
   </div>;
   if (section === 'insights') return <div className="space-y-3">
     <p className="impact-muted text-sm">No verified readings are loaded for automated interpretation, risk scoring or recommendations. Start a research session to investigate this topic and review its evidence.</p>
-    <div className="flex flex-wrap gap-2"><button type="button" className="impact-control" onClick={() => openDeepDive({objective})}>Deep Dive</button><button type="button" className="impact-control" onClick={() => openGuide(objective)}>Ask My Guide</button><Link className="impact-control" to={researchPath(objective)}>Open Saint Intelligence</Link></div>
+    <div className="flex flex-wrap gap-2"><button type="button" className="impact-control" onClick={() => openDeepDive({objective})}>Deep Dive</button><Link className="impact-control" to={`/MyGuide?${new URLSearchParams({question:objective})}`}>Ask My Guide</Link><Link className="impact-control" to={researchPath(objective)}>Open Saint Intelligence</Link></div>
   </div>;
   return <div className="flex flex-wrap gap-2"><button type="button" className="impact-control" onClick={share}>Share Intelligence</button><Link className="impact-text-link self-center text-xs" to={scopeRoute(domain.id,demo,scope)}>Open shareable view</Link></div>;
 }

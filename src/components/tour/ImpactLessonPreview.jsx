@@ -20,7 +20,7 @@ export default function ImpactLessonPreview({ target }) {
       <section id="global-impact" className="space-y-3 p-3">
         <header className="impact-surface p-3"><p className="impact-kicker">Global Impact Dashboard</p><h3 className="text-lg font-bold">{target.label}</h3></header>
         <div inert="">
-          {pulse ? <WorldPulse icon={Radio} demo /> : <ImpactWorkspace active={active} demo={demo} select={noAction} previewUser={user} />}
+          {pulse ? <WorldPulse icon={Radio} demo preview /> : <ImpactWorkspace active={active} demo={demo} select={noAction} previewUser={user} />}
         </div>
       </section>
     </ErrorBoundary>

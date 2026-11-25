@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,7 +7,8 @@ import { openGuide } from '@/components/globalimpact/impactDiscovery';
 import { assistantDraft, pillars } from '@/components/guide/guideTools';
 
 export default function GuideAsk() {
-  const [question, setQuestion] = useState('');
+  const [params] = useSearchParams();
+  const [question, setQuestion] = useState(() => (params.get('question') || '').trim().slice(0, 400));
   const [mode, setMode] = useState('intelligence');
   const navigate = useNavigate();
   const pillar = pillars.find(p => p.id === mode);

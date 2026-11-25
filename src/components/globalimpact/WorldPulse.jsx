@@ -14,11 +14,13 @@ export default function WorldPulse({ icon: PulseIcon, demo, preview = false }) {
   return <section id="world-pulse" className="impact-surface scroll-mt-32 p-3 sm:p-4" aria-label="World Pulse">
     <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
       <div className="flex items-center gap-2"><PulseIcon size={19} /><h2 className="text-lg font-bold">World Pulse</h2><span className="impact-chip">{demo ? 'Demo activity' : 'SaintAgent activity'}</span></div>
-      <select aria-label="Filter World Pulse" value={filter} onChange={e => setFilter(e.target.value)} className="impact-control">{options.map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select>
     </div>
     <PulseModules demo={demo} preview={preview} />
     <div className="mt-4 border-t pt-3">
-      <h3 className="impact-kicker mb-2">{demo ? 'Sample activity feed' : 'SaintAgent activity feed'}</h3>
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <h3 className="impact-kicker">{demo ? 'Sample activity feed' : 'SaintAgent activity feed'}</h3>
+        <select aria-label="Filter World Pulse activity" value={filter} onChange={e => setFilter(e.target.value)} className="impact-control">{options.map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select>
+      </div>
       <div className="impact-pulse flex gap-2 overflow-x-auto py-1">
       {!demo && activity?.events?.isPending ? <p role="status" className="impact-muted text-sm">Loading activity…</p> : !demo && activity?.events?.isError ? <p role="alert" className="impact-muted text-sm">Activity could not be loaded.</p> : !events.length ? <p className="impact-muted text-sm">No updates for this filter yet.</p> : events.map(event => {
         const [label, Icon] = categoryInfo(event);
