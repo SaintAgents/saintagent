@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { SurfaceMedia } from '@/components/hero/SurfaceHeroLayer';
 import SurfaceHeroLibrary from '@/components/hero/SurfaceHeroLibrary';
+import CommandDeckHeroLibrary from '@/components/hero/CommandDeckHeroLibrary';
 import SurfaceHeroOptions from '@/components/hero/SurfaceHeroOptions';
 import SurfaceHeroQueue from '@/components/hero/SurfaceHeroQueue';
 import { getSavedHeroes, heroDefaults, heroMedia, previewSurfaceHero, saveSurfaceHero } from '@/components/hero/surfaceHeroSettings';
@@ -17,10 +18,16 @@ export default function SurfaceHeroEditor({ request, targets, theme, close }) {
     const next = { ...draft, ...patch }; setDraft(next); setDirty(true); setNotice(''); setRelease(release || show);
     previewSurfaceHero({ surfaces: { [surface]: next }, ...((release || show) && { hidden: false }) });
   };
-  function add(item, toggle = false) {
-    if (media.some(entry => entry.url === item.url)) { if (toggle) change({ [field]: media.filter(entry => entry.url !== item.url) }); else setNotice('This item is already in the carousel.'); return false; }
-    if (media.length >= 4) { setNotice('The carousel is full. Remove an item before adding another.'); return false; }
-    change({ [field]: [...media, item], enabled: true }, true); return true;
+  function add(item, toggle = false, mode = draft.mode) {
+    const targetField = mode === 'image' ? 'images' : 'videos';
+    const queue = draft[targetField] || [];
+    if (queue.some(entry => entry.url === item.url)) {
+      if (toggle) change({ mode, [targetField]: queue.filter(entry => entry.url !== item.url) });
+      else setNotice('This item is already in the carousel.');
+      return false;
+    }
+    if (queue.length >= 4) { setNotice(`The ${mode} carousel is full. Remove an item before adding another.`); return false; }
+    change({ mode, [targetField]: [...queue, item], enabled: true }, true); return true;
   }
   const tryClose = () => dirty ? setConfirm(true) : close();
   function save(clear = false) {
@@ -31,6 +38,7 @@ export default function SurfaceHeroEditor({ request, targets, theme, close }) {
     <div className="pr-8"><DialogTitle>Hero / Video Background</DialogTitle><DialogDescription>Choose a background for a page or workspace. Changes preview live and save in this browser.</DialogDescription></div>
     <label className="grid gap-1 text-sm">Surface<select className="rounded border bg-background p-2" value={surface} onChange={event => { const next = event.target.value; if (dirty && !window.confirm('Discard unsaved changes to this surface?')) return; previewSurfaceHero(null); setSurface(next); setDraft(initial(next)); setDirty(false); setRelease(false); setConfirm(false); setNotice(''); }}>{targets.map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
     <div className="surface-hero-preview relative isolate aspect-[3/1] overflow-hidden rounded border bg-muted" aria-label="Background preview">{media.length ? <SurfaceMedia config={{ ...draft, muted: true }} className="absolute inset-0" theme={theme} /> : <p className="p-3 text-sm">No media selected</p>}</div>
+    {surface === 'page:CommandDeck' && <CommandDeckHeroLibrary selected={draft.images || []} toggle={item => add(item, true, 'image')} />}
     <SurfaceHeroOptions config={draft} update={change} page={surface !== 'dock' && surface !== 'sidebar'} />
     <SurfaceHeroQueue key={`${surface}:${field}`} config={draft} update={change} notice={setNotice} add={add} />
     {draft.mode === 'video' && <SurfaceHeroLibrary selected={media} toggle={item => add(item, true)} />}
