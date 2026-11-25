@@ -29,9 +29,9 @@ html[data-theme='hacker'] .sa-canopy .canopy-workspace[data-canopy-art]::before 
 .sa-canopy .canopy-card > header strong { flex:1; min-width:0; overflow-wrap:anywhere; }
 .sa-canopy .canopy-card-body { flex:1 1 auto; min-height:0; min-width:0; overflow:auto; padding-right:.15rem; }
 .sa-canopy .canopy-card[data-focused] .canopy-card-body { max-height:var(--card-height, 60dvh); }
-.sa-canopy .canopy-card[data-inspiration-card] { padding-inline:0; }
-.sa-canopy .canopy-card[data-inspiration-card] > header { padding-inline:.75rem; }
-.sa-canopy .canopy-card[data-inspiration-card] > .canopy-card-body { padding-inline:0; }
+.sa-canopy .canopy-card[data-inspiration-card] { padding:0; }
+.sa-canopy .canopy-card[data-inspiration-card] > header { padding:.3rem .75rem; }
+.sa-canopy .canopy-card[data-inspiration-card] > .canopy-card-body { padding:0; }
 html .sa-canopy button.canopy-card-handle { position:absolute; z-index:2; display:block; background:transparent !important; border:0 !important; border-radius:0; padding:0; min-height:0; min-width:0; box-shadow:none !important; touch-action:none; }
 html .sa-canopy .canopy-card-handle:is(:hover,:focus-visible,:active) { background:hsl(var(--canopy-cyan) / .35) !important; outline-offset:-2px !important; }
 .sa-canopy .canopy-card-handle:is([data-edge='n'],[data-edge='s']) { inset-inline:13px; height:9px; cursor:ns-resize; }

@@ -8,12 +8,12 @@ export default function CanopyCard({ id, size, scale, focused, minimized, onResi
   const saved = typeof size === 'number' ? { height: 46 + (size - 46) * scale / 100 } : size;
   const width = draft?.width ?? saved?.width;
   const height = draft?.height ?? saved?.height;
-  const defaultHeight = 46 + ((id === 'Files & Knowledge' || id === 'Inspiration' ? 320 : 156) - 46) * scale / 100;
+  const defaultHeight = 46 + ((id === 'Files & Knowledge' ? 320 : 156) - 46) * scale / 100;
   const style = {
     '--card-width': width ? `${width}px` : undefined,
     '--card-x': position ? `${position.x}px` : undefined,
     '--card-y': position ? `${position.y}px` : undefined,
-    '--card-height': minimized ? undefined : height ? `${height}px` : focused ? undefined : `${defaultHeight}px`,
+    '--card-height': minimized ? undefined : height ? `${height}px` : focused || id === 'Inspiration' ? undefined : `${defaultHeight}px`,
   };
   return <article ref={card} className="canopy-card" data-focused={focused || undefined} data-minimized={minimized || undefined} style={style}
     data-canopy-card-id={dragHandle ? id : undefined} data-canopy-card-position={position ? '' : undefined} data-canopy-drag={dragState}

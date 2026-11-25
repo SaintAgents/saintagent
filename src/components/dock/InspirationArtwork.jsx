@@ -13,5 +13,5 @@ export default function InspirationArtwork({ image, compactLoading = false }) {
   });
   if (isPending) return compactLoading ? <div role="status" className="flex justify-center py-2"><LoaderCircle className="size-4 motion-safe:animate-spin" aria-hidden="true" /><span className="sr-only">Loading image…</span></div> : <p role="status" className="text-sm">Loading image…</p>;
   if (isError || !data?.signed_url || failedUrl === data.signed_url) return <p className="text-sm">Image unavailable</p>;
-  return <img className="max-h-80 w-full object-contain" src={data.signed_url} alt={image.alt_text} onError={() => setFailedUrl(data.signed_url)} />;
+  return <img className={compactLoading ? 'block h-auto w-full' : 'max-h-80 w-full object-contain'} src={data.signed_url} alt={image.alt_text} onError={() => setFailedUrl(data.signed_url)} />;
 }
