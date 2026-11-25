@@ -45,7 +45,8 @@
     --font-display: 'Plus Jakarta Sans', sans-serif;
   }
 
-  .dark {
+  .dark,
+  html:is([data-theme='dark'], [data-theme='hacker']) #my-guide {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
     --card: 215 28% 17%;

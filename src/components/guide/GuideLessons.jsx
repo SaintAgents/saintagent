@@ -16,7 +16,7 @@ export default function GuideLessons() {
   const [day,setDay] = useState(0);
   const [finished,setFinished] = useState(false);
   const [name,practice,tip,tool] = lessons[day];
-  return <section data-readable-surface className="space-y-3 rounded-xl border p-4" aria-labelledby="guide-lessons-title">
+  return <section className="space-y-3 rounded-xl border bg-card p-4" aria-labelledby="guide-lessons-title">
     <h2 id="guide-lessons-title" className="font-heading text-xl font-bold">Learn the seven My Guide functions</h2>
     {finished ? <div className="space-y-2"><p role="status">You reached the end of the seven lessons.</p><Button type="button" variant="outline" onClick={() => {setFinished(false);setDay(0);}}>Replay lessons</Button></div> : <>
       <label className="block space-y-1 text-sm">Choose a lesson<select className="block max-w-full rounded-md border border-input bg-background px-2 py-1" value={day} onChange={e => setDay(Number(e.target.value))}>{lessons.map(([title],i) => <option key={title} value={i}>{i+1}. {title}</option>)}</select></label>

@@ -39,7 +39,7 @@ export default function GuidePrimaryFunctions() {
     <nav aria-label="My Guide workspaces" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
       {functions.map(([id,title],index) => <Link key={id} to={`?guideTool=${id}#guide-workspace`} aria-current={active === id ? 'page' : undefined} className={`rounded-lg border px-3 py-2.5 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring ${active === id ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-card text-card-foreground hover:bg-muted'}`}>{index+1}. {title}</Link>)}
     </nav>
-    <section data-readable-surface id="guide-workspace" tabIndex={-1} className="scroll-mt-32 space-y-4 rounded-xl border p-4 sm:p-6" aria-labelledby="guide-workspace-title">
+    <section id="guide-workspace" tabIndex={-1} className="scroll-mt-32 space-y-4 rounded-xl border bg-card p-4 sm:p-6" aria-labelledby="guide-workspace-title">
       <div><h3 id="guide-workspace-title" className="font-heading text-xl font-bold">{functions.find(([id]) => id === active)[1]}</h3><p className="text-sm text-muted-foreground">{description}</p></div>
       {functions.map(([id]) => (active === id || visited.has(id)) && <div key={id} hidden={active !== id}>{content[id]}</div>)}
     </section>

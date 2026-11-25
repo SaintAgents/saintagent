@@ -1,0 +1,77 @@
+/* Use the same semantic palette throughout the Guide, including embedded tools. */
+html[data-theme='hacker'] #my-guide {
+  --background: 0 0% 0%;
+  --card: 0 0% 0%;
+  --foreground: 120 100% 50%;
+  --primary: 120 100% 50%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 120 43% 14%;
+  --secondary-foreground: var(--foreground);
+  --muted: 120 43% 8%;
+  --muted-foreground: 120 60% 72%;
+  --border: 120 55% 35%;
+}
+html #my-guide {
+  position: relative;
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground));
+}
+html #my-guide nav[aria-label='My Guide workspaces'] {
+  background: transparent !important;
+}
+html #my-guide .bg-background:not(#saint-intelligence *, #global-impact *) {
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+html #my-guide .bg-card:not(#saint-intelligence *, #global-impact *) {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+html #my-guide :is(input, textarea):not(#saint-intelligence *, #global-impact *)::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+}
+html #my-guide :is(a, button, [role='radio']).bg-background:hover:not(:disabled) {
+  background-color: hsl(var(--muted)) !important;
+}
+html #my-guide :is([aria-label='My Guide workspaces'] [aria-current='page'], [role='radio'][aria-checked='true']) {
+  background-color: hsl(var(--primary) / .14) !important;
+  border-color: hsl(var(--primary)) !important;
+}
+html #my-guide button.bg-primary:not(#saint-intelligence *, #global-impact *) {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border-color: transparent !important;
+}
+html #my-guide button.bg-primary:not(:disabled):hover {
+  background-color: hsl(var(--primary) / .9) !important;
+}
+html #my-guide .text-muted-foreground {
+  color: hsl(var(--muted-foreground)) !important;
+}
+html #my-guide #saint-intelligence {
+  --intel-obsidian: hsl(var(--card));
+  --intel-panel: hsl(var(--card));
+  --intel-control: hsl(var(--muted));
+  --intel-gold: hsl(var(--primary));
+  --intel-text: hsl(var(--foreground));
+  --intel-border: hsl(var(--border));
+  --intel-hero-glow: transparent;
+  --intel-placeholder: hsl(var(--muted-foreground));
+  --intel-action: hsl(var(--primary));
+  --intel-action-text: hsl(var(--primary-foreground));
+}
+html #my-guide #global-impact {
+  --impact-ink: var(--foreground);
+  --impact-muted: var(--muted-foreground);
+  --impact-night: var(--background);
+  --impact-panel: var(--card);
+  --impact-line: var(--border);
+  --impact-cyan: var(--primary);
+  --impact-blue: var(--secondary);
+  color-scheme: inherit;
+}
+html #my-guide #global-impact .impact-selected {
+  color: hsl(var(--secondary-foreground)) !important;
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: none !important;
+}

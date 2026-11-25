@@ -4,9 +4,10 @@ import GuidePillar from '@/components/guide/GuidePillar';
 import GuidePrimaryFunctions from '@/components/guide/GuidePrimaryFunctions';
 import GuideLessons from '@/components/guide/GuideLessons';
 import { pillars } from '@/components/guide/guideTools';
+import '@/components/guide/myGuide.css';
 
 export default function MyGuide() {
-  return <section className="min-h-dvh px-3 pb-24 pt-6 sm:px-6">
+  return <section id="my-guide" className="min-h-dvh px-3 pb-24 pt-6 sm:px-6">
     <div className="mx-auto max-w-6xl space-y-6">
       <GuideHero />
       <GuidePrimaryFunctions />
