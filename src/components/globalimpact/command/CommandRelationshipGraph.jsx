@@ -1,32 +1,25 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Network } from 'lucide-react';
-import { sourceHref } from '@/components/intelligence/intelligenceSources';
+import CommandCitationDiagram from '@/components/globalimpact/command/CommandCitationDiagram';
+import CommandCitationInspector from '@/components/globalimpact/command/CommandCitationInspector';
 
-function position(index, total, x, orbit) {
-  const y = total === 1 ? 140 : 27 + index * (226 / (total - 1));
-  return [x + orbit * Math.sin(y * Math.PI / 280), y];
-}
 export default function CommandRelationshipGraph({ result }) {
   const [selected, setSelected] = useState(null);
-  const findings = result?.evidence || [];
-  const ids = [...new Set(findings.flatMap(finding => finding.citations))].sort((a,b) => a-b);
-  const active = selected?.result === result ? selected.index : 0;
-  const finding = findings[active];
-  const fp = i => position(i, findings.length, 195, -29);
-  const sp = i => position(i, ids.length, 329, 33);
+  const findings = result?.evidence ?? [];
+  const sources = (result?.sources ?? []).map((source, i) => ({ ...source, number:i+1, linked:findings.flatMap((finding,j) => finding.citations.includes(i+1) ? [j] : []) }));
+  const active = selected?.result === result && selected ? selected.active : findings.length ? {finding:0} : {source:1};
+  const uncited = sources.filter(source => !source.linked.length).length;
+  const shared = sources.filter(source => source.linked.length > 1).length;
+  const links = sources.reduce((total, source) => total + source.linked.length, 0);
+  const metrics = [['Findings',findings.length],['Sources',sources.length],['Citation links',links],['Shared sources',shared],['Uncited sources',uncited]];
   return <section className="mc-panel mc-relationships" aria-labelledby="mc-graph-title">
     <div className="mc-panel-title"><h2 id="mc-graph-title">Semantic Relationship Intelligence</h2><span>Citation map</span></div>
     <div className="mc-body space-y-3">
-      {!finding ? <div className="mc-graph-empty"><Network size={42} aria-hidden="true" /><p>{result ? 'No citation links were returned for this goal.' : 'Run Mission Intelligence to map findings to their source records.'}</p></div> : <>
-        <svg className="mc-graph" viewBox="0 0 400 280" role="img" aria-label="Links from the mission goal to cited findings and their sources">
-          {findings.map(({citations}, i) => {const [x,y] = fp(i); return <g key={i} className={active === i ? 'mc-edge-current' : 'mc-edge'}><line x1="66" y1="140" x2={x} y2={y} />{citations.map(n => {const [sx,sy] = sp(ids.indexOf(n)); return <line key={n} x1={x} y1={y} x2={sx} y2={sy} />;})}</g>;})}
-          <circle cx="66" cy="140" r="9" className="mc-goal-node" /><text x="66" y="163" textAnchor="middle">Goal</text>
-          {findings.map((_,i) => {const [x,y] = fp(i); return <g key={i}><circle cx={x} cy={y} r={i === active ? 9 : 6} className={i === active ? 'mc-node-current' : 'mc-node'} /><text x={x-13} y={y+3} textAnchor="end">F{i+1}</text></g>;})}
-          {ids.map((n,i) => {const [x,y] = sp(i); return <g key={n}><circle cx={x} cy={y} r="5" className={finding.citations.includes(n) ? 'mc-node-current' : 'mc-node'} /><text x={x-10} y={y+3} textAnchor="end">S{n}</text></g>;})}
-        </svg>
-        <div className="flex flex-wrap gap-1.5" aria-label="Explore findings">{findings.map((_,i) => <button className="mc-small-button" key={i} type="button" aria-pressed={active === i} onClick={() => setSelected({result,index:i})}>Finding {i+1}</button>)}</div>
-        <div className="space-y-2 text-sm" aria-live="polite"><p>{finding.finding}</p><ul className="space-y-1">{finding.citations.map(n => {const source=result.sources[n-1]; const href=sourceHref(source); return <li key={n}>{href ? <Link to={href}>[{n}] {source.title}</Link> : <span>[{n}] {source.title}</span>}</li>;})}</ul></div>
+      {!result ? <div className="mc-graph-empty"><Network size={42} aria-hidden="true" /><p>Run Mission Intelligence to trace findings to their source records.</p></div> : <>
+        <dl className="flex flex-wrap gap-x-4 gap-y-2 text-xs">{metrics.map(([label,value]) => <div key={label}><dt className="mc-muted">{label}</dt><dd className="mc-gold text-base font-bold">{value}</dd></div>)}</dl>
+        {!findings.length && <p className="mc-muted text-sm">{sources.length ? 'Sources were retrieved, but no findings cited them.' : 'No accessible sources were retrieved for this goal.'}</p>}
+        {!!sources.length && <><CommandCitationDiagram findings={findings} sources={sources} active={active} /><p className="mc-muted text-xs">Larger source nodes are cited by multiple findings; outlined nodes are uncited. Citation links are not independent verification.</p><CommandCitationInspector result={result} sources={sources} active={active} choose={next => setSelected({result,active:next})} /></>}
+        {!!result.questions?.length && <div className="mc-gaps text-sm"><h3 className="mc-kicker">Still to verify</h3><ul className="mt-1 list-disc space-y-1 pl-4">{result.questions.map((question,i) => <li key={i}>{question}</li>)}</ul></div>}
       </>}
     </div>
   </section>;

@@ -28,7 +28,7 @@ export default function GuideEngine({ blueprintOnly = false, onResult }) {
     {!blueprintOnly && <form className="space-y-3" onSubmit={e => {
       e.preventDefault();
       if (guide.isPending || !user?.id || objective.trim().length < 3) return;
-      guide.mutate({ objective: objective.trim(), seven, deep, owner: user.id, blueprint: useBlueprint ? blueprint.data : null }, {onSettled: () => { if (deep) client.invalidateQueries({queryKey:['intelligence-library',user.id]}); }});
+      guide.mutate({ objective: objective.trim(), seven, deep, owner: user.id, detailedCitations: !!onResult, blueprint: useBlueprint ? blueprint.data : null }, {onSettled: () => { if (deep) client.invalidateQueries({queryKey:['intelligence-library',user.id]}); }});
       setUseBlueprint(false);
     }}>
       <label htmlFor="guide-objective" className="text-sm font-semibold">What do you want to make happen?</label>

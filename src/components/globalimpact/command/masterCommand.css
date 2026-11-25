@@ -43,8 +43,9 @@
 .mc-graph-empty {aspect-ratio:10 / 7; display:grid; align-content:center; justify-items:center; gap:.85rem; padding:1rem; text-align:center; font-size:.84rem;}
 #global-impact .master-command :is(.mc-graph,.mc-graph-empty) svg {filter:none; color:hsl(var(--mc-gold));}
 .mc-graph text {fill:hsl(var(--mc-ink)); font:10px var(--font-body); paint-order:stroke; stroke:hsl(var(--mc-bg)); stroke-width:2px;}
-#global-impact .master-command .mc-graph .mc-edge line {stroke:hsl(var(--mc-gold) / .31) !important;}
-#global-impact .master-command .mc-graph .mc-edge-current line {stroke:hsl(var(--mc-gold) / .9) !important; stroke-width:1.5;}
+#global-impact .master-command .mc-graph .mc-edge {stroke:hsl(var(--mc-gold) / .31) !important;}
+#global-impact .master-command .mc-graph .mc-edge-current {stroke:hsl(var(--mc-gold) / .9) !important; stroke-width:1.5;}
+#global-impact .master-command .mc-graph .mc-node-uncited {fill:none !important; stroke:hsl(var(--mc-muted)) !important; stroke-dasharray:2 2;}
 #global-impact .master-command .mc-graph .mc-node {fill:hsl(var(--mc-gold) / .52) !important; stroke:none !important;}
 #global-impact .master-command .mc-graph :is(.mc-node-current,.mc-goal-node) {fill:hsl(var(--mc-gold)) !important; stroke:none !important; filter:drop-shadow(0 0 4px hsl(var(--mc-gold) / .65));}
 .mc-feed {max-height:14rem; overflow:auto; padding-right:.25rem; font-size:.78rem;}
