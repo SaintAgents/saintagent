@@ -1,0 +1,102 @@
+{
+  "name": "GuideActionDraft",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 320
+          },
+          "owner": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "deadline": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "dependencies": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "evidence": {
+            "type": "string",
+            "maxLength": 280
+          },
+          "commitment": {
+            "type": "string",
+            "enum": [
+              "proposed",
+              "confirmed"
+            ]
+          }
+        },
+        "required": [
+          "task",
+          "owner",
+          "deadline",
+          "dependencies",
+          "evidence",
+          "commitment"
+        ]
+      }
+    }
+  },
+  "required": [
+    "title",
+    "actions"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

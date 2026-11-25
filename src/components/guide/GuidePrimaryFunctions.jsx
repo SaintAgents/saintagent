@@ -1,29 +1,46 @@
-import { Link } from 'react-router-dom';
-import { openGuide } from '@/components/globalimpact/impactDiscovery';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useAuth } from '@/lib/AuthContext';
+import GuideEngine from '@/components/guide/GuideEngine';
+import GuideKnowledgeGraph from '@/components/guide/GuideKnowledgeGraph';
+import GuideOrchestrator from '@/components/guide/GuideOrchestrator';
 import GuidePossibilitySimulator from '@/components/guide/GuidePossibilitySimulator';
+import Intelligence from '@/pages/Intelligence';
+import CollaborationRadar from '@/components/globalimpact/CollaborationRadar';
+import '@/components/globalimpact/globalImpact.css';
 
 const functions = [
-  ['SAINT Mission Intelligence', 'Research a goal, review next steps and save a private Planner draft.', 'Open The Weaver', '#guide-weaver'],
-  ['Living Knowledge Graph', 'Explore relationships already recorded in your contact network.', 'Open Contact Network graph', '/CRM?tab=network'],
-  ['SAINT Deep Research Studio', 'Run a cited investigation across SaintAgent and reopen your saved studies.', 'Open Saint Intelligence', '/Intelligence'],
-  ['Intelligent Action Orchestrator', 'Turn meeting notes into proposed follow-ups, assignments and a checkpoint. This drafts suggestions only.', 'Draft follow-up actions'],
-  ['Possibility Simulator', 'Compare team capacity, deadlines and funding delays using your own assumptions.', 'Compare scenarios', '#guide-simulator'],
-  ['Living Purpose & Capability Profile', 'Maintain your private Living Blueprint and choose whether to include it in a Weaver run.', 'Open Living Blueprint', '#guide-blueprint'],
-  ['Global Collaboration Radar', 'Explore emerging needs, active initiatives, offered capabilities and reported outcomes.', 'Open Collaboration Radar', '/GlobalImpactDashboard?workspace=radar'],
+  ['mission','SAINT Mission Intelligence','Ground a goal in SaintAgent evidence and prepare a mission plan.'],
+  ['graph','Living Knowledge Graph','Explore recorded connections and see why each contact matches.'],
+  ['research','SAINT Deep Research Studio','Search sources, run a cited investigation and branch from prior findings.'],
+  ['actions','Intelligent Action Orchestrator','Turn goals or meeting notes into editable, private follow-up drafts.'],
+  ['simulator','Possibility Simulator','Compare assumptions, deadline buffers and capacity risks.'],
+  ['blueprint','Living Purpose & Capability Profile','Edit the private Blueprint you can choose to use in a Weaver run.'],
+  ['radar','Global Collaboration Radar','Explore needs, initiatives, capabilities and outcomes by region or topic.'],
 ];
-const launch = 'Help me draft a follow-up plan from meeting notes. First ask me to paste the notes. Separate confirmed commitments from suggestions, flag missing owners or dates, and draft optional messages, tasks, deal updates and a checkpoint for my review. Do not send anything, make changes or schedule anything.';
-const linkClass = 'text-sm font-semibold underline underline-offset-4';
 
 export default function GuidePrimaryFunctions() {
+  const { user } = useAuth();
+  const [params] = useSearchParams(), { hash } = useLocation();
+  const requested = params.get('guideTool') || ({'#guide-blueprint':'blueprint','#guide-simulator':'simulator'}[hash]);
+  const active = functions.some(([id]) => id === requested) ? requested : 'mission';
+  const [visited,setVisited] = useState(() => new Set([active]));
+  useEffect(() => {setVisited(previous => previous.has(active) ? previous : new Set([...previous,active]));}, [active]);
+  useEffect(() => {
+    if (hash !== '#guide-workspace') return;
+    const frame = requestAnimationFrame(() => document.getElementById('guide-workspace')?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [active,hash]);
+  const [,,description] = functions.find(([id]) => id === active);
+  const content = {mission:<GuideEngine />, graph:<GuideKnowledgeGraph email={user?.email} />, research:user && <Intelligence inGuide guideActive={active === 'research'} />, actions:user && <GuideOrchestrator owner={user.id} />, simulator:<GuidePossibilitySimulator expanded />, blueprint:<GuideEngine blueprintOnly />, radar:<div id="global-impact" className="rounded-xl"><CollaborationRadar inGuide /></div>};
   return <section className="space-y-4" aria-labelledby="guide-functions-title">
     <h2 id="guide-functions-title" className="font-heading text-2xl font-bold">Primary functions</h2>
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {functions.map(([title, copy, label, to], index) => <section key={title} data-readable-surface className="flex flex-col gap-2 rounded-xl border p-4">
-        <h3 className="font-semibold">{index + 1}. {title}</h3>
-        <p className="flex-1 text-sm text-muted-foreground">{copy}</p>
-        {to?.startsWith('#') ? <a className={linkClass} href={to} onClick={to === '#guide-simulator' ? () => { const simulator = document.getElementById('guide-simulator'); if (simulator) simulator.open = true; } : undefined}>{label}</a> : to ? <Link className={linkClass} to={to}>{label}</Link> : <button type="button" className={`${linkClass} self-start rounded-md border px-2 py-1 text-left`} onClick={() => openGuide(launch)}>{label}</button>}
-      </section>)}
-    </div>
-    <GuidePossibilitySimulator />
+    <nav aria-label="My Guide workspaces" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      {functions.map(([id,title],index) => <Link key={id} to={`?guideTool=${id}#guide-workspace`} aria-current={active === id ? 'page' : undefined} className={`rounded-lg border px-3 py-2.5 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring ${active === id ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-card text-card-foreground hover:bg-muted'}`}>{index+1}. {title}</Link>)}
+    </nav>
+    <section data-readable-surface id="guide-workspace" tabIndex={-1} className="scroll-mt-32 space-y-4 rounded-xl border p-4 sm:p-6" aria-labelledby="guide-workspace-title">
+      <div><h3 id="guide-workspace-title" className="font-heading text-xl font-bold">{functions.find(([id]) => id === active)[1]}</h3><p className="text-sm text-muted-foreground">{description}</p></div>
+      {functions.map(([id]) => (active === id || visited.has(id)) && <div key={id} hidden={active !== id}>{content[id]}</div>)}
+    </section>
   </section>;
 }

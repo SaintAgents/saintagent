@@ -1,5 +1,4 @@
 import GuideAsk from '@/components/guide/GuideAsk';
-import GuideEngine from '@/components/guide/GuideEngine';
 import GuideHero from '@/components/guide/GuideHero';
 import GuidePillar from '@/components/guide/GuidePillar';
 import GuidePrimaryFunctions from '@/components/guide/GuidePrimaryFunctions';
@@ -11,7 +10,6 @@ export default function MyGuide() {
     <div className="mx-auto max-w-6xl space-y-6">
       <GuideHero />
       <GuidePrimaryFunctions />
-      <GuideEngine />
       <GuideAsk />
       <div className="grid gap-4 md:grid-cols-3">{pillars.map(p => <GuidePillar key={p.id} pillar={p} />)}</div>
       <GuideLessons />

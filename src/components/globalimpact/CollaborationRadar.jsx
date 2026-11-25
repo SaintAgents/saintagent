@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import ImpactOpportunityMap from '@/components/globalimpact/ImpactOpportunityMap';
 import useCollaborationRadar, { demoRadar, radarLayers } from '@/components/globalimpact/collaborationRadar';
 
-export default function CollaborationRadar({ demo }) {
+export default function CollaborationRadar({ demo, inGuide = false }) {
   const { user } = useAuth();
   const [layer, setLayer] = useState('needs');
   const [input, setInput] = useState('');
@@ -37,6 +37,9 @@ export default function CollaborationRadar({ demo }) {
       <section className="space-y-2 break-words border border-border p-3" aria-live="polite">
         <h3 className="font-semibold">{selected.title}</h3><p className="impact-muted text-sm">{selected.region || 'No region listed'}</p>
         {selected.description && <p className="whitespace-pre-wrap text-sm">{selected.description}</p>}
+        {inGuide && search && <p className="text-sm"><strong>Why it matched:</strong> {[
+          ['title',selected.title],['description',selected.description],['region',selected.region],['skill',selected.terms.join(', ')],
+        ].filter(([,value]) => value?.toLowerCase().includes(search.toLowerCase())).map(([field]) => field).join(', ') || 'A field in the source record'} contains “{search}”. Check the source before acting.</p>}
         {selected.metric && <p className="text-sm">Reported measure: {selected.metric}</p>}
         {!!selected.terms.length && <p className="impact-muted text-sm">Skills: {[...new Set(selected.terms)].join(', ')}</p>}
         {selected.path && <Link className="impact-text-link inline-block" to={selected.path}>Open source record →</Link>}
