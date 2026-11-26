@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import useToolbarDrag from '@/components/hud/useToolbarDrag';
 import { base44 } from '@/api/base44Client';
 import {
-  HelpCircle, Eye, Sun, Moon, Terminal, Sparkles, Layers, PanelLeft,
+  HelpCircle, Eye, Sun, Moon, Terminal, Waves, ImageIcon, Video, Layers, PanelLeft,
   Bell, LogOut, Download, PanelRightClose, PanelRightOpen, Upload,
   Play, X, Volume2, VolumeX, ChevronDown, GripHorizontal
 } from 'lucide-react';
@@ -231,16 +231,34 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
 
         <div className="w-px h-6 mx-0.5" style={{ background: dividerBg }} />
 
-        {/* Hero Background / Video */}
+        {!isTourPreview() && (
+          <button
+            type="button"
+            data-toolbar-btn
+            aria-label="Hero Backgrounds"
+            title="Hero Backgrounds"
+            onClick={event => {
+              setActivePanel(null);
+              openPageHero(currentPageName, { trigger: event.currentTarget });
+            }}
+            className={btnClass(false)}
+            style={{ color: accentColor }}
+          >
+            <ImageIcon className="w-5 h-5" aria-hidden="true" />
+          </button>
+        )}
+
+        {/* Video Background */}
         <button
           ref={heroButtonRef}
           data-toolbar-btn
           onClick={() => togglePanel('hero')}
           className={btnClass(activePanel === 'hero')}
-          title="Hero / Video Background"
+          title="Video Background"
+          aria-label="Video Background"
           style={{ color: activePanel === 'hero' ? (isLight ? accentColor : '#fff') : accentColor, ringColor: accentColor }}
         >
-          <Eye className="w-5 h-5" />
+          <Video className="w-5 h-5" aria-hidden="true" />
           {hasAnyVideo && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full" />}
         </button>
 
@@ -280,9 +298,10 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
           onClick={() => togglePanel('effects')}
           className={btnClass(activePanel === 'effects')}
           title="Background Effects"
+          aria-label="Background Effects"
           style={{ color: activePanel === 'effects' ? (isLight ? accentColor : '#fff') : accentColor }}
         >
-          <Sparkles className="w-5 h-5" />
+          <Waves className="w-5 h-5" aria-hidden="true" />
         </button>
 
         {/* Surface Opacity */}
@@ -349,10 +368,11 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
           <div data-toolbar-panel="true" className="rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto text-sm space-y-3 shadow-2xl border" style={{ '--tb-bg': isLight ? '#ffffff' : '#0f172a', '--tb-border': isLight ? '#e2e8f0' : '#334155', '--tb-color': isLight ? '#475569' : '#cbd5e1', background: isLight ? '#ffffff' : '#0f172a', borderColor: isLight ? '#e2e8f0' : '#334155', color: isLight ? '#475569' : '#cbd5e1' }} onClick={e => e.stopPropagation()}>
             <h2 className="text-lg font-bold flex items-center gap-2" style={{ color: textColor }}><HelpCircle className="w-5 h-5" style={{ color: accentColor }} /> Toolbar Guide</h2>
             <div className="space-y-2">
-              <p><strong style={{ color: accentColor }}>👁 Hero Background</strong> — Select video backgrounds per page or globally. Browse the library or upload your own.</p>
+              {!isTourPreview() && <p><strong style={{ color: accentColor }}><ImageIcon className="inline size-4" aria-hidden="true" /> Hero Backgrounds</strong> — Open the image and carousel editor for this page or another surface.</p>}
+              <p><strong style={{ color: accentColor }}><Video className="inline size-4" aria-hidden="true" /> Video Background</strong> — Select video backgrounds per page or globally. Browse the library or upload your own.</p>
               <p><strong style={{ color: accentColor }}>☀ Light/Dark</strong> — Toggle between light and dark color schemes.</p>
               <p><strong style={{ color: accentColor }}>⌨ Matrix</strong> — Activate green terminal overlay on dark mode.</p>
-              <p><strong style={{ color: accentColor }}>✨ Effects</strong> — Particle/visual overlays: Starfield, Matrix Rain, Nebula, Circuit, Fractal.</p>
+              <p><strong style={{ color: accentColor }}><Waves className="inline size-4" aria-hidden="true" /> Effects</strong> — Particle/visual overlays: Starfield, Matrix Rain, Nebula, Circuit, Fractal.</p>
               <p><strong style={{ color: accentColor }}>◈ Surface Opacity</strong> — Control transparency of content surfaces, hero, cards, and backgrounds.</p>
               <p><strong style={{ color: accentColor }}>◧ Sidebar</strong> — Adjust sidebar opacity, background, and font brightness.</p>
             </div>
@@ -388,7 +408,7 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
               <div className="p-3 space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: textColor }}>
-                    <Eye className="w-4 h-4" style={{ color: accentColor }} /> Hero / Video Background
+                    <Video className="w-4 h-4" style={{ color: accentColor }} aria-hidden="true" /> Video Background
                   </h3>
                   <button onClick={() => setActivePanel(null)} className={`p-1 rounded ${hoverBg}`} style={{ color: textMuted }}><X className="w-4 h-4" /></button>
                 </div>
@@ -657,7 +677,7 @@ function EffectsPanel({ accentColor, textColor, textMuted, hoverBg, panelItemBgA
   return (
     <div className="p-3 space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: textColor }}><Sparkles className="w-4 h-4" style={{ color: accentColor }} /> Background Effects</h3>
+        <h3 className="text-sm font-bold flex items-center gap-2" style={{ color: textColor }}><Waves className="w-4 h-4" style={{ color: accentColor }} aria-hidden="true" /> Background Effects</h3>
         <button onClick={onClose} className={`p-1 rounded ${hoverBg}`} style={{ color: textMuted }}><X className="w-4 h-4" /></button>
       </div>
       <div className="grid grid-cols-3 gap-1">
