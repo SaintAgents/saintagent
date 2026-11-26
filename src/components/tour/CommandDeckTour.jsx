@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import TourScreenPreview from '@/components/tour/TourScreenPreview';
+import TourSplitPane from '@/components/tour/TourSplitPane';
 import { overviewPreviewTarget } from '@/components/tour/tourPreviewTargets';
 import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronLeft, Sparkles, LayoutDashboard, PanelLeft, Settings, Layers, Palette, GripVertical, Moon, Cpu } from 'lucide-react';
@@ -137,13 +138,12 @@ export default function CommandDeckTour({ onComplete, autoStart = false }) {
         <DialogTitle>Command Deck Tour</DialogTitle>
         <DialogDescription>Step {currentStep + 1} of {TOUR_STEPS.length}</DialogDescription>
       </header>
-      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,3fr)] md:grid-cols-2 md:grid-rows-1">
-        <TourScreenPreview targets={[overviewPreviewTarget(step.title, anchors[step.id] ?? '[data-deck-tour="header"]')]} />
-        <section aria-label="Lesson instructions" className="space-y-3 overflow-y-auto p-5 sm:px-8" aria-live="polite">
+      <TourSplitPane preview={<TourScreenPreview targets={[overviewPreviewTarget(step.title, anchors[step.id] ?? '[data-deck-tour="header"]')]} />}>
+        <section aria-label="Lesson instructions" className="min-w-0 space-y-3 overflow-y-auto p-5 sm:px-8" aria-live="polite">
           <h2 className="flex items-center gap-2 text-xl font-semibold"><StepIcon size={20} aria-hidden="true" />{step.title}</h2>
           <p className="text-sm leading-relaxed">{step.description}</p>
         </section>
-      </div>
+      </TourSplitPane>
       <footer className="flex shrink-0 flex-wrap justify-between gap-2 border-t px-4 py-3 sm:px-8">
         <Button variant="ghost" onClick={handleSkip}>Skip Tour</Button>
         <div className="flex gap-2">

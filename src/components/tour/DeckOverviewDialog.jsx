@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import TourNarration from '@/components/tour/TourNarration';
 import TourScreenPreview from '@/components/tour/TourScreenPreview';
+import TourSplitPane from '@/components/tour/TourSplitPane';
 import { overviewPreviewTarget } from '@/components/tour/tourPreviewTargets';
 import DeckIconDemo from '@/components/tour/DeckIconDemo';
 import { DECK_OVERVIEW, DECK_STOPS, WELCOME_OVERVIEW, WELCOME_STOPS } from '@/components/tour/deckOverview';
@@ -34,8 +35,7 @@ export default function DeckOverviewDialog({ index, onSelect, onClose, returnFoc
         <DialogDescription>{firstVisit ? 'Get oriented with a full-screen walkthrough. Nothing you try in the preview changes your account.' : 'Walk through the whole screen, from navigation to the cards and tools. Choose any section or follow in order.'}</DialogDescription>
         {firstVisit && <Button type="button" size="sm" variant="outline" onClick={onToggleSections} disabled={busy}>{essentials ? 'Browse all sections' : 'Back to the essentials'}</Button>}
       </header>
-      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,3fr)] md:grid-cols-2 md:grid-rows-1">
-        <TourScreenPreview targets={[overviewPreviewTarget(title, anchor)]} />
+      <TourSplitPane preview={<TourScreenPreview targets={[overviewPreviewTarget(title, anchor)]} />} >
         <div ref={pane} className="min-h-0 min-w-0 overflow-y-auto px-4 py-5 sm:px-8">
         <div className="mx-auto mb-4 max-w-3xl">
           <label htmlFor="deck-tour-section" className="mb-2 block text-sm font-semibold">Jump to a section</label>
@@ -54,7 +54,7 @@ export default function DeckOverviewDialog({ index, onSelect, onClose, returnFoc
             {!firstVisit && (target ? <Button type="button" variant="outline" onClick={() => { locate.current = target; onClose(); }}><Crosshair aria-hidden="true" /> Highlight on my deck</Button> : <p className="text-sm text-muted-foreground">This section isn’t visible in your current layout.</p>)}
           </div>
         </div>
-      </div>
+      </TourSplitPane>
       <footer className="shrink-0 space-y-2 border-t px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-8">
         {saveError && <p role="alert" className="text-sm">Couldn’t save your tour choice. Please try again.</p>}
         <div className="flex flex-wrap items-center justify-between gap-2">

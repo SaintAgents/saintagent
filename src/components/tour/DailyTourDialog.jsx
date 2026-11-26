@@ -34,7 +34,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
           <DialogDescription>Section {step + 1} of {tour.sections.length}</DialogDescription>
           <progress className="block h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />
         </header>
-        <TourSplitPane resizable={Boolean(tour.reward || tour.lab)} preview={preview}>
+        <TourSplitPane preview={preview}>
           <section aria-label="Lesson instructions" ref={scrollArea} className="min-h-0 min-w-0 space-y-4 overflow-y-auto px-4 py-5 sm:px-8">
         <div className="space-y-3" aria-live="polite">
           <h3 className="font-heading text-lg font-semibold">{title}</h3>
