@@ -146,7 +146,7 @@ export default function ImpactDashboard({ embedded = false, afterStats, previewU
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50/30">
-      <ImpactDashboardHero embedded={embedded} name={profile?.display_name || currentUser?.full_name || 'Agent'} rank={rankReady ? resolveImpactRank(profile, profile?.rp_points || rankPoints) : null} />
+      <ImpactDashboardHero embedded={embedded} avatarUrl={profile?.avatar_url} name={profile?.display_name || currentUser?.full_name || 'Agent'} rank={rankReady ? resolveImpactRank(profile, profile?.rp_points || rankPoints) : null} />
 
       <div className="max-w-7xl mx-auto px-4 py-6 md:px-6 md:pb-12">
         {/* Stat Cards Row */}

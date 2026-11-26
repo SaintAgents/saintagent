@@ -32,10 +32,6 @@
   background: linear-gradient(0deg, hsl(var(--impact-night) / .96), transparent 80%), linear-gradient(90deg, hsl(var(--impact-night) / .55), transparent 78%), var(--impact-earth) center 34% / cover no-repeat, hsl(var(--impact-night)) !important;
 }
 #global-impact .impact-intro h1 {text-shadow: 0 2px 20px hsl(var(--impact-night)) !important;}
-#global-impact .impact-hero-avatar {
-  background: hsl(var(--impact-panel)) !important;
-  border-color: hsl(var(--impact-cyan)) !important;
-}
 #global-impact .impact-kicker {color: hsl(var(--impact-cyan)) !important; font-size: .69rem; font-weight: 750; letter-spacing: .13em;}
 #global-impact .impact-muted {color: hsl(var(--impact-muted)) !important;}
 #global-impact .impact-brand, #global-impact .impact-guide {color: hsl(var(--impact-gold)) !important;}

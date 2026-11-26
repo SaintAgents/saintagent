@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 import ImpactCommand from '@/components/globalimpact/ImpactCommand';
-import ImpactHeroAvatar from '@/components/globalimpact/ImpactHeroAvatar';
 import ImpactWorkspace, { isImpactTab } from '@/components/globalimpact/ImpactWorkspace';
 import { readScope, scopeRoute } from '@/components/globalimpact/pulse/pulseGeography';
 import { openGuide } from '@/components/globalimpact/impactDiscovery';
@@ -40,9 +39,8 @@ export default function GlobalImpactDashboard() {
     <div className="mx-auto max-w-[100rem] space-y-4">
       <ImpactCommand active={active} select={select} demo={demo} />
       {active === 'command' ? <MasterCommandHud key={demo ? 'demo' : 'live'} demo={demo} /> : <>
-      <div className="impact-intro grid grid-rows-[1fr_auto_1fr] gap-y-2">
-        <ImpactHeroAvatar />
-        <div className="row-start-3 flex flex-wrap content-end items-end justify-between gap-3">
+      <div className="impact-intro flex flex-col justify-end">
+        <div className="flex flex-wrap items-end justify-between gap-3">
         <div><p className="impact-kicker">SAINTAGENT / GLOBAL OPERATIONS</p><h1 className="mt-1 text-3xl font-extrabold tracking-tight sm:text-5xl">Global Impact Dashboard</h1><p className="impact-muted mt-2 text-sm">Find opportunities, connect with people, and turn ideas into action.</p></div>
         <div className="flex flex-wrap gap-2"><button type="button" className="impact-control impact-guide inline-flex items-center gap-2" onClick={() => openGuide('Help me plan a mission. Ask about my intended outcome and help me identify an existing initiative or draft the first practical milestone.')}>Plan a mission <Sparkles size={14} /></button><button type="button" className="impact-control inline-flex items-center gap-2" onClick={() => select('research')}>Research Hub <ArrowUpRight size={14} /></button><button type="button" className="impact-control inline-flex items-center gap-2" onClick={() => { select('overview'); document.getElementById('impact-module-tabs')?.scrollIntoView({ block:'start' }); }}>My Impact <ArrowUpRight size={14} /></button></div>
         </div>

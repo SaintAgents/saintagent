@@ -13,6 +13,11 @@ html:root header.personal-impact-hero {
 }
 .personal-impact-hero .personal-impact-heading :is(h1,h3,p) {color: hsl(var(--hero-text)) !important; text-shadow: 0 2px 10px hsl(var(--hero-night)) !important;}
 .personal-impact-hero .personal-impact-heading :is(h1,h3) {color: hsl(var(--hero-gold)) !important;}
+html:root .personal-impact-hero .impact-hero-avatar {
+  background: hsl(var(--hero-night)) !important;
+  border-color: hsl(var(--hero-gold)) !important;
+  color: hsl(var(--hero-text)) !important;
+}
 .personal-impact-hero .personal-impact-back {position: absolute; inset-block-start: .75rem; inset-inline-start: .75rem; color: hsl(var(--hero-text)) !important;}
 .personal-impact-hero .personal-impact-identity {background: hsl(var(--hero-night) / .88) !important; color: hsl(var(--hero-text)) !important; border-color: hsl(var(--hero-text) / .45) !important;}
 .personal-impact-hero .personal-impact-rank {color: hsl(var(--hero-gold)) !important; border-color: hsl(var(--hero-gold) / .65) !important;}
