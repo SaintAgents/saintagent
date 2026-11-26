@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BookOpen, CheckCircle, LayoutDashboard } from 'lucide-react';
 import DeckOverviewDialog from '@/components/tour/DeckOverviewDialog';
+import '@/components/tour/tourHighlight.css';
 import { Button } from '@/components/ui/button';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import DailyTourDialog from '@/components/tour/DailyTourDialog';
@@ -73,8 +74,11 @@ export default function DailyToursCard({ userId, embedded = false }) {
         overviewTrigger.current?.focus({ preventScroll: true });
         if (!target?.isConnected) return;
         target.scrollIntoView({ block: 'center', inline: 'nearest' });
-        const outline = { outline: '3px dashed currentColor', outlineOffset: '-3px' };
-        target.animate?.([outline, outline], { duration: 5000 });
+        const marker = String(performance.now());
+        target.setAttribute('data-tour-deck-focus', marker);
+        window.setTimeout(() => {
+          if (target.getAttribute('data-tour-deck-focus') === marker) target.removeAttribute('data-tour-deck-focus');
+        }, 5000);
       }} />}
       {!embedded && record?.site_skills_reward && <p role="status" className="text-sm">{record.site_skills_reward === 'claimed' ? 'Site Skills Quest: 0.77 GGG added to your wallet.' : 'Site Skills Quest: reward not yet confirmed.'}</p>}
       {save.isPending && !record && <p role="status" className="text-sm">Starting your tour…</p>}

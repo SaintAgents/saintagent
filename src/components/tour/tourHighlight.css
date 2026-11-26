@@ -1,0 +1,18 @@
+[data-tour-preview-focus], [data-tour-deck-focus], [data-tour-launcher-focus] {
+  outline-style: solid !important;
+  outline-width: 4px !important;
+  outline-color: hsl(43 100% 55%);
+  outline-offset: -4px !important;
+}
+[data-tour-preview-focus] { scroll-margin-block: 7rem; }
+[data-tour-launcher-focus] { outline-offset: 0 !important; }
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-tour-preview-focus], [data-tour-deck-focus], [data-tour-launcher-focus] {
+    animation: tour-outline-pulse 1.6s ease-in-out 3;
+  }
+}
+@keyframes tour-outline-pulse {
+  0%, 100% { outline-color: hsl(43 100% 55%); }
+  50% { outline-color: hsl(191 100% 42%); }
+}

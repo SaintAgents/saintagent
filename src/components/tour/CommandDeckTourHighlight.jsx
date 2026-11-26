@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowUp } from 'lucide-react';
+import '@/components/tour/tourHighlight.css';
 
 export default function CommandDeckTourHighlight() {
   const [rect, setRect] = useState(null);
@@ -34,9 +35,7 @@ export default function CommandDeckTourHighlight() {
   if (!rect) return null;
   return createPortal(
     <span aria-hidden="true" className="pointer-events-none fixed z-[10002] block text-primary" style={{ left: rect.left - 3, top: rect.top - 3, width: rect.width + 6, height: rect.height + 6 }}>
-      <span className="absolute inset-0 rounded-[var(--radius)] ring-2 ring-background">
-        <span className="absolute inset-0 rounded-[inherit] outline-[3px] outline-dashed outline-current" />
-      </span>
+      <span data-tour-launcher-focus className="absolute inset-0 rounded-[var(--radius)] ring-2 ring-background" />
       <span className="absolute left-1/2 top-full mt-1 flex -translate-x-1/2 items-center justify-center rounded-full bg-background p-1 ring-2 ring-current">
         <ArrowUp size={24} strokeWidth={3} />
       </span>

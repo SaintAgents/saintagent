@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import highlightStyles from '@/components/tour/tourHighlight.css?raw';
 
 const visible = (doc, selector) => [...doc.querySelectorAll(selector)].find(el => el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0 && doc.defaultView.getComputedStyle(el).visibility !== 'hidden');
 
@@ -10,7 +11,7 @@ export default function useTourFrameTarget(doc, anchor, setup) {
     let highlight, raf;
     const clear = () => highlight?.removeAttribute('data-tour-preview-focus');
     const style = doc.createElement('style');
-    style.textContent = '[data-tour-preview-focus]{outline:3px solid hsl(187 92% 45%) !important;outline-offset:-3px !important;scroll-margin-block:7rem;} button,a,input,select,textarea{cursor:default !important}';
+    style.textContent = `${highlightStyles}\nbutton,a,input,select,textarea{cursor:default !important}`;
     doc.head.append(style);
     const block = event => { if (event.isTrusted) { event.preventDefault(); event.stopImmediatePropagation(); } };
     const blocked = ['pointerdown', 'mousedown', 'click', 'auxclick', 'dblclick', 'keydown', 'contextmenu', 'submit', 'dragstart'];
