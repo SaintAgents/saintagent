@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Crosshair } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import TourWindow from '@/components/tour/TourWindow';
 import TourNarration from '@/components/tour/TourNarration';
 import TourScreenPreview from '@/components/tour/TourScreenPreview';
 import TourSplitPane from '@/components/tour/TourSplitPane';
@@ -27,15 +28,12 @@ export default function DeckOverviewDialog({ index, onSelect, onClose, returnFoc
   const target = title === 'Command Deck card icons' ? elements[0] : elements.find(el => { const box = el.getBoundingClientRect(); return box.right > 0 && box.left < window.innerWidth; });
   useEffect(() => { pane.current?.scrollTo({ top: 0 }); }, [index, essentials]);
 
-  return <Dialog open onOpenChange={open => { if (!open && !busy) onClose(); }}>
-    <DialogContent data-dock-full-tour data-readable-surface data-hacker-draggable="true" hideCloseButton={firstVisit} className="inset-0 z-[1000000] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:rounded-none"
-      onCloseAutoFocus={event => { event.preventDefault(); returnFocus(locate.current); }}>
-      <header className="shrink-0 space-y-1 border-b px-4 py-4 pr-12 sm:px-8">
+  return <TourWindow welcome={firstVisit} onClose={onClose} busy={busy} returnFocus={() => returnFocus(locate.current)} header={<>
         <DialogTitle>{firstVisit ? 'Welcome to SaintAgent' : 'Command Deck Overview'}</DialogTitle>
         <DialogDescription>{firstVisit ? 'Get oriented with a full-screen walkthrough. Nothing you try in the preview changes your account.' : 'Walk through the whole screen, from navigation to the cards and tools. Choose any section or follow in order.'}</DialogDescription>
         {firstVisit && <Button type="button" size="sm" variant="outline" onClick={onToggleSections} disabled={busy}>{essentials ? 'Browse all sections' : 'Back to the essentials'}</Button>}
-      </header>
-      <TourSplitPane preview={<TourScreenPreview targets={[overviewPreviewTarget(title, anchor)]} />} >
+  </>}>
+      <TourSplitPane preview={<TourScreenPreview targets={[overviewPreviewTarget(title, anchor)]} />}>
         <div ref={pane} className="min-h-0 min-w-0 overflow-y-auto px-4 py-5 sm:px-8">
         <div className="mx-auto mb-4 max-w-3xl">
           <label htmlFor="deck-tour-section" className="mb-2 block text-sm font-semibold">Jump to a section</label>
@@ -63,6 +61,5 @@ export default function DeckOverviewDialog({ index, onSelect, onClose, returnFoc
           <Button type="button" disabled={busy} onClick={() => last ? onFinish() : onSelect(index + 1)}>{busy ? 'Saving…' : last ? 'Finish overview' : 'Next section'}</Button>
         </div>
       </footer>
-    </DialogContent>
-  </Dialog>;
+  </TourWindow>;
 }

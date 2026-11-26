@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import TourWindow from '@/components/tour/TourWindow';
 import TourScreenPreview from '@/components/tour/TourScreenPreview';
 import TourSplitPane from '@/components/tour/TourSplitPane';
 import { overviewPreviewTarget } from '@/components/tour/tourPreviewTargets';
@@ -132,12 +133,10 @@ export default function CommandDeckTour({ onComplete, autoStart = false }) {
   const anchors = { topbar: '#app-topbar', sidebar: '[data-sidebar]', sidepanel: '[data-side-panel-handle]', cards: '[data-deck-tour="shortcuts"]', controls: '[data-deck-tour="controls"]', themes: '[data-deck-tour="appearance"]', bgeffects: '[data-deck-tour="appearance"]', customize: '[data-deck-tour="controls"]' };
   if (!isOpen) return null;
 
-  return <Dialog open onOpenChange={open => { if (!open) handleSkip(); }}>
-    <DialogContent data-dock-full-tour data-readable-surface data-hacker-draggable="true" className="inset-0 z-[10010] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:rounded-none">
-      <header className="shrink-0 space-y-1 border-b px-4 py-3 pr-12 sm:px-8">
+  return <TourWindow onClose={handleSkip} header={<>
         <DialogTitle>Command Deck Tour</DialogTitle>
         <DialogDescription>Step {currentStep + 1} of {TOUR_STEPS.length}</DialogDescription>
-      </header>
+  </>}>
       <TourSplitPane preview={<TourScreenPreview targets={[overviewPreviewTarget(step.title, anchors[step.id] ?? '[data-deck-tour="header"]')]} />}>
         <section aria-label="Lesson instructions" className="min-w-0 space-y-3 overflow-y-auto p-5 sm:px-8" aria-live="polite">
           <h2 className="flex items-center gap-2 text-xl font-semibold"><StepIcon size={20} aria-hidden="true" />{step.title}</h2>
@@ -151,8 +150,7 @@ export default function CommandDeckTour({ onComplete, autoStart = false }) {
           <Button onClick={handleNext}>{currentStep === TOUR_STEPS.length - 1 ? 'Get Started' : 'Next'}{currentStep < TOUR_STEPS.length - 1 && <ChevronRight />}</Button>
         </div>
       </footer>
-    </DialogContent>
-  </Dialog>;
+  </TourWindow>;
   }
 
   // Loading screen component

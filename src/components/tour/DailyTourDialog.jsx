@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import TourWindow from '@/components/tour/TourWindow';
 import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import TourScreenPreview from '@/components/tour/TourScreenPreview';
 import TourSplitPane from '@/components/tour/TourSplitPane';
@@ -26,14 +27,11 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
   const preview = tour.lab === 'assistant' ? <AssistantTourLab /> : tour.lab === 'persona' ? <SuperUserTourLab step={step} /> : <TourScreenPreview key={lessonKey} targets={dailyPreviewTargets(day, step, title, path)} />;
 
   return (
-    <Dialog open onOpenChange={(open) => { if (!open && !busy) onClose(); }}>
-      <DialogContent data-dock-full-tour data-readable-surface data-hacker-draggable="true" className="inset-0 z-[10010] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:rounded-none" hideCloseButton={busy}
-        onCloseAutoFocus={(event) => { event.preventDefault(); returnFocus(); }}>
-        <header className="shrink-0 space-y-2 border-b px-4 py-3 pr-12 sm:px-8">
+    <TourWindow onClose={onClose} returnFocus={returnFocus} busy={busy} header={<>
           <DialogTitle>{tour.reward || tour.lab ? tour.title : `Tour ${day + 1}: ${tour.title}`}</DialogTitle>
           <DialogDescription>Section {step + 1} of {tour.sections.length}</DialogDescription>
           <progress className="block h-2 w-full accent-primary" value={step + 1} max={tour.sections.length} aria-label="Current section" />
-        </header>
+    </>}>
         <TourSplitPane preview={preview}>
           <section aria-label="Lesson instructions" ref={scrollArea} className="min-h-0 min-w-0 space-y-4 overflow-y-auto px-4 py-5 sm:px-8">
         <div className="space-y-3" aria-live="polite">
@@ -50,7 +48,6 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
           <Button type="button" variant="outline" disabled={step === 0 || busy} onClick={onBack}>Back</Button>
           <Button type="button" disabled={busy} onClick={onAdvance}>{busy ? 'Saving…' : lastStep ? 'Finish tour' : 'Next section'}</Button>
         </footer>
-      </DialogContent>
-    </Dialog>
+    </TourWindow>
   );
 }
