@@ -2015,7 +2015,9 @@ function AuthenticatedLayout({ children, currentPageName }) {
       <VideoBackgroundToolbar theme={theme} onThemeToggle={setTheme} currentPageName={currentPageName} />
       {!tourPreview && <SurfaceHeroControls page={currentPageName} theme={theme} />}
 
-      {!tourPreview && currentPageName === 'CommandDeck' && !onboarding?.welcome_overview_pending && <WelcomeCourse key={currentUser.id} userId={currentUser.id} eligible={['complete','skipped'].includes(onboarding?.status) && Date.now() - Date.parse(currentUser.created_date || onboarding?.created_date) < 14 * 86400000} />}
+      {!tourPreview && !onboarding?.welcome_overview_pending && <WelcomeCourse key={currentUser.id} userId={currentUser.id}
+        ready={['complete', 'skipped'].includes(onboarding?.status) || (onboardingFetched && !onboardingError && !onboarding && onboardingCompleteFlag)}
+        newMember={Date.now() - Date.parse(currentUser.created_date || onboarding?.created_date) < 14 * 86400000} />}
       {!tourPreview && currentPageName === 'CommandDeck' && onboarding?.welcome_overview_pending && (onboarding.status === 'complete' || onboarding.status === 'skipped') && (
         <FirstVisitTour key={onboarding.id} onboarding={onboarding} userEmail={currentUser.email} />
       )}
