@@ -1,5 +1,6 @@
 import { siteSkillsTour } from '@/components/tour/siteSkillsLessons';
 import { handsOnTours } from '@/components/tour/handsOnTours';
+import { featureInventoryTour } from '@/components/tour/featureInventory';
 
 export const DAILY_TOURS = [
   { title: 'The Basics', sections: [
@@ -80,4 +81,5 @@ export const DAILY_TOURS = [
   ] },
   siteSkillsTour,
   ...handsOnTours,
+  featureInventoryTour,
 ];

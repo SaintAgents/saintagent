@@ -13,6 +13,7 @@ import TourNarration from '@/components/tour/TourNarration';
 import { TOUR_PRACTICE } from '@/components/tour/tourPracticeData';
 import AssistantTourLab from '@/components/tour/AssistantTourLab';
 import SuperUserTourLab from '@/components/tour/SuperUserTourLab';
+import FeatureInventory from '@/components/tour/FeatureInventory';
 
 export default function DailyTourDialog({ day, step, busy, error, onClose, onBack, onAdvance, returnFocus }) {
   const scrollArea = useRef(null);
@@ -24,7 +25,7 @@ export default function DailyTourDialog({ day, step, busy, error, onClose, onBac
   const practice = tour.lab ? null : TOUR_PRACTICE[day][step];
   const lessonKey = `${day}-${step}`;
   const script = `${title}. ${description}` + (practice ? `\n\nTry the ${practice[0]} practice. ${practice.slice(1).map(([action, result, fields]) => `Select ${action}. ${result}. ${fields.map(([label, value]) => `${label}: ${value.replace(/[.!?]$/, '')}.`).join(' ')}`).join(' ')}` : '');
-  const preview = tour.lab === 'assistant' ? <AssistantTourLab /> : tour.lab === 'persona' ? <SuperUserTourLab step={step} /> : <TourScreenPreview key={lessonKey} targets={dailyPreviewTargets(day, step, title, path)} />;
+  const preview = tour.lab === 'features' ? <FeatureInventory key={lessonKey} step={step} /> : tour.lab === 'assistant' ? <AssistantTourLab /> : tour.lab === 'persona' ? <SuperUserTourLab step={step} /> : <TourScreenPreview key={lessonKey} targets={dailyPreviewTargets(day, step, title, path)} />;
 
   return (
     <TourWindow onClose={onClose} returnFocus={returnFocus} busy={busy} header={<>
