@@ -38,7 +38,7 @@ export default function DeepDiveLauncher() {
   return <Dialog open={open} onOpenChange={setOpen}>
     <DeepDiveDragTrigger onOpen={(detail, trigger) => { returnFocus.current = trigger; setRequest(detail); setOpen(true); }} />
     <DialogContent data-readable-surface onCloseAutoFocus={restoreFocus} overlayClassName="z-[10999]" className="z-[11000] max-h-[85dvh] w-[calc(100%-2rem)] max-w-5xl overflow-y-auto rounded-xl p-4 sm:p-7">
-      <div className="space-y-2 border-b pb-4 pr-7">
+      <div data-deep-dive-heading className="space-y-2 border-b pb-4 pr-7">
         <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"><Microscope size={17} aria-hidden="true" /> Discover · Investigate · Connect · Develop · Activate</p>
         <DialogTitle className="font-display text-2xl font-extrabold tracking-tight sm:text-4xl">DEEP DIVE INTELLIGENCE</DialogTitle>
         <DialogDescription>Explore Anything. Discover Connections. Develop Possibilities.</DialogDescription>

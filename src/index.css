@@ -763,6 +763,25 @@ html:root [data-readable-surface][data-testimonial-card] textarea {
   opacity: 1 !important;
 }
 
+/* Keep research headings and empty states legible in Light mode. */
+html[data-theme='light'] [data-readable-surface] [data-deep-dive-heading] {
+  background: var(--readable-bg) !important;
+}
+html[data-theme='light'] [data-readable-surface] [data-deep-dive-heading] :is(h2, p),
+html[data-theme='light'] [data-research-library][data-intel-panel] :is(h2, p) {
+  color: hsl(var(--foreground)) !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+html[data-theme='light'] [data-research-library][data-intel-panel] {
+  background: hsl(var(--card)) !important;
+  opacity: 1 !important;
+}
+/* My Research is an aside, but its header must not inherit sidebar tint. */
+html[data-theme='light'] [data-research-library][data-intel-panel] > div:first-child {
+  background-color: transparent !important;
+}
+
 /* Size tour columns to the card, including in narrow docks on wide screens. */
 .daily-tours-library { container: daily-tours / inline-size; }
 @container daily-tours (min-width: 24rem) {
