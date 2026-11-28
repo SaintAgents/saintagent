@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLanguage } from '@/components/language/LanguageProvider';
-import { Link, useLocation } from 'react-router-dom';
-import { MonitorDot } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { isMobileDevice, DATA_LIMITS } from '@/components/services/dataService';
@@ -1132,9 +1131,6 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
                 {/* View Mode + Theme Radio Buttons */}
                 <div className="mb-4 flex flex-wrap items-center gap-4">
-                  <Button asChild variant="outline" size="icon">
-                    <Link to="/MyCommandCenter" title="My Command Center" aria-label="My Command Center"><MonitorDot /></Link>
-                  </Button>
                   {/* Deck View Mode Selector */}
                   <DeckViewModeSelector 
                     viewMode={deckViewMode} 

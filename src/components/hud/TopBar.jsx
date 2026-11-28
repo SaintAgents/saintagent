@@ -387,7 +387,13 @@ export default function TopBar({
           <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-slate-500" style={{ pointerEvents: 'none' }} />
         )}
       </button>
-      
+      {currentPageName === 'CommandDeck' && (
+        <Button asChild variant="ghost" size="icon" className="h-10 w-10 shrink-0 p-0">
+          <Link to="/MyCommandCenter" title={t('My Command Center')} aria-label={t('My Command Center')}>
+            <img src="https://base44.app/api/apps/694f3e0401b05e6e8a042002/files/mp/public/694f3e0401b05e6e8a042002/2cca7fae9d5dccdbc519a9f175871f79_my-command-center-icon.png" alt="" className="h-full w-full object-contain" />
+          </Link>
+        </Button>
+      )}
       </div>
       {/* Masters Messages - shows when topbar is collapsed */}
       {isCollapsed && <MastersMessagesTicker />}
