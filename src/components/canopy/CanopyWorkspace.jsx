@@ -44,9 +44,9 @@ export default function CanopyWorkspace(props) {
     onRemove={!focused && editable ? () => commit({cards:settings.cards.filter(card => card !== id)}) : undefined}>{tile(id)}</CanopyCard>;
   return <div className="canopy-scroll" style={{'--widget-scale':cardScale/100}}>
     <div className="canopy-tabs">
-      {editable && <button type="button" disabled={viewSaved} onClick={saveView}>{viewSaved ? 'View saved' : 'Save view'}</button>}
+      {editable && <button type="button" disabled={viewSaved} onClick={saveView}>{viewSaved ? 'Layout saved' : 'Save layout'}</button>}
       <button type="button" onClick={() => { setScale(null); onToggleOriginal(); }}>
-        {original ? (saved ? 'Return to saved view' : 'Return to my view') : 'View original'}
+        {original ? (saved ? 'Return to saved layout' : 'Return to my layout') : 'Show original layout'}
       </button>
     </div>
     {mode !== 'peek' && <CanopyCommandBar {...props} />}
