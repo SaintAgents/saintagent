@@ -31,6 +31,7 @@ const GlobalImpactDashboard = lazyPage('GlobalImpactDashboard'), WorldPulse = la
 const DocumentVault = lazyPage('DocumentVault'), ConferencePortal = lazyPage('ConferencePortal'), MyGuide = lazyPage('MyGuide'), CelestialInsights = lazyPage('CelestialInsights'), BusinessPlanBuilder = lazyPage('BusinessPlanBuilder');
 const Login = lazyPage('Login'), Register = lazyPage('Register'), ForgotPassword = lazyPage('ForgotPassword'), ResetPassword = lazyPage('ResetPassword'), Mfa = lazyPage('Mfa');
 const ObservationDeck = lazyPage('ObservationDeck');
+const MyCommandCenter = lazyPage('MyCommandCenter');
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -80,7 +81,8 @@ const AuthenticatedApp = () => {
 
     if (!user) {
       const sharedCircle = /^\/circles\/?$/i.test(location.pathname) && new URLSearchParams(location.search).has('group');
-      window.location.replace(sharedCircle ? `/login?${new URLSearchParams({ returnTo: location.pathname + location.search })}` : '/');
+      const commandCenter = /^\/mycommandcenter\/?$/i.test(location.pathname);
+      window.location.replace(sharedCircle || commandCenter ? `/login?${new URLSearchParams({ returnTo: location.pathname + location.search })}` : '/');
     }
   }, [isPublic, isLoadingAuth, user, location.pathname, location.search]);
 
@@ -181,6 +183,7 @@ const AppRoutes = () => (
     <Route path="/mfa" element={<Mfa />} />
     <Route element={<ProtectedRoute unauthenticatedElement={<a href="/login">Sign in to continue</a>} />}>
       <Route path="/ObservationDeck" element={<LayoutWrapper currentPageName="ObservationDeck"><ObservationDeck /></LayoutWrapper>} />
+      <Route path="/MyCommandCenter" element={<LayoutWrapper currentPageName="MyCommandCenter"><MyCommandCenter /></LayoutWrapper>} />
       <Route path="/Watchlist" element={<LayoutWrapper currentPageName="Watchlist"><Watchlist /></LayoutWrapper>} />
       <Route path="/SavedItems" element={<LayoutWrapper currentPageName="SavedItems"><SavedItems /></LayoutWrapper>} />
       <Route path="/Intelligence" element={<LayoutWrapper currentPageName="Intelligence"><Intelligence /></LayoutWrapper>} />

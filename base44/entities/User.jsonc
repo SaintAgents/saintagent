@@ -26,6 +26,10 @@
     "live_activity_preferences": {
       "type": "object",
       "description": "Personal live ticker and event toast preferences"
+    },
+    "command_center_preferences": {
+      "type": "object",
+      "description": "Member's saved My Command Center card layout and view mode"
     }
   }
 }

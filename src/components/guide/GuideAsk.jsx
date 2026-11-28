@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,7 +8,10 @@ import { assistantDraft, pillars } from '@/components/guide/guideTools';
 
 export default function GuideAsk() {
   const [params] = useSearchParams();
-  const [question, setQuestion] = useState(() => (params.get('question') || '').trim().slice(0, 400));
+  const draft = useLocation().state?.commandQuestion;
+  const input = useRef(null);
+  const [question, setQuestion] = useState(() => (draft || params.get('question') || '').trim().slice(0, 400));
+  useEffect(() => { if (draft) input.current?.focus(); }, [draft]);
   const [mode, setMode] = useState('intelligence');
   const navigate = useNavigate();
   const pillar = pillars.find(p => p.id === mode);
@@ -21,7 +24,7 @@ export default function GuideAsk() {
   }
   return <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6">
     <label htmlFor="guide-question" className="font-heading text-lg font-semibold text-foreground">How can I guide you today?</label>
-    <Textarea id="guide-question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={400} rows={3} placeholder="Ask a question, explore an idea, or describe something you want to make real…" className="mt-3 resize-none bg-background text-base" />
+    <Textarea ref={input} id="guide-question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={400} rows={3} placeholder="Ask a question, explore an idea, or describe something you want to make real…" className="mt-3 resize-none bg-background text-base" />
     <div role="radiogroup" aria-label="How to explore" className="mt-4 grid grid-cols-3 gap-2">
       {pillars.map(({ id, name, tagline, Icon }) => <button key={id} type="button" role="radio" aria-checked={mode === id} onClick={() => setMode(id)}
         className={`rounded-xl border px-3 py-2.5 text-left transition-colors ${mode === id ? 'border-primary bg-primary/10' : 'border-border bg-background hover:bg-muted'}`}>
