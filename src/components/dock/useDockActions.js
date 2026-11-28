@@ -2,7 +2,12 @@ import { widget } from '@/components/dock/dockCatalog';
 
 export default function useDockActions(commit, active) {
   const patch = (id, update) => commit(p => ({cards:p.cards.map(c => c.id === id ? {...c,...update,settings:{...c.settings,...update.settings}} : c)}));
-  const restore = (id,deck) => commit(p => { const card=p.cards.find(c=>c.id===id); return card ? {cards:[...p.cards.filter(c=>c.id!==id), {...card,deck,place:'deck'}]} : {}; });
+  const restore = (id,deck) => commit(p => {
+    const card = p.cards.find(c => c.id === id);
+    const destination = deck ?? p.active;
+    return card && p.decks.some(folder => folder.id === destination)
+      ? {cards:[...p.cards.filter(c=>c.id!==id), {...card,deck:destination,place:'deck'}]} : {};
+  });
   const swap = (id, target) => commit(p => {
     const cards = [...p.cards], from=cards.findIndex(c=>c.id===id), to=cards.findIndex(c=>c.id===target);
     if (from === to || ![cards[from], cards[to]].every(c => c?.deck === p.active && c.place === 'deck')) return {};
@@ -14,7 +19,11 @@ export default function useDockActions(commit, active) {
       const offset = (p.cards.filter(c => c.place === 'float').length % 8) * 22;
       return { cards:p.cards.map(c => c.id === id ? { ...c, place:'float', x:point?.x ?? c.x ?? 24 + offset, y:point?.y ?? c.y ?? 96 + offset, settings:{...c.settings, frameless:true} } : c) };
     }),
-    add: (type,settings) => commit(p => ({cards:[...p.cards,{...widget(type,settings),deck:p.active}]})),
+    add: (type,settings) => {
+      const card = widget(type,settings);
+      commit(p => ({cards:[...p.cards,{...card,deck:p.active}]}));
+      return card.id;
+    },
     remove: id => commit(p => ({cards:p.cards.filter(c=>c.id!==id)})),
     shortcuts: shortcuts => commit({shortcuts}),
     shift: (id,dir) => commit(p => {

@@ -3,14 +3,14 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { Button } from '@/components/ui/button';
 import { icons, links, widgetLabel, widgetLibrary } from '@/components/dock/dockCatalog';
 
-export default function DockDialogs({ modal, close, prefs, deck, cards, actions }) {
+export default function DockDialogs({ modal, close, prefs, deck, cards, actions, revealCard }) {
   const [duplicate, setDuplicate] = useState('');
   const [name, setName] = useState(modal === 'rename' ? deck.name : '');
   const [icon, setIcon] = useState(modal === 'rename' ? deck.icon : icons[0]);
   const [shortcuts, setShortcuts] = useState(prefs.shortcuts);
   const title = {library:'Add Widget', drawer:'Drawer', new:'New deck', rename:'Rename deck', delete:'Delete deck', shortcuts:'Edit Quick Access'}[modal];
   return <Dialog open onOpenChange={value => { if (!value) close(); }}><DialogContent data-readable-surface className="z-[10009] max-h-[85dvh] overflow-y-auto">
-    <DialogTitle>{title}</DialogTitle><DialogDescription>{modal === 'drawer' ? 'Restore, move, or delete archived widgets.' : modal === 'delete' ? 'Widgets from this deck move to the Drawer.' : 'Customize your Dock Deck.'}</DialogDescription>
+    <DialogTitle>{title}</DialogTitle><DialogDescription>{modal === 'drawer' ? `Archived widgets are kept here until you restore, move, or delete them. Restore returns a widget to ${deck.name}.` : modal === 'delete' ? 'Widgets from this deck move to the Drawer.' : 'Customize your Dock Deck.'}</DialogDescription>
     {modal === 'library' && <div className="grid gap-2">{Object.entries(widgetLibrary).map(([type, description]) => {
       const elsewhere = cards.some(c => c.type === type && c.deck !== deck.id && c.place !== 'drawer');
       return <div key={type} className="flex items-start justify-between gap-3 rounded-md border p-2 text-sm">
@@ -19,7 +19,7 @@ export default function DockDialogs({ modal, close, prefs, deck, cards, actions 
       </div>;
     })}</div>}
     {modal === 'drawer' && <div className="grid gap-2">{cards.filter(c => c.place === 'drawer').length === 0 && <p>The Drawer is empty.</p>}{cards.filter(c => c.place === 'drawer').map(c => <div className="flex flex-wrap items-center gap-2 border-b pb-2 text-sm" key={c.id}>
-      <strong className="mr-auto">{c.settings.title || widgetLabel(c.type)}</strong><Button size="sm" onClick={() => actions.restore(c.id, deck.id)}>Restore</Button>
+      <strong className="mr-auto">{c.settings.title || widgetLabel(c.type)}</strong><Button size="sm" onClick={() => { actions.restore(c.id); close(); revealCard(c.id); }}>Restore</Button>
       <select aria-label={`Move ${c.type} to deck`} value="" onChange={e => { if(e.target.value) actions.restore(c.id, e.target.value); }}><option value="">Move to…</option>{prefs.decks.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}</select>
       <Button size="sm" variant="outline" onClick={() => { if (window.confirm(`Permanently delete ${c.settings.title || c.type}?`)) actions.remove(c.id); }}>Delete</Button>
     </div>)}</div>}

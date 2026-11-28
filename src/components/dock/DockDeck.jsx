@@ -25,10 +25,10 @@ export default function DockDeck({user, disabled, preview = false, children}) {
   const {prefs,commit,error}=useDockPreferences(user, preview);
   const heroes = useSurfaceHeroes();
   const actions=useDockActions(commit,prefs.active);
-  const [modal,setModal]=useState(null);
+  const [modal,setModal]=useState(null), [revealId,setRevealId]=useState(null);
   const visited = useRef(new Set());
   const panel=useRef(null), scroll=useRef(null), launcher=useRef(null), grid=useRef(null), floatingTools=useRef(null);
-  const {shown, setOpen, wide, width, max, resize} = useDockPanel({prefs,commit,disabled,actions,setModal});
+  const {shown, setOpen, wide, width, max, resize} = useDockPanel({prefs,commit,disabled,actions,setModal,setRevealId});
   const { handle, ghost, showFolders } = useDockCardDrag({ panel, scroll, shown, wide, actions });
   const history = useDockHistory(user.id, location.pathname, disabled || preview);
   const countedOpening = useRef(false);
@@ -41,13 +41,26 @@ export default function DockDeck({user, disabled, preview = false, children}) {
   }, [shown, compactLauncher, commit]);
   const close=() => {setOpen(false); requestAnimationFrame(() => launcher.current?.focus());};
   const deck=prefs.decks.find(d=>d.id===prefs.active) || prefs.decks[0];
+  const revealCard = id => { setRevealId(id); setOpen(true); };
+  useEffect(() => {
+    if (!shown || modal || !revealId) return;
+    const frame = requestAnimationFrame(() => {
+      const card = grid.current?.querySelector(`[data-dock-card="${CSS.escape(revealId)}"]:not([hidden])`);
+      if (card && scroll.current) {
+        const area = scroll.current.getBoundingClientRect(), rect = card.getBoundingClientRect();
+        if (rect.top < area.top || rect.bottom > area.bottom) scroll.current.scrollTop += rect.top - area.top - 12;
+      }
+      setRevealId(null);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [shown, modal, revealId, deck.id]);
   if (shown) visited.current.add(deck.id);
   const deckCards=prefs.cards.filter(c=>c.place==='deck');
   const openModal=type => {if (!shown) setOpen(true);setModal(type);};
   const columns=width>=930 ? 3 : width>=535 ? 2 : 1;
   const cardProps=card => ({card,user,navigate,openModal,shortcuts:prefs.shortcuts,history,arrangeHandle:handle(card.id),panelOpen:shown || card.place==='float',columnWidth:(width-12*(columns+1))/columns,patch:update=>actions.patch(card.id,update),remove:()=>actions.remove(card.id),shift:dir=>actions.shift(card.id,dir),
     onFloat:() => actions.float(card.id), onReturn:() => { actions.patch(card.id,{place:'deck'}); if (card.deck!==deck.id) commit({active:card.deck}); setOpen(true); } });
-  return <DockPinProvider {...{prefs, commit, disabled}}>{children}<div className="dock-root" hidden={disabled} data-dock-open={shown}>
+  return <DockPinProvider {...{prefs, commit, disabled, revealCard}}>{children}<div className="dock-root" hidden={disabled} data-dock-open={shown}>
     {!shown && <Button ref={launcher} className="dock-launcher" data-dock-handle={compactLauncher ? '' : undefined} variant="outline" onClick={() => setOpen(true)} aria-label="Open Dock Deck" title="Open Dock Deck" aria-controls="dock-deck" aria-expanded={false}><DockDeckIcon />{!compactLauncher && prefs.label && 'Dock Deck'}</Button>}
     <aside ref={panel} id="dock-deck" aria-label="Dock Deck" aria-hidden={!shown} {...(!shown ? {inert:''} : {})} className="dock-panel" style={{width,'--dock-video-opacity':prefs.opacity/100}}>
       {wide && <><CanopyResize label="Resize Dock Deck" className="dock-resize" direction="left" value={width} min={320} max={max} onChange={resize} /><button type="button" className="dock-edge" aria-label="Collapse Dock Deck" title="Collapse Dock Deck" onClick={close}><ChevronRight size={16} /></button></>}
@@ -66,6 +79,6 @@ export default function DockDeck({user, disabled, preview = false, children}) {
       if (!floating && (card.place !== 'deck' || !visited.current.has(card.deck))) return null;
       return <DockCardSlot key={card.id} target={floating ? floatingTools : grid} floating={floating} visible={!disabled && (floating || card.deck===deck.id)} order={order} {...cardProps(card)} />;
     })}
-    {shown && modal && <DockDialogs key={modal} {...{modal,prefs,deck,actions}} cards={prefs.cards} close={()=>setModal(null)} />}
+    {shown && modal && <DockDialogs key={modal} {...{modal,prefs,deck,actions,revealCard}} cards={prefs.cards} close={()=>setModal(null)} />}
   </div></DockPinProvider>;
 }

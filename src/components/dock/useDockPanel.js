@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { safePath } from '@/components/dock/dockCatalog';
 
-export default function useDockPanel({prefs,commit,disabled,actions,setModal}) {
+export default function useDockPanel({prefs,commit,disabled,actions,setModal,setRevealId}) {
   const [open,setOpen]=useState(false), [viewport,setViewport]=useState(()=>window.innerWidth), [draft,setDraft]=useState(null);
   const wide=viewport>=768;
   // Leave room for page content and the widest navigation at each breakpoint.
@@ -25,9 +25,9 @@ export default function useDockPanel({prefs,commit,disabled,actions,setModal}) {
   useEffect(()=>{
     if(disabled) return;
     const launch=()=>{if(!document.querySelector('[data-dock-full-tour][data-state="open"]'))setOpen(true);};
-    const pin=e=>{const {path,title}=e.detail || {};if(safePath(path)){actions.add('Pinned Item',{path,title:typeof title==='string'?title.trim().slice(0,100):path});launch();}};
+    const pin=e=>{const {path,title}=e.detail || {};if(safePath(path)){setRevealId(actions.add('Pinned Item',{path,title:typeof title==='string'?title.trim().slice(0,100):path}));launch();}};
     document.addEventListener('openDockDeck',launch); document.addEventListener('pinDockItem',pin);
     return ()=>{document.removeEventListener('openDockDeck',launch);document.removeEventListener('pinDockItem',pin);};
-  },[disabled,actions]);
+  },[disabled,actions,setRevealId]);
   return {shown,setOpen,wide,width,max,resize:(value,done)=>{if(!done){setDraft(value);return;}if(value!==prefs.width)commit({width:value});setDraft(null);}};
 }
