@@ -61,7 +61,7 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
     {mode !== 'closed' && <section id="canopy-workspace" aria-label="Command Canopy workspace" className="canopy-workspace"
       data-canopy-art={!hideBackgrounds ? '' : undefined}
       style={{ '--canopy-sunrise': `url("${canopySunrise[1]}")`, '--canopy-night': `url("${canopyNight[1]}")` }}>
-      <CanopyHeading {...{ mode, desktop, unread, open, setMode }} toggleView={() => { setFocus(''); setMode(mode === 'full' ? 'peek' : 'full'); }} />
+      <CanopyHeading {...{ mode, desktop, unread, open, setMode }} changeView={next => { setFocus(''); setMode(next); }} />
       <ActivityTicker placement="canopy" />
       <CanopyWorkspace activePath={location.pathname} onToggleOriginal={() => { setFocus(''); if (mode === 'peek') setMode('full'); toggleOriginal(); }}
         {...{ mode, enabled, ids, settings, commit, user, profile, notifications, recent, open, error, focus, original, saved, viewSaved, saveView }} />
