@@ -18,6 +18,7 @@ import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import SidebarLeaderboard from '@/components/hud/SidebarLeaderboard';
 import SidebarPageSearch from '@/components/hud/SidebarPageSearch';
 import SidebarNavFooter from '@/components/hud/SidebarNavFooter';
+import DetachedSidebarIcons from '@/components/hud/DetachedSidebarIcons';
 import SidebarQuickAccess from '@/components/hud/SidebarQuickAccess';
 import SidebarGroupFlyout from '@/components/hud/SidebarGroupFlyout';
 import useSidebarNavigation from '@/components/hud/useSidebarNavigation';
@@ -307,8 +308,11 @@ export default function Sidebar({
 
   // Pop-off state
   const [isPoppedOff, setIsPoppedOff] = useState(false);
+  const [popIconsOnly, setPopIconsOnly] = useState(false);
   const [popPosition, setPopPosition] = useState({ x: 50, y: 50 });
   const [popSize, setPopSize] = useState({ width: 280, height: 600 });
+  const displayedPopWidth = popIconsOnly ? 64 : popSize.width;
+  const displayedPopX = Math.max(0, Math.min(popPosition.x, window.innerWidth - displayedPopWidth));
   const popDragRef = React.useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
   const resizeRef = React.useRef({ startX: 0, startY: 0, startW: 0, startH: 0, edge: '' });
 
@@ -338,7 +342,7 @@ export default function Sidebar({
     const dx = e.clientX - popDragRef.current.startX;
     const dy = e.clientY - popDragRef.current.startY;
     setPopPosition({
-      x: Math.max(0, Math.min(window.innerWidth - popSize.width, popDragRef.current.startPosX + dx)),
+      x: Math.max(0, Math.min(window.innerWidth - displayedPopWidth, popDragRef.current.startPosX + dx)),
       y: Math.max(0, Math.min(window.innerHeight - 50, popDragRef.current.startPosY + dy))
     });
   };
@@ -347,8 +351,9 @@ export default function Sidebar({
     document.removeEventListener('mouseup', onPopDragEnd);
   };
   const onPopDragStart = (e) => {
+    if (e.target.closest('button')) return;
     e.preventDefault();
-    popDragRef.current = { startX: e.clientX, startY: e.clientY, startPosX: popPosition.x, startPosY: popPosition.y };
+    popDragRef.current = { startX: e.clientX, startY: e.clientY, startPosX: displayedPopX, startPosY: popPosition.y };
     document.addEventListener('mousemove', onPopDragMove);
     document.addEventListener('mouseup', onPopDragEnd);
   };
@@ -391,7 +396,7 @@ export default function Sidebar({
       startY: e.clientY, 
       startW: popSize.width, 
       startH: popSize.height,
-      startPosX: popPosition.x,
+      startPosX: displayedPopX,
       startPosY: popPosition.y,
       edge 
     };
@@ -1081,44 +1086,52 @@ export default function Sidebar({
       <div
         className="fixed bg-white rounded-xl shadow-2xl border border-slate-200 flex flex-col z-[60] overflow-hidden"
         style={{
-          left: popPosition.x,
+          left: displayedPopX,
           top: popPosition.y,
-          width: popSize.width,
+          width: displayedPopWidth,
           height: popSize.height,
         }}
       >
         {/* Header */}
         <div
           onMouseDown={onPopDragStart}
-          className="h-10 bg-gradient-to-r from-violet-600 to-violet-700 flex items-center justify-between px-3 cursor-move shrink-0"
+          className={cn('bg-gradient-to-r from-violet-600 to-violet-700 flex items-center cursor-move shrink-0', popIconsOnly ? 'flex-col gap-1 py-2' : 'min-h-10 justify-between px-3')}
         >
           <div className="flex items-center gap-2 text-white">
-            <Move className="w-4 h-4 opacity-70" />
-            <span className="text-sm font-medium">Navigation</span>
+            <Move aria-hidden="true" className="w-4 h-4 opacity-70" />
+            {!popIconsOnly && <span className="text-sm font-medium">Navigation</span>}
           </div>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setIsPoppedOff(false)}
-              className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
-              title="Dock panel"
+          <div className={cn('flex items-center gap-1', popIconsOnly && 'flex-col')}>
+            <button type="button" onClick={() => setPopIconsOnly(value => !value)}
+              className="flex size-7 items-center justify-center rounded-lg hover:bg-white/20 transition-colors"
+              title={popIconsOnly ? 'Expand navigation' : 'Switch to icons only'}
+              aria-label={popIconsOnly ? 'Expand navigation' : 'Switch to icons only'}>
+              {popIconsOnly ? <ChevronRight aria-hidden="true" className="size-4 text-white" /> : <ChevronLeft aria-hidden="true" className="size-4 text-white" />}
+            </button>
+            <button type="button"
+              onClick={() => { setPopIconsOnly(false); setIsPoppedOff(false); }}
+              className="flex size-7 items-center justify-center rounded-lg hover:bg-white/20 transition-colors"
+              aria-label="Dock panel" title="Dock panel"
             >
-              <PanelLeft className="w-4 h-4 text-white" />
+              <PanelLeft aria-hidden="true" className="w-4 h-4 text-white" />
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <ActivityTicker placement="sidebar" />
-        <div className="shrink-0 border-b px-2"><BookmarkNavTab popover /></div>
+        {!popIconsOnly && <ActivityTicker placement="sidebar" />}
+        <div className="shrink-0 border-b px-2"><BookmarkNavTab compact={popIconsOnly} popover /></div>
         <div className="min-h-0 flex-1 overflow-y-auto">
-          {renderSidebarContent(true)}
+          {popIconsOnly ? <DetachedSidebarIcons items={NAV_ITEMS} role={currentUser?.role} leaderTier={profile?.leader_tier}
+            currentPage={currentPage} unreadCount={unreadMessages?.length || 0} /> : renderSidebarContent(true)}
         </div>
-        <div className="shrink-0 px-2 pb-2">
-          <SidebarQuickAccess catalog={ALL_NAV_ITEMS} leaderTier={profile?.leader_tier} />
-          <SidebarNavFooter onChange={changeSidebarMode} />
+        <div className={cn('shrink-0 pb-2', !popIconsOnly && 'px-2')}>
+          <SidebarQuickAccess catalog={ALL_NAV_ITEMS} leaderTier={profile?.leader_tier} compact={popIconsOnly} />
+          {!popIconsOnly && <SidebarNavFooter onChange={changeSidebarMode} />}
         </div>
 
         {/* Resize handles */}
+        {!popIconsOnly && <>
         <div onMouseDown={(e) => onResizeStart(e, 'e')} className="absolute right-0 top-10 bottom-0 w-2 cursor-e-resize hover:bg-violet-200/50" />
         <div onMouseDown={(e) => onResizeStart(e, 's')} className="absolute bottom-0 left-0 right-0 h-2 cursor-s-resize hover:bg-violet-200/50" />
         <div onMouseDown={(e) => onResizeStart(e, 'se')} className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize hover:bg-violet-200/50" />
@@ -1127,6 +1140,7 @@ export default function Sidebar({
         <div onMouseDown={(e) => onResizeStart(e, 'nw')} className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize hover:bg-violet-200/50" />
         <div onMouseDown={(e) => onResizeStart(e, 'ne')} className="absolute top-0 right-0 w-4 h-4 cursor-ne-resize hover:bg-violet-200/50" />
         <div onMouseDown={(e) => onResizeStart(e, 'sw')} className="absolute bottom-0 left-0 w-4 h-4 cursor-sw-resize hover:bg-violet-200/50" />
+        </>}
 
 
       </div>
