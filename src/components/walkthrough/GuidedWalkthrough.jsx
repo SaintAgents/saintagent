@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { X, Volume2, VolumeX, ChevronRight, ChevronLeft, Play } from 'lucide-react';
+import { X, Volume2, VolumeX, ChevronRight, ChevronLeft } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import WalkthroughIntro from '@/components/walkthrough/WalkthroughIntro';
+import { readWalkthrough, saveWalkthrough, clearWalkthrough } from '@/components/walkthrough/walkthroughSession';
 
 // Walkthrough step definitions for 5D Business Entities
 const BUSINESS_ENTITY_STEPS = [
@@ -42,8 +46,7 @@ const BUSINESS_ENTITY_STEPS = [
     id: 'select-category',
     speech: "Choose a category that best fits your business from this dropdown.",
     description: "Select your business category",
-    selector: '[data-radix-select-trigger]',
-    fallbackSelector: 'button[role="combobox"]',
+    selector: '[data-business-registration] button[role="combobox"]',
     action: 'highlight',
     delay: 1500,
   },
@@ -67,7 +70,7 @@ const BUSINESS_ENTITY_STEPS = [
     id: 'complete',
     speech: "Excellent! Fill in any remaining optional fields like focus areas, website, and location. When you're ready, click Create Entity to publish your 5D Business profile!",
     description: "Complete the remaining fields and click 'Create Entity'",
-    selector: 'button[type="submit"]',
+    selector: '[data-business-registration] button[type="submit"]',
     action: 'highlight',
     delay: 2000,
   }
@@ -123,26 +126,17 @@ function speak(text, enabled, onEnd) {
     window.speechSynthesis.speak(utterance);
   };
 
-  // If voices aren't loaded yet, wait for them
-  if (cachedVoices.length === 0) {
-    const check = () => {
-      cachedVoices = window.speechSynthesis.getVoices();
-      if (cachedVoices.length > 0) {
-        doSpeak();
-      } else {
-        setTimeout(check, 100);
-      }
-    };
-    check();
-  } else {
-    doSpeak();
-  }
+  // Use the browser's default voice if its voice list is not ready yet.
+  doSpeak();
 }
 
 export default function GuidedWalkthrough({ walkthroughId = 'business_entity', onClose }) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [ttsEnabled, setTtsEnabled] = useState(true);
-  const [started, setStarted] = useState(false);
+  const navigate = useNavigate();
+  const [saved] = useState(readWalkthrough);
+  const [currentStep, setCurrentStep] = useState(saved?.step ?? 0);
+  const [ttsEnabled, setTtsEnabled] = useState(saved?.tts ?? true);
+  const [started, setStarted] = useState(!!saved);
+  const [controlsHost, setControlsHost] = useState(null);
   const [highlightRect, setHighlightRect] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const cancelRef = useRef(0);
@@ -191,7 +185,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
     el.style.boxShadow = '0 0 0 4px rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.2)';
     el.style.outline = '2px solid rgba(139, 92, 246, 0.8)';
     el.style.zIndex = '99999';
-    if (getComputedStyle(el).position === 'static') {
+    if (window.getComputedStyle(el).position === 'static') {
       el.style.position = 'relative';
     }
     const rect = el.getBoundingClientRect();
@@ -218,15 +212,18 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
       if (s.action === 'navigate') {
         await new Promise(r => setTimeout(r, s.delay || 1500));
         if (cancelled()) return;
-        const currentPath = window.location.pathname;
-        if (!currentPath.includes(s.target)) {
-          window.location.href = createPageUrl(s.target);
+        const destination = createPageUrl(s.target);
+        if (window.location.pathname.replace(/\/$/, '').toLowerCase() !== destination.toLowerCase()) {
+          saveWalkthrough(walkthroughId, currentStep + 1, ttsRef.current);
+          navigate(destination);
         } else {
           setCurrentStep(prev => prev + 1);
         }
         return;
       }
 
+      // The form may already be open when returning to the registration step.
+      if (s.action === 'click' && document.querySelector('[data-business-registration]')) return;
       // Wait for element to appear
       let el = null;
       let attempts = 0;
@@ -285,36 +282,18 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
     };
   }, [highlightRect]);
 
-  // Store walkthrough state in sessionStorage so it persists across navigation
   useEffect(() => {
-    if (started) {
-      sessionStorage.setItem('activeWalkthrough', JSON.stringify({ 
-        id: walkthroughId, 
-        step: currentStep,
-        tts: ttsEnabled 
-      }));
-    }
-    return () => {
-      if (!started) sessionStorage.removeItem('activeWalkthrough');
-    };
+    if (started) saveWalkthrough(walkthroughId, currentStep, ttsEnabled);
   }, [started, currentStep, walkthroughId, ttsEnabled]);
 
-  // Resume walkthrough after navigation
   useEffect(() => {
-    const saved = sessionStorage.getItem('activeWalkthrough');
-    if (saved) {
-      const data = JSON.parse(saved);
-      if (data.id === walkthroughId && data.step > 0) {
-        setCurrentStep(data.step);
-        setTtsEnabled(data.tts);
-        setStarted(true);
-        // Auto advance from navigate step
-        if (steps[data.step]?.action === 'navigate') {
-          setTimeout(() => setCurrentStep(data.step + 1), 1000);
-        }
-      }
-    }
-  }, [walkthroughId]);
+    if (!started) return;
+    const syncHost = () => setControlsHost(document.querySelector('[data-business-walkthrough-controls]'));
+    syncHost();
+    const observer = new MutationObserver(syncHost);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [started]);
 
   const handleNext = () => {
     cancelRef.current++; // cancel any running async step
@@ -340,7 +319,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
     cancelRef.current++;
     window.speechSynthesis?.cancel();
     removeHighlight();
-    sessionStorage.removeItem('activeWalkthrough');
+    clearWalkthrough();
     onClose?.();
   };
 
@@ -348,39 +327,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
     setStarted(true);
   };
 
-  if (!started) {
-    return (
-      <div className="fixed inset-0 z-[99998] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div className="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl text-center">
-          <div className="w-16 h-16 rounded-full bg-violet-100 flex items-center justify-center mx-auto mb-4">
-            <Play className="w-8 h-8 text-violet-600 ml-1" />
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">5D Business Entity Walkthrough</h2>
-          <p className="text-slate-600 mb-6">
-            I'll guide you step-by-step through registering your business entity. 
-            I'll highlight each field, navigate for you, and explain what to do along the way.
-          </p>
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setTtsEnabled(!ttsEnabled)}
-              className={`gap-2 ${ttsEnabled ? 'border-violet-400 text-violet-700 bg-violet-50' : 'text-slate-500'}`}
-            >
-              {ttsEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-              {ttsEnabled ? 'Voice ON' : 'Voice OFF'}
-            </Button>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="outline" className="flex-1" onClick={handleClose}>Cancel</Button>
-            <Button className="flex-1 bg-violet-600 hover:bg-violet-700 gap-2" onClick={handleStart}>
-              <Play className="w-4 h-4" /> Start Walkthrough
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!started) return <WalkthroughIntro ttsEnabled={ttsEnabled} onToggleVoice={() => setTtsEnabled(value => !value)} onStart={handleStart} onClose={handleClose} />;
 
   return (
     <>
@@ -396,8 +343,8 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
         }
       `}</style>
 
-      {/* Bottom instruction bar */}
-      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[99999] w-full max-w-lg px-4">
+      {/* Keep controls inside the registration dialog’s interactive layer when it opens. */}
+      {createPortal(<div className={controlsHost ? 'w-full' : 'pointer-events-auto fixed bottom-20 left-1/2 z-[99999] w-full max-w-lg -translate-x-1/2 px-4'}>
         <div className="bg-white border-2 border-violet-300 rounded-2xl shadow-2xl p-4">
           {/* Progress */}
           <div className="flex items-center gap-2 mb-3">
@@ -447,6 +394,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
             <Button
               size="sm"
               onClick={handleNext}
+              disabled={step?.action === 'navigate'}
               className="gap-1 bg-violet-600 hover:bg-violet-700"
             >
               {currentStep === steps.length - 1 ? 'Finish' : 'Next'} <ChevronRight className="w-3 h-3" />
@@ -462,7 +410,7 @@ export default function GuidedWalkthrough({ walkthroughId = 'business_entity', o
             </Button>
           </div>
         </div>
-      </div>
+      </div>, controlsHost || document.body)}
     </>
   );
 }

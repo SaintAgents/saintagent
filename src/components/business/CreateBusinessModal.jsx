@@ -102,10 +102,11 @@ export default function CreateBusinessModal({ open, onClose }) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent data-business-registration className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Register 5D Business Entity</DialogTitle>
         </DialogHeader>
+        <div data-business-walkthrough-controls className="empty:hidden sticky top-0 z-[100000]" />
         <form onSubmit={handleSubmit} className="space-y-4 pb-20">
           <div>
             <Label>Entity Name *</Label>
