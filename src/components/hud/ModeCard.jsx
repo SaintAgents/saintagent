@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '@/components/language/LanguageProvider';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -34,6 +35,7 @@ export default function ModeCard({
   stats,
   onClick 
 }) {
+  const { t } = useLanguage();
   // Get current theme
   const theme = typeof document !== 'undefined' 
     ? document.documentElement.getAttribute('data-theme') 
@@ -60,16 +62,16 @@ export default function ModeCard({
       <div className="relative h-full p-4 flex flex-col justify-between">
         <div className="flex items-start justify-between">
           <div className="text-left">
-            <h3 className="text-lg font-bold text-white mb-1">{title}</h3>
+            <h3 className="text-lg font-bold text-white mb-1">{t(title)}</h3>
             {stats && (
-              <p className="text-sm text-white/80">{stats}</p>
+              <p className="text-sm text-white/80">{t(stats)}</p>
             )}
           </div>
           {customIcon ? (
             <div className="p-2 rounded-lg bg-white/20 backdrop-blur-sm">
               <img 
                 src={customIcon} 
-                alt={title}
+                alt={t(title)}
                 className="w-10 h-10 object-contain"
                 data-no-filter="true"
               />

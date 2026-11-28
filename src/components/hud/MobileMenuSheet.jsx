@@ -19,6 +19,8 @@ import { getStoredViewMode, VIEW_MODE_CONFIG } from './DeckViewModeSelector';
 import BookmarkNavTab from '@/components/hud/BookmarkNavTab';
 import SidebarQuickAccess from '@/components/hud/SidebarQuickAccess';
 import { ALL_NAV_ITEMS } from '@/components/hud/Sidebar';
+import LanguageSwitcher from '@/components/language/LanguageSwitcher';
+import { useLanguage } from '@/components/language/LanguageProvider';
 
 // Full menu items with nav IDs for filtering - MUST MATCH Sidebar.jsx NAV_ITEMS
 const menuItems = [
@@ -88,6 +90,7 @@ const SIMPLE_NAV_IDS = [
 ];
 
 export default function MobileMenuSheet({ open, onOpenChange, theme: currentTheme, leaderTier }) {
+  const { t } = useLanguage();
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [viewMode, setViewMode] = useState(getStoredViewMode);
   const [menuMode, setMenuMode] = useState(() => {
@@ -142,7 +145,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
         <SheetContent side="bottom" className="flex h-[60vh] flex-col gap-0 rounded-t-3xl p-0 bg-white dark:bg-[#0a0a0a]">
           <SheetHeader className="shrink-0 p-3 border-b border-slate-200 dark:border-[#00ff88]/20">
             <div className="flex items-center justify-between">
-              <SheetTitle className="text-slate-900 dark:text-white">Menu</SheetTitle>
+              <SheetTitle className="text-slate-900 dark:text-white">{t('Menu')}</SheetTitle>
               <div className="flex items-center gap-2 mr-6">
                 {/* Theme switcher */}
                 <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 gap-0.5">
@@ -150,17 +153,17 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                     { id: 'light', Icon: Sun, label: 'Light', activeClass: 'bg-white text-amber-600 shadow-sm', iconColor: 'text-amber-500' },
                     { id: 'dark', Icon: Moon, label: 'Dark', activeClass: 'bg-slate-700 text-blue-300 shadow-sm', iconColor: 'text-indigo-400' },
                     { id: 'hacker', Icon: Terminal, label: 'Hack', activeClass: 'bg-black text-green-400 shadow-sm', iconColor: 'text-green-500' },
-                  ].map(t => (
+                  ].map(option => (
                     <button
-                      key={t.id}
-                      onClick={() => switchTheme(t.id)}
+                      key={option.id}
+                      onClick={() => switchTheme(option.id)}
                       className={cn(
                         "flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-semibold transition-all",
-                        currentTheme === t.id ? t.activeClass : "text-slate-500 dark:text-slate-400"
+                        currentTheme === option.id ? option.activeClass : "text-slate-500 dark:text-slate-400"
                       )}
                     >
-                      <t.Icon className={cn("w-3 h-3", currentTheme === t.id ? undefined : t.iconColor)} />
-                      {t.label}
+                      <option.Icon className={cn("w-3 h-3", currentTheme === option.id ? undefined : option.iconColor)} />
+                      {t(option.label)}
                     </button>
                   ))}
                 </div>
@@ -175,7 +178,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                         : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
                     )}
                   >
-                    Simple
+                    {t('Simple')}
                   </button>
                   <button
                     onClick={() => handleMenuModeChange('advanced')}
@@ -186,7 +189,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                         : "text-slate-500 dark:text-slate-400 hover:text-slate-700"
                     )}
                   >
-                    Adv
+                    {t('Adv')}
                   </button>
                 </div>
                 <Button
@@ -196,10 +199,11 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                   className="gap-1 text-[10px] px-2 h-7"
                 >
                   <PanelLeft className="w-3.5 h-3.5" />
-                  Nav
+                  {t('Nav')}
                 </Button>
               </div>
             </div>
+            <LanguageSwitcher mobile />
           </SheetHeader>
           <SidebarQuickAccess catalog={ALL_NAV_ITEMS} leaderTier={leaderTier} onNavigate={() => onOpenChange(false)} />
           <div className="min-h-0 flex-1 overflow-y-auto p-3 pb-20">
@@ -229,7 +233,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                       )}
                     >
                       <Icon className="w-5 h-5 text-violet-600 dark:text-[#00ff88]" />
-                      <span className="text-[9px] font-medium text-slate-700 dark:text-slate-300 text-center leading-tight">{item.label}</span>
+                      <span className="text-[9px] font-medium text-slate-700 dark:text-slate-300 text-center leading-tight">{t(item.label)}</span>
                     </button>
                   );
                 }
@@ -247,7 +251,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                     )}
                   >
                     <Icon className="w-5 h-5 text-violet-600 dark:text-[#00ff88]" />
-                    <span className="text-[9px] font-medium text-slate-700 dark:text-slate-300 text-center leading-tight">{item.label}</span>
+                    <span className="text-[9px] font-medium text-slate-700 dark:text-slate-300 text-center leading-tight">{t(item.label)}</span>
                   </Link>
                 );
               })}
@@ -281,7 +285,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                     "hover:bg-violet-50 dark:hover:bg-violet-900/30",
                     "transition-all active:scale-95"
                   )}
-                  title={item.label}
+                  title={t(item.label)}
                 >
                   <Icon className="w-5 h-5 text-violet-600 dark:text-[#00ff88]" />
                 </Link>

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useLanguage } from '@/components/language/LanguageProvider';
 import { cn } from "@/lib/utils";
 import { ChevronDown, Pin, MoreHorizontal, ExternalLink, Eye, EyeOff, Maximize2, PanelRight, ArrowRight, RefreshCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ export default function CollapsibleCard({
   onRefresh, // Optional refresh callback
   onAdd // Optional add/create callback - shows + button in header
 }) {
+  const { t } = useLanguage();
   const [refreshing, setRefreshing] = React.useState(false);
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const cardRef = useRef(null);
@@ -111,7 +113,7 @@ export default function CollapsibleCard({
               <Icon className="w-4 h-4 text-slate-600" />
             </div>
           }
-          <h3 className="font-semibold text-slate-900 tracking-tight truncate text-sm md:text-base">{typeof title === 'string' ? title : title}</h3>
+          <h3 className="font-semibold text-slate-900 tracking-tight truncate text-sm md:text-base">{typeof title === 'string' ? t(title) : title}</h3>
           {navigateTo && (
             <Button
               variant="ghost"

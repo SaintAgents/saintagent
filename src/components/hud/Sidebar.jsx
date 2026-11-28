@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '@/components/language/LanguageProvider';
 import SidebarResizeHandle from '@/components/hud/SidebarResizeHandle';
 import SurfaceHeroLayer from '@/components/hero/SurfaceHeroLayer';
 import { openSurfaceHero } from '@/components/hero/surfaceHeroSettings';
@@ -215,6 +216,7 @@ export default function Sidebar({
   theme,
   onThemeToggle
 }) {
+  const { t } = useLanguage();
   const [status, setStatus] = useState(profile?.status || 'online');
   const [dmPolicy, setDMPolicy] = useState(profile?.dm_policy || 'everyone');
 
@@ -498,14 +500,14 @@ export default function Sidebar({
                     )}
                   >
                     <LayoutDashboard className={cn("w-5 h-5 shrink-0", isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600")} />
-                    {showExpanded && <span className="font-medium text-sm text-slate-900">{item.label}</span>}
+                    {showExpanded && <span className="font-medium text-sm text-slate-900">{t(item.label)}</span>}
                   </Link>
                 );
                 return (
                   <Tooltip>
                     <TooltipTrigger asChild>{link}</TooltipTrigger>
                     <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
-                      <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                      <p className="text-sm font-medium text-slate-900">{t(item.label)}</p>
                       <p className="text-xs text-slate-600">{item.hint}</p>
                     </TooltipContent>
                   </Tooltip>
@@ -621,7 +623,7 @@ export default function Sidebar({
                                   ? group.isTreasury ? "text-amber-600" : "text-violet-600"
                                   : "text-slate-400 group-hover:text-slate-500"
                               )} />}
-                              <span className="font-medium text-[13px] text-slate-800 truncate">{item.label}</span>
+                              <span className="font-medium text-[13px] text-slate-800 truncate">{t(item.label)}</span>
                               {badgeValue > 0 && !isLocked && (
                                 <Badge className="ml-auto bg-violet-600 text-white text-[10px] px-1.5 py-0">{badgeValue}</Badge>
                               )}
@@ -635,7 +637,7 @@ export default function Sidebar({
                             <Tooltip key={item.id}>
                               <TooltipTrigger asChild>{navLink}</TooltipTrigger>
                               <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
-                                <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                                <p className="text-sm font-medium text-slate-900">{t(item.label)}</p>
                                 {item.hint && <p className="text-xs text-slate-600">{item.hint}</p>}
                               </TooltipContent>
                             </Tooltip>
@@ -662,14 +664,14 @@ export default function Sidebar({
                     )}
                   >
                     <Settings className={cn("w-5 h-5 shrink-0", isActive ? "text-violet-600" : "text-slate-400 group-hover:text-slate-600")} />
-                    {showExpanded && <span className="font-medium text-sm text-slate-900">{item.label}</span>}
+                    {showExpanded && <span className="font-medium text-sm text-slate-900">{t(item.label)}</span>}
                   </Link>
                 );
                 return (
                   <Tooltip>
                     <TooltipTrigger asChild>{link}</TooltipTrigger>
                     <TooltipContent side="right" className="max-w-xs backdrop-blur-md bg-white/80 border border-white/50 shadow-lg">
-                      <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                      <p className="text-sm font-medium text-slate-900">{t(item.label)}</p>
                       <p className="text-xs text-slate-600">{item.hint}</p>
                     </TooltipContent>
                   </Tooltip>
@@ -1269,7 +1271,7 @@ export default function Sidebar({
                     )}
                   >
                     {ItemIcon && <ItemIcon className="w-4 h-4 shrink-0" />}
-                    {!navPopupCollapsed && <span className="text-sm font-medium">{item.label}</span>}
+                    {!navPopupCollapsed && <span className="text-sm font-medium">{t(item.label)}</span>}
                     {!navPopupCollapsed && isLocked && <Lock className="w-3 h-3 ml-auto text-slate-400" />}
                   </Link>
                 );
@@ -1281,7 +1283,7 @@ export default function Sidebar({
                         {linkContent}
                       </TooltipTrigger>
                       <TooltipContent side="right">
-                        <p className="text-sm font-medium">{item.label}</p>
+                        <p className="text-sm font-medium">{t(item.label)}</p>
                       </TooltipContent>
                     </Tooltip>
                   );

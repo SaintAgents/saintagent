@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useLanguage } from '@/components/language/LanguageProvider';
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -86,6 +87,7 @@ import DeepDisclosureDeckCard from '@/components/broadcast/DeepDisclosureDeckCar
 import ActivityFeedBanner from '@/components/activity/ActivityFeedBanner';
 import CommandDeckCards from '@/components/hud/CommandDeckCards';
 export default function CommandDeck({ theme, onThemeToggle }) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { hash, key: locationKey } = useLocation();
   const tourOpenRequest = hash === '#daily-tours' ? locationKey : null;
@@ -919,10 +921,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             <div className="absolute inset-0 rounded-2xl pointer-events-none z-0" />
             <div className="relative z-10 flex items-center gap-3">
               <div>
-                <h1 className="text-lg md:text-2xl font-bold text-slate-900 dark:text-white dark:drop-shadow-[0_0_10px_rgba(0,255,136,0.5)]">Command Deck</h1>
-                <p className="text-teal-500 dark:text-[#00ff88] mt-1">Your mission control center</p>
+                <h1 className="text-lg md:text-2xl font-bold text-slate-900 dark:text-white dark:drop-shadow-[0_0_10px_rgba(0,255,136,0.5)]">{t('Command Deck')}</h1>
+                <p className="text-teal-500 dark:text-[#00ff88] mt-1">{t('Your mission control center')}</p>
               </div>
-              <button onClick={() => setShowOnboardingTour(true)} className="p-2 rounded-full bg-violet-100 hover:bg-violet-200 dark:bg-violet-900/40 dark:hover:bg-violet-800/60 transition-colors shrink-0" title="Replay Platform Tour">
+              <button onClick={() => setShowOnboardingTour(true)} className="p-2 rounded-full bg-violet-100 hover:bg-violet-200 dark:bg-violet-900/40 dark:hover:bg-violet-800/60 transition-colors shrink-0" title={t('Replay Platform Tour')}>
                 <HelpCircle className="w-5 h-5 text-violet-600 dark:text-violet-400" />
               </button>
             </div>
@@ -930,7 +932,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <button
                 className="p-2 hover:bg-violet-100 dark:hover:bg-violet-900/30 rounded-lg transition-colors"
                 onClick={() => setQuickCreateOpen(true)}
-                title="Quick Create"
+                title={t('Quick Create')}
               >
                 <Zap className="w-6 h-6 text-violet-600 dark:text-violet-400" />
               </button>
@@ -938,11 +940,11 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <PopoverTrigger asChild>
                 <button
                   className="p-2 hover:bg-amber-100 dark:hover:bg-amber-900/30 rounded-lg transition-colors relative"
-                  title="Read Me - Quick Start Guide"
+                  title={t('Read Me - Quick Start Guide')}
                 >
                   <AlertCircle className="w-6 h-6 text-amber-500" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[9px] font-bold text-amber-600 whitespace-nowrap">READ ME</span>
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[9px] font-bold text-amber-600 whitespace-nowrap">{t('READ ME')}</span>
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-72 p-4" align="end" side="bottom" sideOffset={5} collisionPadding={16}>
@@ -1570,7 +1572,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
         {/* Activity Cards Header */}
         <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
-          <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">ACTIVITY CARDS</div>
+          <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">{t('ACTIVITY CARDS')}</div>
         </div>
 
         {/* Mode Cards Grid */}
@@ -1603,15 +1605,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 <div className="flex flex-wrap items-center gap-3">
                   <Button className="bg-violet-600 hover:bg-violet-700 rounded-xl gap-2" onClick={() => setQuickCreateOpen(true)}>
                     <Plus className="w-4 h-4" />
-                    Quick Create
+                    {t('Quick Create')}
                   </Button>
                   <Button variant="outline" className="rounded-xl gap-2" onClick={() => setTuneEngineOpen(true)}>
                     <Sparkles className="w-4 h-4" />
-                    Tune Engine
+                    {t('Tune Engine')}
                   </Button>
                   <Button variant="outline" className="rounded-xl gap-2" onClick={() => setOnlineUsersOpen(true)}>
                     <Users className="w-4 h-4" />
-                    Online Users
+                    {t('Online Users')}
                   </Button>
                 </div>
               </div>
@@ -1620,7 +1622,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             {isCardVisible('quickStart') && <CollapsibleCard 
               title={
                 <span className="flex items-center gap-2">
-                  Quick Start Checklist
+                  {t('Quick Start Checklist')}
                   <span className="relative flex items-center justify-center w-5 h-5 rounded-full bg-amber-500 text-white animate-pulse" title="New users: Complete your quick start!">
                     <AlertCircle className="w-3.5 h-3.5" />
                   </span>
@@ -1786,10 +1788,10 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               </div>
               <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="md:col-span-2 relative">
-                  <Input placeholder="Search projects..." value={projectSearch} onChange={(e) => setProjectSearch(e.target.value)} className="pl-3" />
+                  <Input placeholder={t('Search projects...')} value={projectSearch} onChange={(e) => setProjectSearch(e.target.value)} className="pl-3" />
                 </div>
                 <Select value={projectStatus} onValueChange={setProjectStatus}>
-                  <SelectTrigger className="w-full"><SelectValue placeholder="Status" /></SelectTrigger>
+                  <SelectTrigger className="w-full"><SelectValue placeholder={t('Status')} /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="pending_review">Pending Review</SelectItem>

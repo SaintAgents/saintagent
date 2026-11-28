@@ -1,4 +1,6 @@
 import DeepDiveLauncher from '@/components/deepdive/DeepDiveLauncher';
+import LanguageSwitcher from '@/components/language/LanguageSwitcher';
+import { useLanguage } from '@/components/language/LanguageProvider';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -46,7 +48,6 @@ import {
   X,
   ChevronUp,
   ChevronDown,
-  PoundSterling,
   ArrowLeft,
   LayoutDashboard,
   PanelTopOpen,
@@ -171,13 +172,7 @@ export default function TopBar({
     return () => window.removeEventListener('boostActivated', handleBoostActivated);
   }, [profile]);
 
-  const setLanguage = (code) => {
-    try {
-      localStorage.setItem('language', code);
-      document.documentElement.setAttribute('lang', code);
-      window.location.reload();
-    } catch {}
-  };
+  const { t } = useLanguage();
 
 
   // Check if user owns or is team member of a 5D Business Entity (single API call)
@@ -530,7 +525,7 @@ export default function TopBar({
             </button>
             <input
               type="text"
-              placeholder={searchFocused || searchQuery ? "Search people, offers, missions..." : "Enter deep search..."}
+              placeholder={t(searchFocused || searchQuery ? 'Search people, offers, missions...' : 'Enter deep search...')}
               className={cn('flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus:bg-white md:text-sm', searchQuery.trim().length >= 3 ? 'pr-16' : 'pr-10')}
               value={searchQuery}
               onChange={(e) => {
@@ -736,25 +731,7 @@ export default function TopBar({
           </span>
         </Button>
 
-        {/* Language - hidden on mobile */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-xl relative group hidden md:flex w-8 h-8 md:w-9 md:h-9" title="Language">
-              <PoundSterling className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                Language
-              </span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setLanguage('en-US')}>English (US)</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('es-ES')}>Español</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('fr-FR')}>Français</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('de-DE')}>Deutsch</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('pt-BR')}>Português</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('ja-JP')}>日本語</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <LanguageSwitcher />
 
         {/* Dating Heart Button - opens dating popup (hidden if user opted out) */}
         {!profile?.dating_opt_out && (
