@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { bookmarkLimit, pageLabel } from '@/components/hud/useSidePanelBookmarks';
 
-export default function SidePanelBookmarkSection({ section, sections, current, save, busy, onNavigate }) {
+export default function SidePanelBookmarkSection({ section, sections, current, save, busy, onNavigate, pinLabel, collection }) {
   const { id, name, pages } = section;
   const [editing, setEditing] = useState(false);
   const alreadySaved = !!current && pages.some(path => path === current);
@@ -18,9 +18,9 @@ export default function SidePanelBookmarkSection({ section, sections, current, s
   return <div className="space-y-1 border-t py-2">
     <div className="flex flex-wrap items-center gap-1">
       <p className="min-w-0 grow basis-full break-words text-sm font-semibold">{name}</p>
-      <Button size="sm" variant="ghost" className="h-7 px-1.5" disabled={busy || !current || alreadySaved || pages.length >= bookmarkLimit} title={alreadySaved ? 'Current page already bookmarked' : 'Pin to Group'} aria-label={`Pin to Group: ${name}`} onClick={() => update({ pages: [...pages, current] })}><BookmarkPlus /><span className="text-xs">Pin to Group</span></Button>
+      <Button size="sm" variant="ghost" className="h-7 px-1.5" disabled={busy || !current || alreadySaved || pages.length >= bookmarkLimit} title={alreadySaved ? 'Current page already bookmarked' : pinLabel} aria-label={`${pinLabel}: ${name}`} onClick={() => update({ pages: [...pages, current] })}><BookmarkPlus /><span className="text-xs">{pinLabel}</span></Button>
       <Button type="button" size="icon" variant="ghost" className="size-8 shrink-0" aria-label={`Manage ${name}`} title={`Manage ${name}`} aria-expanded={editing} onClick={() => setEditing(!editing)}><Pencil aria-hidden="true" /></Button>
-      <Button type="button" size="icon" variant="ghost" className="size-8 shrink-0" aria-label={`Delete group ${name}`} title={`Delete group ${name}`} disabled={busy} onClick={() => {
+      <Button type="button" size="icon" variant="ghost" className="size-8 shrink-0" aria-label={`Delete ${collection} ${name}`} title={`Delete ${collection} ${name}`} disabled={busy} onClick={() => {
         if (window.confirm(`Delete “${name}” and its bookmarks?`)) save(sections.filter(item => item.id !== id));
       }}><Trash2 aria-hidden="true" /></Button>
     </div>
