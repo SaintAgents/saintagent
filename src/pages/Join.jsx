@@ -316,7 +316,7 @@ export default function Join() {
             >
               Gaia Global Gold (GGG)
             </a>
-            {" "}redeemable monthly.
+            {" "}is an in-app credit. Conversion to money or withdrawal is not guaranteed.
           </p>
         </div>
       </div>

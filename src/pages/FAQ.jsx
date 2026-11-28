@@ -46,7 +46,8 @@ export default function FAQ() {
 
             <section>
               <h2 className="text-xl font-semibold">What is GGG?</h2>
-              <p className="mt-2 text-slate-600">GGG is the internal currency/credit used on Saint Agents. You can:</p>
+              <p className="mt-2 text-slate-600">GGG is an in-app credit used on Saint Agents. It is not legal tender or fiat currency. Saint Agents may offer conversion or withdrawal options, but neither is guaranteed. See the <a href="/Terms" className="underline underline-offset-4">Terms</a> for details.</p>
+              <p className="mt-2 text-slate-600">Within Saint Agents, you can:</p>
               <ul className="list-disc ml-6 mt-2 space-y-1 text-slate-600">
                 <li>Earn GGG by completing missions, selling services, or receiving rewards</li>
                 <li>Spend GGG on services, support, or access</li>
