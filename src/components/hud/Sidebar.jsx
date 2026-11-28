@@ -479,7 +479,6 @@ export default function Sidebar({
         </div>
         {navOpen && (
           <nav className={cn("min-h-0 flex-1 overflow-y-auto p-3 pt-0 space-y-0.5", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
-            <BookmarkNavTab compact={isCollapsed && !inPopup} />
             <SidebarPageSearch
               pages={Object.values(ALL_NAV_ITEMS).filter(item => !item.action && !item.locked &&
                 (!item.adminOnly || currentUser?.role === 'admin') &&
@@ -538,6 +537,7 @@ export default function Sidebar({
                         "space-y-0.5 pl-1 mt-0.5",
                         group.isTreasury && "bg-amber-50/40 rounded-lg py-1 -mx-0.5 px-1.5"
                       )}>
+                        <BookmarkNavTab onNavigate={closeFlyout} />
                         {groupItems.map(item => {
                           const isActive = currentPage === item.id;
                           const badgeValue = item.id === 'messages' ? (unreadMessages?.length || 0) : 0;
@@ -1109,6 +1109,7 @@ export default function Sidebar({
 
         {/* Content */}
         <ActivityTicker placement="sidebar" />
+        <div className="shrink-0 border-b px-2"><BookmarkNavTab popover /></div>
         <div className="min-h-0 flex-1 overflow-y-auto">
           {renderSidebarContent(true)}
         </div>
@@ -1196,6 +1197,7 @@ export default function Sidebar({
 
       {!isTourPreview() && <SurfaceHeroLayer surface="sidebar" theme={theme} desktopOnly />}
       <ActivityTicker placement="sidebar" />
+      <div className={cn('relative shrink-0 border-b', isCollapsed ? 'px-1' : 'px-2')}><BookmarkNavTab compact={isCollapsed} popover /></div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {renderSidebarContent(false)}
       </div>
@@ -1222,6 +1224,7 @@ export default function Sidebar({
           }
         >
           <div className={cn("space-y-1 p-2", navPopupCollapsed && "p-1")}>
+            <BookmarkNavTab compact={navPopupCollapsed} onNavigate={() => setNavPopupOpen(false)} />
             <TooltipProvider delayDuration={100}>
               {NAV_ITEMS.filter(item => {
                 if (item.adminOnly && currentUser?.role !== 'admin') return false;
@@ -1324,6 +1327,7 @@ export default function Sidebar({
       {presencePopupOpen && (
         <FloatingPanel title="Presence & Settings" onClose={() => setPresencePopupOpen(false)}>
           <div className="p-4 space-y-3">
+            <BookmarkNavTab onNavigate={() => setPresencePopupOpen(false)} />
             {/* RP & Rank */}
             {profile && (
               <div className="flex items-center justify-between px-1 py-1 bg-violet-50 rounded-lg">

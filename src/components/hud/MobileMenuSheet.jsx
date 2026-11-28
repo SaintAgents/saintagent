@@ -206,8 +206,10 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
             <LanguageSwitcher mobile />
           </SheetHeader>
           <SidebarQuickAccess catalog={ALL_NAV_ITEMS} leaderTier={leaderTier} onNavigate={() => onOpenChange(false)} />
-          <div className="min-h-0 flex-1 overflow-y-auto p-3 pb-20">
+          <div className="max-h-[40dvh] shrink-0 overflow-y-auto px-3">
             <BookmarkNavTab onNavigate={() => onOpenChange(false)} />
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto p-3 pb-20">
             <div className="grid grid-cols-4 gap-2">
               {filteredMenuItems.map((item) => {
                 const Icon = item.icon;
@@ -268,11 +270,12 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
         >
           <div className="absolute inset-0 bg-black/50" />
           <div 
-            className="absolute left-0 top-0 bottom-0 w-[var(--collapsed-nav-width)] bg-white dark:bg-[#0a0a0a] border-r border-slate-200 dark:border-[#00ff88]/20 overflow-y-auto py-2"
+            className="absolute left-0 top-0 bottom-0 flex w-[var(--collapsed-nav-width)] flex-col bg-white dark:bg-[#0a0a0a] border-r border-slate-200 dark:border-[#00ff88]/20 py-2"
             onClick={(e) => e.stopPropagation()}
           >
+            <div className="shrink-0"><BookmarkNavTab compact onNavigate={() => setLeftSidebarOpen(false)} /></div>
+            <div className="min-h-0 flex-1 overflow-y-auto">
             <SidebarQuickAccess catalog={ALL_NAV_ITEMS} leaderTier={leaderTier} compact onNavigate={() => setLeftSidebarOpen(false)} />
-            <BookmarkNavTab compact onNavigate={() => setLeftSidebarOpen(false)} />
             {filteredMenuItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -291,6 +294,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                 </Link>
               );
             })}
+            </div>
           </div>
         </div>
       )}

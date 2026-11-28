@@ -690,6 +690,27 @@ html[data-theme='dark'] button:is([data-sidebar-nav-footer] button, [data-sideba
   outline-offset: -2px;
 }
 
+/* Keep bookmarks readable in the sidebar and its detached menus. */
+[data-bookmark-nav-trigger], [data-bookmark-nav-links] { --bookmark-ink: hsl(190 95% 24%); }
+html:is([data-theme='dark'], [data-theme='hacker']) :is([data-bookmark-nav-trigger], [data-bookmark-nav-links]) {
+  --bookmark-ink: hsl(187 92% 69%);
+}
+html:root button[data-bookmark-nav-trigger],
+html:root button[data-bookmark-nav-trigger] :is(span, svg),
+html:root [data-bookmark-nav-links] [data-readable-surface] ul a:any-link {
+  color: var(--bookmark-ink) !important;
+  text-shadow: none !important;
+}
+html:root button[data-bookmark-nav-trigger] svg,
+html:root button[data-bookmark-nav-trigger] svg path {
+  stroke: currentColor !important;
+  filter: none !important;
+}
+html:root button[data-bookmark-nav-trigger]:focus-visible {
+  outline: 2px solid var(--bookmark-ink);
+  outline-offset: -2px;
+}
+
 /* Match Quick Access to the sidebar in dark mode, including its icon controls. */
 html[data-theme='dark'] [data-sidebar-quick-access] {
   background-color: hsl(var(--sidebar-background)) !important;
