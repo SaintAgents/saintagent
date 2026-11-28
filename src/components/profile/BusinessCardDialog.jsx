@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Download, X, Mail, ShieldCheck, Globe, MapPin, Link2, Copy, Phone } from "lucide-react";
+import { Loader2, Download, X, ShieldCheck, Link2, Copy } from "lucide-react";
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/lib/AuthContext';
+import useCardArtwork from '@/components/profile/useCardArtwork';
+import ContactCardDetails from '@/components/publicprofile/ContactCardDetails';
+import { linkTreeEditorQuery } from '@/components/publicprofile/linkTreeEditorQuery';
 import ProfileQRCode from "./ProfileQRCode";
 import SharePublicProfile from '@/components/publicprofile/SharePublicProfile';
 import { contactPath, contactShareUrl } from '@/components/publicprofile/publicLinks';
@@ -21,13 +26,24 @@ export default function BusinessCardDialog({ open, onOpenChange, profile, inline
   const saNumber = profile?.sa_number ? `SA#${profile.sa_number}` : "";
   const id = profile?.sa_number || profile?.id;
   const { data: publicContact } = useQuery({ queryKey: ['public-contact', id], enabled: !!id && active, retry: false, queryFn: async () => (await base44.functions.invoke('getContactCard', { id })).data });
-  const email = publicContact?.email || '';
-  const phoneNumber = publicContact?.phone || '';
-  const region = profile?.region || "";
+  const { user } = useAuth();
+  const isOwner = !!user?.email && user.email === profile?.user_id;
+  const { data: ownerData } = useQuery({ ...linkTreeEditorQuery(user), enabled: active && isOwner });
+  const settings = ownerData?.saved;
+  const contact = {
+    location: profile?.location || profile?.region,
+    website: profile?.social_links?.website,
+    ...publicContact,
+    ...(settings ? { title: settings.contact_title, organization: settings.contact_org,
+      location: settings.contact_address?.trim() || profile?.location || profile?.region,
+      email: settings.share_email === true ? user.email : '', phone: settings.share_phone === true ? settings.contact_phone : '',
+      contact_order: settings.contact_order } : {}),
+  };
   const trustScore = profile?.trust_score || 0;
-  const avatarUrl = artworkUrl || publicContact?.digital_art_url || profile?.avatar_url;
-  const hasArtwork = !!(artworkUrl || publicContact?.digital_art_url);
-  const website = profile?.social_links?.website || "";
+  const ownerArt = useCardArtwork(user?.id, profile?.id, active && isOwner && !inline);
+  const artwork = artworkUrl || ownerArt.url || publicContact?.digital_art_url;
+  const avatarUrl = artwork || profile?.avatar_url;
+  const hasArtwork = !!artwork;
 
   // Fetch affiliate code for this user
   const { data: affiliateCodes = [] } = useQuery({
@@ -101,7 +117,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile, inline
               <div className="shrink-0">
                 {avatarUrl ? (
                   <div className={hasArtwork ? 'size-20 overflow-hidden' : 'w-20 h-20 rounded-full overflow-hidden border-2 border-violet-500/40 shadow-lg'}>
-                    <img src={avatarUrl} alt={hasArtwork ? 'Contact card emblem' : name} className="w-full h-full object-cover" crossOrigin="anonymous" />
+                    <img src={avatarUrl} alt={hasArtwork ? 'Contact card emblem' : name} className={`w-full h-full ${hasArtwork ? 'object-contain' : 'object-cover'}`} crossOrigin="anonymous" />
                   </div>
                 ) : (
                   <div className="w-20 h-20 rounded-full border-2 border-violet-500/30 bg-violet-100 flex items-center justify-center text-violet-600 text-2xl font-bold">
@@ -114,31 +130,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile, inline
               <div className="flex-1 min-w-0 space-y-0.5">
                 <h3 className="text-base font-bold text-slate-900 truncate leading-tight">{name}</h3>
                 {handle && <p className="text-[11px] text-violet-600 leading-tight">{handle}</p>}
-                {region && (
-                  <p className="text-[10px] text-slate-600 flex items-center gap-0.5 leading-tight">
-                    <MapPin className="w-2.5 h-2.5 shrink-0" /> {region}
-                  </p>
-                )}
-                <div className="flex flex-col gap-0.5 pt-1.5 border-t border-violet-500/10 mt-1.5">
-                  {email && (
-                    <div className="flex items-center gap-1.5 text-[10px] text-slate-700 min-w-0">
-                      <Mail className="w-2.5 h-2.5 text-violet-700 shrink-0" />
-                      <span className="truncate">{email}</span>
-                    </div>
-                  )}
-                  {phoneNumber && (
-                    <div className="flex items-center gap-1.5 text-[10px] text-slate-700 min-w-0">
-                      <Phone className="w-2.5 h-2.5 text-violet-700 shrink-0" />
-                      <span className="truncate">{phoneNumber}</span>
-                    </div>
-                  )}
-                  {website && (
-                    <div className="flex items-center gap-1.5 text-[10px] text-slate-700 min-w-0">
-                      <Globe className="w-2.5 h-2.5 text-violet-600/60 shrink-0" />
-                      <span className="truncate">{website.replace(/^https?:\/\//, "")}</span>
-                    </div>
-                  )}
-                </div>
+                <ContactCardDetails profile={contact} compact />
               </div>
 
               {/* QR Code bottom-right */}
@@ -200,7 +192,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile, inline
 
   if (inline) return <section className="relative max-w-lg rounded-xl border bg-card p-4 text-card-foreground">
     <h2 className="pr-10 text-lg font-semibold">Digital Contact Card</h2>
-    <p className="mb-3 text-sm text-muted-foreground">Edit your public contact details in the LinkTree tab.</p>
+    {isOwner && <Link to="/LinkTreeEditor#contact-card-settings" className="mb-3 inline-block text-sm underline">Edit card details and field order</Link>}
     {card}
   </section>;
 
@@ -208,6 +200,7 @@ export default function BusinessCardDialog({ open, onOpenChange, profile, inline
     <DialogContent className="max-w-lg p-0 bg-transparent border-none shadow-none">
       <DialogTitle className="sr-only">Business Card — {name}</DialogTitle>
       {card}
+      {isOwner && <Link to="/LinkTreeEditor#contact-card-settings" onClick={() => onOpenChange?.(false)} className="mx-auto mb-3 rounded-md bg-card px-3 py-2 text-sm text-card-foreground underline">Edit card details and field order</Link>}
     </DialogContent>
   </Dialog>;
 }

@@ -101,6 +101,25 @@
     "contact_phone": {
       "type": "string",
       "maxLength": 40
+    },
+    "contact_address": {
+      "type": "string",
+      "maxLength": 180
+    },
+    "contact_order": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "string",
+        "enum": [
+          "title",
+          "organization",
+          "location",
+          "email",
+          "phone",
+          "website"
+        ]
+      }
     }
   },
   "required": [

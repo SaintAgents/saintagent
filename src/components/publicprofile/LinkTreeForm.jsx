@@ -41,7 +41,7 @@ export default function LinkTreeForm({ saved, profile, business, user, onSaved }
   }
   return <div className="grid items-start gap-6 lg:grid-cols-2"><form onSubmit={save} className="space-y-4 rounded-xl border bg-card p-5 text-card-foreground"><fieldset disabled={busy} className="space-y-4">
     <Button type="button" variant="outline" onClick={importProfile}>Import {business ? 'business profile' : 'my profile'}</Button>
-    <LinkTreeFields {...{ draft, patch, business }} email={user.email} />
+    <LinkTreeFields {...{ draft, patch, business, profile }} email={user.email} />
     <LinkTreeLinksEditor links={draft.links} onChange={change => patch(old => ({ links: change(old.links) }))} />
     {saved?.published && <a href={shareUrl(path)} target="_blank" rel="noreferrer" className="mr-3 underline">Open public LinkTree</a>}
     <Button type="submit" disabled={!dirty || busy}>{busy ? 'Saving…' : 'Save changes'}</Button>

@@ -9,6 +9,10 @@
     "digital_art_url": {
       "type": "string",
       "maxLength": 2500
+    },
+    "digital_art_uri": {
+      "type": "string",
+      "maxLength": 2500
     }
   },
   "required": [

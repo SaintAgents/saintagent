@@ -46,7 +46,8 @@ export default async function(req) {
     const phone = tree?.share_phone === true && /^[+\d(). -]{5,40}$/.test(tree.contact_phone || '') ? tree.contact_phone : '';
     return Response.json({
       display_name: profile.display_name, handle: profile.handle, bio: profile.bio,
-      location: profile.location || profile.region, avatar_url: webUrl(profile.avatar_url), trust_score: profile.trust_score,
+      location: tree?.contact_address?.trim() || profile.location || profile.region, avatar_url: webUrl(profile.avatar_url), trust_score: profile.trust_score,
+      contact_order: Array.isArray(tree?.contact_order) ? tree.contact_order.filter(key => ['title', 'organization', 'location', 'email', 'phone', 'website'].includes(key)).slice(0, 6) : undefined,
       sa_number: profile.sa_number, contact_id: contactId, tree_id: tree?.published === true ? profile.id : '',
       digital_art_url: webUrl(art?.digital_art_url),
       website: website && webUrl(/^[\w-]+(?:\.[\w-]+)+(?:[/:?#]|$)/.test(website) ? `https://${website}` : website),

@@ -1,8 +1,10 @@
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import LinkTreeIntroButton from '@/components/publicprofile/LinkTreeIntroButton';
+import ContactCardFieldOrder from '@/components/publicprofile/ContactCardFieldOrder';
+import ContactCardDetails from '@/components/publicprofile/ContactCardDetails';
 
-export default function LinkTreeFields({ draft, patch, business, email }) {
+export default function LinkTreeFields({ draft, patch, business, email, profile }) {
   const input = (key, label, maxLength, type = 'text') => <label key={key} className="block text-sm">{label}<Input type={type} value={draft[key] || ''} maxLength={maxLength} onChange={e => patch({ [key]: e.target.value })} /></label>;
   const check = (key, label) => <label key={key} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={draft[key] === true} onChange={e => patch({ [key]: e.target.checked })} />{label}</label>;
   return <div className="space-y-3">
@@ -15,11 +17,21 @@ export default function LinkTreeFields({ draft, patch, business, email }) {
       {input('showcase_title', 'Section name', 100)}
       {Array.from({ length: 4 }, (_, i) => <label key={i} className="block text-sm">Showcase image {i + 1} URL<Input type="url" maxLength={1500} value={draft.showcase[i] || ''} onChange={e => { const showcase = [...draft.showcase]; showcase[i] = e.target.value; patch({ showcase }); }} /></label>)}
     </fieldset>
-    {!business && <fieldset data-tour-contact-card className="space-y-2 rounded-lg border p-3"><legend className="font-semibold">Digital Contact Card</legend>
+    {!business && <fieldset id="contact-card-settings" tabIndex={-1} data-tour-contact-card className="scroll-mt-40 space-y-2 rounded-lg border p-3"><legend className="font-semibold">Digital Contact Card</legend>
       <p className="text-sm text-muted-foreground">These settings apply to your contact card, even if LinkTree is unpublished. Email and phone stay off the public card and downloaded contact file unless you opt in.</p>
       {input('contact_title', 'Professional title', 100)}{input('contact_org', 'Organization', 120)}
+      {input('contact_address', 'Public address', 180)}
+      <p className="text-sm text-muted-foreground">Only enter an address you want visitors to see. Leave it blank to use your profile location.</p>
       {check('share_email', `Share my email (${email})`)}{check('share_phone', 'Share a phone number')}
       {draft.share_phone && input('contact_phone', 'Public phone number', 40, 'tel')}
+      <ContactCardFieldOrder value={draft.contact_order} onChange={contact_order => patch({ contact_order })} />
+      <div className="space-y-2 rounded-md border p-3">
+        <h3 className="text-sm font-semibold">Card details preview</h3>
+        <ContactCardDetails compact profile={{ title: draft.contact_title, organization: draft.contact_org,
+          location: draft.contact_address?.trim() || profile.location || profile.region,
+          email: draft.share_email ? email : '', phone: draft.share_phone ? draft.contact_phone : '',
+          website: profile.social_links?.website, contact_order: draft.contact_order }} />
+      </div>
     </fieldset>}
     {check('published', 'Publish LinkTree for signed-out visitors')}
   </div>;
