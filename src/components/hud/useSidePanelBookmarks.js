@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
 export const sectionLimit = 20;
@@ -23,13 +23,24 @@ function readSections(value) {
 export default function useSidePanelBookmarks(user) {
   const client = useQueryClient();
   const queryKey = ['side-panel-bookmarks', user.id];
-  const { data: sections } = useQuery({
-    queryKey, enabled: false, staleTime: Infinity,
-    initialData: () => readSections(user.side_panel_bookmarks),
+  const query = useQuery({
+    queryKey,
+    queryFn: async () => readSections((await base44.auth.me()).side_panel_bookmarks),
+    placeholderData: () => readSections(user.side_panel_bookmarks),
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   });
-  const { mutate, isError, isPending } = useMutation({
+  const saving = useIsMutating({ mutationKey: queryKey, exact: true }) > 0;
+  const { mutate, isError } = useMutation({
+    mutationKey: queryKey,
+    onMutate: () => client.cancelQueries({ queryKey, exact: true }),
     mutationFn: next => base44.auth.updateMe({ side_panel_bookmarks: { sections: next } }),
     onSuccess: (_, next) => client.setQueryData(queryKey, next),
   });
-  return { sections, save: mutate, busy: isPending, error: isError };
+  return {
+    sections: query.data ?? [], save: mutate,
+    busy: saving || query.isFetching || query.isError,
+    loading: query.isFetching, saving, error: isError,
+    loadError: query.isError, retry: query.refetch,
+  };
 }
