@@ -42,7 +42,7 @@ import { createPageUrl } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
-export default function NotificationBell({ notifications = [], onAction }) {
+export default function NotificationBell({ notifications = [], trigger, side = 'bottom' }) {
   const [open, setOpen] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
   const [selectedNotif, setSelectedNotif] = useState(null);
@@ -129,16 +129,16 @@ export default function NotificationBell({ notifications = [], onAction }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button data-tour-notifications aria-label="Notifications" variant="ghost" size="icon" className="relative w-8 h-8 md:w-9 md:h-9" style={{ zIndex: 10001, pointerEvents: 'auto' }}>
+        {trigger || <Button data-tour-notifications aria-label="Notifications" variant="ghost" size="icon" className="relative w-8 h-8 md:w-9 md:h-9" style={{ zIndex: 10001, pointerEvents: 'auto' }}>
           <Bell className="w-4 h-4 md:w-5 md:h-5 text-slate-600" />
           {unreadCount > 0 && (
             <span className="absolute -top-0.5 -right-0.5 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center text-[10px] md:text-xs font-bold text-white bg-rose-500 rounded-full">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
-        </Button>
+        </Button>}
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[calc(100vw-1rem)] md:w-[32rem] max-w-[32rem] p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: 10002 }}>
+      <PopoverContent align="end" side={side} className="w-[calc(100vw-1rem)] md:w-[32rem] max-w-[32rem] p-0 dark:bg-slate-800 dark:border-slate-700" style={{ zIndex: trigger ? 10004 : 10002 }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700">
           <h3 className="font-semibold text-slate-900 dark:text-slate-100">Notifications</h3>
         </div>

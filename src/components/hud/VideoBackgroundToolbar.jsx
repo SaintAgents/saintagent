@@ -3,7 +3,7 @@ import useToolbarDrag from '@/components/hud/useToolbarDrag';
 import { base44 } from '@/api/base44Client';
 import {
   HelpCircle, Eye, Sun, Moon, Terminal, Waves, ImageIcon, Video, Layers, PanelLeft,
-  Bell, LogOut, Download, PanelRightClose, PanelRightOpen, Upload,
+  Bell, Download, PanelRightClose, PanelRightOpen, Upload,
   Play, X, Volume2, VolumeX, ChevronDown, GripHorizontal
 } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
@@ -14,6 +14,7 @@ import { HeroQuickToggle, openPageHero } from '@/components/hero/SurfaceHeroCont
 import CommandDeckHeroLibrary from '@/components/hero/CommandDeckHeroLibrary';
 import { openSurfaceHero } from '@/components/hero/surfaceHeroSettings';
 import { isTourPreview } from '@/components/tour/tourPreviewTargets';
+import NotificationBell from '@/components/hud/NotificationBell';
 
 const STORAGE_KEY = 'videoBgSettings';
 const SURFACE_OPACITY_KEY = 'surfaceOpacitySettings';
@@ -36,7 +37,7 @@ function saveSettings(key, val) {
   try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
 }
 
-export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPageName }) {
+export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPageName, notifications }) {
   const [collapsed, setCollapsed] = useState(() => {
     try { return localStorage.getItem('masterToolbarCollapsed') === 'true'; } catch { return false; }
   });
@@ -328,27 +329,19 @@ export default function VideoBackgroundToolbar({ theme, onThemeToggle, currentPa
 
         <div className="w-px h-6 mx-0.5" style={{ background: dividerBg }} />
 
-        {/* Notifications */}
-        <button
-          data-toolbar-btn
-          onClick={() => { window.location.href = '/Notifications'; }}
-          className={btnClass(false)}
-          title="Notifications"
-          style={{ color: accentColor }}
-        >
-          <Bell className="w-5 h-5" />
-        </button>
-
-        {/* Log out */}
-        <button
-          data-toolbar-btn
-          onClick={() => { base44.auth.logout('/'); }}
-          className={btnClass(false)}
-          title="Log Out"
-          style={{ color: accentColor }}
-        >
-          <LogOut className="w-5 h-5" />
-        </button>
+        <NotificationBell notifications={notifications} side="top" trigger={
+          <button
+            type="button"
+            data-toolbar-btn
+            onClick={() => setActivePanel(null)}
+            className={btnClass(false)}
+            title="Notifications"
+            aria-label="Notifications"
+            style={{ color: accentColor }}
+          >
+            <Bell className="w-5 h-5" aria-hidden="true" />
+          </button>
+        } />
 
         {/* Collapse */}
         <button

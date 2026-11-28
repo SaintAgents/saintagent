@@ -2013,7 +2013,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {!tourPreview && profileReady && profile?.status !== 'dnd' && <LiveAchievementToasts />}
 
       {/* Video Background Toolbar */}
-      <VideoBackgroundToolbar theme={theme} onThemeToggle={setTheme} currentPageName={currentPageName} />
+      <VideoBackgroundToolbar theme={theme} onThemeToggle={setTheme} currentPageName={currentPageName} notifications={notifications} />
       {!tourPreview && <SurfaceHeroControls page={currentPageName} theme={theme} />}
 
       {!tourPreview && !onboarding?.welcome_overview_pending && <WelcomeCourse key={currentUser.id} userId={currentUser.id}
