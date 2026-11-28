@@ -40,7 +40,7 @@ export default function DeepDiveWorkspace({ request, onAssistant }) {
     {(view === 'cards' || view === 'insights') && <ResearchBrowser key={view} {...{owner,view}} onInvestigate={investigate} />}
     {view === 'history' && <IntelligenceLibrary owner={owner} current={report?.id} onSelect={select} onOpenCards={() => setView('cards')} />}
     <div hidden={view !== 'investigate'} className="space-y-4">
-    <div ref={formRef}><DeepDiveForm {...{objective,setObjective,parent,busy,target}} clearTarget={() => setTarget(null)} clearParent={() => setParent(null)} onRun={input => { save.reset(); openSaved.reset(); run.mutate(input); }} /></div>
+    <div ref={formRef}><DeepDiveForm {...{objective,setObjective,parent,busy,target}} emptyDrop={request?.dropped && !request.target && !target} clearTarget={() => setTarget(null)} clearParent={() => setParent(null)} onRun={input => { save.reset(); openSaved.reset(); run.mutate(input); }} /></div>
     {run.isPending && <p role="status" className="text-sm">Finding accessible sources and assembling a cited report…</p>}
     {openSaved.isPending && <p role="status" className="text-sm">Opening saved investigation…</p>}
     {run.isError && <p role="alert" className="text-sm">{run.error.response?.data?.error || 'Could not complete the investigation. Try again.'}</p>}

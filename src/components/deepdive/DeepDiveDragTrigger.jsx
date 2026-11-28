@@ -35,14 +35,17 @@ export default function DeepDiveDragTrigger({ onOpen }) {
     didDrag.current = true;
     const target = targetAt(x,y);
     highlight(target);
-    setGhost({x,y,title:target?.dataset.deepDiveTitle});
+    setGhost({x,y,overItem:!!target});
   };
   const finish = event => {
     if (drag.current?.id !== event.pointerId) return;
-    const target = didDrag.current && targetAt(event.clientX,event.clientY);
+    const dragged = didDrag.current;
+    const { clientX:x, clientY:y } = event;
+    const inside = x >= 0 && y >= 0 && x < window.innerWidth && y < window.innerHeight;
+    const request = dragged && inside ? targetRequest(targetAt(x,y)) : null;
     reset();
-    if (target?.isConnected) onOpen(targetRequest(target),event.currentTarget);
+    if (request) onOpen({ ...request, dropped:true },event.currentTarget);
   };
-  return <><TooltipProvider><Tooltip open={ghost ? false : undefined}><TooltipTrigger asChild><Button type="button" variant="ghost" size="icon" className="relative size-8 shrink-0 touch-none select-none cursor-grab text-primary active:cursor-grabbing" aria-label="Open Deep Dive Intelligence" aria-haspopup="dialog" onPointerDown={start} onPointerMove={move} onPointerUp={finish} onPointerCancel={reset} onLostPointerCapture={reset} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') didDrag.current = false; }} onClick={event => { if (!didDrag.current) onOpen({},event.currentTarget); didDrag.current = false; }}><Microscope aria-hidden="true" /></Button></TooltipTrigger><TooltipContent className="z-[12000] max-w-xs"><strong className="block">Deep Dive</strong><span className="block">Drag the microscope onto a supported card, such as a project or listing. Release when the card highlights to prefill the topic, then click Begin Deep Dive to start.</span><span className="mt-1 block">Click the microscope to enter a topic yourself.</span></TooltipContent></Tooltip></TooltipProvider>
-  {ghost && createPortal(<div aria-hidden="true" className="pointer-events-none fixed z-[12001] flex max-w-56 items-center gap-2 rounded-md border bg-popover px-2 py-1.5 text-xs text-popover-foreground shadow-md" style={{left:Math.max(4,Math.min(ghost.x+12,window.innerWidth-228)),top:Math.max(4,Math.min(ghost.y+12,window.innerHeight-36))}}><Microscope size={16} className="shrink-0" /> <span className="truncate">{ghost.title ? `Release to select: ${ghost.title}` : 'Drag onto a supported card'}</span></div>,document.body)}</>;
+  return <><TooltipProvider><Tooltip open={ghost ? false : undefined}><TooltipTrigger asChild><Button type="button" variant="ghost" size="icon" className="relative size-8 shrink-0 touch-none select-none cursor-grab text-primary active:cursor-grabbing" aria-label="Open Deep Dive Intelligence" aria-haspopup="dialog" onPointerDown={start} onPointerMove={move} onPointerUp={finish} onPointerCancel={reset} onLostPointerCapture={reset} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') didDrag.current = false; }} onClick={event => { if (!didDrag.current) onOpen({},event.currentTarget); didDrag.current = false; }}><Microscope aria-hidden="true" /></Button></TooltipTrigger><TooltipContent className="z-[12000] max-w-xs"><strong className="block">Deep Dive</strong><span className="block">Drop the microscope on a card, text, or another item to review what was captured. Research only starts when you click Begin Deep Dive.</span><span className="mt-1 block">Click the microscope to enter a topic yourself.</span></TooltipContent></Tooltip></TooltipProvider>
+  {ghost && createPortal(<div aria-hidden="true" className="pointer-events-none fixed z-[12001] flex max-w-56 items-center gap-2 rounded-md border bg-popover px-2 py-1.5 text-xs text-popover-foreground shadow-md" style={{left:Math.max(4,Math.min(ghost.x+12,window.innerWidth-228)),top:Math.max(4,Math.min(ghost.y+12,window.innerHeight-36))}}><Microscope size={16} className="shrink-0" /> <span className="truncate">{ghost.overItem ? 'Release to review this item' : 'Drop to open Deep Dive'}</span></div>,document.body)}</>;
 }
