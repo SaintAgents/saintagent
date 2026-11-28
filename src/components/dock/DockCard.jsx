@@ -3,7 +3,7 @@ import { Archive, ArrowRightToLine, GripVertical, Link2, Maximize2, MoreHorizont
 import DockWidget from '@/components/dock/DockWidget';
 import { widgetLabel } from '@/components/dock/dockCatalog';
 
-export default function DockCard({ card, floating, visible, order, patch, onFloat, onReturn, dragStart, dragEnd, reorder, drag, remove, columnWidth, ...widgetProps }) {
+export default function DockCard({ card, floating, visible, order, patch, onFloat, onReturn, arrangeHandle, remove, columnWidth, ...widgetProps }) {
   const host = useRef(null), gesture = useRef(null), pending = useRef(null);
   const switchPlace = (action, focusSelector) => {
     setMenu(false);
@@ -25,9 +25,9 @@ export default function DockCard({ card, floating, visible, order, patch, onFloa
   });
   const g={...card,...preview};
   const style = floating ? {'--dock-float-x':`${g.x ?? 24}px`,'--dock-float-y':`${g.y ?? 96}px`,'--dock-float-width':`${settings.compact ? 245 : (g.w || 355)}px`,height:autoHeight || settings.compact || (frameless && !g.h) ? undefined : (g.h || 280)} : {order,width:g.w || undefined,height:autoHeight ? undefined : g.h || undefined, '--dock-card-span': Math.max(1, Math.ceil(((g.w || 1) + 10) / (columnWidth + 10)))};
-  return <article ref={host} aria-label={settings.title || widgetLabel(type)} hidden={!visible} className={`dock-card ${floating?'dock-float':''} ${frameless?'dock-frameless':''}`} style={style} onDragOver={e => {if(!floating && drag) e.preventDefault();}} onDrop={e => {if(!floating && drag) reorder(e,card.id);}} onContextMenu={e => {if(frameless && !e.target.closest('input,textarea,select,a,[contenteditable]')) {e.preventDefault();setMenu(true);}}}>
+  return <article ref={host} aria-label={settings.title || widgetLabel(type)} hidden={!visible} className={`dock-card ${floating?'dock-float':''} ${frameless?'dock-frameless':''}`} style={style} data-dock-card={floating ? undefined : card.id} onContextMenu={e => {if(frameless && !e.target.closest('input,textarea,select,a,[contenteditable]')) {e.preventDefault();setMenu(true);}}}>
     <div className="dock-card-header">
-      {!floating && <button type="button" draggable onDragStart={e => dragStart(e,card.id)} onDragEnd={dragEnd} title="Drag to rearrange, or press Enter for options" data-dock-arrange aria-label={`Arrange ${type}`} onClick={() => setMenu(!menu)}><GripVertical size={14} /></button>}
+      {!floating && <button type="button" {...arrangeHandle} title="Drag onto another card to swap, or press Enter for options" data-dock-arrange aria-label={`Arrange ${type}`} onClick={() => setMenu(!menu)}><GripVertical size={14} /></button>}
       {floating && <button type="button" aria-label="Move widget" title="Drag to move; arrow keys move the widget" className="dock-move" onKeyDown={e => {
         const x=e.key==='ArrowRight'?24:e.key==='ArrowLeft'?-24:0, y=e.key==='ArrowDown'?24:e.key==='ArrowUp'?-24:0;
         if(!x&&!y) return;

@@ -74,7 +74,7 @@ html[data-theme='custom'] #dock-deck :is(.dock-header,.dock-footer,.dock-card-he
 #dock-deck :is(.dock-header,.dock-folders,.dock-footer) svg :is(path,circle,rect,line,polyline) {stroke:currentColor!important;}
 #dock-deck :is(.dock-current-deck,.dock-folder-name) .truncate {color:inherit!important;}
 #dock-deck .dock-folder-mark {flex:none;color:hsl(var(--d-gold))!important;}
-.dock-grid {display:grid;align-items:start;grid-template-columns:repeat(var(--dock-columns),minmax(0,1fr));grid-auto-flow:dense;gap:.65rem;padding:1.25rem .75rem .75rem;}
+.dock-grid {display:grid;align-items:start;grid-template-columns:repeat(var(--dock-columns),minmax(0,1fr));grid-auto-flow:row;gap:.65rem;padding:1.25rem .75rem .75rem;}
 .dock-card {grid-column:span min(var(--dock-columns),var(--dock-card-span));position:relative;display:flex;flex-direction:column;min-width:0;max-width:100%;border-radius:.7rem!important;box-shadow:none!important;}
 .dock-card-header {display:flex;align-items:center;justify-content:flex-end;gap:.22rem;min-height:2rem;padding:.2rem .35rem;background:hsl(var(--d-chrome))!important;color:hsl(var(--d-text))!important;border-bottom:1px solid hsl(var(--d-line))!important;border-radius:.65rem .65rem 0 0;}
 .dock-card-title {display:flex;flex:1;align-items:center;gap:.35rem;min-width:0;font-size:.77rem;}
@@ -108,6 +108,12 @@ html .dock-root .dock-frameless .dock-card-body {background:hsl(var(--d-card))!i
   .dock-frameless:not(:hover,:focus-within,:has(.dock-card-menu)) :is(.dock-card-header,.dock-card-resize) {opacity:0;}
 }
 .dock-move {touch-action:none;cursor:move;}
+#dock-deck [data-dock-arrange] {touch-action:none;cursor:grab;}
+#dock-deck [data-dock-dragging] [data-dock-arrange] {cursor:grabbing;}
+#dock-deck [data-dock-dragging] {opacity:.5;}
+#dock-deck [data-dock-drop-target] {outline:2px solid hsl(var(--d-cyan));outline-offset:-2px;}
+.dock-root .dock-drag-preview {position:fixed;z-index:10005;top:0;left:0;pointer-events:none;padding:.5rem .75rem;overflow:hidden;border-radius:.7rem;background:hsl(var(--d-card)/.72)!important;color:hsl(var(--d-text))!important;border:2px dashed hsl(var(--d-cyan))!important;font-size:.8rem;font-weight:700;}
+.dock-drag-preview[hidden] {display:none!important;}
 .dock-card-resize {position:absolute;right:0;bottom:0;touch-action:none;cursor:nwse-resize;}
 .dock-resize {position:absolute;z-index:1;inset:0 auto 0 -5px;width:10px;opacity:.001;cursor:ew-resize;touch-action:none;}
 .dock-resize:focus-visible {opacity:1;}

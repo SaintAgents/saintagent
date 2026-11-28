@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { safePath } from '@/components/dock/dockCatalog';
 
-export default function useDockPanel({prefs,commit,disabled,panel,actions,dragId,setDrag,setModal}) {
+export default function useDockPanel({prefs,commit,disabled,actions,setModal}) {
   const [open,setOpen]=useState(false), [viewport,setViewport]=useState(()=>window.innerWidth), [draft,setDraft]=useState(null);
   const wide=viewport>=768;
   // Leave room for page content and the widest navigation at each breakpoint.
@@ -26,10 +26,8 @@ export default function useDockPanel({prefs,commit,disabled,panel,actions,dragId
     if(disabled) return;
     const launch=()=>{if(!document.querySelector('[data-dock-full-tour][data-state="open"]'))setOpen(true);};
     const pin=e=>{const {path,title}=e.detail || {};if(safePath(path)){actions.add('Pinned Item',{path,title:typeof title==='string'?title.trim().slice(0,100):path});launch();}};
-    const over=e=>{if(dragId.current&&!panel.current?.contains(e.target))e.preventDefault();};
-    const drop=e=>{if(dragId.current&&!panel.current?.contains(e.target)){e.preventDefault();actions.float(dragId.current,{x:e.clientX,y:e.clientY});dragId.current=null;setDrag(null);}};
-    document.addEventListener('openDockDeck',launch); document.addEventListener('pinDockItem',pin); window.addEventListener('dragover',over);window.addEventListener('drop',drop);
-    return ()=>{document.removeEventListener('openDockDeck',launch);document.removeEventListener('pinDockItem',pin);window.removeEventListener('dragover',over);window.removeEventListener('drop',drop);};
-  },[disabled,actions,panel,dragId,setDrag]);
+    document.addEventListener('openDockDeck',launch); document.addEventListener('pinDockItem',pin);
+    return ()=>{document.removeEventListener('openDockDeck',launch);document.removeEventListener('pinDockItem',pin);};
+  },[disabled,actions]);
   return {shown,setOpen,wide,width,max,resize:(value,done)=>{if(!done){setDraft(value);return;}if(value!==prefs.width)commit({width:value});setDraft(null);}};
 }
