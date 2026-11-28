@@ -1,5 +1,4 @@
 import { Bell, Mail, X } from 'lucide-react';
-import DockDeckIcon from '@/components/dock/DockDeckIcon';
 import CanopyHint from '@/components/canopy/CanopyHint';
 
 const viewLabels = { peek: 'Peek', full: 'Full', split: 'Side' };
@@ -15,7 +14,6 @@ export default function CanopyHeading({ mode, desktop, unread, open, setMode, ch
       <CanopyHint label={`${viewLabels[mode]} view active. Switch to ${nextLabel}.`}>
         <button type="button" onClick={() => changeView(nextView)}>{nextLabel}</button>
       </CanopyHint>
-      <CanopyHint label="Open Dock Deck"><button type="button" aria-label="Open Dock Deck" onClick={() => open('dock')}><DockDeckIcon /></button></CanopyHint>
       <CanopyHint label="Close Canopy"><button type="button" aria-label="Close Canopy" onClick={() => setMode('closed')}><X size={15} /></button></CanopyHint>
     </div>
   </div>;
