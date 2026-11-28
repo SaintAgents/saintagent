@@ -5,38 +5,47 @@ import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import DailyTourDialog from '@/components/tour/DailyTourDialog';
 import useDailyTours from '@/components/tour/useDailyTours';
 import useReturningTourInvitation from '@/components/tour/useReturningTourInvitation';
+import TourReminderToast from '@/components/tour/TourReminderToast';
 
 const days = [0,1,2,3,4,5,DAILY_TOURS.findIndex(tour => tour.reward)];
 const tips = ['Bookmark the Command Deck so you always have a way back.', 'Watch what you need updates on; save what you just need to reference.', 'When reaching out, say why you chose that person and offer one clear next step.', 'Check the time commitment and what counts as completion before joining a Mission.', 'Make your first milestone measurable, with a date and one owner who has agreed.', 'Read an offer’s scope, price and delivery terms before requesting a booking.', 'Keep a list of the tools that helped you and pin the ones you want to use again.'];
 const tomorrow = () => { const date = new Date(); date.setHours(24,0,0,0); return date.getTime(); };
 const read = key => { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch { return {}; } };
 
-export default function WelcomeCourse({ userId, ready, newMember }) {
+export default function WelcomeCourse({ userId, ready, newMember, remindersEnabled }) {
   const key = `welcome-course:${userId}`;
   const [prefs,setPrefs] = useState(() => read(key));
-  const invitation = useReturningTourInvitation(userId, ready && !newMember && !prefs.off && !prefs.paused);
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const eligible = ready && remindersEnabled && !prefs.off && !prefs.paused;
+  const invitation = useReturningTourInvitation(userId, eligible && !newMember);
   const refresher = !!invitation && prefs.finishedInvitation !== invitation;
-  const eligible = ready && (newMember || refresher);
   const [manual,setManual] = useState(false), [day,setDay] = useState(null), [step,setStep] = useState(0), [tip,setTip] = useState(null);
   const [now,setNow] = useState(Date.now);
   const { query,record,sections,save } = useDailyTours(userId,eligible || manual);
   const pendingDay = days.findIndex(index => sections[index] < DAILY_TOURS[index].sections.length || (DAILY_TOURS[index].reward && !record?.site_skills_reward));
-  const [progressDelayed, setProgressDelayed] = useState(false);
+  const hasTourSuggestion = query.isSuccess && (pendingDay >= 0 || refresher);
+  const change = values => { const next = {...prefs,...values}; try { localStorage.setItem(key,JSON.stringify(next)); } catch {} setPrefs(next); setNow(Date.now()); setManual(false); setReminderOpen(false); };
+  const canPrompt = eligible && hasTourSuggestion && !reminderOpen && !manual && day === null && tip === null && !(prefs.nextAt > now);
   useEffect(() => {
-    if (!eligible || !newMember || !query.isPending) return;
-    const timer = setTimeout(() => setProgressDelayed(true), 5000);
+    if (!canPrompt) return;
+    const timer = setTimeout(() => {
+      // Reserve today's reminder before rendering so navigation doesn't show it again.
+      if (read(key).nextAt > Date.now()) { setPrefs(read(key)); return; }
+      const next = { ...prefs, nextAt: tomorrow() };
+      try { localStorage.setItem(key, JSON.stringify(next)); } catch { /* in-memory preference still applies */ }
+      setPrefs(next);
+      setNow(Date.now());
+      setReminderOpen(true);
+    }, 8000);
     return () => clearTimeout(timer);
-  }, [eligible, newMember, query.isPending]);
-  const showNewMemberCourse = newMember && (query.isError || (query.isPending ? progressDelayed : pendingDay >= 0));
-  const visible = manual || (eligible && !prefs.off && !prefs.paused && !(prefs.nextAt > now) && (refresher || showNewMemberCourse));
-  const change = values => { const next = {...prefs,...values}; try { localStorage.setItem(key,JSON.stringify(next)); } catch {} setPrefs(next); setNow(Date.now()); setManual(false); };
+  }, [canPrompt, key, prefs]);
   useEffect(() => { const show = () => setManual(true); window.addEventListener('open-welcome-course',show); return () => window.removeEventListener('open-welcome-course',show); }, []);
   useEffect(() => {
     if (!eligible || !(prefs.nextAt > now)) return;
     const timer = setTimeout(() => setNow(Date.now()), Math.max(0, Math.min(prefs.nextAt - Date.now(), 2147483647)));
     return () => clearTimeout(timer);
   }, [eligible, prefs.nextAt, now]);
-  const postpone = () => change({nextAt:Date.now()+60*60*1000});
+  const postpone = () => change({nextAt:Math.max(prefs.nextAt || 0, Date.now()+60*60*1000)});
   const openDay = index => {
     save.reset();
     const tour = DAILY_TOURS[days[index]], complete = sections[days[index]] >= tour.sections.length;
@@ -48,7 +57,12 @@ export default function WelcomeCourse({ userId, ready, newMember }) {
     const advance = () => { const count=step+1; const proceed=() => { if (count < tour.sections.length) {setStep(count);return;} if (refresher || day === pendingDay) change({nextAt:tomorrow(), ...(refresher && {finishedInvitation: invitation})}); setDay(null); setTip(day); }; if (sections[index] >= count && !(tour.reward && count===tour.sections.length && !record?.site_skills_reward)) proceed(); else save.mutate({day:index,count},{onSuccess:proceed}); };
     return <DailyTourDialog day={index} step={step} busy={save.isPending} error={save.isError} onClose={() => {setDay(null);postpone();}} onBack={() => {save.reset();setStep(step-1);}} onAdvance={advance} returnFocus={() => document.querySelector('[data-welcome-course-launch]')?.focus()} />;
   }
-  if (!visible && tip === null) return null;
+  if (!manual && tip === null) {
+    if (!reminderOpen || !eligible || !hasTourSuggestion) return null;
+    return <TourReminderToast refresher={refresher} rewardAvailable={record?.site_skills_reward !== 'claimed'}
+      onOpen={() => { setReminderOpen(false); setManual(true); }} onDismiss={() => setReminderOpen(false)}
+      onMute={() => change({off:true,paused:false})} />;
+  }
   return <Dialog open onOpenChange={open => { if (!open && !save.isPending) { if (tip !== null) setTip(null); else postpone(); } }}>
     <DialogContent data-readable-surface overlayClassName="z-[1000000]" className="z-[1000001] max-h-[85dvh] w-[calc(100%_-_1rem)] overflow-y-auto" hideCloseButton={save.isPending}>
       <DialogTitle>{tip !== null ? `Day ${tip+1} tip` : refresher ? 'Welcome back! Take a refresher tour' : 'Your 7-day SaintAgent course'}</DialogTitle>

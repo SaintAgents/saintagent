@@ -2024,7 +2024,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
       {!tourPreview && (showWelcomeOverview ? (
         <FirstVisitTour key={onboarding.id} onboarding={onboarding} userEmail={currentUser.email} />
       ) : (
-        <WelcomeCourse key={currentUser.id} userId={currentUser.id} ready={courseReady} newMember={newMember} />
+        <WelcomeCourse key={currentUser.id} userId={currentUser.id} ready={courseReady} newMember={newMember} remindersEnabled={profile?.status !== 'dnd'} />
       ))}
     </div>
     </LiveActivity>
