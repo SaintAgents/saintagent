@@ -40,6 +40,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import TestimonialsMarquee from '@/components/testimonials/TestimonialsMarquee';
+import JoinLaunch from '@/components/join/JoinLaunch';
 
 const PILLARS = [
   { id: 'earn', label: 'Earn', icon: DollarSign, color: 'from-emerald-500 to-teal-600', description: 'Monetize your skills and services in our trusted marketplace' },
@@ -401,6 +402,8 @@ export default function Join() {
           </Button>
         </div>
       </div>
+
+      <JoinLaunch />
 
       {/* Footer */}
       <div className="border-t border-slate-800 py-8">

@@ -1,0 +1,44 @@
+{
+  "name": "Founding Member Count",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "founding_member_count",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "refresh_total": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "refreshFoundingMemberTotal",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Refresh member count"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Refreshes the public founding member total without exposing account details.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 * * * *",
+      "one_time_date": null,
+      "timezone": "America/Denver",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}

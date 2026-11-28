@@ -1,0 +1,32 @@
+{
+  "name": "FoundingMemberTotal",
+  "type": "object",
+  "description": "Public aggregate of eligible member accounts. No individual account data is stored here.",
+  "properties": {
+    "total": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "total"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
