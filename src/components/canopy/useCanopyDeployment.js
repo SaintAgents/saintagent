@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { COLLAPSED_SIDEBAR_WIDTH } from '@/components/hud/SidebarResizeHandle';
+import { defaults } from '@/components/canopy/canopyCatalog';
 
 const sessions = new Map();
 const stepDown = { split:'peek', full:'peek', peek:'closed', closed:'closed' };
@@ -19,7 +20,24 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
   const available = viewport - Math.max(sidebar, dock.left) - dock.right;
   const split = draft.split ?? settings.split;
   const splitWidth = Math.max(0, Math.min(split, available - (available > 580 ? 320 : 220)));
-  const height = draft.height ?? settings.height;
+  const [maxHeight, setMaxHeight] = useState(() => Math.max(1, window.innerHeight - 56));
+  const minHeight = Math.min(280, maxHeight);
+  const preferredHeight = draft.height ?? (settings.height === defaults.height ? undefined : settings.height);
+  const height = Math.max(minHeight, Math.min(maxHeight, preferredHeight ?? maxHeight));
+  useLayoutEffect(() => {
+    if (mode !== 'full') return;
+    const topbar = document.getElementById('app-topbar');
+    const measure = () => {
+      const top = topbar?.getBoundingClientRect().bottom ?? 56;
+      const bottomInset = parseFloat(window.getComputedStyle(root.current).scrollPaddingBottom) || 0;
+      setMaxHeight(Math.max(1, Math.floor(window.innerHeight - top - bottomInset)));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    if (topbar) observer.observe(topbar);
+    window.addEventListener('resize', measure);
+    return () => { observer.disconnect(); window.removeEventListener('resize', measure); };
+  }, [mode]);
   const setMode = useCallback(next => { session.mode = next; setCurrent(next); }, [session]);
   useLayoutEffect(() => {
     const parent = root.current?.parentElement;
@@ -49,8 +67,8 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
     window.addEventListener('keydown', key); if (settings.auto) activity.forEach(name => window.addEventListener(name, reset, true)); reset();
     return () => { clearTimeout(timer); window.removeEventListener('keydown', key); activity.forEach(name => window.removeEventListener(name, reset, true)); };
   }, [desktop, mode, settings.auto, setMode]);
-  return { desktop, enabled, root, mode, setMode, recent:session.recent, split, height,
-    style:{ '--canopy-left':`${mode === 'split' ? Math.max(sidebar,dock.left) : sidebar}px`, '--canopy-right':`${dock.right + (dock.right ? 28 : 32)}px`, '--canopy-top':topbarCollapsed ? '40px' : '56px', '--canopy-height':`${height}px`, '--canopy-split':`${splitWidth}px` },
-    resize(key, value, done, commit) { if (done) { if (value !== settings[key]) commit({[key]:value}); setDraft(prev => ({...prev,[key]:undefined})); } else setDraft(prev => ({...prev,[key]:value})); },
+  return { desktop, enabled, root, mode, setMode, recent:session.recent, split, height, minHeight, maxHeight,
+    style:{ '--canopy-left':`${mode === 'full' || mode === 'split' ? Math.max(sidebar,dock.left) : sidebar}px`, '--canopy-right':`${dock.right + (dock.right ? 28 : 32)}px`, '--canopy-top':topbarCollapsed ? '40px' : '56px', '--canopy-split':`${splitWidth}px`, '--canopy-full-top':`calc(${topbarCollapsed ? desktop ? 40 : 44 : 56}px + env(safe-area-inset-top, 0px))`, '--canopy-full-height':preferredHeight == null ? '100dvh' : `${Math.max(minHeight, preferredHeight)}px` },
+    resize(key, value, done, commit) { if (done) { const next = key === 'height' && value >= maxHeight ? defaults.height : value; if (next !== settings[key]) commit({[key]:next}); setDraft(prev => ({...prev,[key]:undefined})); } else setDraft(prev => ({...prev,[key]:value})); },
   };
 }

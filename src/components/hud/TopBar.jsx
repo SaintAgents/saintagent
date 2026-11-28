@@ -1,4 +1,5 @@
 import DeepDiveLauncher from '@/components/deepdive/DeepDiveLauncher';
+import CanopyHint from '@/components/canopy/CanopyHint';
 import LanguageSwitcher from '@/components/language/LanguageSwitcher';
 import { useLanguage } from '@/components/language/LanguageProvider';
 import React, { useState, useEffect, useRef } from 'react';
@@ -354,11 +355,13 @@ export default function TopBar({
       <Button asChild variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-primary sm:hidden" title={t('Global Impact Dashboard')} aria-label={t('Global Impact Dashboard')}>
         <Link to="/GlobalImpactDashboard" aria-current={currentPageName === 'GlobalImpactDashboard' ? 'page' : undefined}><LayoutDashboard aria-hidden="true" /></Link>
       </Button>
-      {currentUser && canopyControl && <Button type="button" variant="outline" size="icon" className="h-8 w-8 shrink-0 border-current text-primary md:hidden"
-        aria-label={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'} title="Command Canopy"
-        aria-expanded={canopyControl.expanded} aria-controls={canopyControl.expanded ? 'canopy-workspace' : undefined} onClick={canopyControl.toggle}>
-        <PanelTopOpen aria-hidden="true" />
-      </Button>}
+      {currentUser && canopyControl && <CanopyHint label={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}>
+        <Button type="button" variant="outline" size="icon" className="h-8 w-8 shrink-0 border-current text-primary md:hidden"
+          aria-label={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}
+          aria-expanded={canopyControl.expanded} aria-controls={canopyControl.expanded ? 'canopy-workspace' : undefined} onClick={canopyControl.toggle}>
+          <PanelTopOpen aria-hidden="true" />
+        </Button>
+      </CanopyHint>}
       {/* Collapse/Expand Toggle */}
       <button
         onClick={() => onToggleCollapse?.()}
@@ -923,16 +926,15 @@ export default function TopBar({
 
 
 
-        {currentUser && canopyControl && (
+        {currentUser && canopyControl && <CanopyHint label={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}>
           <Button type="button" variant="outline" size="sm" className="hidden h-8 shrink-0 gap-1.5 border-current px-2.5 font-semibold text-primary hover:text-accent-foreground md:inline-flex"
             aria-label={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}
-            title={canopyControl.expanded ? 'Close Command Canopy' : 'Open Command Canopy'}
             aria-expanded={canopyControl.expanded} aria-controls={canopyControl.expanded ? 'canopy-workspace' : undefined}
             onClick={canopyControl.toggle}>
             <PanelTopOpen aria-hidden="true" />
             Canopy
           </Button>
-        )}
+        </CanopyHint>}
 
         {/* Profile Menu / Auth */}
         {currentUser ? (

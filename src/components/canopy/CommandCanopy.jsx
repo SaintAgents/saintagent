@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Bell, Mail, PanelRight, X } from 'lucide-react';
-import DockDeckIcon from '@/components/dock/DockDeckIcon';
+import CanopyHeading from '@/components/canopy/CanopyHeading';
 import { peek } from '@/components/canopy/canopyCatalog';
 import useCanopySettings from '@/components/canopy/useCanopySettings';
 import useCanopyDeployment from '@/components/canopy/useCanopyDeployment';
@@ -62,11 +61,11 @@ export default function CommandCanopy({ user, profile, sidebarCollapsed, sidebar
     {mode !== 'closed' && <section id="canopy-workspace" aria-label="Command Canopy workspace" className="canopy-workspace"
       data-canopy-art={!hideBackgrounds ? '' : undefined}
       style={{ '--canopy-sunrise': `url("${canopySunrise[1]}")`, '--canopy-night': `url("${canopyNight[1]}")` }}>
-      <div className="canopy-heading"><strong>SaintAgent Command Canopy</strong><div><button onClick={() => open('/Messages')} aria-label="Inbox" title="Inbox"><Mail size={15} /></button><button onClick={() => open('notifications')} aria-label="Notifications" title="Notifications"><Bell size={15} />{unread > 0 && <b>{unread}</b>}</button><button onClick={() => { setFocus(''); setMode(mode === 'full' ? 'peek' : 'full'); }}>{mode === 'full' ? 'Peek' : 'Full view'}</button>{desktop && <button onClick={() => setMode(mode === 'split' ? 'full' : 'split')} aria-label={mode === 'split' ? 'Exit split view' : 'Open split view'} title={mode === 'split' ? 'Exit split view' : 'Open split view'}><PanelRight size={15} /></button>}<button onClick={() => open('dock')} aria-label="Open Dock Deck" title="Open Dock Deck"><DockDeckIcon /></button><button onClick={() => setMode('closed')} aria-label="Close Canopy" title="Close Canopy"><X size={15} /></button></div></div>
+      <CanopyHeading {...{ mode, desktop, unread, open, setMode }} toggleView={() => { setFocus(''); setMode(mode === 'full' ? 'peek' : 'full'); }} />
       <ActivityTicker placement="canopy" />
       <CanopyWorkspace activePath={location.pathname} onToggleOriginal={() => { setFocus(''); if (mode === 'peek') setMode('full'); toggleOriginal(); }}
         {...{ mode, enabled, ids, settings, commit, user, profile, notifications, recent, open, error, focus, original, saved, viewSaved, saveView }} />
-      {!original && mode !== 'peek' && <CanopyResize className={mode === 'split' ? 'canopy-split-resize' : 'canopy-full-resize'} label={mode === 'split' ? 'Resize split panel' : 'Resize full Canopy'} value={mode === 'split' ? hud.split : hud.height} min={mode === 'split' ? 220 : 280} max={mode === 'split' ? 720 : 940} direction={mode === 'split' ? 'left' : 'down'} onChange={(value, done) => hud.resize(mode === 'split' ? 'split' : 'height', value, done, commit)} />}
+      {!original && mode !== 'peek' && <CanopyResize className={mode === 'split' ? 'canopy-split-resize' : 'canopy-full-resize'} label={mode === 'split' ? 'Resize split panel' : 'Resize full Canopy'} value={mode === 'split' ? hud.split : hud.height} min={mode === 'split' ? 220 : hud.minHeight} max={mode === 'split' ? 720 : hud.maxHeight} direction={mode === 'split' ? 'left' : 'down'} onChange={(value, done) => hud.resize(mode === 'split' ? 'split' : 'height', value, done, commit)} />}
     </section>}
     {overlay && <CanopyOverlays type={overlay} profile={profile} close={() => setOverlay(null)} />}
   </div>;
