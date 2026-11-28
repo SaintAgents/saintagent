@@ -21,10 +21,21 @@ export default function WelcomeCourse({ userId, ready, newMember }) {
   const [now,setNow] = useState(Date.now);
   const { query,record,sections,save } = useDailyTours(userId,eligible || manual);
   const pendingDay = days.findIndex(index => sections[index] < DAILY_TOURS[index].sections.length || (DAILY_TOURS[index].reward && !record?.site_skills_reward));
-  const visible = manual || (eligible && !prefs.off && !prefs.paused && !(prefs.nextAt > now) && (refresher || (!query.isPending && !query.isError && pendingDay >= 0)));
+  const [progressDelayed, setProgressDelayed] = useState(false);
+  useEffect(() => {
+    if (!eligible || !newMember || !query.isPending) return;
+    const timer = setTimeout(() => setProgressDelayed(true), 5000);
+    return () => clearTimeout(timer);
+  }, [eligible, newMember, query.isPending]);
+  const showNewMemberCourse = newMember && (query.isError || (query.isPending ? progressDelayed : pendingDay >= 0));
+  const visible = manual || (eligible && !prefs.off && !prefs.paused && !(prefs.nextAt > now) && (refresher || showNewMemberCourse));
   const change = values => { const next = {...prefs,...values}; try { localStorage.setItem(key,JSON.stringify(next)); } catch {} setPrefs(next); setNow(Date.now()); setManual(false); };
   useEffect(() => { const show = () => setManual(true); window.addEventListener('open-welcome-course',show); return () => window.removeEventListener('open-welcome-course',show); }, []);
-  useEffect(() => { if (!eligible || !(prefs.nextAt > now)) return; const timer = setTimeout(() => setNow(Date.now()),Math.min(prefs.nextAt-now,2147483647)); return () => clearTimeout(timer); }, [eligible,prefs.nextAt,now]);
+  useEffect(() => {
+    if (!eligible || !(prefs.nextAt > now)) return;
+    const timer = setTimeout(() => setNow(Date.now()), Math.max(0, Math.min(prefs.nextAt - Date.now(), 2147483647)));
+    return () => clearTimeout(timer);
+  }, [eligible, prefs.nextAt, now]);
   const postpone = () => change({nextAt:Date.now()+60*60*1000});
   const openDay = index => {
     save.reset();
@@ -39,7 +50,7 @@ export default function WelcomeCourse({ userId, ready, newMember }) {
   }
   if (!visible && tip === null) return null;
   return <Dialog open onOpenChange={open => { if (!open && !save.isPending) { if (tip !== null) setTip(null); else postpone(); } }}>
-    <DialogContent data-readable-surface className="max-h-[85dvh] overflow-y-auto" hideCloseButton={save.isPending}>
+    <DialogContent data-readable-surface overlayClassName="z-[1000000]" className="z-[1000001] max-h-[85dvh] w-[calc(100%_-_1rem)] overflow-y-auto" hideCloseButton={save.isPending}>
       <DialogTitle>{tip !== null ? `Day ${tip+1} tip` : refresher ? 'Welcome back! Take a refresher tour' : 'Your 7-day SaintAgent course'}</DialogTitle>
       <DialogDescription>{tip !== null ? tips[tip] : refresher ? 'Pick up where you left off or replay a completed tour. Your progress and rewards are unchanged.' : 'One guided tour at a time. Your progress is saved, and you can replay any completed day. The Site Skills Quest reward is available only once.'}</DialogDescription>
       {tip !== null ? <Button type="button" onClick={() => setTip(null)}>Done</Button> : <>

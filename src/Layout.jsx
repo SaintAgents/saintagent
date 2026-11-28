@@ -433,8 +433,6 @@ function AuthenticatedLayout({ children, currentPageName }) {
   const [onboardingTimeout, setOnboardingTimeout] = useState(false);
   useEffect(() => {
     if (!currentUser?.email) return;
-    const onboardingCompleteFlag = localStorage.getItem('onboardingComplete') === '1';
-    if (onboardingCompleteFlag) return; // Already done, no timeout needed
     const timer = setTimeout(() => setOnboardingTimeout(true), 5000);
     return () => clearTimeout(timer);
   }, [currentUser?.email]);
@@ -644,6 +642,13 @@ function AuthenticatedLayout({ children, currentPageName }) {
   // Onboarding check is NON-BLOCKING — render the page immediately.
   // The onboarding redirect useEffect handles navigation if needed.
   const onboardingCompleteFlag = typeof window !== 'undefined' && localStorage.getItem('onboardingComplete') === '1';
+  const onboardingDone = ['complete', 'skipped'].includes(onboarding?.status);
+  const showWelcomeOverview = onboardingDone && onboarding.welcome_overview_pending === true;
+  const joinedAt = [currentUser.created_date, onboarding?.created_date, profile?.created_date].map(value => Date.parse(value)).find(Number.isFinite);
+  const newMember = joinedAt !== undefined && Date.now() - joinedAt < 14 * 86400000;
+  const courseReady = onboardingDone || (!onboarding && onboardingCompleteFlag && (
+    (onboardingFetched && !onboardingError) || (newMember && (onboardingError || onboardingTimeout))
+  ));
 
   const rankCode = profile?.rp_rank_code || 'seeker';
 
@@ -2016,12 +2021,11 @@ function AuthenticatedLayout({ children, currentPageName }) {
       <VideoBackgroundToolbar theme={theme} onThemeToggle={setTheme} currentPageName={currentPageName} notifications={notifications} />
       {!tourPreview && <SurfaceHeroControls page={currentPageName} theme={theme} />}
 
-      {!tourPreview && !onboarding?.welcome_overview_pending && <WelcomeCourse key={currentUser.id} userId={currentUser.id}
-        ready={['complete', 'skipped'].includes(onboarding?.status) || (onboardingFetched && !onboardingError && !onboarding && onboardingCompleteFlag)}
-        newMember={Date.now() - Date.parse(currentUser.created_date || onboarding?.created_date) < 14 * 86400000} />}
-      {!tourPreview && currentPageName === 'CommandDeck' && onboarding?.welcome_overview_pending && (onboarding.status === 'complete' || onboarding.status === 'skipped') && (
+      {!tourPreview && (showWelcomeOverview ? (
         <FirstVisitTour key={onboarding.id} onboarding={onboarding} userEmail={currentUser.email} />
-      )}
+      ) : (
+        <WelcomeCourse key={currentUser.id} userId={currentUser.id} ready={courseReady} newMember={newMember} />
+      ))}
     </div>
     </LiveActivity>
   );
