@@ -10,6 +10,7 @@ import { useSurfaceHeroes } from '@/components/hero/surfaceHeroSettings';
 import DockFooter from '@/components/dock/DockFooter';
 import DockHeader from '@/components/dock/DockHeader';
 import DockFolders from '@/components/dock/DockFolders';
+import DockEmptyFolder from '@/components/dock/DockEmptyFolder';
 import DockDialogs from '@/components/dock/DockDialogs';
 import DockCardSlot from '@/components/dock/DockCardSlot';
 import DockPinProvider from '@/components/dock/DockPinContext';
@@ -70,7 +71,7 @@ export default function DockDeck({user, disabled, preview = false, children}) {
       <DockHeader {...{prefs,deck,commit,close,openModal,compactLauncher,preview}} configured={Boolean(heroes.surfaces?.dock)} />
       <div ref={scroll} className="dock-scroll">
         <DockFolders {...{prefs,commit,openModal,showFolders}} />
-        <div ref={grid} className="dock-grid" style={{'--dock-columns':columns}}>{deckCards.every(c=>c.deck!==deck.id) && <p className="p-3">This deck is empty. Use Add Widget to get started.</p>}</div>
+        <div ref={grid} className="dock-grid" style={{'--dock-columns':columns}}>{deckCards.every(c=>c.deck!==deck.id) && <DockEmptyFolder onAddWidget={() => openModal('library')} />}</div>
       </div>
       <DockFooter {...{prefs,openModal,error}} archived={prefs.cards.filter(c=>c.place==='drawer').length} />
     </aside>
