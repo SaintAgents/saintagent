@@ -38,7 +38,8 @@ export default function SidebarQuickAccess({ catalog, leaderTier, compact, onNav
     window.dispatchEvent(new Event(changeEvent));
   };
   return <div data-sidebar-quick-access role="group" aria-label={t('Quick access')} className={cn('relative flex shrink-0 items-center gap-1 border-t bg-background p-1 text-foreground', compact && 'flex-col')}>
-    <div className={cn('flex min-w-0 gap-0.5', compact ? 'max-h-28 w-full flex-col items-center overflow-y-auto' : 'flex-1 overflow-x-auto')}>
+    <div className={cn('flex min-w-0 gap-0.5', compact ? 'max-h-28 w-full flex-col items-center overflow-y-auto' : 'max-h-[90px] flex-1 flex-wrap content-start overflow-y-auto md:max-h-[74px] [@media(pointer:coarse)]:max-h-[90px]')}>
+
       {pinned.map(({ page, label, Icon }) => <Button key={page} asChild variant="ghost" size="icon" className="shrink-0 aria-[current=page]:bg-accent aria-[current=page]:text-accent-foreground">
         <NavLink to={`/${page}`} end aria-label={t(label)} title={t(label)} onClick={onNavigate}><Icon aria-hidden="true" /></NavLink>
       </Button>)}
