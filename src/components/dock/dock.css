@@ -56,7 +56,9 @@ html[data-theme='custom'] #dock-deck :is(.dock-header,.dock-footer,.dock-card-he
 #dock-deck .dock-chip {display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-width:0;min-height:3.65rem;gap:.25rem;padding:.45rem .6rem;background:hsl(var(--d-surface))!important;color:hsl(var(--d-text))!important;border:1px solid hsl(var(--d-line))!important;border-radius:.65rem!important;text-align:left;box-shadow:none!important;}
 #dock-deck .dock-chip:hover {border-color:hsl(var(--d-selected))!important;}
 #dock-deck .dock-chip[aria-pressed='true'] {background:hsl(var(--d-muted))!important;border-color:hsl(var(--d-selected))!important;}
-.dock-folder-name {max-width:100%;font-size:.8rem;}
+.dock-folder-heading {display:flex;width:100%;align-items:flex-start;justify-content:space-between;gap:.4rem;}
+.dock-folder-name {min-width:0;max-width:100%;font-size:.8rem;}
+#dock-deck .dock-folder-number {flex:none;padding:.1rem .3rem;border:1px solid hsl(var(--d-line));border-radius:.25rem;background:hsl(var(--d-muted))!important;color:hsl(var(--d-text))!important;font:700 .7rem/1.2 ui-monospace,monospace;white-space:nowrap;}
 #dock-deck .dock-folder-icon {flex:none;color:hsl(var(--d-gold))!important;fill:hsl(var(--d-gold)/.4)!important;}
 #dock-deck .dock-folder-widgets {width:100%;font-size:.66rem;line-height:1.3;color:hsl(var(--d-subtle))!important;}
 .dock-footer {flex-shrink:0;border-top:1px solid;font-size:.75rem;}

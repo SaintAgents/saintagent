@@ -17,7 +17,7 @@ export default function DockHeader({ prefs, deck, commit, close, openModal, comp
       <button type="button" className="dock-icon-button" aria-label="Collapse Dock Deck" title="Collapse Dock Deck" onClick={close}><ChevronRight size={16} /></button>
       <span className="dock-emblem"><AnimatedBrandLogo fallback={logo} /></span>
       <button type="button" className="dock-icon-button" aria-label="Add Widget" title="Add Widget" onClick={() => openModal('library')}><Plus size={16} /></button>
-      <h2 className="dock-current-deck" title={deck.name}>{(!deck.icon || deck.icon === '▦') ? <FolderClosed size={15} className="dock-folder-icon" aria-hidden="true" /> : <span className="dock-folder-mark" aria-hidden="true">{deck.icon}</span>}<span className="truncate">{deck.name}</span></h2>
+      <h2 className="dock-current-deck" title={deck.name}>{(!deck.icon || deck.icon === '▦') ? <FolderClosed size={15} className="dock-folder-icon" aria-hidden="true" /> : <span className="dock-folder-mark" aria-hidden="true">{deck.icon}</span>}<span className="truncate">{deck.name}</span><span className="dock-folder-number"><span className="sr-only">Folder </span>#{prefs.decks.findIndex(folder => folder.id === deck.id) + 1}</span></h2>
     </div>
     <nav className="dock-header-group dock-header-tools" aria-label="Dock destinations and settings">
       <Link className="dock-icon-button" to="/Schedule" aria-label="Calendar" title="Calendar"><CalendarDays size={15} /></Link>
