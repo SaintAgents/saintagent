@@ -49,6 +49,8 @@ import {
   X,
   ChevronUp,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ArrowLeft,
   LayoutDashboard,
   PanelTopOpen,
@@ -123,6 +125,8 @@ export default function TopBar({
   theme: themeProp,
   onThemeToggle
 }) {
+  const [hideCompactIcons, setHideCompactIcons] = useState(false);
+  const tickerOnly = isCollapsed && hideCompactIcons;
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -352,6 +356,14 @@ export default function TopBar({
       sidebarCollapsed ? "md:left-[var(--collapsed-nav-width)]" : "md:left-64 lg:left-[var(--expanded-nav-width)]",
       isCollapsed ? "h-10" : "h-14"
     )} style={{ zIndex: 9999, overflowX: 'auto', overflowY: 'visible' }}>
+      {isCollapsed && <Button type="button" variant="ghost" size="icon" className="h-7 w-7 shrink-0 text-inherit"
+        aria-label={tickerOnly ? 'Show top bar icons' : 'Hide top bar icons'}
+        title={tickerOnly ? 'Show top bar icons' : 'Hide icons and show only the Inspiration ticker'}
+        aria-expanded={!tickerOnly} aria-controls="topbar-leading-controls topbar-trailing-controls"
+        onClick={() => setHideCompactIcons(value => !value)}>
+        {tickerOnly ? <ChevronRight aria-hidden="true" /> : <ChevronLeft aria-hidden="true" />}
+      </Button>}
+      <div id="topbar-leading-controls" className={tickerOnly ? '!hidden' : 'contents'}>
       <Button asChild variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-primary sm:hidden" title={t('Global Impact Dashboard')} aria-label={t('Global Impact Dashboard')}>
         <Link to="/GlobalImpactDashboard" aria-current={currentPageName === 'GlobalImpactDashboard' ? 'page' : undefined}><LayoutDashboard aria-hidden="true" /></Link>
       </Button>
@@ -376,9 +388,11 @@ export default function TopBar({
         )}
       </button>
       
+      </div>
       {/* Masters Messages - shows when topbar is collapsed */}
       {isCollapsed && <MastersMessagesTicker />}
-      
+
+      <div id="topbar-trailing-controls" className={tickerOnly ? '!hidden' : 'contents'}>
       {/* Navigation buttons - shows when collapsed */}
       {isCollapsed && (
         <div className="flex items-center gap-1 mr-2">
@@ -1126,6 +1140,7 @@ export default function TopBar({
             </Button>
           </div>
         )}
+      </div>
       </div>
       {/* Privacy Modal */}
       <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
