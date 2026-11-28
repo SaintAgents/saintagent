@@ -3,12 +3,12 @@ import { base44 } from '@/api/base44Client';
 
 export const sectionLimit = 20;
 export const bookmarkLimit = 30;
-const safePage = path => typeof path === 'string' && /^\/(?!\/)[\w/-]{0,179}$/.test(path);
-export const pagePath = pathname => {
-  const path = pathname.replace(/\/+$/, '') || '/';
+const safePage = path => typeof path === 'string' && path.length <= 2048 && /^\/(?![\/\\])[\w/%.-]*(?:\?[^#\s\\]*)?(?:#[^\s\\]*)?$/.test(path) && !/[\u0000-\u001f\u007f]/.test(path);
+export const pagePath = (pathname, search = '', hash = '') => {
+  const path = (pathname.replace(/\/+$/, '') || '/') + search + hash;
   return safePage(path) ? path : null;
 };
-export const pageLabel = path => (path.split('/').filter(Boolean).at(-1) || 'Home')
+export const pageLabel = path => (path.split(/[?#]/, 1)[0].split('/').filter(Boolean).at(-1) || 'Home')
   .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2').replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/[-_]+/g, ' ');
 
 function readSections(value) {

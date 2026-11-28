@@ -20,7 +20,7 @@ import SidebarNavFooter from '@/components/hud/SidebarNavFooter';
 import useSidebarNavigation from '@/components/hud/useSidebarNavigation';
 import useSidebarSectionSizes from '@/components/hud/useSidebarSectionSizes';
 import SidebarSectionSizer from '@/components/hud/SidebarSectionSizer';
-import SidePanelBookmarks from '@/components/hud/SidePanelBookmarks';
+import BookmarkNavTab from '@/components/hud/BookmarkNavTab';
 import {
   Select,
   SelectContent,
@@ -473,6 +473,7 @@ export default function Sidebar({
         </div>
         {navOpen && (
           <nav className={cn("min-h-0 flex-1 overflow-y-auto p-3 pt-0 space-y-0.5", isCollapsed && !inPopup && "p-1 pt-0 space-y-0.5")}>
+            <BookmarkNavTab compact={isCollapsed && !inPopup} />
             <SidebarPageSearch
               pages={Object.values(ALL_NAV_ITEMS).filter(item => !item.action && !item.locked &&
                 (!item.adminOnly || currentUser?.role === 'admin') &&
@@ -675,7 +676,6 @@ export default function Sidebar({
               })()}
             </TooltipProvider>
             </SidebarPageSearch>
-            {(!isCollapsed || inPopup) && <SidePanelBookmarks />}
           </nav>
         )}
       </SidebarSectionSizer>

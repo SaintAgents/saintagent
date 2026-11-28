@@ -16,7 +16,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { getStoredViewMode, VIEW_MODE_CONFIG } from './DeckViewModeSelector';
-import SidePanelBookmarks from '@/components/hud/SidePanelBookmarks';
+import BookmarkNavTab from '@/components/hud/BookmarkNavTab';
 
 // Full menu items with nav IDs for filtering - MUST MATCH Sidebar.jsx NAV_ITEMS
 const menuItems = [
@@ -200,6 +200,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
             </div>
           </SheetHeader>
           <div className="min-h-0 flex-1 overflow-y-auto p-3 pb-20">
+            <BookmarkNavTab onNavigate={() => onOpenChange(false)} />
             <div className="grid grid-cols-4 gap-2">
               {filteredMenuItems.map((item) => {
                 const Icon = item.icon;
@@ -248,7 +249,6 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
                 );
               })}
             </div>
-            <SidePanelBookmarks onNavigate={() => onOpenChange(false)} />
           </div>
         </SheetContent>
       </Sheet>
@@ -264,6 +264,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
             className="absolute left-0 top-0 bottom-0 w-16 bg-white dark:bg-[#0a0a0a] border-r border-slate-200 dark:border-[#00ff88]/20 overflow-y-auto py-2"
             onClick={(e) => e.stopPropagation()}
           >
+            <BookmarkNavTab compact onNavigate={() => setLeftSidebarOpen(false)} />
             {filteredMenuItems.map((item) => {
               const Icon = item.icon;
               return (

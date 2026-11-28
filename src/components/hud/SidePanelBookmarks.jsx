@@ -10,12 +10,13 @@ import useSidePanelBookmarks, { pageLabel, pagePath, sectionLimit } from '@/comp
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
 
 function BookmarkSections({ user, onNavigate }) {
-  const { pathname } = useLocation();
+  const { pathname, search, hash } = useLocation();
   const [adding, setAdding] = useState(false);
   const [pageActions, setPageActions] = useState(false);
   const [name, setName] = useState('');
   const { sections, save, busy, error } = useSidePanelBookmarks(user);
-  const current = pagePath(pathname);
+  const current = pagePath(pathname, search, hash);
+  const page = pagePath(pathname);
   const create = event => {
     event.preventDefault();
     if (busy || !name.trim() || sections.length >= sectionLimit) return;
@@ -28,6 +29,7 @@ function BookmarkSections({ user, onNavigate }) {
       <h3 className="text-xs font-semibold">My Bookmark Groups</h3>
       <Button size="sm" variant="outline" className="h-7 px-2" disabled={busy || sections.length >= sectionLimit} aria-expanded={adding} onClick={() => setAdding(!adding)}><Plus /> New group</Button>
     </div>
+    <p className="py-1 text-xs text-muted-foreground">Go to what you want to bookmark, choose a group (or make one with <strong>New group</strong>), then select <strong>Pin to Group</strong>. Select the bookmark later to reopen that link, including any item, tab, or section it identifies. It doesn’t save a copy of the page.</p>
     {adding && <form className="flex gap-1 py-1" onSubmit={create}>
       <Input className="h-8 min-w-0 flex-1 text-xs" aria-label="Section name" placeholder="Section name" maxLength={45} required autoFocus value={name} onChange={event => setName(event.target.value)} />
       <Button type="submit" size="sm" disabled={busy || !name.trim()}>Create</Button>
@@ -36,7 +38,7 @@ function BookmarkSections({ user, onNavigate }) {
     {busy && <p role="status" className="text-xs">Saving bookmarks…</p>}
     {!sections.length && !adding && <p className="py-1 text-xs text-muted-foreground">Create a section to bookmark pages for quick access.</p>}
     {sections.map(section => <SidePanelBookmarkSection key={section.id} {...{ section, sections, current, save, busy, onNavigate }} />)}
-    {current && <><Button type="button" size="sm" variant="ghost" aria-expanded={pageActions} onClick={() => setPageActions(value => !value)}>Other page actions</Button>{pageActions && <RecordKeepActions key={current} type="page" id={current.toLowerCase()} title={pageLabel(current)} route={current} />}</>}
+    {page && <><Button type="button" size="sm" variant="ghost" aria-expanded={pageActions} onClick={() => setPageActions(value => !value)}>Other page actions</Button>{pageActions && <RecordKeepActions key={page} type="page" id={page.toLowerCase()} title={pageLabel(page)} route={page} />}</>}
   </section>;
 }
 
