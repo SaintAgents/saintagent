@@ -231,7 +231,7 @@ export default function Join() {
           </div>
           
           <p className="text-xl text-slate-300 max-w-2xl mx-auto mb-10">
-            Saint Agents is a platform for conscious creators, healers, builders, and leaders 
+            Saint Agents is a private sovereign platform for conscious creators, healers, builders, and leaders
             to connect, collaborate, and create meaningful impact in the world.
           </p>
           
