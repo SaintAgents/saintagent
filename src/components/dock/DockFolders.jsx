@@ -15,14 +15,17 @@ export default function DockFolders({ prefs, commit, openModal, showFolders }) {
     {(prefs.folders || showFolders) && <div className="dock-folder-grid">{prefs.decks.map((deck, index) => {
       const cards = prefs.cards.filter(c => c.deck === deck.id && c.place === 'deck');
       const Glyph = deck.icon === '★' ? Star : FolderClosed;
-      return <button type="button" key={deck.id} className="dock-chip" aria-pressed={prefs.active === deck.id} onClick={() => commit({active:deck.id})} data-dock-folder={deck.id}>
+      return <div key={deck.id} className="relative min-w-0">
+      <button type="button" className="dock-chip h-full w-full" aria-pressed={prefs.active === deck.id} onClick={() => commit({active:deck.id})} data-dock-folder={deck.id}>
         <span className="dock-folder-heading">
           <strong className="dock-folder-name">{deck.icon && !['▦','★'].includes(deck.icon) ? <span className="dock-folder-mark" aria-hidden="true">{deck.icon}</span> : <Glyph size={19} className="dock-folder-icon" aria-hidden="true" />}<span className="truncate">{deck.name}</span></strong>
           <span className="dock-folder-number"><span className="sr-only">Folder </span>#{index + 1}</span>
         </span>
         <span className="dock-folder-count"><Folder size={12} /> {cards.length} {cards.length === 1 ? 'widget' : 'widgets'}</span>
         {prefs.folders && cards.length > 0 && <ul className="dock-folder-widgets">{cards.slice(0,3).map(c => <li key={c.id} className="truncate">· {c.settings.title || c.type}</li>)}</ul>}
-      </button>;
+      </button>
+      <button type="button" className="dock-icon-button dock-folder-rename" aria-label={`Rename folder ${deck.name} (#${index + 1})`} title="Rename folder" onClick={event => openModal({ renameId:deck.id, trigger:event.currentTarget })}><Pencil size={13} aria-hidden="true" /></button>
+      </div>;
     })}</div>}
   </section>;
 }

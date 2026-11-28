@@ -3,13 +3,13 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { Button } from '@/components/ui/button';
 import { icons, links, widgetLabel, widgetLibrary } from '@/components/dock/dockCatalog';
 
-export default function DockDialogs({ modal, close, prefs, deck, cards, actions, revealCard }) {
+export default function DockDialogs({ modal, close, prefs, deck, cards, actions, revealCard, trigger }) {
   const [duplicate, setDuplicate] = useState('');
   const [name, setName] = useState(modal === 'rename' ? deck.name : '');
   const [icon, setIcon] = useState(modal === 'rename' ? deck.icon : icons[0]);
   const [shortcuts, setShortcuts] = useState(prefs.shortcuts);
-  const title = {library:'Add Widget', drawer:'Drawer', new:'New deck folder', rename:'Rename deck', delete:'Delete deck', shortcuts:'Edit Quick Access'}[modal];
-  return <Dialog open onOpenChange={value => { if (!value) close(); }}><DialogContent data-readable-surface className="z-[10009] max-h-[85dvh] overflow-y-auto">
+  const title = {library:'Add Widget', drawer:'Drawer', new:'New deck folder', rename:'Rename folder', delete:'Delete deck', shortcuts:'Edit Quick Access'}[modal];
+  return <Dialog open onOpenChange={value => { if (!value) close(); }}><DialogContent data-readable-surface className="z-[10009] max-h-[85dvh] overflow-y-auto" onCloseAutoFocus={trigger ? event => { event.preventDefault(); trigger.focus(); } : undefined}>
     <DialogTitle>{title}</DialogTitle><DialogDescription>{modal === 'drawer' ? `Archived widgets are kept here until you restore, move, or delete them. Restore returns a widget to ${deck.name}.` : modal === 'delete' ? 'Widgets from this deck move to the Drawer.' : 'Customize your Dock Deck.'}</DialogDescription>
     {modal === 'library' && <div className="grid gap-2">{Object.entries(widgetLibrary).map(([type, description]) => {
       const elsewhere = cards.some(c => c.type === type && c.deck !== deck.id && c.place !== 'drawer');
@@ -23,7 +23,7 @@ export default function DockDialogs({ modal, close, prefs, deck, cards, actions,
       <select aria-label={`Move ${c.type} to deck`} value="" onChange={e => { if(e.target.value) actions.restore(c.id, e.target.value); }}><option value="">Move to…</option>{prefs.decks.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}</select>
       <Button size="sm" variant="outline" onClick={() => { if (window.confirm(`Permanently delete ${c.settings.title || c.type}?`)) actions.remove(c.id); }}>Delete</Button>
     </div>)}</div>}
-    {(modal === 'new' || modal === 'rename') && <form className="grid gap-3" onSubmit={e => {e.preventDefault(); if (name.trim()) { actions.saveDeck(name.trim(),icon,modal); close(); }}}>
+    {(modal === 'new' || modal === 'rename') && <form className="grid gap-3" onSubmit={e => {e.preventDefault(); if (name.trim()) { actions.saveDeck(name.trim(),icon,modal,deck.id); close(); }}}>
       <label className="grid gap-1">Deck name <input autoFocus required maxLength={40} className="rounded-md border bg-background p-2" value={name} onChange={e => setName(e.target.value)} /></label>
       <label>Icon <select value={icon} onChange={e => setIcon(e.target.value)}>{icons.map(i => <option key={i}>{i}</option>)}</select></label><Button type="submit">Save deck</Button>
     </form>}

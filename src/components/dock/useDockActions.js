@@ -32,8 +32,8 @@ export default function useDockActions(commit, active) {
       const cards=[...p.cards], a=cards.findIndex(c=>c.id===id), b=cards.findIndex(c=>c.id===other.id);
       [cards[a],cards[b]]=[cards[b],cards[a]]; return {cards};
     }),
-    saveDeck: (name,icon,mode) => commit(p => {
-      if(mode==='rename') return {decks:p.decks.map(d => d.id===p.active ? {...d,name,icon} : d)};
+    saveDeck: (name,icon,mode,folderId) => commit(p => {
+      if(mode==='rename') return {decks:p.decks.map(d => d.id===(folderId ?? p.active) ? {...d,name,icon} : d)};
       if(p.decks.length>=20) return {};
       const id=crypto.randomUUID(); return {decks:[...p.decks,{id,name,icon}],active:id};
     }),

@@ -61,6 +61,12 @@ html[data-theme='custom'] #dock-deck :is(.dock-header,.dock-footer,.dock-card-he
 .dock-folder-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem;margin-top:.45rem;}
 @container (max-width: 340px) {.dock-folder-grid {grid-template-columns:minmax(0,1fr);}}
 #dock-deck .dock-chip {display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-width:0;min-height:3.65rem;gap:.25rem;padding:.45rem .6rem;background:hsl(var(--d-surface))!important;color:hsl(var(--d-text))!important;border:1px solid hsl(var(--d-line))!important;border-radius:.65rem!important;text-align:left;box-shadow:none!important;}
+#dock-deck .dock-chip {padding-inline-end:2.6rem;}
+#dock-deck .dock-folder-rename {position:absolute;inset-block-start:.35rem;inset-inline-end:.35rem;}
+@media (max-width: 767px), (pointer: coarse) {
+  #dock-deck .dock-chip {padding-inline-end:3.4rem;}
+  #dock-deck .dock-folder-rename {width:44px;height:44px;}
+}
 #dock-deck .dock-chip:hover {border-color:hsl(var(--d-selected))!important;}
 #dock-deck .dock-chip[aria-pressed='true'] {background:hsl(var(--d-muted))!important;border-color:hsl(var(--d-selected))!important;}
 .dock-folder-heading {display:flex;width:100%;align-items:flex-start;justify-content:space-between;gap:.4rem;}
