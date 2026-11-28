@@ -1,5 +1,7 @@
 import React from 'react';
 import QuickNotes from '@/components/dock/QuickNotes';
+import DockClipboardHistory from '@/components/dock/DockClipboardHistory';
+import DockScratchpad from '@/components/dock/DockScratchpad';
 import DockNews from '@/components/dock/DockNews';
 import DockMarketTicker from '@/components/dock/DockMarketTicker';
 import WorldClocks from '@/components/dock/WorldClocks';
@@ -43,6 +45,8 @@ export default function DockWidget({ card, user, save, navigate, shortcuts, hist
   if (type === 'Who Is Online') return <DockOnlineMembers visible={visible && panelOpen} userId={user.id} />;
   if (type === 'pinned_item') return <div className="dock-links">{safePath(settings.path) ? <a href={settings.path}>{settings.title}</a> : <p>{settings.title}</p>}{settings.subtitle && <p>{settings.subtitle}</p>}</div>;
   if (type === 'Quick Notes') return <QuickNotes value={settings.note} save={note => save({note})} />;
+  if (type === 'Clipboard History') return <DockClipboardHistory />;
+  if (type === 'Scratchpad') return <DockScratchpad />;
   if (type === 'Quick Access' || type === 'Quick Links') return <div className="dock-links">{(type === 'Quick Access' ? shortcuts : Object.keys(links)).map(label => <Link key={label} to={links[label]}>{label}</Link>)}{type === 'Quick Access' && <button onClick={() => openModal('shortcuts')}>Edit Quick Access</button>}</div>;
   if (type === 'Pinned Item') return settings.path ? <Link to={settings.path}>{settings.title || settings.path}</Link> : <form onSubmit={e => { e.preventDefault(); const path = new FormData(e.currentTarget).get('path').trim(); if (safePath(path)) save({path, title:path}); else { e.currentTarget.elements.path.setCustomValidity('Enter a SaintAgent path beginning with one slash.'); e.currentTarget.elements.path.reportValidity(); } }}><label>SaintAgent path <input name="path" required maxLength={500} onInput={e => e.currentTarget.setCustomValidity('')} placeholder="/Projects" /></label><button>Pin</button></form>;
   return <DockTools {...{type, settings, save, navigate}} visible={type === 'Inspiration' ? active : visible} />;

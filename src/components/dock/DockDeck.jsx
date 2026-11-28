@@ -13,6 +13,7 @@ import DockFolders from '@/components/dock/DockFolders';
 import DockDialogs from '@/components/dock/DockDialogs';
 import DockCardSlot from '@/components/dock/DockCardSlot';
 import DockPinProvider from '@/components/dock/DockPinContext';
+import DockWritingStore from '@/components/dock/DockWritingStore';
 import useDockPreferences from '@/components/dock/useDockPreferences';
 import useDockActions from '@/components/dock/useDockActions';
 import useDockPanel from '@/components/dock/useDockPanel';
@@ -60,7 +61,8 @@ export default function DockDeck({user, disabled, preview = false, children}) {
   const columns=width>=930 ? 3 : width>=535 ? 2 : 1;
   const cardProps=card => ({card,user,navigate,openModal,shortcuts:prefs.shortcuts,history,arrangeHandle:handle(card.id),panelOpen:shown || card.place==='float',columnWidth:(width-12*(columns+1))/columns,patch:update=>actions.patch(card.id,update),remove:()=>actions.remove(card.id),shift:dir=>actions.shift(card.id,dir),
     onFloat:() => actions.float(card.id), onReturn:() => { actions.patch(card.id,{place:'deck'}); if (card.deck!==deck.id) commit({active:card.deck}); setOpen(true); } });
-  return <DockPinProvider {...{prefs, commit, disabled, revealCard}}>{children}<div className="dock-root" hidden={disabled} data-dock-open={shown}>
+  const captureAvailable = prefs.cards.some(card => card.type === 'Clipboard History' && card.place !== 'drawer');
+  return <DockPinProvider {...{prefs, commit, disabled, revealCard}}>{children}<DockWritingStore userId={user.id} captureAvailable={captureAvailable} writable={!disabled && !preview}><div className="dock-root" hidden={disabled} data-dock-open={shown}>
     {!shown && <Button ref={launcher} className="dock-launcher" data-dock-handle={compactLauncher ? '' : undefined} variant="outline" onClick={() => setOpen(true)} aria-label="Open Dock Deck" title="Open Dock Deck" aria-controls="dock-deck" aria-expanded={false}><DockDeckIcon />{!compactLauncher && prefs.label && 'Dock Deck'}</Button>}
     <aside ref={panel} id="dock-deck" aria-label="Dock Deck" aria-hidden={!shown} {...(!shown ? {inert:''} : {})} className="dock-panel" style={{width,'--dock-video-opacity':prefs.opacity/100}}>
       {wide && <><CanopyResize label="Resize Dock Deck" className="dock-resize" direction="left" value={width} min={320} max={max} onChange={resize} /><button type="button" className="dock-edge" aria-label="Collapse Dock Deck" title="Collapse Dock Deck" onClick={close}><ChevronRight size={16} /></button></>}
@@ -80,5 +82,5 @@ export default function DockDeck({user, disabled, preview = false, children}) {
       return <DockCardSlot key={card.id} target={floating ? floatingTools : grid} floating={floating} visible={!disabled && (floating || card.deck===deck.id)} order={order} {...cardProps(card)} />;
     })}
     {shown && modal && <DockDialogs key={modal} {...{modal,prefs,deck,actions,revealCard}} cards={prefs.cards} close={()=>setModal(null)} />}
-  </div></DockPinProvider>;
+  </div></DockWritingStore></DockPinProvider>;
 }

@@ -19,7 +19,9 @@ export const widgetLibrary = {
   'Conference Rooms':'Create or join a private audio room and copy member invite links.',
   Inbox:'Read, search, compose, and manage received and sent messages.',
   Messages:'Read and reply to conversations without leaving the Dock.',
-  'Pinned Item':'Keep a shortcut to a SaintAgent page or record.'
+  'Pinned Item':'Keep a shortcut to a SaintAgent page or record.',
+  'Clipboard History':'Opt in to saving copied page text, or paste clips to reuse later.',
+  Scratchpad:'Save a private draft in this browser as you type.'
 };
 export const widgetLabel = type => type === 'Contact Card' ? 'Digital Contact Card' : type === 'Recent' ? 'History' : type;
 export const icons = ['▦','★','◈','☀','✦','◉','◇','◆'];
