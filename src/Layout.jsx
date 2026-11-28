@@ -1998,6 +1998,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
               {/* Mobile Menu Sheet */}
               <MobileMenuSheet 
                 theme={theme}
+                leaderTier={profile?.leader_tier}
                 open={mobileMenuOpen} 
                 onOpenChange={setMobileMenuOpen} 
               />

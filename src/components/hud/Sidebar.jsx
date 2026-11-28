@@ -17,6 +17,7 @@ import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import SidebarLeaderboard from '@/components/hud/SidebarLeaderboard';
 import SidebarPageSearch from '@/components/hud/SidebarPageSearch';
 import SidebarNavFooter from '@/components/hud/SidebarNavFooter';
+import SidebarQuickAccess from '@/components/hud/SidebarQuickAccess';
 import useSidebarNavigation from '@/components/hud/useSidebarNavigation';
 import useSidebarSectionSizes from '@/components/hud/useSidebarSectionSizes';
 import SidebarSectionSizer from '@/components/hud/SidebarSectionSizer';
@@ -1128,7 +1129,10 @@ export default function Sidebar({
         <div className="min-h-0 flex-1 overflow-y-auto">
           {renderSidebarContent(true)}
         </div>
-        <div className="shrink-0 px-2 pb-2"><SidebarNavFooter onChange={changeSidebarMode} /></div>
+        <div className="shrink-0 px-2 pb-2">
+          <SidebarQuickAccess catalog={ALL_NAV_ITEMS} leaderTier={profile?.leader_tier} />
+          <SidebarNavFooter onChange={changeSidebarMode} />
+        </div>
 
         {/* Resize handles */}
         <div onMouseDown={(e) => onResizeStart(e, 'e')} className="absolute right-0 top-10 bottom-0 w-2 cursor-e-resize hover:bg-violet-200/50" />
@@ -1212,6 +1216,7 @@ export default function Sidebar({
       <div className="min-h-0 flex-1 overflow-y-auto">
         {renderSidebarContent(false)}
       </div>
+      <SidebarQuickAccess catalog={ALL_NAV_ITEMS} leaderTier={profile?.leader_tier} compact={isCollapsed} />
       <SidebarNavFooter compact={isCollapsed} onChange={value => changeSidebarMode(value, isCollapsed)} />
 
       {/* Nav popup */}
