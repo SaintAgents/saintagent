@@ -798,6 +798,12 @@ html:root [data-readable-surface][data-testimonial-card] textarea {
   opacity: 1 !important;
 }
 
+/* Gold Flakes sits on a dark panel even when the page's foreground token is light-mode. */
+html[data-theme='dark'] [data-gold-flakes]:not([data-readable-surface]),
+html[data-theme='dark'] [data-gold-flakes]:not([data-readable-surface]) :is(span, button) {
+  color: var(--text-primary) !important;
+}
+
 /* Opt-in dark-mode contrast for forms and their surrounding controls. */
 html:root[data-theme='dark'] [data-dark-contrast] {
   background-color: hsl(var(--background)) !important;
