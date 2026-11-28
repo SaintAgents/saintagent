@@ -2,11 +2,11 @@ import { widget } from '@/components/dock/dockCatalog';
 
 export default function useDockActions(commit, active) {
   const patch = (id, update) => commit(p => ({cards:p.cards.map(c => c.id === id ? {...c,...update,settings:{...c.settings,...update.settings}} : c)}));
-  const restore = (id,deck) => commit(p => {
+  const restore = (id,deck,follow = false) => commit(p => {
     const card = p.cards.find(c => c.id === id);
     const destination = deck ?? p.active;
     return card && p.decks.some(folder => folder.id === destination)
-      ? {cards:[...p.cards.filter(c=>c.id!==id), {...card,deck:destination,place:'deck'}]} : {};
+      ? {cards:[...p.cards.filter(c=>c.id!==id), {...card,deck:destination,place:'deck'}], ...(follow ? {active:destination} : {})} : {};
   });
   const swap = (id, target) => commit(p => {
     const cards = [...p.cards], from=cards.findIndex(c=>c.id===id), to=cards.findIndex(c=>c.id===target);

@@ -12,6 +12,7 @@ import DockHeader from '@/components/dock/DockHeader';
 import DockFolders from '@/components/dock/DockFolders';
 import DockEmptyFolder from '@/components/dock/DockEmptyFolder';
 import DockDialogs from '@/components/dock/DockDialogs';
+import DockMoveDialog from '@/components/dock/DockMoveDialog';
 import DockCardSlot from '@/components/dock/DockCardSlot';
 import DockPinProvider from '@/components/dock/DockPinContext';
 import DockWritingStore from '@/components/dock/DockWritingStore';
@@ -61,7 +62,9 @@ export default function DockDeck({user, disabled, preview = false, children}) {
   const openModal=type => {if (!shown) setOpen(true);setModal(type);};
   const columns=width>=930 ? 3 : width>=535 ? 2 : 1;
   const cardProps=card => ({card,user,navigate,openModal,shortcuts:prefs.shortcuts,history,arrangeHandle:handle(card.id),panelOpen:shown || card.place==='float',columnWidth:(width-12*(columns+1))/columns,patch:update=>actions.patch(card.id,update),remove:()=>actions.remove(card.id),shift:dir=>actions.shift(card.id,dir),
+    onMoveFolder:prefs.decks.length > 1 ? trigger => setModal({ moveId:card.id, trigger }) : undefined,
     onFloat:() => actions.float(card.id), onReturn:() => { actions.patch(card.id,{place:'deck'}); if (card.deck!==deck.id) commit({active:card.deck}); setOpen(true); } });
+  const movingCard = modal?.moveId ? deckCards.find(card => card.id === modal.moveId) : null;
   const captureAvailable = prefs.cards.some(card => card.type === 'Clipboard History' && card.place !== 'drawer');
   return <DockPinProvider {...{prefs, commit, disabled, revealCard}}>{children}<DockWritingStore userId={user.id} captureAvailable={captureAvailable} writable={!disabled && !preview}><div className="dock-root" hidden={disabled} data-dock-open={shown}>
     {!shown && <Button ref={launcher} className="dock-launcher" data-dock-handle={compactLauncher ? '' : undefined} variant="outline" onClick={() => setOpen(true)} aria-label="Open Dock Deck" title="Open Dock Deck" aria-controls="dock-deck" aria-expanded={false}><DockDeckIcon />{!compactLauncher && prefs.label && 'Dock Deck'}</Button>}
@@ -82,6 +85,11 @@ export default function DockDeck({user, disabled, preview = false, children}) {
       if (!floating && (card.place !== 'deck' || !visited.current.has(card.deck))) return null;
       return <DockCardSlot key={card.id} target={floating ? floatingTools : grid} floating={floating} visible={!disabled && (floating || card.deck===deck.id)} order={order} {...cardProps(card)} />;
     })}
-    {shown && modal && <DockDialogs key={modal} {...{modal,prefs,deck,actions,revealCard}} cards={prefs.cards} close={()=>setModal(null)} />}
+    {shown && typeof modal === 'string' && <DockDialogs key={modal} {...{modal,prefs,deck,actions,revealCard}} cards={prefs.cards} close={()=>setModal(null)} />}
+    {shown && movingCard && <DockMoveDialog key={movingCard.id} card={movingCard} folders={prefs.decks} trigger={modal.trigger} onClose={() => setModal(null)} onMove={destination => {
+      actions.restore(movingCard.id, destination, true);
+      setModal(null);
+      revealCard(movingCard.id);
+    }} />}
   </div></DockWritingStore></DockPinProvider>;
 }
