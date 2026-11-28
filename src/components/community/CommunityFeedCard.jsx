@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from '@/components/messages/EmojiPicker';
@@ -33,7 +32,6 @@ export default function CommunityFeedCard({ maxHeight = '400px', postsLimit, onS
   const [videoUploadProgress, setVideoUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
   const videoInputRef = useRef(null);
-  const scrollRef = useRef(null);
   const queryClient = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -286,12 +284,6 @@ export default function CommunityFeedCard({ maxHeight = '400px', postsLimit, onS
     return allComments.filter((c) => c.post_id === postId);
   };
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [posts]);
-
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-4">
@@ -443,7 +435,7 @@ export default function CommunityFeedCard({ maxHeight = '400px', postsLimit, onS
 
         {/* Feed */}
         {postsLimit && <Button size="sm" variant="outline" disabled={feed.isFetching} onClick={() => feed.refetch()}>{feed.isFetching ? 'Refreshing…' : 'Refresh feed'}</Button>}
-        <ScrollArea style={{ maxHeight }} ref={scrollRef}>
+        <div role="region" aria-label="Community posts" tabIndex={0} style={{ maxHeight }} className="overflow-x-hidden overflow-y-auto focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2">
           <div className="space-y-3 pr-2">
             {postsLimit && feed.isError ? <p role="alert">Could not load the feed. Try refreshing.</p> : postsLoading ? (
               <div className="text-center py-8 text-slate-400">
@@ -677,7 +669,7 @@ export default function CommunityFeedCard({ maxHeight = '400px', postsLimit, onS
               })
             )}
           </div>
-        </ScrollArea>
+        </div>
         {postsLimit && feed.data?.has_more && <Button size="sm" variant="outline" onClick={() => onShowMore(postsLimit + 5)}>Show more</Button>}
       </CardContent>
     </Card>
