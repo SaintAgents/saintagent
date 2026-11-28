@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -9,6 +9,17 @@ export const GoldFlakeContext = createContext(null);
 export default function GoldFlakeProvider({ user, disabled, children }) {
   const key = `gold-flakes:${user.id}`;
   const [view, setView] = useState(() => { const p = getProgress(key); return { count: p.clicks.length, status: p.status }; });
+  const warningKey = `${key}:warnings-muted`;
+  const [warningsMuted, setWarningsMuted] = useState(() => {
+    try { return localStorage.getItem(warningKey) === '1'; } catch { return false; }
+  });
+  const mutedRef = useRef(warningsMuted);
+  const setWarningMute = useCallback(muted => {
+    mutedRef.current = muted;
+    setWarningsMuted(muted);
+    try { localStorage.setItem(warningKey, muted ? '1' : '0'); } catch { /* applies for this session */ }
+    if (muted) toast.dismiss('gold-flake-warning');
+  }, [warningKey]);
   const queryClient = useQueryClient();
   useEffect(() => {
     if (disabled) return;
@@ -16,9 +27,13 @@ export default function GoldFlakeProvider({ user, disabled, children }) {
     let p = getProgress(key);
     const save = next => { p = next; saveProgress(key, p); if (live) setView({ count: p.clicks.length, status: p.status }); };
     const warn = (message, now = Date.now()) => {
-      if (now - lastWarning < 12000 || !live) return;
+      if (mutedRef.current || now - lastWarning < 12000 || !live) return;
       lastWarning = now;
-      toast.warning('Gold Flakes: click not counted', { description: message, id: 'gold-flake-warning' });
+      toast.warning('Gold Flakes: click not counted', {
+        description: message,
+        id: 'gold-flake-warning',
+        action: { label: 'Mute warnings', onClick: () => setWarningMute(true) },
+      });
     };
     const sync = async () => {
       if (busy || Date.now() < retryAt || p.status === 'limit') return;
@@ -83,6 +98,6 @@ export default function GoldFlakeProvider({ user, disabled, children }) {
     };
     document.addEventListener('click', onClick, true);
     return () => { live = false; document.removeEventListener('click', onClick, true); };
-  }, [key, disabled, queryClient, user.email]);
-  return <GoldFlakeContext.Provider value={disabled ? null : view}>{children}</GoldFlakeContext.Provider>;
+  }, [key, disabled, queryClient, user.email, setWarningMute]);
+  return <GoldFlakeContext.Provider value={disabled ? null : { ...view, warningsMuted, setWarningMute }}>{children}</GoldFlakeContext.Provider>;
 }

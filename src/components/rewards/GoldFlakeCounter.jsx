@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Coins } from 'lucide-react';
+import { Bell, BellOff, Coins } from 'lucide-react';
 import { GoldFlakeContext } from '@/components/rewards/GoldFlakeProvider';
 import { GOAL } from '@/components/rewards/goldFlakeClicks';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -7,7 +7,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 export default function GoldFlakeCounter() {
   const progress = useContext(GoldFlakeContext);
   if (!progress) return null;
-  const { count, status } = progress;
+  const { count, status, warningsMuted, setWarningMute } = progress;
+  const WarningIcon = warningsMuted ? BellOff : Bell;
   const progressText = status === 'limit' ? 'Daily limit reached' : status === 'processing' ? 'Reward pending' : `${count}/${GOAL}`;
   return <div data-gold-flakes="" className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 px-1 text-xs font-medium text-foreground">
     <span className="inline-flex items-center gap-1">
@@ -23,6 +24,10 @@ export default function GoldFlakeCounter() {
         <p>Gold Flakes are small GGG rewards you earn by using SaintAgent. At {GOAL} qualifying clicks, 0.045 GGG is added to your balance automatically.</p>
         <p>Use buttons, links, and other controls as you normally would. Empty-space clicks and rapid or excessive repeats don’t count.</p>
         <p>You can earn up to 10 rewards per day.</p>
+        <button type="button" onClick={() => setWarningMute(!warningsMuted)} className="flex min-h-11 w-full items-center gap-2 rounded-md border border-border bg-muted px-2 text-left font-medium">
+          <WarningIcon aria-hidden="true" className="size-4 shrink-0" />
+          {warningsMuted ? 'Turn click warnings back on' : 'Mute click warnings'}
+        </button>
       </PopoverContent>
     </Popover>
   </div>;
