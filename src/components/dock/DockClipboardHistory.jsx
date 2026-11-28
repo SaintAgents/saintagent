@@ -10,12 +10,12 @@ export default function DockClipboardHistory() {
   }
   if (!writable) return <p>Open the Dock outside the tour to use Clipboard History.</p>;
   return <div className="dock-added-widget session-record-block grid gap-2">
-    <p>Keep up to 30 text clips in this browser. Capture saves selected page text copied in SaintAgent, but skips form fields. Paste below to save other clips.</p>
+    <p>Keep up to 30 text clips in this browser. Capture saves selected page text you copy in SaintAgent. It skips form fields and doesn’t record Copy buttons or copies from other apps. Paste below to save those clips.</p>
     <div className="flex flex-wrap gap-2">
       <button type="button" aria-pressed={capture} onClick={() => setCapture(!capture)}>{capture ? 'Pause capture' : 'Enable capture'}</button>
       <button type="button" disabled={!history.length} onClick={() => { if (window.confirm('Clear all saved clipboard clips?')) { saveHistory([]); setStatus('History cleared.'); } }}>Clear history</button>
     </div>
-    <input value="" readOnly aria-label="Paste a clip to save" placeholder="Paste a clip here to save it" onPaste={event => {
+    <input value="" onChange={() => {}} aria-label="Paste a clip to save" placeholder="Paste a clip here to save it" onPaste={event => {
       event.preventDefault();
       const text = event.clipboardData.getData('text/plain');
       if (!text.trim()) return;

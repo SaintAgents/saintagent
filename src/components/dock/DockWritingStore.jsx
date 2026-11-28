@@ -38,6 +38,11 @@ export default function DockWritingStore({ userId, captureAvailable, writable, c
       if (!event.isTrusted || inExcluded(event.target) || inExcluded(document.activeElement)) return;
       const selection = window.getSelection();
       if (!selection || selection.isCollapsed || inExcluded(selection.anchorNode) || inExcluded(selection.focusNode)) return;
+      for (let i = 0; i < selection.rangeCount; i++) {
+        const range = selection.getRangeAt(i);
+        const root = range.commonAncestorContainer;
+        if (root.querySelectorAll && Array.from(root.querySelectorAll(excluded)).some(node => range.intersectsNode(node))) return;
+      }
       addCopy(selection.toString());
     };
     document.addEventListener('copy', onCopy);
