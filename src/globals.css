@@ -1962,9 +1962,9 @@ html[data-theme='dark'] [data-sidebar] {
     padding: 1.25rem !important;
   }
   
-  /* Larger sidebar for tablet */
+  /* Larger expanded sidebar for tablet; keep the collapsed rail aligned with the header. */
   aside,
-  [data-sidebar] {
+  [data-sidebar]:not([data-sidebar-collapsed]) {
     width: 280px !important;
   }
   

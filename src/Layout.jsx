@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from '@/lib/AuthContext';
 import { isSharedCirclePost } from '@/lib/authReturnTo';
 import Sidebar from '@/components/hud/Sidebar';
-import { clampSidebarWidth, DEFAULT_SIDEBAR_WIDTH } from '@/components/hud/SidebarResizeHandle';
+import { clampSidebarWidth, COLLAPSED_SIDEBAR_WIDTH, DEFAULT_SIDEBAR_WIDTH } from '@/components/hud/SidebarResizeHandle';
 import TopBar from '@/components/hud/TopBar';
 import QuickCreateModal from '@/components/hud/QuickCreateModal';
 import CommandCanopy from '@/components/canopy/CommandCanopy';
@@ -650,7 +650,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
   return (
     <LiveActivity key={currentUser.id} user={currentUser} profile={profile} profileReady={profileReady} page={currentPageName} disabled={tourPreview}>
     <div className="relative min-h-screen bg-slate-50 [&[data-nav-resizing]_.nav-width-aware]:duration-0" data-bg-effect={bgEffect}
-      data-nav-resizing={sidebarResizing ? '' : undefined} style={{ '--expanded-nav-width': `${sidebarWidth}px` }}>
+      data-nav-resizing={sidebarResizing ? '' : undefined} style={{ '--expanded-nav-width': `${sidebarWidth}px`, '--collapsed-nav-width': `${COLLAPSED_SIDEBAR_WIDTH}px` }}>
       {currentPageName !== 'G3Dex' && currentPageName !== 'GGGCrypto' && <CommandCanopy key={currentUser.id} user={currentUser} profile={profile} sidebarCollapsed={sidebarCollapsed} sidebarWidth={sidebarWidth} topbarCollapsed={topbarCollapsed} notifications={notifications} onSearch={query => { setCanopySearch(query || ''); setSearchOpen(true); }} onCreate={() => setQuickCreateOpen(true)} onToolbarControlChange={setCanopyControl} />}
       <LightThemeBackgroundRotator theme={theme} bgEffect={bgEffect} />
       <CanvasBackgrounds theme={theme} bgEffect={bgEffect} rankCode={rankCode} />
@@ -1890,7 +1890,7 @@ function AuthenticatedLayout({ children, currentPageName }) {
               "nav-width-aware min-h-screen transition-all duration-300",
               (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
                 ? "pl-0"
-                : sidebarCollapsed ? "pl-0 md:pl-16" : "pl-0 md:pl-16 lg:pl-[var(--expanded-nav-width)]",
+                : sidebarCollapsed ? "pl-0 md:pl-[var(--collapsed-nav-width)]" : "pl-0 md:pl-16 lg:pl-[var(--expanded-nav-width)]",
               "pr-0",
               (currentPageName === 'G3Dex' || currentPageName === 'GGGCrypto')
                 ? "pt-0"

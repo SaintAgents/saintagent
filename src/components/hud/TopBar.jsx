@@ -353,7 +353,7 @@ export default function TopBar({
     <header id="app-topbar" className={cn(
       "fixed top-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 flex items-center gap-2 md:gap-3 px-2 md:px-4 transition-all duration-300 scrollbar-hide",
       "nav-width-aware left-0",
-      sidebarCollapsed ? "md:left-16" : "md:left-64 lg:left-[var(--expanded-nav-width)]",
+      sidebarCollapsed ? "md:left-[var(--collapsed-nav-width)]" : "md:left-64 lg:left-[var(--expanded-nav-width)]",
       isCollapsed ? "h-10" : "h-14"
     )} style={{ zIndex: 9999, overflowX: 'auto', overflowY: 'visible' }}>
       <Button asChild variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-primary sm:hidden" title="Global Impact Dashboard" aria-label="Global Impact Dashboard">

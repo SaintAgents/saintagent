@@ -1155,12 +1155,12 @@ export default function Sidebar({
       "bg-white border-slate-200",
       "dark:bg-[#050505] dark:border-[rgba(0,255,136,0.2)]",
       "[data-theme='hacker']_&:bg-black [data-theme='hacker']_&:border-[#00ff00]",
-      isCollapsed ? "w-16" : "w-64 lg:w-[var(--expanded-nav-width)]",
+      isCollapsed ? "w-[var(--collapsed-nav-width)]" : "w-64 lg:w-[var(--expanded-nav-width)]",
       "hidden md:flex" // Hide sidebar on mobile
-    )} data-sidebar>
+    )} data-sidebar data-sidebar-collapsed={isCollapsed ? '' : undefined}>
       {!isCollapsed && onResize && <SidebarResizeHandle width={width} onResize={onResize} onDraggingChange={onResizeDraggingChange} />}
       {/* Logo */}
-      <div data-sidebar-brand className={cn("flex items-center justify-between px-2 py-2 border-b border-slate-100", isCollapsed && "px-1")}>
+      <div data-sidebar-brand className={cn("flex items-center justify-between py-2 border-b border-slate-100", isCollapsed ? "px-px" : "px-2")}>
         <div
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => {

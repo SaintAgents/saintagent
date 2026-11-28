@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 const MIN_WIDTH = 220;
 const MAX_WIDTH = 400;
 export const DEFAULT_SIDEBAR_WIDTH = 256;
+export const COLLAPSED_SIDEBAR_WIDTH = 84;
 export const clampSidebarWidth = width => Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, width));
 
 export default function SidebarResizeHandle({ width, onResize, onDraggingChange }) {

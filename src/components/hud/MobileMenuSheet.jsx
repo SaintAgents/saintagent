@@ -264,7 +264,7 @@ export default function MobileMenuSheet({ open, onOpenChange, theme: currentThem
         >
           <div className="absolute inset-0 bg-black/50" />
           <div 
-            className="absolute left-0 top-0 bottom-0 w-16 bg-white dark:bg-[#0a0a0a] border-r border-slate-200 dark:border-[#00ff88]/20 overflow-y-auto py-2"
+            className="absolute left-0 top-0 bottom-0 w-[var(--collapsed-nav-width)] bg-white dark:bg-[#0a0a0a] border-r border-slate-200 dark:border-[#00ff88]/20 overflow-y-auto py-2"
             onClick={(e) => e.stopPropagation()}
           >
             <SidebarQuickAccess catalog={ALL_NAV_ITEMS} leaderTier={leaderTier} compact onNavigate={() => setLeftSidebarOpen(false)} />

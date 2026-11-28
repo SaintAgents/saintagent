@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { COLLAPSED_SIDEBAR_WIDTH } from '@/components/hud/SidebarResizeHandle';
 
 const sessions = new Map();
 const stepDown = { split:'peek', full:'peek', peek:'closed', closed:'closed' };
@@ -14,7 +15,7 @@ export default function useCanopyDeployment(userId, pathname, settings, sidebarC
   const root = useRef(null);
   const desktop = viewport >= 768;
   const enabled = mode !== 'closed';
-  const sidebar = sidebarCollapsed ? 64 : viewport >= 1024 ? sidebarWidth : 256;
+  const sidebar = sidebarCollapsed ? COLLAPSED_SIDEBAR_WIDTH : viewport >= 1024 ? sidebarWidth : 256;
   const available = viewport - Math.max(sidebar, dock.left) - dock.right;
   const split = draft.split ?? settings.split;
   const splitWidth = Math.max(0, Math.min(split, available - (available > 580 ? 320 : 220)));
