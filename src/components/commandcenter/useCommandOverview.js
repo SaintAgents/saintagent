@@ -13,7 +13,7 @@ export function useCommandOverview(user) {
   const [now,setNow] = useState(() => new Date());
   useEffect(() => { const timer = setInterval(() => setNow(new Date()), 15000); return () => clearInterval(timer); }, []);
   const day = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  const d = { day, start:new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString(), end:new Date(now.getFullYear(),now.getMonth(),now.getDate()+1).toISOString() };
+  const d = { day, now:now.toISOString(), start:new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString(), end:new Date(now.getFullYear(),now.getMonth(),now.getDate()+1).toISOString() };
   const results = useQueries({ queries:commandSources.map(source => ({
     queryKey:['command-overview',user.id,source.id,day], staleTime:60000, retry:false,
     queryFn:async () => {

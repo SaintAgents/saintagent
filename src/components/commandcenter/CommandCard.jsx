@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Pin } from 'lucide-react';
+import { ArrowUpRight, Pin, Sparkles } from 'lucide-react';
 import { commandDate } from '@/components/commandcenter/useCommandOverview';
 export default function CommandCard({ source, result, card, expanded }) {
   const { Icon } = source;
@@ -19,6 +19,8 @@ export default function CommandCard({ source, result, card, expanded }) {
       {rows?.length > 0 && (result.data.more || rows.length > (expanded ? 8 : 3)) && <p><small>Open the workspace for more.</small></p>}
       {result.dataUpdatedAt > 0 && rows && <p><small>Checked {commandDate(new Date(result.dataUpdatedAt).toISOString())}</small></p>}
     </>}
-    <Link className="cc-action" to={source.path}>Open workspace <ArrowUpRight size={15} /></Link>
+    <div className="cc-actions"><Link className="cc-action" to={source.path}>Open workspace <ArrowUpRight size={15} /></Link>
+      {!card?.collapsed && <Link className="cc-action" to="/MyGuide" state={{ commandQuestion:`Help me review ${source.label.toLowerCase()} in My Command Center (${source.source.toLowerCase()}). ${result.data?.total == null ? '' : `The overview shows ${result.data.total} ${source.metric?.toLowerCase() || 'items'}. `}Suggest a next step for me to review.` }}><Sparkles size={15} /> Ask My Guide</Link>}
+    </div>
   </article>;
 }

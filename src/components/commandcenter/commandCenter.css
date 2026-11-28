@@ -36,7 +36,9 @@ html body [data-command-center] .cc-primary { background:var(--cc-accent) !impor
 .cc-actions { display:flex; align-items:center; flex-wrap:wrap; gap:.45rem; }
 .cc-setting-row { padding:.75rem; margin:.45rem 0; }
 .cc-control:disabled { opacity:.5; }
-.cc-control[aria-pressed='true'] { text-decoration:underline; text-underline-offset:.24em; }
+html body [data-command-center] .cc-control[aria-pressed='true'] { background:var(--cc-glow) !important; border-color:var(--cc-accent) !important; font-weight:700; text-decoration:underline; text-underline-offset:.24em; }
+html body [data-command-center] .cc-control option { background:var(--cc-pane) !important; color:var(--cc-ink) !important; }
+.cc-hero-copy { overflow-wrap:anywhere; }
 [data-command-center] :is(a,button,select):focus-visible { outline:2px solid var(--cc-accent); outline-offset:2px; }
 [data-command-center] :is(.cc-action,.cc-control,.cc-strip a) { transition:box-shadow .18s ease; }
 [data-command-center] :is(.cc-action,.cc-control,.cc-strip a):hover { box-shadow:0 0 0 1px var(--cc-accent); }
