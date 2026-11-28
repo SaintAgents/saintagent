@@ -19,6 +19,7 @@ import SidebarLeaderboard from '@/components/hud/SidebarLeaderboard';
 import SidebarPageSearch from '@/components/hud/SidebarPageSearch';
 import SidebarNavFooter from '@/components/hud/SidebarNavFooter';
 import SidebarQuickAccess from '@/components/hud/SidebarQuickAccess';
+import SidebarGroupFlyout from '@/components/hud/SidebarGroupFlyout';
 import useSidebarNavigation from '@/components/hud/useSidebarNavigation';
 import useSidebarSectionSizes from '@/components/hud/useSidebarSectionSizes';
 import SidebarSectionSizer from '@/components/hud/SidebarSectionSizer';
@@ -222,8 +223,10 @@ export default function Sidebar({
 
   const [navPopupOpen, setNavPopupOpen] = useState(false);
   const [presencePopupOpen, setPresencePopupOpen] = useState(false);
-  const { mode, navOpen, setNavOpen, expandedGroups, toggleGroup, openCompactGroup, changeNavMode } =
+  const [openGroup, setOpenGroup] = useState(null);
+  const { mode, navOpen, setNavOpen, expandedGroups, toggleGroup, changeNavMode } =
     useSidebarNavigation({ groups: NAV_GROUPS, currentPage, startNavCollapsed, onToggle });
+  React.useEffect(() => setOpenGroup(null), [isCollapsed, navOpen, currentPage]);
   const sectionSize = useSidebarSectionSizes(isCollapsed);
   const [sectionOverrides, setSectionOverrides] = useState({});
   const sectionsCollapsed = mode === 'collapsed';
@@ -530,63 +533,7 @@ export default function Sidebar({
                 const showExpanded = !isCollapsed || inPopup;
                 const GroupIcon = group.icon;
 
-                // Collapsed sidebar — show only group icon
-                if (!showExpanded) {
-                  return (
-                    <Tooltip key={group.key}>
-                      <TooltipTrigger asChild>
-                        <button
-                          data-tour-nav-group={group.key}
-                          aria-label={`Open ${group.label} navigation`}
-                          onClick={() => openCompactGroup(group.key)}
-                          className={cn(
-                            "w-full flex items-center justify-center p-2 rounded-lg transition-colors relative",
-                            hasActivePage ? "bg-violet-100 text-violet-600" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-                          )}
-                        >
-                          <GroupIcon className="w-5 h-5" />
-                          {hasActivePage && <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-violet-500 rounded-full" />}
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent side="right">
-                        <p className="text-sm font-medium">{group.label}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  );
-                }
-
-                return (
-                  <div key={group.key} className={cn("mt-1", group.isTreasury && "mt-2")}>
-                    {/* Treasury gets a visual divider */}
-                    {group.isTreasury && <div className="mx-2 mb-1.5 border-t border-amber-200" />}
-                    <button
-                      data-tour-nav-group={group.key}
-                      aria-expanded={isGroupExpanded}
-                      onClick={() => toggleGroup(group.key)}
-                      className={cn(
-                        "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors text-left",
-                        group.isTreasury
-                          ? "hover:bg-amber-50"
-                          : "hover:bg-slate-50",
-                        hasActivePage && !isGroupExpanded && (group.isTreasury ? "bg-amber-50" : "bg-violet-50/50")
-                      )}
-                    >
-                      <GroupIcon className={cn(
-                        "w-3.5 h-3.5 shrink-0",
-                        group.isTreasury ? "text-amber-600" : hasActivePage ? "text-violet-500" : "text-slate-400"
-                      )} />
-                      <span className={cn(
-                        "text-[10px] font-semibold uppercase tracking-wider flex-1",
-                        group.isTreasury ? "text-amber-700" : "text-slate-500"
-                      )}>
-                        {group.label}
-                      </span>
-                      {isGroupExpanded
-                        ? <ChevronUp className="w-3 h-3 text-slate-400" />
-                        : <ChevronDown className="w-3 h-3 text-slate-400" />}
-                    </button>
-
-                    {isGroupExpanded && (
+                const renderGroupItems = (closeFlyout) => (
                       <div className={cn(
                         "space-y-0.5 pl-1 mt-0.5",
                         group.isTreasury && "bg-amber-50/40 rounded-lg py-1 -mx-0.5 px-1.5"
@@ -604,6 +551,7 @@ export default function Sidebar({
                               to={isLocked ? '#' : createPageUrl(item.page)}
                               onClick={(e) => {
                                 if (isLocked) { e.preventDefault(); return; }
+                                closeFlyout?.();
                                 if (item.action === 'openGallery') {
                                   e.preventDefault();
                                   document.dispatchEvent(new CustomEvent('openHeroGallery', { detail: { startIndex: 0 } }));
@@ -633,6 +581,7 @@ export default function Sidebar({
                             </Link>
                           );
 
+                          if (closeFlyout) return navLink;
                           return (
                             <Tooltip key={item.id}>
                               <TooltipTrigger asChild>{navLink}</TooltipTrigger>
@@ -643,13 +592,45 @@ export default function Sidebar({
                             </Tooltip>
                           );
                         })}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                        </div>
+                        );
+                        if (!showExpanded) return <SidebarGroupFlyout key={group.key} group={{ ...group, label: t(group.label) }} openGroup={openGroup} setOpenGroup={setOpenGroup} active={hasActivePage}>
+                        {renderGroupItems}
+                        </SidebarGroupFlyout>;
 
-              {/* Settings — always at bottom */}
+                        return (
+                        <div key={group.key} className={cn("mt-1", group.isTreasury && "mt-2")}>
+                        {group.isTreasury && <div className="mx-2 mb-1.5 border-t border-amber-200" />}
+                        <button
+                        data-tour-nav-group={group.key}
+                        aria-expanded={isGroupExpanded}
+                        onClick={() => toggleGroup(group.key)}
+                        className={cn(
+                        "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors text-left",
+                        group.isTreasury ? "hover:bg-amber-50" : "hover:bg-slate-50",
+                        hasActivePage && !isGroupExpanded && (group.isTreasury ? "bg-amber-50" : "bg-violet-50/50")
+                        )}
+                        >
+                        <GroupIcon className={cn(
+                        "w-3.5 h-3.5 shrink-0",
+                        group.isTreasury ? "text-amber-600" : hasActivePage ? "text-violet-500" : "text-slate-400"
+                        )} />
+                        <span className={cn(
+                        "text-[10px] font-semibold uppercase tracking-wider flex-1",
+                        group.isTreasury ? "text-amber-700" : "text-slate-500"
+                        )}>
+                        {group.label}
+                        </span>
+                        {isGroupExpanded
+                        ? <ChevronUp className="w-3 h-3 text-slate-400" />
+                        : <ChevronDown className="w-3 h-3 text-slate-400" />}
+                        </button>
+                        {isGroupExpanded && renderGroupItems()}
+                        </div>
+                        );
+                        })}
+
+                        {/* Settings — always at bottom */}
               {(() => {
                 const item = ALL_NAV_ITEMS.settings;
                 const isActive = currentPage === item.id;

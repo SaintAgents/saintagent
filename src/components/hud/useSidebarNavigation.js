@@ -16,10 +16,7 @@ export default function useSidebarNavigation({ groups, currentPage, startNavColl
   useEffect(() => setOverrides({}), [currentPage]);
 
   const toggleGroup = key => setOverrides(prev => ({ ...prev, [key]: !(prev[key] ?? defaults[key]) }));
-  const openCompactGroup = key => {
-    setOverrides(prev => ({ ...prev, [key]: true }));
-    onToggle?.();
-  };
+
   const changeNavMode = (value, compact = false) => {
     setMode(value);
     setOverrides({});
@@ -29,5 +26,5 @@ export default function useSidebarNavigation({ groups, currentPage, startNavColl
       try { sessionStorage.setItem(storageKey, value); } catch {}
     }
   };
-  return { mode, navOpen, setNavOpen, expandedGroups: { ...defaults, ...overrides }, toggleGroup, openCompactGroup, changeNavMode };
+  return { mode, navOpen, setNavOpen, expandedGroups: { ...defaults, ...overrides }, toggleGroup, changeNavMode };
 }
