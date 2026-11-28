@@ -108,6 +108,45 @@ SaintTube Videos|Vídeos de SaintTube|Vidéos SaintTube|SaintTube-Videos|Vídeos
 New|Nuevo|Nouveau|Neu|Novo|新着
 Live|En directo|En direct|Live|Ao vivo|ライブ
 Sign out|Cerrar sesión|Se déconnecter|Abmelden|Sair|ログアウト
+Dashboard|Panel de control|Tableau de bord|Übersicht|Painel|ダッシュボード
+Rank|Rango|Rang|Rang|Nível|ランク
+Reach|Alcance|Portée|Reichweite|Alcance|リーチ
+Earned|Ganancias|Gains|Verdienst|Ganhos|獲得額
+Theme|Tema|Thème|Design|Tema|テーマ
+Loading...|Cargando…|Chargement…|Wird geladen…|Carregando…|読み込み中…
+My Guide|Mi guía|Mon guide|Mein Leitfaden|Meu guia|マイガイド
+Global Impact Dashboard|Panel de impacto global|Tableau de bord de l’impact mondial|Übersicht zur globalen Wirkung|Painel de impacto global|グローバルインパクトダッシュボード
+Quick access|Acceso rápido|Accès rapide|Schnellzugriff|Acesso rápido|クイックアクセス
+Manage quick access|Gestionar el acceso rápido|Gérer l’accès rapide|Schnellzugriff verwalten|Gerenciar o acesso rápido|クイックアクセスを管理
+Member Profile|Perfil de miembro|Profil de membre|Mitgliederprofil|Perfil de membro|メンバープロフィール
+7-day welcome course|Curso de bienvenida de 7 días|Cours de bienvenue sur 7 jours|7-tägiger Einführungskurs|Curso de boas-vindas de 7 dias|7日間のウェルカムコース
+Command Deck Overview · Full screen|Vista general del centro de mando · Pantalla completa|Vue d’ensemble du centre de commande · Plein écran|Überblick über die Kommandozentrale · Vollbild|Visão geral da central de comando · Tela cheia|司令デッキの概要 · 全画面
+Start with the full-screen overview or choose any topic tour. Read or listen at your own pace.|Empieza con la vista general a pantalla completa o elige un recorrido temático. Lee o escucha a tu ritmo.|Commencez par l’aperçu en plein écran ou choisissez une visite thématique. Lisez ou écoutez à votre rythme.|Beginne mit der Vollbildübersicht oder wähle eine Thementour. Lies oder höre in deinem eigenen Tempo.|Comece pela visão geral em tela cheia ou escolha um tour temático. Leia ou ouça no seu ritmo.|全画面の概要から始めるか、テーマ別ツアーを選んでください。自分のペースで読んだり聞いたりできます。
+Hacker|Hacker|Hacker|Hacker|Hacker|ハッカー
+Followers|Seguidores|Abonnés|Follower|Seguidores|フォロワー
+Following|Siguiendo|Abonnements|Gefolgt|Seguindo|フォロー中
+AI Discover|Descubrir con IA|Découvrir avec l’IA|Mit KI entdecken|Descobrir com IA|AIで発見
+Synchronicity Engine|Motor de sincronicidad|Moteur de synchronicité|Synchronizitäts-Engine|Motor de sincronicidade|シンクロニシティエンジン
+Deep Disclosure Podcast|Pódcast Deep Disclosure|Podcast Deep Disclosure|Deep Disclosure-Podcast|Podcast Deep Disclosure|Deep Disclosure ポッドキャスト
+Saint Intelligence|Inteligencia Saint|Intelligence Saint|Saint-Intelligenz|Inteligência Saint|セイント・インテリジェンス
+Top GGG Mission|Misión GGG destacada|Mission GGG à la une|Top-GGG-Mission|Missão GGG em destaque|注目のGGGミッション
+Learn about {title}|Más sobre {title}|En savoir plus : {title}|Mehr zu {title}|Saiba mais sobre {title}|{title}について詳しく
+The Basics|Lo básico|Les bases|Die Grundlagen|O básico|基本
+Discover SaintAgent|Descubre SaintAgent|Découvrir SaintAgent|SaintAgent entdecken|Descubra o SaintAgent|SaintAgentを知る
+Meet and Connect|Conoce y conecta|Rencontrer et échanger|Kennenlernen und vernetzen|Conheça e conecte-se|出会いとつながり
+Missions, Quests & Rewards|Misiones, desafíos y recompensas|Missions, quêtes et récompenses|Missionen, Quests und Belohnungen|Missões, jornadas e recompensas|ミッション、クエスト、報酬
+Build and Manage Work|Crea y gestiona tu trabajo|Créer et gérer son travail|Arbeit planen und verwalten|Crie e gerencie seu trabalho|作業の作成と管理
+Create, Offer & Share|Crea, ofrece y comparte|Créer, proposer et partager|Erstellen, anbieten und teilen|Crie, ofereça e compartilhe|作成、提供、共有
+Use the Advanced Tools|Usa las herramientas avanzadas|Utiliser les outils avancés|Erweiterte Werkzeuge nutzen|Use as ferramentas avançadas|高度なツールを使う
+What’s New Walkthrough|Recorrido por las novedades|Visite des nouveautés|Tour durch die Neuerungen|Tour pelas novidades|新機能の案内
+Play {title}|Reproducir: {title}|Lancer : {title}|Abspielen: {title}|Reproduzir: {title}|{title}を再生
+Replay {title}|Repetir: {title}|Rejouer : {title}|Wiederholen: {title}|Repetir: {title}|{title}をもう一度見る
+Resume {title}|Continuar: {title}|Reprendre : {title}|Fortsetzen: {title}|Continuar: {title}|{title}を再開
+Start {title}|Iniciar: {title}|Démarrer : {title}|Starten: {title}|Iniciar: {title}|{title}を開始
+Tour {number}: {title}|Recorrido {number}: {title}|Visite {number} : {title}|Tour {number}: {title}|Tour {number}: {title}|ツアー{number}：{title}
+Completed; select to replay|Completado; selecciona para repetir|Terminé ; sélectionner pour rejouer|Abgeschlossen; zum Wiederholen auswählen|Concluído; selecione para repetir|完了。選択してもう一度見る
+Series complete|Serie completada|Série terminée|Reihe abgeschlossen|Série concluída|シリーズ完了
+{completed} of {total} tours finished|{completed} de {total} recorridos completados|{completed} visites terminées sur {total}|{completed} von {total} Touren abgeschlossen|{completed} de {total} tours concluídos|全{total}件中{completed}件のツアーが完了
 `;
 
 export default new Map(rows.trim().split('\n').map(row => {

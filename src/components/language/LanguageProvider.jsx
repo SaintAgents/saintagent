@@ -29,7 +29,10 @@ export default function LanguageProvider({ children }) {
   const value = useMemo(() => ({
     language,
     setLanguage,
-    t: text => translations.get(text)?.[language] ?? text,
+    t: (text, values) => {
+      const label = translations.get(text)?.[language] ?? text;
+      return values ? label.replace(/\{(\w+)\}/g, (match, key) => values[key] ?? match) : label;
+    },
   }), [language]);
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

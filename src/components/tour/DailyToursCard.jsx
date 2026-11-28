@@ -8,6 +8,7 @@ import { DAILY_TOURS } from '@/components/tour/dailyTours';
 import DailyTourDialog from '@/components/tour/DailyTourDialog';
 import useDailyTours from '@/components/tour/useDailyTours';
 import { isTourPreview } from '@/components/tour/tourPreviewTargets';
+import { useLanguage } from '@/components/language/LanguageProvider';
 
 export default function DailyToursCard({ userId, embedded = false }) {
   const [day, setDay] = useState(null);
@@ -18,6 +19,7 @@ export default function DailyToursCard({ userId, embedded = false }) {
   const trigger = useRef(null);
   const card = useRef(null);
   const { hash, key } = useLocation();
+  const { t } = useLanguage();
   useEffect(() => {
     if (embedded || hash !== '#daily-tours' || !userId) return;
     const frame = requestAnimationFrame(() => {
@@ -55,17 +57,17 @@ export default function DailyToursCard({ userId, embedded = false }) {
   return (
     <section id={embedded ? undefined : 'daily-tours'} ref={card} tabIndex={-1} data-readable-surface className="daily-tours-library relative scroll-mt-40 space-y-4 p-4 text-card-foreground" aria-label="Tour library">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <p className="text-sm text-muted-foreground">Start with the full-screen overview or choose any topic tour. Read or listen at your own pace.</p>
-        {!embedded && record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? 'Series complete' : `${completed} of ${DAILY_TOURS.length} tours finished`}</p>}
+        <p className="text-sm text-muted-foreground">{t('Start with the full-screen overview or choose any topic tour. Read or listen at your own pace.')}</p>
+        {!embedded && record && <p role="status" className="text-sm font-medium">{completed === DAILY_TOURS.length ? t('Series complete') : t('{completed} of {total} tours finished', { completed, total: DAILY_TOURS.length })}</p>}
       </div>
-      {!readOnly && !embedded && <Button type="button" variant="outline" data-welcome-course-launch onClick={() => window.dispatchEvent(new Event('open-welcome-course'))}>7-day welcome course</Button>}
-      <Button ref={overviewTrigger} type="button" variant="outline" className="h-auto min-h-10 whitespace-normal" onClick={() => setOverviewOpen(true)}><LayoutDashboard aria-hidden="true" /> Command Deck Overview · Full screen</Button>
+      {!readOnly && !embedded && <Button type="button" variant="outline" data-welcome-course-launch onClick={() => window.dispatchEvent(new Event('open-welcome-course'))}>{t('7-day welcome course')}</Button>}
+      <Button ref={overviewTrigger} type="button" variant="outline" className="h-auto min-h-10 whitespace-normal" onClick={() => setOverviewOpen(true)}><LayoutDashboard aria-hidden="true" /> {t('Command Deck Overview · Full screen')}</Button>
       {!readOnly && query.isPending ? <p role="status" className="text-sm">Loading tours…</p> : !readOnly && query.isError ? <div className="flex items-center gap-3"><p role="alert" className="text-sm">Tours couldn’t be loaded.</p><Button type="button" size="sm" variant="outline" onClick={() => query.refetch()}>Retry</Button></div> : (
         <ol className="daily-tours-grid grid grid-cols-1 gap-2">
           {DAILY_TOURS.map((tour, index) => {
             const done = !embedded && sections[index] === tour.sections.length;
             return <li key={tour.title} className="min-w-0"><Button type="button" variant="outline" className="h-full min-h-10 w-full justify-start whitespace-normal px-3 text-left" disabled={save.isPending} onClick={(event) => open(index, event)}>
-              {done ? <CheckCircle aria-label="Completed; select to replay" /> : <BookOpen aria-hidden="true" />}<span className="min-w-0 break-words">{embedded ? `Play ${tour.actionLabel || tour.title}` : tour.actionLabel ? `${done ? 'Replay' : sections[index] ? 'Resume' : 'Start'} ${tour.actionLabel}` : `Tour ${index + 1}: ${tour.title}`}{!embedded && !done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
+              {done ? <CheckCircle aria-label={t('Completed; select to replay')} /> : <BookOpen aria-hidden="true" />}<span className="min-w-0 break-words">{t(embedded ? 'Play {title}' : tour.actionLabel ? (done ? 'Replay {title}' : sections[index] ? 'Resume {title}' : 'Start {title}') : 'Tour {number}: {title}', { title: t(tour.actionLabel || tour.title), number: index + 1 })}{!embedded && !done && sections[index] > 0 ? ` (${sections[index]}/${tour.sections.length})` : ''}</span>
             </Button></li>;
           })}
         </ol>

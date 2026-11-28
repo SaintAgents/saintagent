@@ -351,7 +351,7 @@ export default function TopBar({
       sidebarCollapsed ? "md:left-[var(--collapsed-nav-width)]" : "md:left-64 lg:left-[var(--expanded-nav-width)]",
       isCollapsed ? "h-10" : "h-14"
     )} style={{ zIndex: 9999, overflowX: 'auto', overflowY: 'visible' }}>
-      <Button asChild variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-primary sm:hidden" title="Global Impact Dashboard" aria-label="Global Impact Dashboard">
+      <Button asChild variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-primary sm:hidden" title={t('Global Impact Dashboard')} aria-label={t('Global Impact Dashboard')}>
         <Link to="/GlobalImpactDashboard" aria-current={currentPageName === 'GlobalImpactDashboard' ? 'page' : undefined}><LayoutDashboard aria-hidden="true" /></Link>
       </Button>
       {currentUser && canopyControl && <Button type="button" variant="outline" size="icon" className="h-8 w-8 shrink-0 border-current text-primary md:hidden"
@@ -462,12 +462,12 @@ export default function TopBar({
                     ? "bg-white/90 shadow-sm ring-1 ring-violet-200" 
                     : "hover:bg-white/50"
                 )}
-                title={tab.label}
+                title={t(tab.label)}
                 data-tour-command-icon={tab.id === 'command' ? '' : undefined}
               >
                 <img 
                   src={iconUrl} 
-                  alt={tab.label}
+                  alt={t(tab.label)}
                   className="object-contain topbar-mode-icon w-8 h-8 md:w-9 md:h-9"
                   style={{
                     ...(currentTheme === 'hacker' ? { filter: 'grayscale(100%) brightness(1.5) sepia(100%) hue-rotate(70deg) saturate(800%)' } : {})
@@ -475,7 +475,7 @@ export default function TopBar({
                 />
                 {/* Hover tooltip with label */}
                 <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50">
-                  {tab.label}
+                  {t(tab.label)}
                 </span>
               </button>
               <button
@@ -484,7 +484,7 @@ export default function TopBar({
                   setHelpMode(tab.id);
                 }}
                 className="p-0.5 rounded-full hover:bg-slate-200 transition-colors -ml-1 opacity-0 group-hover:opacity-100"
-                title={`Learn about ${tab.label}`}
+                title={t('Learn about {title}', { title: t(tab.label) })}
               >
                 <HelpCircle className="w-3 h-3 text-slate-400 hover:text-violet-600" />
               </button>
@@ -500,7 +500,7 @@ export default function TopBar({
         mode={helpMode || 'command'}
       />
 
-      <Button asChild variant="ghost" size="icon" className="hidden h-8 w-8 shrink-0 text-primary sm:inline-flex" title="Global Impact Dashboard" aria-label="Global Impact Dashboard">
+      <Button asChild variant="ghost" size="icon" className="hidden h-8 w-8 shrink-0 text-primary sm:inline-flex" title={t('Global Impact Dashboard')} aria-label={t('Global Impact Dashboard')}>
         <Link to="/GlobalImpactDashboard" aria-current={currentPageName === 'GlobalImpactDashboard' ? 'page' : undefined}><LayoutDashboard aria-hidden="true" /></Link>
       </Button>
 
@@ -592,7 +592,7 @@ export default function TopBar({
                       >
                         <LayoutDashboard className="w-8 h-8 p-1.5 rounded-lg bg-violet-100 text-violet-600" />
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-slate-900 truncate">{page.label}</p>
+                          <p className="font-medium text-slate-900 truncate">{t(page.label)}</p>
                           <p className="text-xs text-slate-500 truncate">{page.description}</p>
                         </div>
                       </button>
@@ -711,8 +711,8 @@ export default function TopBar({
           <GlobalTimerWidget currentUser={currentUser} currentPageName={currentPageName} />
         )}
 
-        <Button asChild variant="ghost" size="icon" className="rounded-xl shrink-0" title="My Guide">
-          <Link to="/MyGuide" aria-label="My Guide" aria-current={currentPageName === 'MyGuide' ? 'page' : undefined}><span aria-hidden="true" className="text-lg leading-none">🔮</span></Link>
+        <Button asChild variant="ghost" size="icon" className="rounded-xl shrink-0" title={t('My Guide')}>
+          <Link to="/MyGuide" aria-label={t('My Guide')} aria-current={currentPageName === 'MyGuide' ? 'page' : undefined}><span aria-hidden="true" className="text-lg leading-none">🔮</span></Link>
         </Button>
 
         {/* SaintBrowser */}

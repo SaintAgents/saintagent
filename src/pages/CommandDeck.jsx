@@ -891,7 +891,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4" />
-          <p className="text-slate-600">Loading...</p>
+          <p className="text-slate-600">{t('Loading...')}</p>
         </div>
       </div>
     );
@@ -950,7 +950,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
               <PopoverContent className="w-72 p-4" align="end" side="bottom" sideOffset={5} collisionPadding={16}>
                 <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-amber-500" />
-                  Quick Start Guide
+                  {t('Quick Start Guide')}
                 </h4>
                   <ol className="space-y-2 text-sm">
                     <li className="flex items-start gap-2"><span className="flex-shrink-0 w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 text-xs font-bold flex items-center justify-center">1</span><span className="text-slate-700 dark:text-slate-300">Complete your profile with avatar & bio</span></li>
@@ -1141,7 +1141,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                   
                   {/* Theme Radio Buttons */}
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Theme:</span>
+                    <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">{t('Theme')}:</span>
                     <label className="flex items-center gap-1.5 cursor-pointer">
                       <input
                         type="radio"
@@ -1151,7 +1151,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         onChange={() => onThemeToggle?.('light')}
                         className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
                       />
-                      <span className="text-xs text-slate-700 dark:text-slate-300">Light</span>
+                      <span className="text-xs text-slate-700 dark:text-slate-300">{t('Light')}</span>
                     </label>
                     <label className="flex items-center gap-1.5 cursor-pointer">
                       <input
@@ -1162,7 +1162,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         onChange={() => onThemeToggle?.('dark')}
                         className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
                       />
-                      <span className="text-xs text-slate-700 dark:text-slate-300">Dark</span>
+                      <span className="text-xs text-slate-700 dark:text-slate-300">{t('Dark')}</span>
                     </label>
                     <label className="flex items-center gap-1.5 cursor-pointer">
                       <input
@@ -1173,7 +1173,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                         onChange={() => onThemeToggle?.('hacker')}
                         className="w-3.5 h-3.5 text-violet-600 focus:ring-violet-500"
                       />
-                      <span className="text-xs text-slate-700 dark:text-slate-300">Hacker</span>
+                      <span className="text-xs text-slate-700 dark:text-slate-300">{t('Hacker')}</span>
                     </label>
                   </div>
                 </div>
@@ -1195,7 +1195,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                       }}
                       disabled={profileLoading}
                       className="flex flex-col items-center justify-center p-2 rounded-lg bg-white/80 dark:bg-slate-700/80 border border-violet-200 dark:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800/80 transition-all group disabled:opacity-50"
-                      title="Refresh profile data"
+                      title={t('Refresh profile data')}
                     >
                       <RefreshCw className={cn("w-5 h-5 text-violet-600 dark:text-violet-400 mb-1", profileLoading ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-500")} />
                       <p className="text-slate-600 dark:text-slate-300 text-xs">{profileLoading ? 'Loading...' : 'Refresh'}</p>
@@ -1216,13 +1216,13 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                       <p className="text-lg font-bold text-slate-900 dark:text-blue-400 mt-0.5">
                         {profileLoading ? <span className="inline-block w-8 h-5 bg-slate-200 dark:bg-slate-600 rounded animate-pulse" /> : (profile?.follower_count || 0)}
                       </p>
-                      <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Followers</p>
+                      <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">{t('Followers')}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-lg font-bold text-slate-900 dark:text-emerald-400 mt-0.5">
                         {profileLoading ? <span className="inline-block w-8 h-5 bg-slate-200 dark:bg-slate-600 rounded animate-pulse" /> : (profile?.meetings_completed || 0)}
                       </p>
-                      <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">Meetings</p>
+                      <p className="text-slate-600 dark:text-slate-300 text-xs inline-flex items-center gap-1 justify-center">{t('Meetings')}</p>
                     </div>
                   </div>
                 </div>
@@ -1463,7 +1463,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
 
           {/* Platform Stats Mini Dashboard */}
           <div className="mb-4 p-4 rounded-2xl bg-transparent border-0 shadow-none">
-            <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">Dashboard</div>
+            <div className="text-teal-600 text-3xl font-semibold uppercase tracking-wide">{t('Dashboard')}</div>
           </div>
           <div data-deck-tour="activity"><ActivityFeedBanner context="commanddeck" /></div>
           {/* Hero Metrics */}
@@ -1480,7 +1480,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <TrendingUp className="w-4 h-4 text-white/90" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-white/80">Rank</p>
+                    <p className="text-xs font-medium uppercase tracking-wider text-white/80">{t('Rank')}</p>
                   </div>
                   <p className="text-xl font-bold tracking-tight text-white capitalize inline-flex items-center gap-1">
                     {rpInfo.title}
@@ -1509,7 +1509,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <Users className="w-4 h-4 text-blue-300" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-blue-200">Reach</p>
+                    <p className="text-xs font-medium uppercase tracking-wider text-blue-200">{t('Reach')}</p>
                   </div>
                   <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">{profile?.reach_score || 0}</p>
                   <div className="flex items-center gap-1 mt-1">
@@ -1527,7 +1527,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <DollarSign className="w-4 h-4 text-emerald-300" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-emerald-200">Earned</p>
+                    <p className="text-xs font-medium uppercase tracking-wider text-emerald-200">{t('Earned')}</p>
                   </div>
                   <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">${profile?.total_earnings?.toLocaleString() || 0}</p>
                 </div>
@@ -1541,7 +1541,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <Calendar className="w-4 h-4 text-cyan-300" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-cyan-200">Meetings</p>
+                    <p className="text-xs font-medium uppercase tracking-wider text-cyan-200">{t('Meetings')}</p>
                   </div>
                   <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">{completedMeetingsThisWeek}</p>
                 </div>
@@ -1555,7 +1555,7 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <Target className="w-4 h-4 text-purple-300" />
-                    <p className="text-xs font-medium uppercase tracking-wider text-purple-200">Missions</p>
+                    <p className="text-xs font-medium uppercase tracking-wider text-purple-200">{t('Missions')}</p>
                   </div>
                   <p className="text-2xl font-bold tracking-tight text-white drop-shadow-lg">{missions.filter((m) => m.participant_ids?.includes(profile?.user_id)).length}</p>
                 </div>
@@ -1702,14 +1702,14 @@ export default function CommandDeck({ theme, onThemeToggle }) {
             <CommandDeckCards isCardVisible={isCardVisible} hiddenCards={hiddenCards} toggleCardVisibility={toggleCardVisibility} handleTossToSidePanel={handleTossToSidePanel} forceOpen={cardsForceOpen} />
           </div>
           <div className="block space-y-6 mt-6">
-            {isCardVisible('aiDiscover') && <CollapsibleCard title={<span className="flex items-center gap-1">AI Discover <SynchronicityHelpHint /></span>} cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')} onTossToSidePanel={handleTossToSidePanel}>
+            {isCardVisible('aiDiscover') && <CollapsibleCard title={<span className="flex items-center gap-1">{t('AI Discover')} <SynchronicityHelpHint /></span>} cardId="aiDiscover" icon={Sparkles} badge="New" badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" defaultOpen={true} onPopout={() => setAiDiscoverPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('aiDiscover')} onToggleHide={() => toggleCardVisibility('aiDiscover')} onTossToSidePanel={handleTossToSidePanel}>
               <div className="space-y-4">
                 <AIDiscoverMatches profile={profile} />
                 <ActivityBasedMatcher profile={profile} compact={true} />
               </div>
             </CollapsibleCard>}
 
-            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">Synchronicity Engine <SynchronicityHelpHint />{profile?.auto_scan_prefs?.new_matches_count > 0 && <MatchScanPulse count={profile.auto_scan_prefs.new_matches_count} variant="badge" />}</span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Matches')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['matches'] })}>
+            {isCardVisible('syncEngine') && <CollapsibleCard title={<span className="flex items-center gap-1">{t('Synchronicity Engine')} <SynchronicityHelpHint />{profile?.auto_scan_prefs?.new_matches_count > 0 && <MatchScanPulse count={profile.auto_scan_prefs.new_matches_count} variant="badge" />}</span>} cardId="syncEngine" icon={Sparkles} badge={matches.length} badgeColor="violet" backgroundImage="https://images.unsplash.com/photo-1516450137517-162bfbeb8dba?w=800&q=80" onPopout={() => setSyncPopupOpen(true)} forceOpen={cardsForceOpen} isHidden={hiddenCards.has('syncEngine')} onToggleHide={() => toggleCardVisibility('syncEngine')} onTossToSidePanel={handleTossToSidePanel} navigateTo={createPageUrl('Matches')} onRefresh={() => queryClient.refetchQueries({ queryKey: ['matches'] })}>
               <div className="mb-4">
                 <AIMatchGenerator profile={profile} />
               </div>
@@ -1863,15 +1863,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
                                   <div className="grid grid-cols-3 gap-3">
                                     <div className="text-center p-3 rounded-xl bg-slate-50">
                                       <p className="text-2xl font-bold text-slate-900">{profile?.follower_count || 0}</p>
-                                      <p className="text-xs text-slate-500">Followers</p>
+                                      <p className="text-xs text-slate-500">{t('Followers')}</p>
                                     </div>
                                     <div className="text-center p-3 rounded-xl bg-slate-50">
                                       <p className="text-2xl font-bold text-slate-900">{profile?.following_count || 0}</p>
-                                      <p className="text-xs text-slate-500">Following</p>
+                                      <p className="text-xs text-slate-500">{t('Following')}</p>
                                     </div>
                                     <div className="text-center p-3 rounded-xl bg-violet-50">
                                       <p className="text-2xl font-bold text-violet-700">{profile?.reach_score || 0}</p>
-                                      <p className="text-xs text-violet-600">Reach</p>
+                                      <p className="text-xs text-violet-600">{t('Reach')}</p>
                                     </div>
                                   </div>
                                   <div className="p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
