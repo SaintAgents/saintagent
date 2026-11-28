@@ -115,6 +115,19 @@ html .dock-root .dock-frameless .dock-card-body {background:hsl(var(--d-card))!i
 .dock-root .dock-drag-preview {position:fixed;z-index:10005;top:0;left:0;pointer-events:none;padding:.5rem .75rem;overflow:hidden;border-radius:.7rem;background:hsl(var(--d-card)/.72)!important;color:hsl(var(--d-text))!important;border:2px dashed hsl(var(--d-cyan))!important;font-size:.8rem;font-weight:700;}
 .dock-drag-preview[hidden] {display:none!important;}
 .dock-card-resize {position:absolute;right:0;bottom:0;touch-action:none;cursor:nwse-resize;}
+.dock-root .dock-float > button.dock-float-edge {position:absolute;z-index:1;touch-action:none;padding:0;border:0!important;background:transparent!important;box-shadow:none!important;}
+.dock-root .dock-float > button.dock-float-edge:is(:hover,:focus-visible) {background:hsl(var(--d-cyan)/.35)!important;}
+.dock-frameless > .dock-card-header {z-index:2;}
+.dock-float-edge-top,.dock-float-edge-bottom {left:.65rem;right:.65rem;height:.65rem;cursor:ns-resize;}
+.dock-float-edge-top {top:-.35rem;}
+.dock-float-edge-bottom {bottom:-.35rem;right:2rem;}
+.dock-float-edge-left,.dock-float-edge-right {top:.65rem;bottom:.65rem;width:.65rem;cursor:ew-resize;}
+.dock-float-edge-left {left:-.35rem;}
+.dock-float-edge-right {right:-.35rem;bottom:2rem;}
+@media (pointer:coarse) {
+  .dock-float-edge-top,.dock-float-edge-bottom {height:1rem;}
+  .dock-float-edge-left,.dock-float-edge-right {width:1rem;}
+}
 .dock-resize {position:absolute;z-index:1;inset:0 auto 0 -5px;width:10px;opacity:.001;cursor:ew-resize;touch-action:none;}
 .dock-resize:focus-visible {opacity:1;}
 .dock-edge {position:absolute;z-index:2;left:-1.35rem;top:8rem;min-height:2.4rem;background:hsl(var(--d-card))!important;border:1px solid hsl(var(--d-line))!important;border-radius:.4rem 0 0 .4rem;}
