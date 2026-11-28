@@ -49,6 +49,7 @@ export default function MissionJoinButton({ mission, profile, user }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mission', mission.id] });
       queryClient.invalidateQueries({ queryKey: ['missionParticipants'] });
+      queryClient.invalidateQueries({ queryKey: ['missions', 'my-group-shortcuts'] });
     },
   });
 
@@ -64,6 +65,7 @@ export default function MissionJoinButton({ mission, profile, user }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mission', mission.id] });
       queryClient.invalidateQueries({ queryKey: ['missionParticipants'] });
+      queryClient.invalidateQueries({ queryKey: ['missions', 'my-group-shortcuts'] });
     },
   });
 

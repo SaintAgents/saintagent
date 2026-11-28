@@ -68,10 +68,8 @@ export default function MissionDetail() {
   const { data: mission, isLoading } = useQuery({
     queryKey: ['mission', missionId],
     queryFn: async () => {
-      // Try direct get first, then fallback to list-scan
-      const all = await base44.entities.Mission.list('-created_date', 500);
-      const found = all.find(m => m.id === missionId);
-      return found || null;
+      const { items } = await base44.entities.Mission.filter({ id: missionId }, { limit: 1 });
+      return items[0] ?? null;
     },
     enabled: !!missionId,
     retry: 2,

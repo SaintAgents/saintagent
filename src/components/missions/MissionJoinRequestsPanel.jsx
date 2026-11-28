@@ -48,6 +48,7 @@ export default function MissionJoinRequestsPanel({ mission }) {
       queryClient.invalidateQueries({ queryKey: ['missionJoinRequests', mission.id] });
       queryClient.invalidateQueries({ queryKey: ['mission', mission.id] });
       queryClient.invalidateQueries({ queryKey: ['missionParticipants'] });
+      queryClient.invalidateQueries({ queryKey: ['missions', 'my-group-shortcuts'] });
     },
   });
 
