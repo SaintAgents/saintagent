@@ -38,6 +38,7 @@ import { formatDistanceToNow } from 'date-fns';
 import CommunityStatsCard from '@/components/profile/CommunityStatsCard';
 import XPProgressCard from '@/components/progression/XPProgressCard';
 import CallButton from '@/components/CallButton';
+import useProfileHeroImage from '@/components/profile/useProfileHeroImage';
 
 
 // Default fallback hero image
@@ -55,6 +56,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
     staleTime: 120000,
   });
   const profile = profiles?.[0];
+  const heroImage = useProfileHeroImage(profile?.hero_image_url);
 
   // GGG balance is maintained on profile.ggg_balance — single source of truth
   const gggBalance = profile?.ggg_balance || 0;
@@ -266,7 +268,7 @@ export default function ProfileDrawer({ userId, onClose, offsetIndex = 0 }) {
         <div className="relative h-32 bg-gradient-to-r from-violet-500 to-purple-600">
           {/* Hero Image - always show, use default if none */}
           <img
-            src={profile.hero_image_url || DEFAULT_HERO_IMAGE}
+            src={heroImage || DEFAULT_HERO_IMAGE}
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
           />

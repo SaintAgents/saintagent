@@ -3,6 +3,10 @@ import { base44 } from '@/api/base44Client';
 import RecordKeepActions from '@/components/watch/RecordKeepActions';
 import { deepDiveTarget } from '@/components/deepdive/deepDiveTargets';
 import ProfileHeroLogo from '@/components/profile/ProfileHeroLogo';
+import ProfileHeroUpload from '@/components/profile/ProfileHeroUpload';
+import ProfileRankBadge from '@/components/profile/ProfileRankBadge';
+import useProfileHeroImage from '@/components/profile/useProfileHeroImage';
+import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SkillsPicker from '@/components/SkillsPicker';
 import SpiritualProfileEditor from '@/components/profile/SpiritualProfileEditor';
@@ -66,7 +70,8 @@ import {
   Contact,
   Activity,
   Network,
-  CreditCard
+  CreditCard,
+  RefreshCw
 } from
 "lucide-react";
 
@@ -74,7 +79,6 @@ import ProgressRing from '@/components/hud/ProgressRing';
 import RPRing from '@/components/reputation/RPRing';
 import { getRPRank, RP_LADDER } from '@/components/reputation/rpUtils';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
-import { RANK_BADGE_IMAGES, RankBadge } from '@/components/reputation/rankBadges';
 import { AffiliateBadge, getAffiliateTier } from '@/components/reputation/affiliateBadges';
 import PhotoViewer from '@/components/profile/PhotoViewer';
 import TrustScoreCard from '@/components/trust/TrustScoreCard';
@@ -184,22 +188,22 @@ export default function Profile() {
   const targetUserId = viewingUserId || currentUser?.email;
   const isOwnProfile = !viewingUserId || viewingUserId === currentUser?.email;
 
-  const { data: profiles, isLoading: profilesLoading } = useQuery({
-    queryKey: ['userProfile', targetUserId],
+  const profileQueryKey = ['userProfile', targetUserId];
+  const { data: profiles, isLoading: profilesLoading, isFetching: isRefreshingProfile, refetch: refreshProfile } = useQuery({
+    queryKey: profileQueryKey,
     queryFn: async () => {
       if (viewingUserId) {
         const bySA = await base44.entities.UserProfile.filter({ sa_number: viewingUserId }, '-updated_date', 1);
         if (bySA.length > 0) return bySA;
         return base44.entities.UserProfile.filter({ user_id: viewingUserId }, '-updated_date', 1);
       }
-      const user = await base44.auth.me();
-      return base44.entities.UserProfile.filter({ user_id: user.email }, '-updated_date', 1);
+      return base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
     },
     enabled: !!targetUserId,
-    staleTime: viewingUserId ? 30000 : 600000,
+    staleTime: 0,
     refetchOnWindowFocus: false,
   });
-  const { data: datingProfiles } = useQuery({
+  const { data: datingProfiles, isFetching: isRefreshingDatingProfile, refetch: refreshDatingProfile } = useQuery({
     queryKey: ['datingProfile', targetUserId],
     queryFn: () => base44.entities.DatingProfile.filter({ user_id: targetUserId }, '-updated_date', 1),
     enabled: !!targetUserId && !!viewingUserId,
@@ -219,6 +223,18 @@ export default function Profile() {
     region: datingProfile.location,
     is_demo_dating_profile: true
   } : null);
+  const heroImage = useProfileHeroImage(profile?.hero_image_url);
+  const avatarImage = profile?.avatar_url ?? profile?.gallery_images?.find(Boolean);
+
+  const handleRefreshProfile = async () => {
+    try {
+      const result = await refreshProfile({ throwOnError: true });
+      if (viewingUserId && !result.data?.length) await refreshDatingProfile({ throwOnError: true });
+      toast.success('Profile refreshed');
+    } catch {
+      toast.error('Could not refresh the profile. Try again.');
+    }
+  };
   
   // Use SA# for all database queries if available, fallback to user_id
   const userIdentifier = profile?.sa_number || profile?.user_id;
@@ -335,17 +351,24 @@ export default function Profile() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data) => {
-      if (!profile?.id) {
-        return Promise.reject(new Error('Profile not loaded'));
+    mutationFn: async (data) => {
+      if (rawProfile?.id) return base44.entities.UserProfile.update(rawProfile.id, data);
+      if (!isOwnProfile || !currentUser?.email || !('avatar_url' in data || 'hero_image_url' in data)) {
+        throw new Error('Profile not loaded');
       }
-      return base44.entities.UserProfile.update(profile.id, data);
+      const [existing] = await base44.entities.UserProfile.filter({ user_id: currentUser.email }, '-updated_date', 1);
+      if (existing) return base44.entities.UserProfile.update(existing.id, data);
+      const handle = currentUser.email.split('@')[0].toLowerCase().replace(/[^a-z0-9_]/g, '') || 'agent';
+      return base44.entities.UserProfile.create({ user_id: currentUser.email, display_name: currentUser.full_name || handle, handle: `${handle}_${currentUser.id.slice(-8)}`, ...data });
     },
-    onSuccess: () => {
+    onSuccess: async (savedProfile, changes) => {
+      await queryClient.cancelQueries({ queryKey: profileQueryKey, exact: true });
+      queryClient.setQueryData(profileQueryKey, old => [{ ...old?.[0], ...savedProfile, ...changes }]);
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       queryClient.invalidateQueries({ queryKey: ['myProfile'] });
-      queryClient.refetchQueries({ queryKey: ['userProfile', targetUserId] });
-      queryClient.refetchQueries({ queryKey: ['myProfile'] });
+      if ('avatar_url' in changes || 'hero_image_url' in changes) {
+        queryClient.invalidateQueries({ queryKey: ['profile', savedProfile?.user_id || rawProfile?.user_id] });
+      }
       setIsEditing(false);
       // Track challenge progress for updating profile
       if (userIdentifier) {
@@ -370,13 +393,15 @@ export default function Profile() {
   };
 
   const handleAvatarUpdate = async (avatarUrl) => {
-    await updateMutation.mutateAsync({ avatar_url: avatarUrl });
+    await updateMutation.mutateAsync({ avatar_url: avatarUrl || '' });
     const queries = ['profiles', 'currentUserProfile', 'dock-online-members', 'allLiveStatuses', 'public-contact'];
     try {
       const presence = base44.entities.LiveStatus;
       const [record] = await presence.filter({ user_id: currentUser.email }, '-updated_date', 1);
       if (record) await presence.update(record.id, { avatar_url: avatarUrl || '' });
       else await presence.create({ user_id: currentUser.email, avatar_url: avatarUrl || '', status: 'offline' });
+    } catch (error) {
+      console.warn('Could not sync the saved profile photo to presence', error);
     } finally {
       await Promise.all(queries.map(key => queryClient.invalidateQueries({ queryKey: [key] })));
     }
@@ -424,7 +449,7 @@ export default function Profile() {
     }
   });
 
-  const rpPoints = profile?.rp_points || 0;
+  const rpPoints = profile?.rp_points ?? profile?.rank_points ?? 0;
   // Use stored rank_code if available, otherwise calculate from points
   const storedRankCode = profile?.rp_rank_code || profile?.rank_code || null;
   const calculatedRpInfo = getRPRank(rpPoints);
@@ -487,9 +512,9 @@ export default function Profile() {
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
           <div className="relative h-40 md:h-64 bg-gradient-to-r from-violet-500 to-purple-600 group">
-            {profile?.hero_image_url ? (
+            {heroImage ? (
               <img
-                src={profile.hero_image_url}
+                src={heroImage}
                 alt="Profile Hero"
                 className="w-full h-full object-cover hero-image"
                 data-no-filter="true"
@@ -498,9 +523,9 @@ export default function Profile() {
               <div className="w-full h-full bg-gradient-to-r from-violet-500 to-purple-600" />
             )}
             
-            {/* Rank Badge - Top Left - 3x Bigger */}
-            <div className="absolute top-2 left-2 md:top-3 md:left-3 z-10">
-              <RankBadge code={profile?.rp_rank_code || profile?.rank_code || 'seeker'} size={typeof window !== 'undefined' && window.innerWidth < 640 ? 72 : 144} className="drop-shadow-lg" />
+            {/* Rank Badge */}
+            <div className="absolute top-2 left-2 z-20 md:top-3 md:left-3">
+              <ProfileRankBadge rank={rpInfo} points={rpPoints} size={typeof window !== 'undefined' && window.innerWidth < 640 ? 72 : 144} />
             </div>
             
             <ProfileHeroLogo saNumber={profile?.sa_number} />
@@ -536,31 +561,14 @@ export default function Profile() {
               </div>
             </div>
             
-            {isOwnProfile &&
-            <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-                    await updateMutation.mutateAsync({ hero_image_url: file_url });
-                  }
-                }} />
-                <div className="text-white text-center">
-                  <Edit className="w-8 h-8 mx-auto mb-2" />
-                  <p className="text-sm font-medium">Change Hero Image</p>
-                </div>
-              </label>
-            }
+            {isOwnProfile && currentUser && <ProfileHeroUpload onSave={reference => updateMutation.mutateAsync({ hero_image_url: reference })} />}
           </div>
           <CardContent className="bg-purple-100 text-zinc-500 pt-4 p-3 md:p-6 relative">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-6">
               <div className="cursor-pointer shrink-0" onClick={() => setViewerOpen(true)} title="View photos">
                 <RankedAvatar
-                  src={profile?.avatar_url}
+                  key={avatarImage || 'default-profile-avatar'}
+                  src={avatarImage}
                   name={profile?.display_name}
                   size={80}
                   leaderTier={profile?.leader_tier}
@@ -586,6 +594,9 @@ export default function Profile() {
                     </button>
                   )}
                   <h1 className="text-slate-900 dark:text-white text-xl sm:text-2xl font-bold">{profile?.display_name || currentUser?.full_name || 'User'}</h1>
+                  <Button type="button" variant="outline" size="icon" aria-label="Refresh profile" title="Refresh profile" disabled={isRefreshingProfile || isRefreshingDatingProfile || !targetUserId} onClick={handleRefreshProfile}>
+                    <RefreshCw className={isRefreshingProfile || isRefreshingDatingProfile ? 'animate-spin' : ''} aria-hidden="true" />
+                  </Button>
                   {!isOwnProfile && rawProfile && (!rawProfile.profile_visibility || rawProfile.profile_visibility === 'public') && <RecordKeepActions type="person" id={rawProfile.id} title={rawProfile.display_name} route={rawProfile.sa_number ? `/Profile?id=${encodeURIComponent(rawProfile.sa_number)}` : undefined} />}
                   {profile?.tagline &&
                   <span className="text-slate-600 text-sm italic hidden sm:inline">— {profile.tagline}</span>
@@ -835,7 +846,7 @@ export default function Profile() {
               {isOwnProfile &&
               <div>
                   <AvatarUploader
-                  currentAvatar={profile?.avatar_url}
+                  currentAvatar={avatarImage}
                   displayName={profile?.display_name}
                   onAvatarUpdate={handleAvatarUpdate} />
                   {rawProfile?.id && <div className="mt-4"><ProfileArtworkGenerator kind="avatar" currentAvatar={profile.avatar_url} onSave={handleAvatarUpdate} /></div>}
@@ -1747,7 +1758,7 @@ export default function Profile() {
             <Card>
               <CardContent className="pt-6 text-center">
                 <div className="flex flex-col items-center mb-4">
-                  <RankBadge code={profile?.rp_rank_code || profile?.rank_code || rpInfo?.code || 'seeker'} size={80} className="mb-2 drop-shadow-lg" />
+                  <ProfileRankBadge rank={rpInfo} points={rpPoints} size={80} className="mb-2" />
                   <RPRing rpPoints={rpPoints} className="mx-auto" />
                 </div>
                 <div className="flex items-center justify-center gap-2">
@@ -2074,7 +2085,7 @@ export default function Profile() {
       </Dialog>
       <PhotoViewer
         open={viewerOpen}
-        images={[profile?.avatar_url, ...(profile?.gallery_images || [])].filter(Boolean).slice(0, 5)}
+        images={[...new Set([avatarImage, ...(profile?.gallery_images || [])].filter(Boolean))].slice(0, 5)}
         startIndex={0}
         onClose={() => setViewerOpen(false)} />
 

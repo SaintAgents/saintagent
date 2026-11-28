@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import RankedAvatar from '@/components/reputation/RankedAvatar';
+import useProfileHeroImage from '@/components/profile/useProfileHeroImage';
 // RP ladder utilities - inlined to avoid import issues
 const RP_LADDER = [
   { level: 1, code: 'seeker', title: 'Seeker', min: 200, nextMin: 500 },
@@ -119,7 +120,7 @@ export default function MiniProfile({
   // Determine if we should show the hero layout (larger sizes)
   const showHeroLayout = size >= 64;
   const heroHeight = Math.max(32, Math.round(size * 0.5));
-  const heroImage = profile?.hero_image_url;
+  const heroImage = useProfileHeroImage(profile?.hero_image_url, showHeroLayout);
   
   // Make avatar bigger - minimum 56px for activity feed items
   const actualSize = Math.max(56, size);
