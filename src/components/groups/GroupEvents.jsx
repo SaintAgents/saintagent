@@ -281,7 +281,7 @@ export default function GroupEvents({ circle, user }) {
 
       {/* Create Event Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent data-group-contrast className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Create Group Event</DialogTitle>
           </DialogHeader>
@@ -323,7 +323,7 @@ export default function GroupEvents({ circle, user }) {
                 <SelectTrigger>
                   <SelectValue placeholder="Event type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent data-group-contrast>
                   <SelectItem value="online">Online</SelectItem>
                   <SelectItem value="in_person">In Person</SelectItem>
                   <SelectItem value="hybrid">Hybrid</SelectItem>
@@ -336,7 +336,7 @@ export default function GroupEvents({ circle, user }) {
                 <SelectTrigger>
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent data-group-contrast>
                   <SelectItem value="meditation">Meditation</SelectItem>
                   <SelectItem value="workshop">Workshop</SelectItem>
                   <SelectItem value="meetup">Meetup</SelectItem>

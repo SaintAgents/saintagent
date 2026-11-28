@@ -85,7 +85,7 @@ export default function GroupDetailPage({ circle, user, onBack }) {
       <div className="relative">
         <div className="relative h-48 bg-gradient-to-r from-violet-500 to-indigo-600">
           <CircleCover circle={circle} user={user} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div data-group-detail-scrim className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         </div>
         
         <div className="absolute top-4 left-4">

@@ -123,7 +123,7 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent data-group-contrast className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create a Circle</DialogTitle>
         </DialogHeader>
@@ -146,7 +146,7 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
               <SelectTrigger className="mt-2">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent data-group-contrast>
                 {CATEGORIES.map(c => (
                   <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
                 ))}
@@ -237,7 +237,7 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
                 <SelectTrigger className="mt-2">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent data-group-contrast>
                   <SelectItem value="public">Public</SelectItem>
                   <SelectItem value="private">Private</SelectItem>
                   <SelectItem value="invite_only">Invite Only</SelectItem>
@@ -250,7 +250,7 @@ export default function CreateCircleModal({ open, onOpenChange, user }) {
                 <SelectTrigger className="mt-2">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent data-group-contrast>
                   <SelectItem value="daily">Daily</SelectItem>
                   <SelectItem value="weekly">Weekly</SelectItem>
                   <SelectItem value="biweekly">Biweekly</SelectItem>

@@ -386,7 +386,7 @@ export default function GroupMeetings({ circle, user }) {
                             <SelectTrigger className="h-8 text-xs">
                               <SelectValue placeholder="Finalize time..." />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent data-group-contrast>
                               {meeting.proposed_times.map((time, idx) => (
                                 <SelectItem key={idx} value={time}>
                                   {format(parseISO(time), 'EEE, MMM d • h:mm a')} ({(meeting.time_votes?.[time] || []).length} votes)
@@ -464,7 +464,7 @@ export default function GroupMeetings({ circle, user }) {
 
       {/* Schedule Meeting Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent data-group-contrast className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-violet-600" />
@@ -502,7 +502,7 @@ export default function GroupMeetings({ circle, user }) {
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent data-group-contrast>
                     <SelectItem value="15">15 min</SelectItem>
                     <SelectItem value="30">30 min</SelectItem>
                     <SelectItem value="45">45 min</SelectItem>
@@ -521,7 +521,7 @@ export default function GroupMeetings({ circle, user }) {
               <SelectTrigger>
                 <SelectValue placeholder="Meeting type" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent data-group-contrast>
                 <SelectItem value="group_call">Video Call</SelectItem>
                 <SelectItem value="in_person">In Person</SelectItem>
                 <SelectItem value="collaboration">Collaboration Session</SelectItem>
@@ -589,7 +589,7 @@ export default function GroupMeetings({ circle, user }) {
 
       {/* Poll Times Dialog */}
       <Dialog open={pollOpen} onOpenChange={setPollOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent data-group-contrast className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Vote className="w-5 h-5 text-amber-500" />
@@ -647,7 +647,7 @@ export default function GroupMeetings({ circle, user }) {
               <SelectTrigger>
                 <SelectValue placeholder="Duration" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent data-group-contrast>
                 <SelectItem value="30">30 min</SelectItem>
                 <SelectItem value="60">1 hour</SelectItem>
                 <SelectItem value="90">1.5 hours</SelectItem>

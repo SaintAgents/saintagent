@@ -141,7 +141,7 @@ export default function MissionDetail() {
           }}
         />
         {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/80 to-white" />
+        <div data-group-detail-scrim className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/80 to-white" />
         
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-6 py-6">

@@ -46,7 +46,8 @@
   }
 
   .dark,
-  html:is([data-theme='dark'], [data-theme='hacker']) #my-guide {
+  html:is([data-theme='dark'], [data-theme='hacker']) #my-guide,
+  html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
     --card: 215 28% 17%;
@@ -761,6 +762,36 @@ html:root [data-readable-surface][data-testimonial-card] textarea {
   color: var(--readable-text) !important;
   border-color: var(--readable-border) !important;
   opacity: 1 !important;
+}
+
+/* Group views and their portalled dialogs share the same dark-mode contrast rules. */
+html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) {
+  color: hsl(var(--foreground)) !important;
+  --muted-foreground: 215 20% 78%;
+}
+html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) :is(.text-foreground, .text-card-foreground, .text-popover-foreground, .text-black, .text-slate-700, .text-slate-800, .text-slate-900) {
+  color: hsl(var(--foreground)) !important;
+}
+html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) :is(.text-muted-foreground, .text-slate-300, .text-slate-400, .text-slate-500, .text-slate-600) {
+  color: hsl(var(--muted-foreground)) !important;
+}
+html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) :is(.text-primary, .text-violet-600, .text-violet-700, .text-purple-700, .text-blue-600, .text-blue-700, .text-cyan-700, .text-emerald-600, .text-emerald-700, .text-amber-500, .text-amber-600, .text-amber-700, .text-pink-700, .text-rose-500, .text-rose-700) {
+  color: hsl(var(--accent)) !important;
+}
+html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) .text-destructive {
+  color: hsl(0 85% 76%) !important;
+}
+html[data-theme='dark'] :is([data-group-contrast], [data-group-contrast] *)[role='option']:is(:focus, [data-highlighted]) {
+  background-color: hsl(var(--muted)) !important;
+}
+html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) :is(.bg-card, .bg-amber-50, .bg-amber-100, .bg-blue-50, .bg-blue-100, .bg-cyan-100, .bg-emerald-100, .bg-fuchsia-300, .bg-pink-100, .bg-purple-100, .bg-purple-200, .bg-rose-100, .bg-violet-50, .bg-violet-100) {
+  background-color: hsl(var(--card)) !important;
+}
+html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) :is(input, textarea)::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+}
+html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail']) [data-group-detail-scrim] {
+  background: linear-gradient(to bottom, hsl(var(--background) / .66), hsl(var(--background) / .94)) !important;
 }
 
 /* Keep research headings and empty states legible in Light mode. */

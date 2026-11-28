@@ -71,7 +71,7 @@ export default function CircleManageModal({ open, onOpenChange, circle, currentU
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent overlayClassName="z-[60]" className="z-[61] max-w-2xl max-h-[90dvh] overflow-y-auto">
+      <DialogContent data-group-contrast overlayClassName="z-[60]" className="z-[61] max-w-2xl max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Manage Circle</DialogTitle>
         </DialogHeader>

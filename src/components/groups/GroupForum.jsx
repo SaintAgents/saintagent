@@ -147,7 +147,7 @@ export default function GroupForum({ circle, user, linkedPostId, onDismissLinked
               <Filter className="w-4 h-4 mr-2" />
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent data-group-contrast>
               <SelectItem value="all">All Types</SelectItem>
               <SelectItem value="discussion">Discussions</SelectItem>
               <SelectItem value="question">Questions</SelectItem>
@@ -195,7 +195,7 @@ export default function GroupForum({ circle, user, linkedPostId, onDismissLinked
 
       {/* Create Post Dialog */}
       <Dialog open={createOpen} onOpenChange={(open) => open ? setCreateOpen(true) : closeComposer()}>
-        <DialogContent className="max-w-lg max-h-[90dvh] overflow-y-auto">
+        <DialogContent data-group-contrast className="max-w-lg max-h-[90dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create New Post</DialogTitle>
           </DialogHeader>
@@ -208,7 +208,7 @@ export default function GroupForum({ circle, user, linkedPostId, onDismissLinked
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent data-group-contrast>
                   {Object.entries(POST_TYPE_CONFIG).map(([key, config]) => (
                     <SelectItem key={key} value={key}>
                       <span className="flex items-center gap-2">
@@ -249,7 +249,7 @@ export default function GroupForum({ circle, user, linkedPostId, onDismissLinked
 
       {/* Post Detail Dialog */}
       <Dialog open={!!selectedPost || !!linkedPostId} onOpenChange={(open) => !open && closePost()}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent data-group-contrast className="max-w-2xl max-h-[80vh] overflow-y-auto">
           {!selectedPost && linkedPostId && <DialogHeader>
             <DialogTitle>Shared forum post</DialogTitle>
             <p role="status" className="text-sm text-muted-foreground">{linkedPost.isPending ? 'Opening post…' : linkedPost.isError ? 'Couldn’t load this post.' : 'This post is unavailable in this Circle.'}</p>

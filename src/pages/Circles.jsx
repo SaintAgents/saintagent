@@ -225,7 +225,7 @@ export default function Circles() {
             <SelectTrigger className="w-40 h-12 rounded-xl dark:bg-slate-900/90 dark:border-slate-700 dark:text-white [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00] [data-theme='hacker']_&:text-[#00ff00]">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
-            <SelectContent className="dark:bg-slate-900 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00]">
+            <SelectContent data-group-contrast className="dark:bg-slate-900 dark:border-slate-700 [data-theme='hacker']_&:bg-[#0a0a0a] [data-theme='hacker']_&:border-[#00ff00]">
               <SelectItem value="all">All Categories</SelectItem>
               <SelectItem value="spiritual">Spiritual</SelectItem>
               <SelectItem value="creative">Creative</SelectItem>
