@@ -74,7 +74,7 @@ html .sa-canopy :is(button,input,select,textarea):focus-visible { outline:2px so
 .sa-canopy .canopy-command-form { display:flex; gap:.4rem; align-items:center; }
 .sa-canopy .canopy-command-form label { position:relative; flex:1; min-width:0; }
 .sa-canopy .canopy-command-form label svg { position:absolute; left:.65rem; top:50%; transform:translateY(-50%); color:hsl(var(--canopy-metal)); pointer-events:none; }
-html .sa-canopy .canopy-command-form input { width:100%; min-height:2.3rem; padding-left:2rem; font-size:.875rem; }
+html .sa-canopy .canopy-command-form label > input { width:100%; min-height:2.3rem; padding-left:calc(2rem + 20px); font-size:.875rem; }
 html .sa-canopy .canopy-command-form .canopy-run { background:hsl(var(--canopy-metal)) !important; color:hsl(var(--canopy-surface)) !important; min-height:2.15rem; padding-inline:.7rem; font-weight:750; }
 html .sa-canopy .canopy-run svg { color:inherit !important; }
 .sa-canopy :is(.canopy-destinations,.canopy-command-results) { margin-top:.45rem; }
