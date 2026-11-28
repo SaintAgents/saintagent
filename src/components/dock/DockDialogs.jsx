@@ -8,7 +8,7 @@ export default function DockDialogs({ modal, close, prefs, deck, cards, actions,
   const [name, setName] = useState(modal === 'rename' ? deck.name : '');
   const [icon, setIcon] = useState(modal === 'rename' ? deck.icon : icons[0]);
   const [shortcuts, setShortcuts] = useState(prefs.shortcuts);
-  const title = {library:'Add Widget', drawer:'Drawer', new:'New deck', rename:'Rename deck', delete:'Delete deck', shortcuts:'Edit Quick Access'}[modal];
+  const title = {library:'Add Widget', drawer:'Drawer', new:'New deck folder', rename:'Rename deck', delete:'Delete deck', shortcuts:'Edit Quick Access'}[modal];
   return <Dialog open onOpenChange={value => { if (!value) close(); }}><DialogContent data-readable-surface className="z-[10009] max-h-[85dvh] overflow-y-auto">
     <DialogTitle>{title}</DialogTitle><DialogDescription>{modal === 'drawer' ? `Archived widgets are kept here until you restore, move, or delete them. Restore returns a widget to ${deck.name}.` : modal === 'delete' ? 'Widgets from this deck move to the Drawer.' : 'Customize your Dock Deck.'}</DialogDescription>
     {modal === 'library' && <div className="grid gap-2">{Object.entries(widgetLibrary).map(([type, description]) => {
