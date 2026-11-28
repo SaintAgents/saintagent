@@ -37,15 +37,18 @@ export default function CollapsedViewModeToggle() {
   };
 
   return (
-    <div className="flex items-center gap-0.5 bg-slate-100/80 rounded-lg p-0.5 mr-2 shrink-0">
+    <div data-collapsed-view-modes role="group" aria-label="Deck view mode" className="flex items-center gap-0.5 bg-slate-100/80 rounded-lg p-0.5 mr-2 shrink-0">
       {MODES.map(m => (
         <button
           key={m.id}
+          type="button"
+          aria-label={m.full}
+          aria-pressed={viewMode === m.id}
           onClick={() => handleChange(m.id)}
           className={cn(
             "px-1.5 py-0.5 rounded-md text-[10px] font-semibold transition-all leading-tight",
             viewMode === m.id
-              ? "bg-violet-600 text-white shadow-sm"
+              ? "bg-sidebar text-sidebar-foreground shadow-sm"
               : "text-slate-500 hover:text-slate-700 hover:bg-white/60"
           )}
           title={m.full}

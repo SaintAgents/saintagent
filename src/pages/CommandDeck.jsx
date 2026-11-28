@@ -170,6 +170,15 @@ export default function CommandDeck({ theme, onThemeToggle }) {
     } catch { return getDefaultCustomCards(); }
   });
   
+  // Keep the deck in sync with the mode selector in the collapsed top bar.
+  useEffect(() => {
+    const syncMode = ({ detail }) => {
+      if (Object.hasOwn(VIEW_MODE_CONFIG, detail?.viewMode)) setDeckViewMode(detail.viewMode);
+    };
+    document.addEventListener('viewModeChange', syncMode);
+    return () => document.removeEventListener('viewModeChange', syncMode);
+  }, []);
+
   // Persist deck view mode and notify other components
   useEffect(() => {
     if (deckViewMode) {

@@ -654,6 +654,18 @@ html[data-theme='hacker'] [data-sidebar].fixed.left-0 {
   border-radius: 9999px;
 }
 
+/* Keep the selected collapsed deck mode visible above global button themes. */
+#app-topbar [data-collapsed-view-modes] button[aria-pressed='true'] {
+  background: hsl(var(--sidebar-background)) !important;
+  color: hsl(var(--sidebar-foreground)) !important;
+}
+html[data-theme='dark'] #app-topbar [data-collapsed-view-modes] button[aria-pressed='true'],
+html[data-theme='hacker'] #app-topbar [data-collapsed-view-modes] button[aria-pressed='true'] {
+  background: var(--neon-green, #00ff00) !important;
+  color: hsl(var(--sidebar-background)) !important;
+  border-color: currentColor !important;
+}
+
 /* Keep navigation controls legible on the dark sidebar and in detached navigation. */
 html[data-theme='dark'] [data-sidebar-nav-footer] {
   background: hsl(var(--sidebar-background)) !important;
