@@ -689,6 +689,27 @@ html[data-theme='dark'] button:is([data-sidebar-nav-footer] button, [data-sideba
   outline-offset: -2px;
 }
 
+/* Match Quick Access to the sidebar in dark mode, including its icon controls. */
+html[data-theme='dark'] [data-sidebar-quick-access] {
+  background-color: hsl(var(--sidebar-background)) !important;
+  border-color: hsl(var(--sidebar-border)) !important;
+  color: hsl(var(--sidebar-foreground)) !important;
+}
+html[data-theme='dark'] [data-sidebar-quick-access] :is(a, button) {
+  background-color: hsl(var(--sidebar-background)) !important;
+  border-color: hsl(var(--sidebar-border)) !important;
+  color: hsl(var(--sidebar-foreground)) !important;
+}
+html[data-theme='dark'] [data-sidebar-quick-access] :is(a, button):is(:hover, :focus-visible, [aria-current='page']) {
+  background-color: hsl(var(--sidebar-accent)) !important;
+  color: hsl(var(--sidebar-accent-foreground)) !important;
+  box-shadow: none !important;
+}
+html[data-theme='dark'] [data-sidebar-quick-access] :is(a, button):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+
 /* Keep the profile menu opaque above the dashboard in every theme. */
 #topbar-profile-menu {
   background: hsl(var(--popover)) !important;
