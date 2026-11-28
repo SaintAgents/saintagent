@@ -8,7 +8,8 @@ const themes = {
 export default function LinkTreeContent({ tree, children }) {
   const avatar = webUrl(tree.avatar), banner = webUrl(tree.banner);
   const images = (tree.showcase || []).map(webUrl).filter(Boolean);
-  return <div className={`w-full overflow-hidden rounded-2xl border border-current/10 ${themes[tree.theme] || themes.amber}`}>
+  const palette = Object.hasOwn(themes, tree.theme) ? tree.theme : 'amber';
+  return <div data-own-palette={palette} className={`w-full overflow-hidden rounded-2xl border border-current/10 ${themes[palette]}`}>
     {banner && <img src={banner} alt="" className="h-36 w-full object-cover" />}
     <div className="space-y-5 p-5 sm:p-7">
       <header className="space-y-2 text-center">

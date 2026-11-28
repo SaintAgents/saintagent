@@ -46,6 +46,7 @@
   }
 
   .dark,
+  html[data-theme='dark'] [data-dark-contrast],
   html:is([data-theme='dark'], [data-theme='hacker']) #my-guide,
   html[data-theme='dark'] :is(main[data-page='Circles'], main[data-page='MissionDetail'], [data-group-contrast]) {
     --background: 222 47% 11%;
@@ -795,6 +796,52 @@ html:root [data-readable-surface][data-testimonial-card] textarea {
   color: var(--readable-text) !important;
   border-color: var(--readable-border) !important;
   opacity: 1 !important;
+}
+
+/* Opt-in dark-mode contrast for forms and their surrounding controls. */
+html:root[data-theme='dark'] [data-dark-contrast] {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+html:root[data-theme='dark'] [data-dark-contrast] .bg-card:not(:where([data-own-palette] *)) {
+  background-color: hsl(var(--card)) !important;
+}
+html:root[data-theme='dark'] [data-dark-contrast] :is(h1, h2, h3, p, label, legend, a, button, button span):not(:where([data-own-palette] *)) {
+  color: hsl(var(--foreground)) !important;
+  text-shadow: none !important;
+}
+html:root[data-theme='dark'] [data-dark-contrast] :is(.text-muted-foreground, button:disabled, button:disabled span):not(:where([data-own-palette] *)) {
+  color: hsl(var(--muted-foreground)) !important;
+  opacity: 1;
+}
+html:root[data-theme='dark'] [data-dark-contrast] :is(input:not([type='checkbox']), textarea, select, option):not(:where([data-own-palette] *)) {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: currentColor;
+}
+html:root[data-theme='dark'] [data-dark-contrast] :is(input, textarea)::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+  opacity: 1;
+}
+
+/* Keep the public LinkTree palette intact inside the dark editor preview. */
+[data-own-palette='amber'] { --preview-surface: theme(colors.amber.50); --preview-ink: theme(colors.amber.950); }
+[data-own-palette='blue'] { --preview-surface: theme(colors.sky.50); --preview-ink: theme(colors.sky.950); }
+[data-own-palette='green'] { --preview-surface: theme(colors.emerald.50); --preview-ink: theme(colors.emerald.950); }
+[data-own-palette='purple'] { --preview-surface: theme(colors.violet.50); --preview-ink: theme(colors.violet.950); }
+[data-own-palette='dark'] { --preview-surface: theme(colors.slate.950); --preview-ink: theme(colors.slate.50); }
+html:root[data-theme='dark'] [data-dark-contrast] [data-own-palette] {
+  background-color: var(--preview-surface) !important;
+  color: var(--preview-ink) !important;
+}
+html:root[data-theme='dark'] [data-dark-contrast] [data-own-palette] :is(h1, h2, p, a, span, strong, svg) {
+  color: var(--preview-ink) !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+html:root[data-theme='dark'] [data-dark-contrast] [data-own-palette] a {
+  background-color: transparent !important;
+  border-color: color-mix(in srgb, var(--preview-ink) 25%, transparent) !important;
 }
 
 /* Group views and their portalled dialogs share the same dark-mode contrast rules. */

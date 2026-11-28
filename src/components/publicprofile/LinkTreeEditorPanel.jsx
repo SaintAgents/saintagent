@@ -9,7 +9,7 @@ export default function LinkTreeEditorPanel({ businessId = '', embedded = false 
   const client = useQueryClient();
   const { data, isPending, isError } = useQuery(options);
   const heading = businessId ? 'Business LinkTree' : 'LinkTree & Contact Card';
-  return <section className={embedded ? 'space-y-4 text-foreground' : 'mx-auto max-w-6xl space-y-4 px-4 pb-20 pt-6 text-foreground'}>
+  return <section data-dark-contrast className={embedded ? 'space-y-4 text-foreground' : 'mx-auto max-w-6xl space-y-4 px-4 pb-20 pt-6 text-foreground'}>
     {embedded ? <h2 className="text-2xl font-bold">{heading}</h2> : <h1 className="text-2xl font-bold">{heading}</h1>}
     {isPending ? <p role="status">Loading editor…</p> : isError ? <p role="alert">Could not load the editor. Try refreshing the page.</p> : !data.profile ? <p>{businessId ? 'This business is unavailable or you are not its owner.' : 'Set up your profile before editing LinkTree.'}</p> : <>
       {businessId && !['active', 'featured'].includes(data.profile.status) && <p>Visitors can open this LinkTree once the business profile is active.</p>}
