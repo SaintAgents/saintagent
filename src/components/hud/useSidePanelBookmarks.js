@@ -1,8 +1,8 @@
 import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-export const sectionLimit = 20;
-export const bookmarkLimit = 30;
+const sectionLimit = 20;
+const bookmarkLimit = 30;
 const safePage = path => typeof path === 'string' && path.length <= 2048 && /^\/(?![\/\\])[\w/%.-]*(?:\?[^#\s\\]*)?(?:#[^\s\\]*)?$/.test(path) && !/[\u0000-\u001f\u007f]/.test(path);
 export const pagePath = (pathname, search = '', hash = '') => {
   const path = (pathname.replace(/\/+$/, '') || '/') + search + hash;
@@ -37,9 +37,24 @@ export default function useSidePanelBookmarks(user) {
     mutationFn: next => base44.auth.updateMe({ side_panel_bookmarks: { sections: next } }),
     onSuccess: (_, next) => client.setQueryData(queryKey, next),
   });
+  // Keep the existing saved format; expose only a flat list to the UI.
+  const sections = query.data ?? [];
+  const entries = [...new Set(sections.flatMap(section => section.pages))];
+  const slot = sections.findLastIndex(section => section.pages.length < bookmarkLimit);
+  const full = slot === -1 && sections.length >= sectionLimit;
+  const busy = saving || query.isFetching || query.isError;
+  const add = path => {
+    if (busy || full || !safePage(path) || entries.includes(path)) return;
+    mutate(slot === -1
+      ? [...sections, { id: crypto.randomUUID(), name: 'Bookmarks', pages: [path] }]
+      : sections.map((section, index) => index === slot ? { ...section, pages: [...section.pages, path] } : section));
+  };
+  const remove = path => {
+    if (busy || !entries.includes(path)) return;
+    mutate(sections.map(section => ({ ...section, pages: section.pages.filter(entry => entry !== path) })));
+  };
   return {
-    sections: query.data ?? [], save: mutate,
-    busy: saving || query.isFetching || query.isError,
+    entries, add, remove, full, busy,
     loading: query.isFetching, saving, error: isError,
     loadError: query.isError, retry: query.refetch,
   };
